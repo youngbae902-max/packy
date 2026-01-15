@@ -3,45 +3,6 @@ import { Pack } from '@/types/pack';
 
 const STORAGE_KEY = 'pack-storage-packs';
 
-const initialPacks: Pack[] = [
-  {
-    id: '1',
-    title: 'ZIP SERGI FIM DE SEMANA',
-    author: 'DJ IGAGURI ZL',
-    type: 'samples',
-    downloadUrl: 'https://example.com/download1',
-    createdAt: new Date('2026-01-10'),
-    isExclusive: true,
-  },
-  {
-    id: '2',
-    title: 'ZIPS EXCLU',
-    author: 'DJ LEGALIZAÇÃO DO NORDESTE',
-    type: 'drumkit',
-    downloadUrl: 'https://example.com/download2',
-    createdAt: new Date('2026-01-06'),
-    isExclusive: true,
-  },
-  {
-    id: '3',
-    title: 'PACK TLS DA ZL o serto',
-    author: 'DJ PIKA DOS KELL',
-    type: 'loops',
-    downloadUrl: 'https://example.com/download3',
-    createdAt: new Date('2026-01-02'),
-    isExclusive: true,
-  },
-  {
-    id: '4',
-    title: 'PACK TLS DA ZL',
-    author: 'DJ PIKA DOS KELL',
-    type: 'presets',
-    downloadUrl: 'https://example.com/download4',
-    createdAt: new Date('2026-01-02'),
-    isExclusive: true,
-  },
-];
-
 export function usePacks() {
   const [packs, setPacks] = useState<Pack[]>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -52,25 +13,51 @@ export function usePacks() {
         createdAt: new Date(p.createdAt),
       }));
     }
-    return initialPacks;
+    return [];
   });
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(packs));
   }, [packs]);
 
-  const addPack = (pack: Omit<Pack, 'id' | 'createdAt'>) => {
+  const addPack = (pack: Omit<Pack, 'id' | 'createdAt' | 'status'>) => {
     const newPack: Pack = {
       ...pack,
       id: Date.now().toString(),
       createdAt: new Date(),
+      status: 'pending',
     };
     setPacks((prev) => [newPack, ...prev]);
+  };
+
+  const approvePack = (id: string) => {
+    setPacks((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, status: 'approved' as const } : p))
+    );
+  };
+
+  const rejectPack = (id: string) => {
+    setPacks((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, status: 'rejected' as const } : p))
+    );
   };
 
   const deletePack = (id: string) => {
     setPacks((prev) => prev.filter((p) => p.id !== id));
   };
 
-  return { packs, addPack, deletePack };
+  const approvedPacks = packs.filter((p) => p.status === 'approved');
+  const pendingPacks = packs.filter((p) => p.status === 'pending');
+  const rejectedPacks = packs.filter((p) => p.status === 'rejected');
+
+  return { 
+    packs, 
+    approvedPacks, 
+    pendingPacks, 
+    rejectedPacks,
+    addPack, 
+    approvePack, 
+    rejectPack, 
+    deletePack 
+  };
 }

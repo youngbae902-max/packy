@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ArrowLeft } from 'lucide-react';
+import { X, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { Pack, PackType, packTypeLabels } from '@/types/pack';
 import {
   Select,
@@ -12,7 +12,7 @@ import {
 interface AddPackModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (pack: Omit<Pack, 'id' | 'createdAt'>) => void;
+  onAdd: (pack: Omit<Pack, 'id' | 'createdAt' | 'status'>) => void;
 }
 
 export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
@@ -20,6 +20,7 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
   const [title, setTitle] = useState('');
   const [type, setType] = useState<PackType>('samples');
   const [downloadUrl, setDownloadUrl] = useState('');
+  const [coverUrl, setCoverUrl] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
       author: author.trim(),
       type,
       downloadUrl: downloadUrl.trim(),
+      coverUrl: coverUrl.trim() || undefined,
       isExclusive: true,
     });
 
@@ -41,6 +43,7 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
     setTitle('');
     setType('samples');
     setDownloadUrl('');
+    setCoverUrl('');
     onClose();
   };
 
@@ -53,7 +56,7 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-md bg-card rounded-3xl p-8 shadow-2xl animate-scale-in">
+      <div className="relative w-full max-w-md bg-card rounded-3xl p-8 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-colors"
@@ -104,6 +107,20 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <label className="label-field">
+              <ImageIcon className="w-3 h-3 inline mr-1" />
+              Capa do Pack (opcional)
+            </label>
+            <input
+              type="url"
+              value={coverUrl}
+              onChange={(e) => setCoverUrl(e.target.value)}
+              placeholder="Link da imagem (Imgur, etc)"
+              className="input-field"
+            />
           </div>
 
           <div>
