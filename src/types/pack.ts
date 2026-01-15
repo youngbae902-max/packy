@@ -4,8 +4,10 @@ export interface Pack {
   author: string;
   type: PackType;
   downloadUrl: string;
+  coverUrl?: string;
   createdAt: Date;
   isExclusive?: boolean;
+  status: 'pending' | 'approved' | 'rejected';
 }
 
 export type PackType = 'samples' | 'drumkit' | 'loops' | 'midi' | 'presets' | 'outros';
