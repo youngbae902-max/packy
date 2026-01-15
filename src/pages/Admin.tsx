@@ -1,20 +1,35 @@
 import { useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Lock } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Lock, Crown, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePacks } from '@/hooks/usePacks';
 import { AdminPackCard } from '@/components/AdminPackCard';
+import { EditPackModal } from '@/components/EditPackModal';
+import { AddPremiumPackModal } from '@/components/AddPremiumPackModal';
+import { Pack } from '@/types/pack';
 
-type TabType = 'pending' | 'approved' | 'rejected';
+type TabType = 'pending' | 'approved' | 'rejected' | 'premium';
 
-const ADMIN_PASSWORD = 'admin123'; // Senha simples para demo
+const ADMIN_PASSWORD = '55271505@Ma';
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<TabType>('pending');
+  const [editingPack, setEditingPack] = useState<Pack | null>(null);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   
-  const { pendingPacks, approvedPacks, rejectedPacks, approvePack, rejectPack, deletePack } = usePacks();
+  const { 
+    pendingPacks, 
+    approvedPacks, 
+    rejectedPacks, 
+    premiumPacks,
+    approvePack, 
+    rejectPack, 
+    deletePack,
+    updatePack,
+    addPremiumPack,
+  } = usePacks();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,12 +45,15 @@ export default function Admin() {
     { id: 'pending' as const, label: 'Pendentes', count: pendingPacks.length, icon: Clock },
     { id: 'approved' as const, label: 'Aprovados', count: approvedPacks.length, icon: CheckCircle },
     { id: 'rejected' as const, label: 'Rejeitados', count: rejectedPacks.length, icon: XCircle },
+    { id: 'premium' as const, label: 'Premium', count: premiumPacks.length, icon: Crown },
   ];
 
   const currentPacks = activeTab === 'pending' 
     ? pendingPacks 
     : activeTab === 'approved' 
     ? approvedPacks 
+    : activeTab === 'premium'
+    ? premiumPacks
     : rejectedPacks;
 
   if (!isAuthenticated) {
@@ -111,17 +129,19 @@ export default function Admin() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
                 activeTab === tab.id
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground hover:text-foreground'
+                  ? tab.id === 'premium' 
+                    ? 'bg-premium text-premium-foreground'
+                    : 'bg-primary text-primary-foreground'
+                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               }`}
             >
               <tab.icon className="w-4 h-4" />
               {tab.label}
               <span className={`px-2 py-0.5 rounded-full text-xs ${
                 activeTab === tab.id
-                  ? 'bg-primary-foreground/20'
+                  ? 'bg-foreground/20'
                   : 'bg-foreground/10'
               }`}>
                 {tab.count}
@@ -130,12 +150,28 @@ export default function Admin() {
           ))}
         </div>
 
+        {/* Add Premium Button */}
+        {activeTab === 'premium' && (
+          <button
+            onClick={() => setShowPremiumModal(true)}
+            className="w-full mb-6 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wide bg-premium text-premium-foreground hover:bg-premium/90 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Adicionar Pack Premium
+          </button>
+        )}
+
         {/* Content */}
         <div className="space-y-4">
           {currentPacks.length === 0 ? (
             <div className="pack-card text-center py-8">
               <p className="text-muted-foreground">
-                Nenhum pack {activeTab === 'pending' ? 'pendente' : activeTab === 'approved' ? 'aprovado' : 'rejeitado'}.
+                Nenhum pack {
+                  activeTab === 'pending' ? 'pendente' : 
+                  activeTab === 'approved' ? 'aprovado' : 
+                  activeTab === 'premium' ? 'premium' :
+                  'rejeitado'
+                }.
               </p>
             </div>
           ) : (
@@ -146,12 +182,26 @@ export default function Admin() {
                 onApprove={approvePack}
                 onReject={rejectPack}
                 onDelete={deletePack}
+                onEdit={setEditingPack}
                 showActions={activeTab === 'pending'}
               />
             ))
           )}
         </div>
       </div>
+
+      <EditPackModal
+        isOpen={!!editingPack}
+        pack={editingPack}
+        onClose={() => setEditingPack(null)}
+        onSave={updatePack}
+      />
+
+      <AddPremiumPackModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        onAdd={addPremiumPack}
+      />
     </div>
   );
 }

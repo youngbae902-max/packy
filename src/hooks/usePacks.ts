@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Pack } from '@/types/pack';
 
-const STORAGE_KEY = 'pack-storage-packs';
+const STORAGE_KEY = 'packy-packs';
 
 export function usePacks() {
   const [packs, setPacks] = useState<Pack[]>(() => {
@@ -30,6 +30,17 @@ export function usePacks() {
     setPacks((prev) => [newPack, ...prev]);
   };
 
+  const addPremiumPack = (pack: Omit<Pack, 'id' | 'createdAt' | 'status' | 'isPremium'>) => {
+    const newPack: Pack = {
+      ...pack,
+      id: Date.now().toString(),
+      createdAt: new Date(),
+      status: 'approved',
+      isPremium: true,
+    };
+    setPacks((prev) => [newPack, ...prev]);
+  };
+
   const approvePack = (id: string) => {
     setPacks((prev) =>
       prev.map((p) => (p.id === id ? { ...p, status: 'approved' as const } : p))
@@ -46,18 +57,28 @@ export function usePacks() {
     setPacks((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const approvedPacks = packs.filter((p) => p.status === 'approved');
+  const updatePack = (id: string, updates: Partial<Pack>) => {
+    setPacks((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, ...updates } : p))
+    );
+  };
+
+  const approvedPacks = packs.filter((p) => p.status === 'approved' && !p.isPremium);
   const pendingPacks = packs.filter((p) => p.status === 'pending');
   const rejectedPacks = packs.filter((p) => p.status === 'rejected');
+  const premiumPacks = packs.filter((p) => p.isPremium && p.status === 'approved');
 
   return { 
     packs, 
     approvedPacks, 
     pendingPacks, 
     rejectedPacks,
-    addPack, 
+    premiumPacks,
+    addPack,
+    addPremiumPack,
     approvePack, 
     rejectPack, 
-    deletePack 
+    deletePack,
+    updatePack,
   };
 }

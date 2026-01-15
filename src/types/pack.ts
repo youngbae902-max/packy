@@ -7,6 +7,9 @@ export interface Pack {
   coverUrl?: string;
   createdAt: Date;
   isExclusive?: boolean;
+  isAnonymous?: boolean;
+  isPremium?: boolean;
+  price?: number;
   status: 'pending' | 'approved' | 'rejected';
 }
 

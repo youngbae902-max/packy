@@ -1,12 +1,6 @@
 import { Zap, ExternalLink } from 'lucide-react';
 
-interface SupportCardProps {
-  name: string;
-  description: string;
-  channelUrl: string;
-}
-
-export function SupportCard({ name, description, channelUrl }: SupportCardProps) {
+export function SupportCard() {
   return (
     <div className="pack-card">
       <div className="flex flex-col items-center text-center gap-3">
@@ -15,16 +9,16 @@ export function SupportCard({ name, description, channelUrl }: SupportCardProps)
         </span>
         
         <h3 className="text-xl font-black flex items-center gap-2">
-          {name}
+          PACKY
           <Zap className="w-5 h-5 text-warning fill-warning" />
         </h3>
         
         <p className="text-sm text-muted-foreground">
-          {description}
+          Apoie o projeto para mantermos o site online!
         </p>
         
         <a 
-          href={channelUrl}
+          href="https://youtube.com/@mathewdcarmo?si=8gABoE4cqYvcpBja"
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary mt-2 text-sm"
