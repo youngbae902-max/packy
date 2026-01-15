@@ -5,10 +5,7 @@ export function Header() {
     <header className="text-center py-8 px-4">
       <div className="flex items-center justify-center gap-1 mb-4">
         <span className="text-3xl md:text-4xl font-black tracking-tighter">
-          PACK
-        </span>
-        <span className="text-3xl md:text-4xl font-light tracking-tighter text-muted-foreground">
-          STORAGE
+          PACKY
         </span>
         <Zap className="w-6 h-6 text-warning fill-warning" />
       </div>

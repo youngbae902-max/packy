@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { X, ArrowLeft, Image as ImageIcon, Upload } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X, ArrowLeft, Image as ImageIcon, Upload, Star } from 'lucide-react';
 import { Pack, PackType, packTypeLabels } from '@/types/pack';
 import {
   Select,
@@ -10,13 +10,14 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 
-interface AddPackModalProps {
+interface EditPackModalProps {
   isOpen: boolean;
+  pack: Pack | null;
   onClose: () => void;
-  onAdd: (pack: Omit<Pack, 'id' | 'createdAt' | 'status'>) => void;
+  onSave: (id: string, updates: Partial<Pack>) => void;
 }
 
-export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
+export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalProps) {
   const [author, setAuthor] = useState('');
   const [title, setTitle] = useState('');
   const [type, setType] = useState<PackType>('samples');
@@ -24,8 +25,21 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
   const [coverUrl, setCoverUrl] = useState('');
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [isExclusive, setIsExclusive] = useState(false);
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [price, setPrice] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (pack) {
+      setAuthor(pack.author);
+      setTitle(pack.title);
+      setType(pack.type);
+      setDownloadUrl(pack.downloadUrl);
+      setCoverUrl(pack.coverUrl || '');
+      setCoverPreview(pack.coverUrl || null);
+      setIsExclusive(pack.isExclusive || false);
+      setPrice(pack.price?.toString() || '');
+    }
+  }, [pack]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -43,33 +57,24 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!author.trim() || !title.trim() || !downloadUrl.trim()) {
+    if (!pack || !author.trim() || !title.trim() || !downloadUrl.trim()) {
       return;
     }
 
-    onAdd({
+    onSave(pack.id, {
       title: title.trim(),
       author: author.trim(),
       type,
       downloadUrl: downloadUrl.trim(),
       coverUrl: coverUrl || undefined,
       isExclusive,
-      isAnonymous,
+      price: price ? parseFloat(price) : undefined,
     });
 
-    // Reset form
-    setAuthor('');
-    setTitle('');
-    setType('samples');
-    setDownloadUrl('');
-    setCoverUrl('');
-    setCoverPreview(null);
-    setIsExclusive(false);
-    setIsAnonymous(false);
     onClose();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !pack) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -87,32 +92,19 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
         </button>
 
         <h2 className="text-2xl font-black text-center mb-8 uppercase tracking-tight">
-          Postar Pack
+          Editar Pack
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="label-field">Teu Vulgo</label>
+            <label className="label-field">Autor</label>
             <input
               type="text"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
-              placeholder="Ex: JVXT"
               className="input-field"
               required
-              disabled={isAnonymous}
             />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="anonymous"
-              checked={isAnonymous}
-              onCheckedChange={(checked) => setIsAnonymous(checked === true)}
-            />
-            <label htmlFor="anonymous" className="text-sm text-muted-foreground cursor-pointer">
-              Postar como Anônimo
-            </label>
           </div>
 
           <div>
@@ -121,11 +113,25 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ex: Drumkit Vol. 1"
               className="input-field"
               required
             />
           </div>
+
+          {pack.isPremium && (
+            <div>
+              <label className="label-field">Preço (R$)</label>
+              <input
+                type="number"
+                step="0.01"
+                min="0.01"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="input-field"
+                required
+              />
+            </div>
+          )}
 
           <div>
             <label className="label-field">Tipo de Conteúdo</label>
@@ -146,7 +152,7 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
           <div>
             <label className="label-field">
               <ImageIcon className="w-3 h-3 inline mr-1" />
-              Capa do Pack (opcional)
+              Capa do Pack
             </label>
             
             <input
@@ -164,7 +170,7 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
                 className="w-full flex items-center justify-center gap-2 bg-muted border border-border rounded-xl px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
               >
                 <Upload className="w-4 h-4" />
-                Carregar imagem da galeria
+                Alterar imagem
               </button>
               
               {coverPreview && (
@@ -195,25 +201,27 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
               type="url"
               value={downloadUrl}
               onChange={(e) => setDownloadUrl(e.target.value)}
-              placeholder="Mediafire ou Google Drive"
               className="input-field"
               required
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="exclusive"
-              checked={isExclusive}
-              onCheckedChange={(checked) => setIsExclusive(checked === true)}
-            />
-            <label htmlFor="exclusive" className="text-sm text-muted-foreground cursor-pointer">
-              Marcar como Exclusivo ⭐
-            </label>
-          </div>
+          {!pack.isPremium && (
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="exclusive-edit"
+                checked={isExclusive}
+                onCheckedChange={(checked) => setIsExclusive(checked === true)}
+              />
+              <label htmlFor="exclusive-edit" className="text-sm text-muted-foreground cursor-pointer flex items-center gap-1">
+                <Star className="w-3 h-3 text-warning" />
+                Marcar como Exclusivo
+              </label>
+            </div>
+          )}
 
           <button type="submit" className="btn-primary w-full text-sm uppercase tracking-wide">
-            Enviar para Análise
+            Salvar Alterações
           </button>
 
           <button
@@ -222,7 +230,7 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
             className="flex items-center justify-center gap-2 w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Voltar à Galeria
+            Cancelar
           </button>
         </form>
       </div>

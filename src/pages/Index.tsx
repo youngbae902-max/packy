@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Settings } from 'lucide-react';
+import { Plus, Settings, Crown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { PackCard } from '@/components/PackCard';
@@ -9,7 +9,10 @@ import { usePacks } from '@/hooks/usePacks';
 
 const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { approvedPacks, addPack } = usePacks();
+  const [activeSection, setActiveSection] = useState<'free' | 'premium'>('free');
+  const { approvedPacks, premiumPacks, addPack } = usePacks();
+
+  const currentPacks = activeSection === 'free' ? approvedPacks : premiumPacks;
 
   return (
     <div className="min-h-screen bg-background">
@@ -25,7 +28,7 @@ const Index = () => {
 
         <Header />
 
-        <div className="mb-8">
+        <div className="mb-6">
           <button
             onClick={() => setIsModalOpen(true)}
             className="btn-primary w-full text-sm uppercase tracking-wide"
@@ -35,27 +38,52 @@ const Index = () => {
           </button>
         </div>
 
+        {/* Section Tabs */}
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={() => setActiveSection('free')}
+            className={`flex-1 py-3 rounded-xl font-bold text-sm uppercase tracking-wide transition-all ${
+              activeSection === 'free'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+            }`}
+          >
+            Packs Grátis
+          </button>
+          <button
+            onClick={() => setActiveSection('premium')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wide transition-all ${
+              activeSection === 'premium'
+                ? 'bg-premium text-premium-foreground'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+            }`}
+          >
+            <Crown className="w-4 h-4" />
+            Premium
+          </button>
+        </div>
+
         <div className="space-y-4 mb-8">
-          <SupportCard
-            name="Pack Storage"
-            description="Apoie o projeto para mantermos o site online!"
-            channelUrl="https://youtube.com"
-          />
+          <SupportCard />
         </div>
 
         <div className="space-y-4">
-          {approvedPacks.map((pack) => (
+          {currentPacks.map((pack) => (
             <PackCard key={pack.id} pack={pack} />
           ))}
         </div>
 
-        {approvedPacks.length === 0 && (
+        {currentPacks.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">
-              Nenhum pack aprovado ainda.
+              {activeSection === 'free' 
+                ? 'Nenhum pack aprovado ainda.' 
+                : 'Nenhum pack premium disponível.'}
             </p>
             <p className="text-sm text-muted-foreground mt-2">
-              Envie seu pack e aguarde a aprovação!
+              {activeSection === 'free' 
+                ? 'Envie seu pack e aguarde a aprovação!' 
+                : 'Em breve novos packs premium!'}
             </p>
           </div>
         )}
