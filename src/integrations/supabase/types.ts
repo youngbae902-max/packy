@@ -14,16 +14,265 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      acapellas: {
+        Row: {
+          artist_name: string
+          audio_url: string
+          created_at: string | null
+          created_by: string | null
+          download_url: string
+          duration_seconds: number | null
+          id: string
+        }
+        Insert: {
+          artist_name: string
+          audio_url: string
+          created_at?: string | null
+          created_by?: string | null
+          download_url: string
+          duration_seconds?: number | null
+          id?: string
+        }
+        Update: {
+          artist_name?: string
+          audio_url?: string
+          created_at?: string | null
+          created_by?: string | null
+          download_url?: string
+          duration_seconds?: number | null
+          id?: string
+        }
+        Relationships: []
+      }
+      pack_downloads: {
+        Row: {
+          id: string
+          pack_id: string
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          pack_id: string
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          pack_id?: string
+          unlocked_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_downloads_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pack_favorites: {
+        Row: {
+          created_at: string | null
+          id: string
+          pack_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          pack_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          pack_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_favorites_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pack_likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          pack_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          pack_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          pack_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_likes_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packs: {
+        Row: {
+          author_name: string | null
+          cover_url: string | null
+          created_at: string | null
+          credit_channel_url: string | null
+          download_url: string
+          id: string
+          is_admin_pack: boolean | null
+          is_anonymous: boolean | null
+          is_exclusive: boolean | null
+          is_pinned: boolean | null
+          is_premium: boolean | null
+          likes_count: number | null
+          pack_type: Database["public"]["Enums"]["pack_type"] | null
+          price: number | null
+          status: Database["public"]["Enums"]["pack_status"] | null
+          title: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          author_name?: string | null
+          cover_url?: string | null
+          created_at?: string | null
+          credit_channel_url?: string | null
+          download_url: string
+          id?: string
+          is_admin_pack?: boolean | null
+          is_anonymous?: boolean | null
+          is_exclusive?: boolean | null
+          is_pinned?: boolean | null
+          is_premium?: boolean | null
+          likes_count?: number | null
+          pack_type?: Database["public"]["Enums"]["pack_type"] | null
+          price?: number | null
+          status?: Database["public"]["Enums"]["pack_status"] | null
+          title: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          author_name?: string | null
+          cover_url?: string | null
+          created_at?: string | null
+          credit_channel_url?: string | null
+          download_url?: string
+          id?: string
+          is_admin_pack?: boolean | null
+          is_anonymous?: boolean | null
+          is_exclusive?: boolean | null
+          is_pinned?: boolean | null
+          is_premium?: boolean | null
+          likes_count?: number | null
+          pack_type?: Database["public"]["Enums"]["pack_type"] | null
+          price?: number | null
+          status?: Database["public"]["Enums"]["pack_status"] | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          artist_name: string | null
+          avatar_url: string | null
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          artist_name?: string | null
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          artist_name?: string | null
+          avatar_url?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: { Args: never; Returns: boolean }
+      promote_to_admin: {
+        Args: { admin_password: string; user_email: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      pack_status: "pending" | "approved" | "rejected"
+      pack_type:
+        | "samples"
+        | "presets"
+        | "drumkit"
+        | "loops"
+        | "project"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +399,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      pack_status: ["pending", "approved", "rejected"],
+      pack_type: ["samples", "presets", "drumkit", "loops", "project", "other"],
+    },
   },
 } as const
