@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, ArrowLeft, Image as ImageIcon, Upload, Star } from 'lucide-react';
-import { Pack, PackType, packTypeLabels } from '@/types/pack';
+import { Pack } from '@/hooks/useSupabasePacks';
 import {
   Select,
   SelectContent,
@@ -9,69 +9,104 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { supabase } from '@/integrations/supabase/client';
+
+const packTypeLabels: Record<string, string> = {
+  samples: 'Samples',
+  drumkit: 'Drumkit',
+  loops: 'Loops',
+  presets: 'Presets',
+  project: 'Projeto',
+  other: 'Outros',
+};
 
 interface EditPackModalProps {
   isOpen: boolean;
   pack: Pack | null;
   onClose: () => void;
-  onSave: (id: string, updates: Partial<Pack>) => void;
+  onSave: (id: string, updates: Partial<Pack>) => Promise<void>;
 }
 
 export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalProps) {
-  const [author, setAuthor] = useState('');
+  const [authorName, setAuthorName] = useState('');
   const [title, setTitle] = useState('');
-  const [type, setType] = useState<PackType>('samples');
+  const [packType, setPackType] = useState<Pack['pack_type']>('samples');
   const [downloadUrl, setDownloadUrl] = useState('');
+  const [creditChannelUrl, setCreditChannelUrl] = useState('');
   const [coverUrl, setCoverUrl] = useState('');
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [isExclusive, setIsExclusive] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
   const [price, setPrice] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (pack) {
-      setAuthor(pack.author);
+      setAuthorName(pack.author_name || '');
       setTitle(pack.title);
-      setType(pack.type);
-      setDownloadUrl(pack.downloadUrl);
-      setCoverUrl(pack.coverUrl || '');
-      setCoverPreview(pack.coverUrl || null);
-      setIsExclusive(pack.isExclusive || false);
+      setPackType(pack.pack_type);
+      setDownloadUrl(pack.download_url);
+      setCreditChannelUrl(pack.credit_channel_url || '');
+      setCoverUrl(pack.cover_url || '');
+      setCoverPreview(pack.cover_url || null);
+      setIsExclusive(pack.is_exclusive);
+      setIsPremium(pack.is_premium);
       setPrice(pack.price?.toString() || '');
     }
   }, [pack]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setCoverPreview(result);
-        setCoverUrl(result);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+    
+    setIsUploading(true);
+    try {
+      const fileName = `${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage
+        .from('covers')
+        .upload(fileName, file);
+      
+      if (error) throw error;
+      
+      const { data: urlData } = supabase.storage
+        .from('covers')
+        .getPublicUrl(fileName);
+      
+      setCoverUrl(urlData.publicUrl);
+      setCoverPreview(urlData.publicUrl);
+    } catch (error) {
+      console.error('Error uploading cover:', error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!pack || !author.trim() || !title.trim() || !downloadUrl.trim()) {
+    if (!pack || !title.trim() || !downloadUrl.trim()) {
       return;
     }
 
-    onSave(pack.id, {
-      title: title.trim(),
-      author: author.trim(),
-      type,
-      downloadUrl: downloadUrl.trim(),
-      coverUrl: coverUrl || undefined,
-      isExclusive,
-      price: price ? parseFloat(price) : undefined,
-    });
-
-    onClose();
+    setIsSaving(true);
+    try {
+      await onSave(pack.id, {
+        title: title.trim(),
+        author_name: authorName.trim() || null,
+        pack_type: packType,
+        download_url: downloadUrl.trim(),
+        credit_channel_url: creditChannelUrl.trim() || null,
+        cover_url: coverUrl || null,
+        is_exclusive: isExclusive,
+        is_premium: isPremium,
+        price: price ? parseFloat(price) : null,
+      });
+      onClose();
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (!isOpen || !pack) return null;
@@ -100,10 +135,10 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
             <label className="label-field">Autor</label>
             <input
               type="text"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
+              value={authorName}
+              onChange={(e) => setAuthorName(e.target.value)}
               className="input-field"
-              required
+              placeholder="Nome do autor"
             />
           </div>
 
@@ -118,24 +153,9 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
             />
           </div>
 
-          {pack.isPremium && (
-            <div>
-              <label className="label-field">Preço (R$)</label>
-              <input
-                type="number"
-                step="0.01"
-                min="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="input-field"
-                required
-              />
-            </div>
-          )}
-
           <div>
             <label className="label-field">Tipo de Conteúdo</label>
-            <Select value={type} onValueChange={(value) => setType(value as PackType)}>
+            <Select value={packType} onValueChange={(value) => setPackType(value as Pack['pack_type'])}>
               <SelectTrigger className="input-field border-border">
                 <SelectValue />
               </SelectTrigger>
@@ -167,10 +187,11 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full flex items-center justify-center gap-2 bg-muted border border-border rounded-xl px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                disabled={isUploading}
+                className="w-full flex items-center justify-center gap-2 bg-muted border border-border rounded-xl px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
               >
                 <Upload className="w-4 h-4" />
-                Alterar imagem
+                {isUploading ? 'Enviando...' : 'Alterar imagem'}
               </button>
               
               {coverPreview && (
@@ -206,7 +227,18 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
             />
           </div>
 
-          {!pack.isPremium && (
+          <div>
+            <label className="label-field">Link do Canal (Crédito)</label>
+            <input
+              type="url"
+              value={creditChannelUrl}
+              onChange={(e) => setCreditChannelUrl(e.target.value)}
+              placeholder="https://youtube.com/..."
+              className="input-field"
+            />
+          </div>
+
+          <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Checkbox
                 id="exclusive-edit"
@@ -218,10 +250,40 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
                 Marcar como Exclusivo
               </label>
             </div>
-          )}
 
-          <button type="submit" className="btn-primary w-full text-sm uppercase tracking-wide">
-            Salvar Alterações
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="premium-edit"
+                checked={isPremium}
+                onCheckedChange={(checked) => setIsPremium(checked === true)}
+              />
+              <label htmlFor="premium-edit" className="text-sm text-muted-foreground cursor-pointer">
+                Pack Premium (Pago)
+              </label>
+            </div>
+
+            {isPremium && (
+              <div>
+                <label className="label-field">Preço (R$)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="input-field"
+                  required={isPremium}
+                />
+              </div>
+            )}
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={isSaving}
+            className="btn-primary w-full text-sm uppercase tracking-wide"
+          >
+            {isSaving ? 'Salvando...' : 'Salvar Alterações'}
           </button>
 
           <button

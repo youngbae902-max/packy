@@ -77,6 +77,73 @@ export function useSupabasePacks() {
     enabled: isAdmin,
   });
 
+  // Fetch rejected packs (admin only)
+  const { data: rejectedPacks = [] } = useQuery({
+    queryKey: ['packs', 'rejected'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('packs')
+        .select('*')
+        .eq('status', 'rejected')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Pack[];
+    },
+    enabled: isAdmin,
+  });
+
+  // Fetch all approved packs for admin (including premium)
+  const { data: allApprovedPacks = [] } = useQuery({
+    queryKey: ['packs', 'all-approved'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('packs')
+        .select('*')
+        .eq('status', 'approved')
+        .order('is_pinned', { ascending: false })
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Pack[];
+    },
+    enabled: isAdmin,
+  });
+
+  // Fetch project packs (pack_type = 'project')
+  const { data: projectPacks = [], isLoading: isLoadingProjects } = useQuery({
+    queryKey: ['packs', 'projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('packs')
+        .select('*')
+        .eq('status', 'approved')
+        .eq('pack_type', 'project')
+        .order('is_pinned', { ascending: false })
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Pack[];
+    },
+  });
+
+  // Fetch pending project packs (admin only)
+  const { data: pendingProjectPacks = [] } = useQuery({
+    queryKey: ['packs', 'pending-projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('packs')
+        .select('*')
+        .eq('status', 'pending')
+        .eq('pack_type', 'project')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Pack[];
+    },
+    enabled: isAdmin,
+  });
+
   // Fetch user's own packs
   const { data: userPacks = [] } = useQuery({
     queryKey: ['packs', 'user', user?.id],
@@ -151,8 +218,13 @@ export function useSupabasePacks() {
     approvedPacks,
     premiumPacks,
     pendingPacks,
+    rejectedPacks,
+    allApprovedPacks,
+    projectPacks,
+    pendingProjectPacks,
     userPacks,
     isLoading: isLoadingApproved || isLoadingPremium,
+    isLoadingProjects,
     addPack: addPackMutation.mutateAsync,
     updatePack: updatePackMutation.mutateAsync,
     deletePack: deletePackMutation.mutateAsync,

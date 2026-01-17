@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
-import { User, LogOut, Shield, Camera, Package, Heart, Bookmark } from 'lucide-react';
+import { User, LogOut, Shield, Camera, Package, Heart, Bookmark, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
 import { useAuth } from '@/contexts/AuthContext';
@@ -138,6 +139,17 @@ const Conta = () => {
             <p className="text-xs text-muted-foreground">Favoritos</p>
           </div>
         </div>
+
+        {/* Admin Panel Access */}
+        {isAdmin && (
+          <Link
+            to="/admin"
+            className="w-full mb-6 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wide bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
+          >
+            <Settings className="w-4 h-4" />
+            Painel de Administração
+          </Link>
+        )}
 
         {!isAdmin && (
           <div className="pack-card mb-6">

@@ -23,6 +23,7 @@ export type Database = {
           download_url: string
           duration_seconds: number | null
           id: string
+          status: Database["public"]["Enums"]["pack_status"]
         }
         Insert: {
           artist_name: string
@@ -32,6 +33,7 @@ export type Database = {
           download_url: string
           duration_seconds?: number | null
           id?: string
+          status?: Database["public"]["Enums"]["pack_status"]
         }
         Update: {
           artist_name?: string
@@ -41,6 +43,7 @@ export type Database = {
           download_url?: string
           duration_seconds?: number | null
           id?: string
+          status?: Database["public"]["Enums"]["pack_status"]
         }
         Relationships: []
       }
