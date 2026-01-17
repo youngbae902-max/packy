@@ -9,6 +9,9 @@ import Projetos from "./pages/Projetos";
 import MCs from "./pages/MCs";
 import Conta from "./pages/Conta";
 import Admin from "./pages/Admin";
+import Albums from "./pages/Albums";
+import Wishlist from "./pages/Wishlist";
+import Inbox from "./pages/Inbox";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +27,9 @@ const App = () => (
             <Route path="/" element={<Packs />} />
             <Route path="/projetos" element={<Projetos />} />
             <Route path="/mcs" element={<MCs />} />
+            <Route path="/albuns" element={<Albums />} />
+            <Route path="/desejos" element={<Wishlist />} />
+            <Route path="/inbox" element={<Inbox />} />
             <Route path="/conta" element={<Conta />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />

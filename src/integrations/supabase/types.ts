@@ -47,6 +47,75 @@ export type Database = {
         }
         Relationships: []
       }
+      album_packs: {
+        Row: {
+          added_at: string | null
+          album_id: string
+          id: string
+          pack_id: string
+        }
+        Insert: {
+          added_at?: string | null
+          album_id: string
+          id?: string
+          pack_id: string
+        }
+        Update: {
+          added_at?: string | null
+          album_id?: string
+          id?: string
+          pack_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_packs_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "album_packs_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      albums: {
+        Row: {
+          cover_url: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          style: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          style?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          style?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       pack_downloads: {
         Row: {
           id: string
@@ -203,29 +272,85 @@ export type Database = {
           avatar_url: string | null
           created_at: string | null
           id: string
+          is_banned: boolean | null
+          is_online: boolean | null
+          last_seen: string | null
+          last_username_change_date: string | null
           updated_at: string | null
           user_id: string
           username: string | null
+          username_changes_today: number | null
         }
         Insert: {
           artist_name?: string | null
           avatar_url?: string | null
           created_at?: string | null
           id?: string
+          is_banned?: boolean | null
+          is_online?: boolean | null
+          last_seen?: string | null
+          last_username_change_date?: string | null
           updated_at?: string | null
           user_id: string
           username?: string | null
+          username_changes_today?: number | null
         }
         Update: {
           artist_name?: string | null
           avatar_url?: string | null
           created_at?: string | null
           id?: string
+          is_banned?: boolean | null
+          is_online?: boolean | null
+          last_seen?: string | null
+          last_username_change_date?: string | null
           updated_at?: string | null
           user_id?: string
           username?: string | null
+          username_changes_today?: number | null
         }
         Relationships: []
+      }
+      user_inbox: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string | null
+          pack_id: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          pack_id?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          pack_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_inbox_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -248,6 +373,39 @@ export type Database = {
         }
         Relationships: []
       }
+      wishlists: {
+        Row: {
+          admin_response: string | null
+          created_at: string | null
+          id: string
+          request_text: string
+          responded_at: string | null
+          responded_by: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_response?: string | null
+          created_at?: string | null
+          id?: string
+          request_text: string
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_response?: string | null
+          created_at?: string | null
+          id?: string
+          request_text?: string
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -265,6 +423,23 @@ export type Database = {
         Args: { admin_password: string; user_email: string }
         Returns: boolean
       }
+      send_gift: {
+        Args: {
+          gift_message?: string
+          gift_pack_id: string
+          target_user_id: string
+        }
+        Returns: boolean
+      }
+      set_user_ban_status: {
+        Args: { ban_status: boolean; target_user_id: string }
+        Returns: boolean
+      }
+      update_online_status: {
+        Args: { online_status: boolean }
+        Returns: undefined
+      }
+      update_username: { Args: { new_username: string }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "user"
