@@ -67,11 +67,33 @@ export function useInbox() {
     },
   });
 
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('user_inbox')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['inbox'] });
+      toast.success('Mensagem apagada');
+    },
+    onError: (error: Error) => {
+      toast.error('Erro ao apagar: ' + error.message);
+    },
+  });
+
+  const hasUnread = unreadCount > 0;
+
   return {
     messages,
     unreadCount,
+    hasUnread,
     isLoading,
     markAsRead: markAsReadMutation.mutate,
     markAllAsRead: markAllAsReadMutation.mutate,
+    deleteMessage: deleteMessageMutation.mutate,
   };
 }

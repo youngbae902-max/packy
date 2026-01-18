@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Gift, Send } from 'lucide-react';
+import { Gift, Send, Trash2 } from 'lucide-react';
 import { useWishlist } from '@/hooks/useWishlist';
 import { useAuth } from '@/contexts/AuthContext';
 import { BottomNav } from '@/components/BottomNav';
@@ -11,7 +11,7 @@ import { AuthModal } from '@/components/AuthModal';
 
 export default function Wishlist() {
   const { user } = useAuth();
-  const { myWishlist, addWish, isLoading } = useWishlist();
+  const { myWishlist, hasUpdates, addWish, deleteWish, isLoading } = useWishlist();
   const [requestText, setRequestText] = useState('');
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
@@ -43,8 +43,11 @@ export default function Wishlist() {
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-lg mx-auto px-4 pt-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center relative">
             <Gift className="w-5 h-5 text-primary" />
+            {hasUpdates && (
+              <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" />
+            )}
           </div>
           <div>
             <h1 className="text-xl font-bold">Lista de Desejos</h1>
@@ -96,7 +99,17 @@ export default function Wishlist() {
                 <CardContent className="pt-4">
                   <div className="flex items-start justify-between gap-3">
                     <p className="text-sm flex-1">{wish.request_text}</p>
-                    {getStatusBadge(wish.status)}
+                    <div className="flex items-center gap-2">
+                      {getStatusBadge(wish.status)}
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="text-muted-foreground hover:text-destructive"
+                        onClick={() => deleteWish(wish.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                   {wish.admin_response && (
                     <div className="mt-3 pt-3 border-t border-border">

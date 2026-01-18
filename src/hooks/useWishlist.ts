@@ -139,12 +139,34 @@ export function useWishlist() {
     },
   });
 
+  const deleteWishMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('wishlists')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my_wishlist'] });
+      toast.success('Pedido apagado');
+    },
+    onError: (error: Error) => {
+      toast.error('Erro ao apagar: ' + error.message);
+    },
+  });
+
+  const hasUpdates = myWishlist.some(w => w.status !== 'pending');
+
   return {
     myWishlist,
     pendingWishlists,
     allWishlists,
+    hasUpdates,
     isLoading: isLoadingMy || isLoadingPending || isLoadingAll,
     addWish: addWishMutation.mutate,
     respondToWish: respondToWishMutation.mutate,
+    deleteWish: deleteWishMutation.mutate,
   };
 }

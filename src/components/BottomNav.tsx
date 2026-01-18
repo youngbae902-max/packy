@@ -1,17 +1,19 @@
 import { NavLink } from 'react-router-dom';
 import { Package, Disc, Gift, Inbox, User } from 'lucide-react';
 import { useInbox } from '@/hooks/useInbox';
+import { useWishlist } from '@/hooks/useWishlist';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function BottomNav() {
   const { user } = useAuth();
-  const { unreadCount } = useInbox();
+  const { hasUnread } = useInbox();
+  const { hasUpdates } = useWishlist();
 
   const navItems = [
     { to: '/', icon: Package, label: 'Packs' },
     { to: '/albuns', icon: Disc, label: 'Álbuns' },
-    { to: '/desejos', icon: Gift, label: 'Desejos' },
-    { to: '/inbox', icon: Inbox, label: 'Inbox', badge: unreadCount },
+    { to: '/desejos', icon: Gift, label: 'Desejos', showDot: hasUpdates },
+    { to: '/inbox', icon: Inbox, label: 'Inbox', showDot: hasUnread },
     { to: '/conta', icon: User, label: 'Conta' },
   ];
 
@@ -32,10 +34,8 @@ export function BottomNav() {
           >
             <div className="relative">
               <item.icon className="w-5 h-5" />
-              {item.badge && item.badge > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 rounded-full text-[10px] flex items-center justify-center text-white font-bold">
-                  {item.badge > 9 ? '9+' : item.badge}
-                </span>
+              {item.showDot && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
               )}
             </div>
             <span className="text-xs font-medium">{item.label}</span>

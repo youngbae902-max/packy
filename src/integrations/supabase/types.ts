@@ -20,6 +20,7 @@ export type Database = {
           audio_url: string
           created_at: string | null
           created_by: string | null
+          deleted_at: string | null
           download_url: string
           duration_seconds: number | null
           id: string
@@ -30,6 +31,7 @@ export type Database = {
           audio_url: string
           created_at?: string | null
           created_by?: string | null
+          deleted_at?: string | null
           download_url: string
           duration_seconds?: number | null
           id?: string
@@ -40,12 +42,51 @@ export type Database = {
           audio_url?: string
           created_at?: string | null
           created_by?: string | null
+          deleted_at?: string | null
           download_url?: string
           duration_seconds?: number | null
           id?: string
           status?: Database["public"]["Enums"]["pack_status"]
         }
         Relationships: []
+      }
+      album_links: {
+        Row: {
+          album_id: string
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          link_url: string
+          name: string
+        }
+        Insert: {
+          album_id: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          link_url: string
+          name: string
+        }
+        Update: {
+          album_id?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          link_url?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_links_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       album_packs: {
         Row: {
@@ -209,6 +250,7 @@ export type Database = {
           cover_url: string | null
           created_at: string | null
           credit_channel_url: string | null
+          deleted_at: string | null
           download_url: string
           id: string
           is_admin_pack: boolean | null
@@ -229,6 +271,7 @@ export type Database = {
           cover_url?: string | null
           created_at?: string | null
           credit_channel_url?: string | null
+          deleted_at?: string | null
           download_url: string
           id?: string
           is_admin_pack?: boolean | null
@@ -249,6 +292,7 @@ export type Database = {
           cover_url?: string | null
           created_at?: string | null
           credit_channel_url?: string | null
+          deleted_at?: string | null
           download_url?: string
           id?: string
           is_admin_pack?: boolean | null
@@ -271,6 +315,7 @@ export type Database = {
           artist_name: string | null
           avatar_url: string | null
           created_at: string | null
+          has_spotify_badge: boolean | null
           id: string
           is_banned: boolean | null
           is_online: boolean | null
@@ -285,6 +330,7 @@ export type Database = {
           artist_name?: string | null
           avatar_url?: string | null
           created_at?: string | null
+          has_spotify_badge?: boolean | null
           id?: string
           is_banned?: boolean | null
           is_online?: boolean | null
@@ -299,6 +345,7 @@ export type Database = {
           artist_name?: string | null
           avatar_url?: string | null
           created_at?: string | null
+          has_spotify_badge?: boolean | null
           id?: string
           is_banned?: boolean | null
           is_online?: boolean | null
@@ -308,6 +355,45 @@ export type Database = {
           user_id?: string
           username?: string | null
           username_changes_today?: number | null
+        }
+        Relationships: []
+      }
+      site_events: {
+        Row: {
+          content: string | null
+          created_at: string
+          created_by: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean
+          link_url: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean
+          link_url?: string | null
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean
+          link_url?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -411,6 +497,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_delete_user: { Args: { target_user_id: string }; Returns: boolean }
+      delete_my_account: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -430,6 +518,10 @@ export type Database = {
           target_user_id: string
         }
         Returns: boolean
+      }
+      send_gift_to_all: {
+        Args: { gift_message?: string; gift_pack_id: string }
+        Returns: number
       }
       set_user_ban_status: {
         Args: { ban_status: boolean; target_user_id: string }
