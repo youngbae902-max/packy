@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { User, LogOut, Shield, Camera, Package, Heart, Bookmark, Settings } from 'lucide-react';
+import { User, LogOut, Shield, Camera, Package, Heart, Bookmark, Settings, AtSign, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
@@ -7,7 +7,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useUserFavorites, useUserLikes } from '@/hooks/usePackInteractions';
+import { useUserManagement } from '@/hooks/useUserManagement';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, promoteToAdmin } = useAuth();
@@ -15,12 +20,15 @@ const Conta = () => {
   const { userPacks } = useSupabasePacks();
   const { favorites } = useUserFavorites();
   const { likes } = useUserLikes();
+  const { updateUsername, deleteMyAccount } = useUserManagement();
   
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [artistName, setArtistName] = useState(profile?.artist_name || '');
+  const [username, setUsername] = useState(profile?.username || '');
   const [showAdminForm, setShowAdminForm] = useState(false);
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +52,11 @@ const Conta = () => {
     }
   };
 
+  const handleUpdateUsername = () => {
+    if (!username.trim()) return;
+    updateUsername(username.trim());
+  };
+
   const handlePromoteToAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     const success = await promoteToAdmin(adminEmail, adminPassword);
@@ -53,6 +66,12 @@ const Conta = () => {
     } else {
       toast.error('Credenciais inválidas');
     }
+  };
+
+  const handleDeleteAccount = () => {
+    deleteMyAccount();
+    setShowDeleteConfirm(false);
+    signOut();
   };
 
   if (!user) {
@@ -98,29 +117,72 @@ const Conta = () => {
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
             </div>
 
-            {isAdmin && (
-              <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-3 py-1 rounded-full text-xs font-bold">
-                <Shield className="w-3 h-3" />
-                ADM
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {isAdmin && (
+                <Badge className="bg-destructive/20 text-destructive">
+                  <Shield className="w-3 h-3 mr-1" />
+                  ADM
+                </Badge>
+              )}
+              {profile?.has_spotify_badge && (
+                <Badge className="bg-green-500/20 text-green-500">
+                  <svg className="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                  </svg>
+                  Spotify
+                </Badge>
+              )}
+            </div>
+
+            {/* Username @ Field */}
+            <div className="w-full">
+              <label className="label-field flex items-center gap-1">
+                <AtSign className="w-3 h-3" />
+                Nome de Usuário
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">@</span>
+                  <Input
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
+                    placeholder="seunome"
+                    className="pl-7"
+                  />
+                </div>
+                <Button size="sm" onClick={handleUpdateUsername} disabled={!username.trim()}>
+                  Salvar
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Você pode alterar até 3 vezes por dia
+              </p>
+            </div>
 
             <div className="w-full">
               <label className="label-field">Nome Artístico</label>
-              <input
-                type="text"
+              <Input
                 value={artistName}
                 onChange={(e) => setArtistName(e.target.value)}
                 placeholder="Seu vulgo"
-                className="input-field"
               />
             </div>
 
-            <button onClick={handleSaveProfile} disabled={isUpdating} className="btn-primary w-full">
+            <Button onClick={handleSaveProfile} disabled={isUpdating} className="w-full">
               {isUpdating ? 'Salvando...' : 'Salvar Perfil'}
-            </button>
+            </Button>
           </div>
         </div>
+
+        {/* Profile Display */}
+        {(profile?.artist_name || profile?.username) && (
+          <div className="pack-card mb-6 text-center">
+            <h3 className="font-bold text-lg">{profile.artist_name || 'Sem nome'}</h3>
+            {profile.username && (
+              <p className="text-sm text-muted-foreground">@{profile.username}</p>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="pack-card text-center">
@@ -161,19 +223,68 @@ const Conta = () => {
             </button>
             {showAdminForm && (
               <form onSubmit={handlePromoteToAdmin} className="mt-4 space-y-3">
-                <input type="email" value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} placeholder="Email autorizado" className="input-field" />
-                <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder="Senha ADM" className="input-field" />
-                <button type="submit" className="btn-secondary w-full text-sm">Validar</button>
+                <Input 
+                  type="email" 
+                  value={adminEmail} 
+                  onChange={(e) => setAdminEmail(e.target.value)} 
+                  placeholder="Email autorizado" 
+                />
+                <Input 
+                  type="password" 
+                  value={adminPassword} 
+                  onChange={(e) => setAdminPassword(e.target.value)} 
+                  placeholder="Senha ADM" 
+                />
+                <Button type="submit" variant="secondary" className="w-full">
+                  Validar
+                </Button>
               </form>
             )}
           </div>
         )}
 
-        <button onClick={signOut} className="w-full flex items-center justify-center gap-2 text-destructive py-3">
-          <LogOut className="w-4 h-4" />
-          Sair
-        </button>
+        <div className="space-y-3">
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start text-destructive hover:text-destructive"
+            onClick={() => setShowDeleteConfirm(true)}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Excluir minha conta
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start text-muted-foreground"
+            onClick={signOut}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Sair
+          </Button>
+        </div>
       </div>
+
+      {/* Delete Account Confirmation */}
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Excluir conta</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.
+              Todos os seus dados serão removidos permanentemente.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteAccount}>
+              Excluir permanentemente
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <BottomNav />
     </div>
   );

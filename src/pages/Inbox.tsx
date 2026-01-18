@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Inbox as InboxIcon, Gift, Bell, MessageSquare, Check, CheckCheck } from 'lucide-react';
+import { Inbox as InboxIcon, Gift, Bell, MessageSquare, Check, CheckCheck, Trash2 } from 'lucide-react';
 import { useInbox, InboxMessage } from '@/hooks/useInbox';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 
 export default function Inbox() {
   const { user } = useAuth();
-  const { messages, unreadCount, markAsRead, markAllAsRead, isLoading } = useInbox();
+  const { messages, hasUnread, markAsRead, markAllAsRead, deleteMessage, isLoading } = useInbox();
   const { allApprovedPacks } = useSupabasePacks();
   const [selectedMessage, setSelectedMessage] = useState<InboxMessage | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -35,6 +35,11 @@ export default function Inbox() {
     }
   };
 
+  const handleDelete = (e: React.MouseEvent, messageId: string) => {
+    e.stopPropagation();
+    deleteMessage(messageId);
+  };
+
   const getPackForMessage = (packId: string | null) => {
     if (!packId) return null;
     return allApprovedPacks.find(p => p.id === packId);
@@ -47,20 +52,18 @@ export default function Inbox() {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center relative">
               <InboxIcon className="w-5 h-5 text-primary" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center text-white font-bold">
-                  {unreadCount}
-                </span>
+              {hasUnread && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" />
               )}
             </div>
             <div>
               <h1 className="text-xl font-bold">Caixa de Entrada</h1>
               <p className="text-xs text-muted-foreground">
-                {unreadCount > 0 ? `${unreadCount} não lida(s)` : 'Tudo lido'}
+                {hasUnread ? 'Novas mensagens' : 'Tudo lido'}
               </p>
             </div>
           </div>
-          {unreadCount > 0 && (
+          {hasUnread && (
             <Button size="sm" variant="outline" onClick={() => markAllAsRead()}>
               <CheckCheck className="w-4 h-4 mr-1" />
               Ler tudo
@@ -102,7 +105,7 @@ export default function Inbox() {
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold truncate">{message.title}</h3>
                         {!message.is_read && (
-                          <Badge variant="default" className="shrink-0 text-xs">Novo</Badge>
+                          <span className="w-2 h-2 bg-green-500 rounded-full shrink-0" />
                         )}
                       </div>
                       {message.message && (
@@ -119,9 +122,14 @@ export default function Inbox() {
                         })}
                       </p>
                     </div>
-                    {message.is_read && (
-                      <Check className="w-4 h-4 text-muted-foreground shrink-0" />
-                    )}
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                      onClick={(e) => handleDelete(e, message.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
