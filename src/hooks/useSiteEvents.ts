@@ -92,6 +92,13 @@ export function useSiteEvents() {
     },
   });
 
+  const toggleEventActive = (id: string) => {
+    const event = events.find(e => e.id === id);
+    if (event) {
+      updateEventMutation.mutate({ id, is_active: !event.is_active });
+    }
+  };
+
   return {
     events,
     activeEvents,
@@ -99,5 +106,6 @@ export function useSiteEvents() {
     addEvent: addEventMutation.mutate,
     updateEvent: updateEventMutation.mutate,
     deleteEvent: deleteEventMutation.mutate,
+    toggleEventActive,
   };
 }

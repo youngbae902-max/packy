@@ -8,6 +8,7 @@ interface Profile {
   username: string | null;
   artist_name: string | null;
   avatar_url: string | null;
+  has_spotify_badge: boolean | null;
 }
 
 interface AuthContextType {

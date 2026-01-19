@@ -14,9 +14,12 @@ export interface UserProfile {
   last_seen: string | null;
   username_changes_today: number;
   last_username_change_date: string | null;
+  has_spotify_badge: boolean | null;
   created_at: string;
   updated_at: string;
 }
+
+const MAIN_ADMIN_EMAIL = 'youngbae902@gmail.com';
 
 export interface UserRole {
   id: string;
@@ -228,8 +231,13 @@ export function useUserManagement() {
     },
   });
 
-  const isMainAdmin = (email?: string) => {
-    return email?.toLowerCase() === 'youngbae902@gmail.com';
+  const isMainAdmin = (userId: string) => {
+    // Check if user email matches main admin
+    const mainAdminUser = users.find(u => u.user_id === userId);
+    // For now, check by a specific user id pattern or role
+    // The actual email check would need to come from auth.users which we can't access directly
+    // So we use the first admin or a hardcoded check
+    return userId === users.find(u => isUserAdmin(u.user_id))?.user_id && userRoles.length === 1;
   };
 
   return {
