@@ -102,9 +102,12 @@ export function useAlbumLinks(albumId?: string) {
     },
   });
 
+  const getAlbumLinks = (albumId: string) => albumLinks.filter(l => l.album_id === albumId);
+
   return {
     albumLinks,
     isLoading,
+    getAlbumLinks,
     addLink: addLinkMutation.mutate,
     updateLink: updateLinkMutation.mutate,
     deleteLink: deleteLinkMutation.mutate,

@@ -23,7 +23,7 @@ const Index = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showOrderDialog, setShowOrderDialog] = useState(false);
   
-  const { allApprovedPacks, premiumPacks, isLoading } = useSupabasePacks();
+  const { allApprovedPacks, approvedPacks, premiumPacks, isLoading, addPack } = useSupabasePacks();
   const { activeEvents } = useSiteEvents();
   const { isAdmin } = useAuth();
 
@@ -221,6 +221,7 @@ const Index = () => {
       <AddPackModalV2
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onAdd={addPack}
       />
       
       <BottomNav />
