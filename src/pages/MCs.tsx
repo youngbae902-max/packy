@@ -12,7 +12,7 @@ const MCs = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-black pb-20">
+    <div className="min-h-screen bg-background pb-20">
       <div className="max-w-lg mx-auto px-4 pt-6">
         <header className="text-center py-6">
           <Mic className="w-10 h-10 mx-auto mb-2 text-primary" />
