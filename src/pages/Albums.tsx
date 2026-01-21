@@ -1,31 +1,23 @@
 import { useState } from 'react';
-import { Disc, Plus, ChevronRight } from 'lucide-react';
+import { Disc, Plus, ExternalLink } from 'lucide-react';
 import { useAlbums } from '@/hooks/useAlbums';
-import { useSupabasePacks } from '@/hooks/useSupabasePacks';
+import { useAlbumLinks } from '@/hooks/useAlbumLinks';
 import { useAuth } from '@/contexts/AuthContext';
 import { BottomNav } from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { PackCardV2 } from '@/components/PackCardV2';
 import { AddAlbumModal } from '@/components/AddAlbumModal';
 
 export default function Albums() {
-  const { albums, albumPacks, isLoading } = useAlbums();
-  const { allApprovedPacks } = useSupabasePacks();
+  const { albums, isLoading } = useAlbums();
+  const { getAlbumLinks } = useAlbumLinks();
   const { isAdmin } = useAuth();
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const getPacksForAlbum = (albumId: string) => {
-    const packIds = albumPacks
-      .filter(ap => ap.album_id === albumId)
-      .map(ap => ap.pack_id);
-    return allApprovedPacks.filter(p => packIds.includes(p.id));
-  };
-
   const selectedAlbumData = albums.find(a => a.id === selectedAlbum);
-  const selectedAlbumPacks = selectedAlbum ? getPacksForAlbum(selectedAlbum) : [];
+  const selectedAlbumLinks = selectedAlbum ? getAlbumLinks(selectedAlbum) : [];
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -54,7 +46,7 @@ export default function Albums() {
         ) : (
           <div className="grid grid-cols-2 gap-4">
             {albums.map((album) => {
-              const packsCount = albumPacks.filter(ap => ap.album_id === album.id).length;
+              const linksCount = getAlbumLinks(album.id).length;
               
               return (
                 <Card
@@ -76,7 +68,7 @@ export default function Albums() {
                     )}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3">
                       <h3 className="font-bold text-white truncate">{album.title}</h3>
-                      <p className="text-xs text-white/70">{packsCount} packs</p>
+                      <p className="text-xs text-white/70">{linksCount} links</p>
                     </div>
                   </div>
                 </Card>
@@ -117,17 +109,31 @@ export default function Albums() {
             </div>
           )}
 
+          {/* External Links */}
           <div className="space-y-3">
-            <h4 className="font-semibold flex items-center gap-2">
-              Packs do Álbum
-              <ChevronRight className="w-4 h-4" />
-            </h4>
-            {selectedAlbumPacks.length === 0 ? (
-              <p className="text-muted-foreground text-sm">Nenhum pack neste álbum ainda.</p>
+            <h4 className="font-semibold">Links do Álbum</h4>
+            {selectedAlbumLinks.length === 0 ? (
+              <p className="text-muted-foreground text-sm">Nenhum link neste álbum ainda.</p>
             ) : (
-              <div className="space-y-3">
-                {selectedAlbumPacks.map((pack) => (
-                  <PackCardV2 key={pack.id} pack={pack} />
+              <div className="space-y-2">
+                {selectedAlbumLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate">{link.name}</p>
+                        {link.description && (
+                          <p className="text-xs text-muted-foreground truncate">{link.description}</p>
+                        )}
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
+                    </div>
+                  </a>
                 ))}
               </div>
             )}
