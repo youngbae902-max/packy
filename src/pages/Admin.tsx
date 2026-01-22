@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
 import { useAcapellas, Acapella } from '@/hooks/useAcapellas';
 import { useUserManagement } from '@/hooks/useUserManagement';
 import { useWishlist } from '@/hooks/useWishlist';
-import { useAlbums } from '@/hooks/useAlbums';
+import { useAlbums, Album } from '@/hooks/useAlbums';
 import { useAlbumLinks, AlbumLink } from '@/hooks/useAlbumLinks';
 import { useSiteEvents } from '@/hooks/useSiteEvents';
 import { useStats } from '@/hooks/useStats';
@@ -28,8 +28,9 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
 
-type MainTab = 'stats' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'lixeira';
+type MainTab = 'stats' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_EMAIL = 'youngbae902@gmail.com';
@@ -48,15 +49,18 @@ export default function Admin() {
   const [giftModal, setGiftModal] = useState<{ userId: string; username: string } | null>(null);
   const [selectedGiftPack, setSelectedGiftPack] = useState('');
   const [giftMessage, setGiftMessage] = useState('');
+  const [externalGiftUrl, setExternalGiftUrl] = useState('');
+  const [externalGiftName, setExternalGiftName] = useState('');
+  const [externalGiftCover, setExternalGiftCover] = useState('');
   const [wishResponse, setWishResponse] = useState('');
   const [respondingWish, setRespondingWish] = useState<string | null>(null);
-  const [showGiftAllModal, setShowGiftAllModal] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
   const [newLinkName, setNewLinkName] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [newLinkDesc, setNewLinkDesc] = useState('');
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
+  const [albumSubTab, setAlbumSubTab] = useState<SubTab>('pending');
   
   const { 
     pendingPacks, allApprovedPacks, rejectedPacks, 
@@ -75,7 +79,7 @@ export default function Admin() {
   } = useUserManagement();
   
   const { pendingWishlists, respondToWish } = useWishlist();
-  const { albums, deleteAlbum } = useAlbums();
+  const { albums, pendingAlbums, approvedAlbums, rejectedAlbums, approveAlbum, rejectAlbum, deleteAlbum } = useAlbums();
   const { getAlbumLinks, addLink, deleteLink, updateLink } = useAlbumLinks();
   const { events, deleteEvent, toggleEventActive } = useSiteEvents();
   const { stats } = useStats();
@@ -94,6 +98,12 @@ export default function Admin() {
   };
 
   const getCurrentAcapellas = () => subTab === 'pending' ? pendingAcapellas : subTab === 'approved' ? acapellas : rejectedAcapellas;
+  
+  const getCurrentAlbums = () => {
+    if (albumSubTab === 'pending') return pendingAlbums;
+    if (albumSubTab === 'approved') return approvedAlbums;
+    return rejectedAlbums;
+  };
 
   const mainTabs = [
     { id: 'stats' as const, label: 'Stats', icon: BarChart3 },
@@ -104,6 +114,7 @@ export default function Admin() {
     { id: 'desejos' as const, label: 'Pedidos', icon: Gift },
     { id: 'albuns' as const, label: 'Álbuns', icon: Disc },
     { id: 'eventos' as const, label: 'Eventos', icon: Megaphone },
+    { id: 'giftall' as const, label: 'Gift All', icon: Send },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
 
@@ -122,11 +133,48 @@ export default function Admin() {
     setGiftMessage('');
   };
 
-  const handleSendGiftToAll = () => {
-    if (!selectedGiftPack) return;
+  const handleSendExternalGiftToAll = async () => {
+    if (!externalGiftUrl.trim() || !externalGiftName.trim()) {
+      toast.error('Preencha nome e link');
+      return;
+    }
+    
+    // Create a pack for the external gift
+    const { data: newPack, error } = await supabase
+      .from('packs')
+      .insert({
+        title: externalGiftName.trim(),
+        download_url: externalGiftUrl.trim(),
+        cover_url: externalGiftCover.trim() || null,
+        author_name: 'ADM',
+        is_admin_pack: true,
+        status: 'approved',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      toast.error('Erro ao criar pack');
+      return;
+    }
+
+    // Send to all users
+    sendGiftToAll({ packId: newPack.id, message: giftMessage || 'Presente do admin!' });
+    toast.success('Gift enviado para todos!');
+    
+    setExternalGiftUrl('');
+    setExternalGiftName('');
+    setExternalGiftCover('');
+    setGiftMessage('');
+  };
+
+  const handleSendPackGiftToAll = () => {
+    if (!selectedGiftPack) {
+      toast.error('Selecione um pack');
+      return;
+    }
     sendGiftToAll({ packId: selectedGiftPack, message: giftMessage || undefined });
-    toast.success('Presente enviado para todos!');
-    setShowGiftAllModal(false);
+    toast.success('Gift enviado para todos!');
     setSelectedGiftPack('');
     setGiftMessage('');
   };
@@ -193,7 +241,7 @@ export default function Admin() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-6">
           <Link to="/conta" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
@@ -245,7 +293,7 @@ export default function Admin() {
                 <p className="text-xs text-muted-foreground">Usuários</p>
               </Card>
               <Card className="p-4 text-center">
-                <p className="text-2xl font-bold text-yellow-500">{stats.pendingPacks + stats.pendingAcapellas}</p>
+                <p className="text-2xl font-bold text-warning">{stats.pendingPacks + stats.pendingAcapellas}</p>
                 <p className="text-xs text-muted-foreground">Pendentes</p>
               </Card>
             </div>
@@ -262,7 +310,7 @@ export default function Admin() {
                 <Button size="sm" variant="outline" onClick={() => setShowAcapellaModal(true)}>
                   <Mic className="w-3 h-3 mr-1" />Acapella
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => setShowGiftAllModal(true)}>
+                <Button size="sm" variant="outline" onClick={() => setMainTab('giftall')}>
                   <Send className="w-3 h-3 mr-1" />Gift All
                 </Button>
               </div>
@@ -270,10 +318,83 @@ export default function Admin() {
           </div>
         )}
 
+        {/* Gift All Tab */}
+        {mainTab === 'giftall' && (
+          <div className="space-y-6">
+            <Card className="p-4">
+              <h3 className="font-bold mb-4 flex items-center gap-2">
+                <LinkIcon className="w-4 h-4" />
+                Enviar Link Externo para Todos
+              </h3>
+              <div className="space-y-3">
+                <div>
+                  <Label>Nome do Pack</Label>
+                  <Input 
+                    value={externalGiftName} 
+                    onChange={e => setExternalGiftName(e.target.value)} 
+                    placeholder="Ex: Pack Especial Vol.1"
+                  />
+                </div>
+                <div>
+                  <Label>Link de Download</Label>
+                  <Input 
+                    value={externalGiftUrl} 
+                    onChange={e => setExternalGiftUrl(e.target.value)} 
+                    placeholder="https://..."
+                  />
+                </div>
+                <div>
+                  <Label>URL da Capa (opcional)</Label>
+                  <Input 
+                    value={externalGiftCover} 
+                    onChange={e => setExternalGiftCover(e.target.value)} 
+                    placeholder="https://..."
+                  />
+                </div>
+                <div>
+                  <Label>Mensagem (opcional)</Label>
+                  <Input 
+                    value={giftMessage} 
+                    onChange={e => setGiftMessage(e.target.value)} 
+                    placeholder="Uma mensagem especial..."
+                  />
+                </div>
+                <Button onClick={handleSendExternalGiftToAll} className="w-full">
+                  <Send className="w-4 h-4 mr-2" />
+                  Enviar para Todos
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <h3 className="font-bold mb-4 flex items-center gap-2">
+                <Package className="w-4 h-4" />
+                Enviar Pack Existente para Todos
+              </h3>
+              <div className="space-y-3">
+                <div>
+                  <Label>Selecione um pack</Label>
+                  <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
+                    <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
+                    <SelectContent>
+                      {allApprovedPacks.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={handleSendPackGiftToAll} className="w-full" disabled={!selectedGiftPack}>
+                  <Send className="w-4 h-4 mr-2" />
+                  Enviar Pack para Todos
+                </Button>
+              </div>
+            </Card>
+          </div>
+        )}
+
         {/* Sub Tabs for content moderation */}
         {(mainTab === 'packs' || mainTab === 'projetos' || mainTab === 'acapellas') && (
           <div className="space-y-4">
-            {/* Add button inline */}
             <Button 
               variant="outline" 
               className="w-full"
@@ -315,7 +436,7 @@ export default function Admin() {
                   </div>
                   <div className="flex gap-1 mt-0.5 flex-wrap">
                     {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-primary/20 text-primary">ADM</Badge>}
-                    {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-yellow-500/20 text-yellow-500">Principal</Badge>}
+                    {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-warning/20 text-warning">Principal</Badge>}
                     {u.is_banned && <Badge variant="destructive" className="text-[10px] px-1 py-0">Banido</Badge>}
                     {u.has_spotify_badge && <Badge className="text-[10px] px-1 py-0 bg-green-500/20 text-green-500">Spotify</Badge>}
                   </div>
@@ -380,83 +501,116 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Albums Tab */}
+        {/* Albums Tab with Approval */}
         {mainTab === 'albuns' && (
           <div className="space-y-4">
             <Button onClick={() => setShowAlbumModal(true)} className="w-full">
               <Plus className="w-4 h-4 mr-2" />Novo Álbum
             </Button>
+
+            {/* Album Sub Tabs */}
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {subTabs.map((tab) => (
+                <button 
+                  key={tab.id} 
+                  onClick={() => setAlbumSubTab(tab.id)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap ${
+                    albumSubTab === tab.id ? 'bg-muted text-foreground' : 'text-muted-foreground'
+                  }`}
+                >
+                  <tab.icon className="w-3 h-3" />{tab.label}
+                </button>
+              ))}
+            </div>
             
-            {albums.map((a) => (
+            {getCurrentAlbums().map((a) => (
               <div key={a.id} className="pack-card">
                 <div className="flex items-start gap-4 mb-4">
                   <img src={a.cover_url || '/placeholder.svg'} alt="" className="w-16 h-16 rounded-lg object-cover" />
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold">{a.title}</h3>
                     <p className="text-xs text-muted-foreground">{a.style}</p>
+                    <Badge variant="outline" className="text-[10px] mt-1">{a.status}</Badge>
                   </div>
-                  <Button size="sm" variant="destructive" onClick={() => deleteAlbum(a.id)}>
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <div className="flex flex-col gap-1">
+                    {albumSubTab === 'pending' && (
+                      <>
+                        <button onClick={() => approveAlbum(a.id)} className="p-1.5 rounded-lg bg-green-500/20 text-green-500 hover:bg-green-500/30">
+                          <Check className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => rejectAlbum(a.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
+                    <Button size="sm" variant="destructive" onClick={() => deleteAlbum(a.id)}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
 
-                {/* Album Links */}
-                <div className="border-t pt-4">
-                  <p className="text-sm font-medium mb-2">Links Externos ({getAlbumLinks(a.id).length}/10)</p>
-                  <div className="space-y-2 mb-3">
-                    {getAlbumLinks(a.id).map((link) => (
-                      <div key={link.id} className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{link.name}</p>
-                          {link.description && <p className="text-xs text-muted-foreground truncate">{link.description}</p>}
-                        </div>
-                        <a href={link.link_url} target="_blank" rel="noopener noreferrer" className="text-primary flex-shrink-0">
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                        <Button size="sm" variant="ghost" onClick={() => setEditingLink(link)}>
-                          <Edit className="w-3 h-3" />
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => deleteLink(link.id)}>
-                          <X className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-
-                  {getAlbumLinks(a.id).length < 10 && (
-                    <div className="space-y-2">
-                      {selectedAlbum === a.id ? (
-                        <>
-                          <Input 
-                            placeholder="Nome do link (ex: Pack ZN Vol.1)" 
-                            value={newLinkName} 
-                            onChange={(e) => setNewLinkName(e.target.value)} 
-                          />
-                          <Input 
-                            placeholder="URL externa (https://...)" 
-                            value={newLinkUrl} 
-                            onChange={(e) => setNewLinkUrl(e.target.value)} 
-                          />
-                          <Input 
-                            placeholder="Descrição (opcional)" 
-                            value={newLinkDesc} 
-                            onChange={(e) => setNewLinkDesc(e.target.value)} 
-                          />
-                          <div className="flex gap-2">
-                            <Button size="sm" onClick={handleAddAlbumLink}>Adicionar</Button>
-                            <Button size="sm" variant="outline" onClick={() => setSelectedAlbum(null)}>Cancelar</Button>
+                {/* Album Links - Only for approved albums */}
+                {albumSubTab === 'approved' && (
+                  <div className="border-t pt-4">
+                    <p className="text-sm font-medium mb-2">Links Externos ({getAlbumLinks(a.id).length}/10)</p>
+                    <div className="space-y-2 mb-3">
+                      {getAlbumLinks(a.id).map((link) => (
+                        <div key={link.id} className="flex items-center gap-2 bg-muted p-2 rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{link.name}</p>
+                            {link.description && <p className="text-xs text-muted-foreground truncate">{link.description}</p>}
                           </div>
-                        </>
-                      ) : (
-                        <Button size="sm" variant="outline" onClick={() => setSelectedAlbum(a.id)} className="w-full">
-                          <Plus className="w-3 h-3 mr-1" />Adicionar Link Externo
-                        </Button>
-                      )}
+                          <a href={link.link_url} target="_blank" rel="noopener noreferrer" className="text-primary flex-shrink-0">
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                          <Button size="sm" variant="ghost" onClick={() => setEditingLink(link)}>
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => deleteLink(link.id)}>
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
+
+                    {getAlbumLinks(a.id).length < 10 && (
+                      <div className="space-y-2">
+                        {selectedAlbum === a.id ? (
+                          <>
+                            <Input 
+                              placeholder="Nome do link (ex: Pack ZN Vol.1)" 
+                              value={newLinkName} 
+                              onChange={(e) => setNewLinkName(e.target.value)} 
+                            />
+                            <Input 
+                              placeholder="URL externa (https://...)" 
+                              value={newLinkUrl} 
+                              onChange={(e) => setNewLinkUrl(e.target.value)} 
+                            />
+                            <Input 
+                              placeholder="Descrição (opcional)" 
+                              value={newLinkDesc} 
+                              onChange={(e) => setNewLinkDesc(e.target.value)} 
+                            />
+                            <div className="flex gap-2">
+                              <Button size="sm" onClick={handleAddAlbumLink}>Adicionar</Button>
+                              <Button size="sm" variant="outline" onClick={() => setSelectedAlbum(null)}>Cancelar</Button>
+                            </div>
+                          </>
+                        ) : (
+                          <Button size="sm" variant="outline" onClick={() => setSelectedAlbum(a.id)} className="w-full">
+                            <Plus className="w-3 h-3 mr-1" />Adicionar Link Externo
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
+            {getCurrentAlbums().length === 0 && (
+              <p className="text-center py-8 text-muted-foreground">Nenhum álbum encontrado</p>
+            )}
           </div>
         )}
 
@@ -500,6 +654,9 @@ export default function Admin() {
                 </div>
               </div>
             ))}
+            {events.length === 0 && (
+              <p className="text-center py-8 text-muted-foreground">Nenhum evento criado</p>
+            )}
           </div>
         )}
 
@@ -563,7 +720,7 @@ export default function Admin() {
                   <p className="text-xs text-muted-foreground">@{pack.author_name}</p>
                   <div className="flex gap-1 mt-1 flex-wrap">
                     <Badge variant="outline" className="text-[10px]">{pack.pack_type}</Badge>
-                    {pack.is_premium && <Badge className="bg-yellow-500/20 text-yellow-500 text-[10px]">Premium</Badge>}
+                    {pack.is_premium && <Badge className="bg-warning/20 text-warning text-[10px]">Premium</Badge>}
                     {pack.is_pinned && <Badge className="text-[10px]"><Pin className="w-2 h-2" /></Badge>}
                   </div>
                 </div>
@@ -689,42 +846,6 @@ export default function Admin() {
         </DialogContent>
       </Dialog>
 
-      {/* Gift All Modal */}
-      <Dialog open={showGiftAllModal} onOpenChange={setShowGiftAllModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Enviar Presente para Todos</DialogTitle>
-            <DialogDescription>
-              Este presente será enviado para todos os usuários cadastrados.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label>Selecione um pack</Label>
-              <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                <SelectContent>
-                  {allApprovedPacks.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Mensagem (opcional)</Label>
-              <Input 
-                value={giftMessage} 
-                onChange={(e) => setGiftMessage(e.target.value)} 
-                placeholder="Uma mensagem especial..."
-              />
-            </div>
-            <Button onClick={handleSendGiftToAll} disabled={!selectedGiftPack} className="w-full">
-              <Send className="w-4 h-4 mr-2" />Enviar para Todos
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {/* Add Pack Modal (Admin) */}
       <Dialog open={showPackModal} onOpenChange={setShowPackModal}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
@@ -740,7 +861,7 @@ export default function Admin() {
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Crown className="w-5 h-5 text-yellow-500" />
+              <Crown className="w-5 h-5 text-warning" />
               Adicionar Pack Premium
             </DialogTitle>
           </DialogHeader>
@@ -774,6 +895,24 @@ function AdminPackForm({
   const [coverUrl, setCoverUrl] = useState('');
   const [price, setPrice] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCoverFile(file);
+    
+    // Upload to storage
+    const fileName = `admin/${Date.now()}-${file.name}`;
+    const { error } = await supabase.storage.from('covers').upload(fileName, file);
+    if (error) {
+      toast.error('Erro ao fazer upload da capa');
+      return;
+    }
+    const { data } = supabase.storage.from('covers').getPublicUrl(fileName);
+    setCoverUrl(data.publicUrl);
+    toast.success('Capa enviada!');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -786,13 +925,11 @@ function AdminPackForm({
     try {
       await onSubmit({
         title: title.trim(),
-        author_name: authorName.trim() || 'Admin',
+        author_name: authorName.trim() || 'ADM',
         pack_type: packType,
         download_url: downloadUrl.trim(),
-        cover_url: coverUrl.trim() || null,
-        price: isPremium && price ? parseFloat(price) : null,
-        is_exclusive: false,
-        is_anonymous: false,
+        cover_url: coverUrl || null,
+        price: isPremium && price ? Number(price) : null,
       });
       onClose();
     } catch (error) {
@@ -806,11 +943,11 @@ function AdminPackForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Label>Título *</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nome do pack" required />
+        <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Nome do pack" />
       </div>
       <div>
         <Label>Autor</Label>
-        <Input value={authorName} onChange={(e) => setAuthorName(e.target.value)} placeholder="Nome do autor" />
+        <Input value={authorName} onChange={e => setAuthorName(e.target.value)} placeholder="ADM" />
       </div>
       <div>
         <Label>Tipo</Label>
@@ -820,31 +957,37 @@ function AdminPackForm({
             <SelectItem value="samples">Samples</SelectItem>
             <SelectItem value="drumkit">Drumkit</SelectItem>
             <SelectItem value="loops">Loops</SelectItem>
-            <SelectItem value="presets">Presets</SelectItem>
+            <SelectItem value="midi">MIDI</SelectItem>
+            <SelectItem value="preset">Preset</SelectItem>
             <SelectItem value="project">Projeto</SelectItem>
             <SelectItem value="other">Outro</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label>Link de Download *</Label>
-        <Input value={downloadUrl} onChange={(e) => setDownloadUrl(e.target.value)} placeholder="https://..." required />
+        <Label>Capa</Label>
+        <Input type="file" accept="image/*" onChange={handleCoverUpload} />
+        {coverUrl && (
+          <img src={coverUrl} alt="Preview" className="mt-2 w-24 h-24 rounded-lg object-cover" />
+        )}
       </div>
       <div>
-        <Label>URL da Capa (opcional)</Label>
-        <Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://..." />
+        <Label>Link de Download *</Label>
+        <Input value={downloadUrl} onChange={e => setDownloadUrl(e.target.value)} placeholder="https://..." />
       </div>
       {isPremium && (
         <div>
           <Label>Preço (R$)</Label>
-          <Input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="9.90" />
+          <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="19.90" />
         </div>
       )}
-      <div className="flex gap-2">
-        <Button type="submit" className="flex-1" disabled={isSubmitting}>
+      <div className="flex gap-2 pt-2">
+        <Button type="submit" disabled={isSubmitting} className="flex-1">
           {isSubmitting ? 'Adicionando...' : 'Adicionar'}
         </Button>
-        <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+        <Button type="button" variant="outline" onClick={onClose}>
+          Cancelar
+        </Button>
       </div>
     </form>
   );
