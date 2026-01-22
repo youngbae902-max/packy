@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 export interface Album {
@@ -8,6 +9,7 @@ export interface Album {
   cover_url: string | null;
   description: string | null;
   style: string | null;
+  status: string;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -21,8 +23,10 @@ export interface AlbumPack {
 }
 
 export function useAlbums() {
+  const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
 
+  // Fetch approved albums (public) or all albums (admin)
   const { data: albums = [], isLoading } = useQuery({
     queryKey: ['albums'],
     queryFn: async () => {
@@ -35,6 +39,11 @@ export function useAlbums() {
       return data as Album[];
     },
   });
+
+  // Separate albums by status
+  const approvedAlbums = albums.filter(a => a.status === 'approved');
+  const pendingAlbums = albums.filter(a => a.status === 'pending');
+  const rejectedAlbums = albums.filter(a => a.status === 'rejected');
 
   const { data: albumPacks = [] } = useQuery({
     queryKey: ['album_packs'],
@@ -52,7 +61,7 @@ export function useAlbums() {
     mutationFn: async (album: { title: string; cover_url?: string; description?: string; style?: string }) => {
       const { data, error } = await supabase
         .from('albums')
-        .insert(album)
+        .insert({ ...album, status: 'pending' })
         .select()
         .single();
       
@@ -61,7 +70,7 @@ export function useAlbums() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['albums'] });
-      toast.success('Álbum criado com sucesso!');
+      toast.success('Álbum criado e aguardando aprovação!');
     },
     onError: (error: Error) => {
       toast.error('Erro ao criar álbum: ' + error.message);
@@ -88,6 +97,9 @@ export function useAlbums() {
       toast.error('Erro ao atualizar: ' + error.message);
     },
   });
+
+  const approveAlbum = (id: string) => updateAlbumMutation.mutate({ id, status: 'approved' });
+  const rejectAlbum = (id: string) => updateAlbumMutation.mutate({ id, status: 'rejected' });
 
   const deleteAlbumMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -152,10 +164,15 @@ export function useAlbums() {
 
   return {
     albums,
+    approvedAlbums,
+    pendingAlbums,
+    rejectedAlbums,
     albumPacks,
     isLoading,
     addAlbum: addAlbumMutation.mutate,
     updateAlbum: updateAlbumMutation.mutate,
+    approveAlbum,
+    rejectAlbum,
     deleteAlbum: deleteAlbumMutation.mutate,
     addPackToAlbum: addPackToAlbumMutation.mutate,
     removePackFromAlbum: removePackFromAlbumMutation.mutate,

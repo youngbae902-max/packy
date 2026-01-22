@@ -131,6 +131,7 @@ export type Database = {
           created_by: string | null
           description: string | null
           id: string
+          status: string
           style: string | null
           title: string
           updated_at: string | null
@@ -141,6 +142,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          status?: string
           style?: string | null
           title: string
           updated_at?: string | null
@@ -151,6 +153,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          status?: string
           style?: string | null
           title?: string
           updated_at?: string | null
@@ -314,47 +317,62 @@ export type Database = {
         Row: {
           artist_name: string | null
           avatar_url: string | null
+          bio: string | null
           created_at: string | null
           has_spotify_badge: boolean | null
           id: string
+          instagram_url: string | null
           is_banned: boolean | null
           is_online: boolean | null
           last_seen: string | null
           last_username_change_date: string | null
+          soundcloud_url: string | null
+          spotify_url: string | null
           updated_at: string | null
           user_id: string
           username: string | null
           username_changes_today: number | null
+          youtube_url: string | null
         }
         Insert: {
           artist_name?: string | null
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           has_spotify_badge?: boolean | null
           id?: string
+          instagram_url?: string | null
           is_banned?: boolean | null
           is_online?: boolean | null
           last_seen?: string | null
           last_username_change_date?: string | null
+          soundcloud_url?: string | null
+          spotify_url?: string | null
           updated_at?: string | null
           user_id: string
           username?: string | null
           username_changes_today?: number | null
+          youtube_url?: string | null
         }
         Update: {
           artist_name?: string | null
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           has_spotify_badge?: boolean | null
           id?: string
+          instagram_url?: string | null
           is_banned?: boolean | null
           is_online?: boolean | null
           last_seen?: string | null
           last_username_change_date?: string | null
+          soundcloud_url?: string | null
+          spotify_url?: string | null
           updated_at?: string | null
           user_id?: string
           username?: string | null
           username_changes_today?: number | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
