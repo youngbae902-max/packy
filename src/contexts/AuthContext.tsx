@@ -8,7 +8,12 @@ interface Profile {
   username: string | null;
   artist_name: string | null;
   avatar_url: string | null;
+  bio: string | null;
   has_spotify_badge: boolean | null;
+  instagram_url: string | null;
+  spotify_url: string | null;
+  soundcloud_url: string | null;
+  youtube_url: string | null;
 }
 
 interface AuthContextType {
@@ -36,11 +41,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from('profiles')
-      .select('*')
+      .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url')
       .eq('user_id', userId)
       .single();
     
-    setProfile(data);
+    setProfile(data as Profile | null);
   };
 
   const checkAdminRole = async (userId: string) => {
@@ -62,14 +67,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Set up auth state listener BEFORE getting session
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Use setTimeout to avoid potential deadlocks
           setTimeout(async () => {
             await fetchProfile(session.user.id);
             await checkAdminRole(session.user.id);
@@ -83,7 +86,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -12,6 +12,7 @@ import { useSiteEvents } from '@/hooks/useSiteEvents';
 import { useStats } from '@/hooks/useStats';
 import { EditPackModal } from '@/components/EditPackModal';
 import { EditAcapellaModal } from '@/components/EditAcapellaModal';
+import { EditAlbumModal } from '@/components/EditAlbumModal';
 import { AddAlbumModal } from '@/components/AddAlbumModal';
 import { AddEventModal } from '@/components/AddEventModal';
 import { AddAcapellaModal } from '@/components/AddAcapellaModal';
@@ -28,6 +29,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 
 type MainTab = 'stats' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
@@ -60,7 +62,11 @@ export default function Admin() {
   const [newLinkDesc, setNewLinkDesc] = useState('');
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
+  const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
   const [albumSubTab, setAlbumSubTab] = useState<SubTab>('pending');
+  const [giftType, setGiftType] = useState<'pack' | 'external'>('pack');
+  const [externalGiftUrlForUser, setExternalGiftUrlForUser] = useState('');
+  const [externalGiftNameForUser, setExternalGiftNameForUser] = useState('');
   
   const { 
     pendingPacks, allApprovedPacks, rejectedPacks, 
@@ -79,7 +85,7 @@ export default function Admin() {
   } = useUserManagement();
   
   const { pendingWishlists, respondToWish } = useWishlist();
-  const { albums, pendingAlbums, approvedAlbums, rejectedAlbums, approveAlbum, rejectAlbum, deleteAlbum } = useAlbums();
+  const { albums, pendingAlbums, approvedAlbums, rejectedAlbums, approveAlbum, rejectAlbum, deleteAlbum, updateAlbum } = useAlbums();
   const { getAlbumLinks, addLink, deleteLink, updateLink } = useAlbumLinks();
   const { events, deleteEvent, toggleEventActive } = useSiteEvents();
   const { stats } = useStats();
@@ -124,13 +130,49 @@ export default function Admin() {
     { id: 'rejected' as const, label: 'Rejeitados', icon: XCircle },
   ];
 
-  const handleSendGift = () => {
-    if (!giftModal || !selectedGiftPack) return;
-    sendGift({ userId: giftModal.userId, packId: selectedGiftPack, message: giftMessage || undefined });
+  const handleSendGift = async () => {
+    if (!giftModal) return;
+    
+    if (giftType === 'external') {
+      if (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()) {
+        toast.error('Preencha nome e link');
+        return;
+      }
+      
+      // Create a pack for the external gift
+      const { data: newPack, error } = await supabase
+        .from('packs')
+        .insert({
+          title: externalGiftNameForUser.trim(),
+          download_url: externalGiftUrlForUser.trim(),
+          author_name: 'ADM',
+          is_admin_pack: true,
+          status: 'approved',
+        })
+        .select()
+        .single();
+
+      if (error) {
+        toast.error('Erro ao criar pack');
+        return;
+      }
+
+      sendGift({ userId: giftModal.userId, packId: newPack.id, message: giftMessage || undefined });
+    } else {
+      if (!selectedGiftPack) {
+        toast.error('Selecione um pack');
+        return;
+      }
+      sendGift({ userId: giftModal.userId, packId: selectedGiftPack, message: giftMessage || undefined });
+    }
+    
     toast.success('Presente enviado!');
     setGiftModal(null);
     setSelectedGiftPack('');
     setGiftMessage('');
+    setExternalGiftNameForUser('');
+    setExternalGiftUrlForUser('');
+    setGiftType('pack');
   };
 
   const handleSendExternalGiftToAll = async () => {
@@ -543,6 +585,9 @@ export default function Admin() {
                         </button>
                       </>
                     )}
+                    <Button size="sm" variant="outline" onClick={() => setEditingAlbum(a)}>
+                      <Edit className="w-4 h-4" />
+                    </Button>
                     <Button size="sm" variant="destructive" onClick={() => deleteAlbum(a.id)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -814,23 +859,74 @@ export default function Admin() {
       />
 
       {/* Gift Modal */}
-      <Dialog open={!!giftModal} onOpenChange={() => setGiftModal(null)}>
-        <DialogContent>
+      <Dialog open={!!giftModal} onOpenChange={() => {
+        setGiftModal(null);
+        setGiftType('pack');
+        setExternalGiftNameForUser('');
+        setExternalGiftUrlForUser('');
+        setSelectedGiftPack('');
+        setGiftMessage('');
+      }}>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Enviar Presente para @{giftModal?.username}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div>
-              <Label>Selecione um pack</Label>
-              <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                <SelectContent>
-                  {allApprovedPacks.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* Toggle between pack and external link */}
+            <div className="flex gap-2">
+              <Button 
+                variant={giftType === 'pack' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setGiftType('pack')}
+                className="flex-1"
+              >
+                <Package className="w-4 h-4 mr-1" />
+                Pack do Site
+              </Button>
+              <Button 
+                variant={giftType === 'external' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setGiftType('external')}
+                className="flex-1"
+              >
+                <LinkIcon className="w-4 h-4 mr-1" />
+                Link Externo
+              </Button>
             </div>
+
+            {giftType === 'pack' ? (
+              <div>
+                <Label>Selecione um pack</Label>
+                <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
+                  <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
+                  <SelectContent>
+                    {allApprovedPacks.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <Label>Nome do Pack</Label>
+                  <Input 
+                    value={externalGiftNameForUser} 
+                    onChange={(e) => setExternalGiftNameForUser(e.target.value)} 
+                    placeholder="Ex: Pack Especial Vol.1"
+                  />
+                </div>
+                <div>
+                  <Label>Link de Download</Label>
+                  <Input 
+                    value={externalGiftUrlForUser} 
+                    onChange={(e) => setExternalGiftUrlForUser(e.target.value)} 
+                    placeholder="https://..."
+                  />
+                </div>
+              </div>
+            )}
+
             <div>
               <Label>Mensagem (opcional)</Label>
               <Input 
@@ -839,7 +935,11 @@ export default function Admin() {
                 placeholder="Uma mensagem especial..."
               />
             </div>
-            <Button onClick={handleSendGift} disabled={!selectedGiftPack} className="w-full">
+            <Button 
+              onClick={handleSendGift} 
+              disabled={giftType === 'pack' ? !selectedGiftPack : (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim())} 
+              className="w-full"
+            >
               <Gift className="w-4 h-4 mr-2" />Enviar Presente
             </Button>
           </div>
@@ -871,6 +971,7 @@ export default function Admin() {
 
       <EditPackModal isOpen={!!editingPack} pack={editingPack} onClose={() => setEditingPack(null)} onSave={async (id, updates) => { await updatePack({ id, ...updates }); }} />
       <EditAcapellaModal isOpen={!!editingAcapella} acapella={editingAcapella} onClose={() => setEditingAcapella(null)} onSave={async (id, updates) => { await updateAcapella({ id, ...updates }); }} />
+      <EditAlbumModal album={editingAlbum} isOpen={!!editingAlbum} onClose={() => setEditingAlbum(null)} onSave={(id, updates) => updateAlbum({ id, ...updates })} />
       <AddAlbumModal isOpen={showAlbumModal} onClose={() => setShowAlbumModal(false)} />
       <AddEventModal isOpen={showEventModal} onClose={() => setShowEventModal(false)} />
       <AddAcapellaModal isOpen={showAcapellaModal} onClose={() => setShowAcapellaModal(false)} onAdd={addAcapella} />

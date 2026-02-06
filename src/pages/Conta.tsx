@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, Camera, Package, Heart, Bookmark, AtSign, Trash2, Edit, Star, Instagram, Music, Youtube } from 'lucide-react';
+import { User, LogOut, Shield, Camera, Package, Heart, Bookmark, AtSign, Trash2, Edit, Star, Instagram, Youtube, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
@@ -28,7 +28,6 @@ const Conta = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   
-  // Form states
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
@@ -43,11 +42,11 @@ const Conta = () => {
     if (profile) {
       setArtistName(profile.artist_name || '');
       setUsername(profile.username || '');
-      setBio((profile as any).bio || '');
-      setInstagramUrl((profile as any).instagram_url || '');
-      setSpotifyUrl((profile as any).spotify_url || '');
-      setSoundcloudUrl((profile as any).soundcloud_url || '');
-      setYoutubeUrl((profile as any).youtube_url || '');
+      setBio(profile.bio || '');
+      setInstagramUrl(profile.instagram_url || '');
+      setSpotifyUrl(profile.spotify_url || '');
+      setSoundcloudUrl(profile.soundcloud_url || '');
+      setYoutubeUrl(profile.youtube_url || '');
     }
   }, [profile]);
 
@@ -58,6 +57,7 @@ const Conta = () => {
       const url = await uploadAvatar(file);
       await updateProfile({ avatar_url: url });
       toast.success('Foto atualizada!');
+      refreshProfile();
     } catch {
       toast.error('Erro ao atualizar foto');
     }
@@ -72,7 +72,7 @@ const Conta = () => {
         spotify_url: spotifyUrl || null,
         soundcloud_url: soundcloudUrl || null,
         youtube_url: youtubeUrl || null,
-      } as any);
+      });
       
       if (username.trim() && username !== profile?.username) {
         await updateUsername(username.trim());
@@ -92,11 +92,23 @@ const Conta = () => {
     signOut();
   };
 
+  const SpotifyIcon = () => (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+    </svg>
+  );
+
+  const SoundCloudIcon = () => (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.052-.1-.084-.1zm-.899 1.075c-.05 0-.09.039-.099.096l-.164 1.08.164 1.063c.009.053.049.09.099.09.05 0 .09-.037.099-.09l.2-1.063-.185-1.08c-.009-.057-.049-.096-.114-.096zm1.956-1.574c-.061 0-.107.048-.117.109l-.205 2.453.205 2.365c.01.061.056.109.117.109.06 0 .107-.048.117-.109l.235-2.365-.235-2.453c-.01-.061-.057-.109-.117-.109zm.943-.109c-.073 0-.126.059-.133.125l-.178 2.562.178 2.453c.007.066.06.125.133.125.073 0 .126-.059.133-.125l.205-2.453-.205-2.562c-.007-.066-.06-.125-.133-.125zm.937-.287c-.08 0-.14.063-.15.143l-.163 2.85.163 2.453c.01.08.07.143.15.143.08 0 .14-.063.15-.143l.19-2.453-.19-2.85c-.01-.08-.07-.143-.15-.143zm.943-.252c-.092 0-.159.07-.168.158l-.14 3.102.14 2.453c.009.088.076.158.168.158.092 0 .159-.07.168-.158l.163-2.453-.163-3.102c-.009-.088-.076-.158-.168-.158zm.949-.252c-.102 0-.176.076-.185.176l-.117 3.354.117 2.416c.009.1.083.176.185.176.102 0 .176-.076.185-.176l.14-2.416-.14-3.354c-.009-.1-.083-.176-.185-.176zm.956-.144c-.11 0-.19.08-.199.19l-.09 3.498.09 2.378c.009.11.089.19.199.19.11 0 .19-.08.199-.19l.107-2.378-.107-3.498c-.009-.11-.089-.19-.199-.19zm.95-.144c-.122 0-.21.088-.22.208l-.068 3.642.068 2.341c.01.12.098.208.22.208.122 0 .21-.088.22-.208l.08-2.341-.08-3.642c-.01-.12-.098-.208-.22-.208zm1.896.496c-.182 0-.326.144-.326.326v7.412c0 .182.144.326.326.326h7.412c1.8 0 3.262-1.462 3.262-3.262s-1.462-3.262-3.262-3.262c-.512 0-.994.118-1.424.326-.26-2.006-1.968-3.56-4.048-3.56-.598 0-1.168.13-1.678.364-.154.07-.194.144-.194.28v5.55z"/>
+    </svg>
+  );
+
   const socialLinks = [
-    { url: (profile as any)?.instagram_url, icon: Instagram, color: 'text-pink-500' },
-    { url: (profile as any)?.spotify_url, icon: Music, color: 'text-green-500' },
-    { url: (profile as any)?.soundcloud_url, icon: Music, color: 'text-orange-500' },
-    { url: (profile as any)?.youtube_url, icon: Youtube, color: 'text-red-500' },
+    { url: profile?.instagram_url, Icon: Instagram, color: 'text-pink-500', label: 'Instagram' },
+    { url: profile?.spotify_url, Icon: SpotifyIcon, color: 'text-green-500', label: 'Spotify' },
+    { url: profile?.soundcloud_url, Icon: SoundCloudIcon, color: 'text-orange-500', label: 'SoundCloud' },
+    { url: profile?.youtube_url, Icon: Youtube, color: 'text-red-500', label: 'YouTube' },
   ].filter(link => link.url);
 
   if (!user) {
@@ -117,118 +129,118 @@ const Conta = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="max-w-lg mx-auto px-4 pt-6">
-        {/* Header with Wishlist */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-black">MINHA CONTA</h1>
-          <Link to="/desejos" className="relative p-2 text-muted-foreground hover:text-foreground">
-            <Star className="w-5 h-5" />
-            {hasUpdates && (
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
-            )}
-          </Link>
-        </div>
+    <div className="min-h-screen bg-black pb-20">
+      {/* Header */}
+      <div className="bg-gradient-to-b from-zinc-900 to-black pt-8 pb-16 px-4">
+        <div className="max-w-lg mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-lg font-bold tracking-wider text-white/90">MINHA CONTA</h1>
+            <Link to="/desejos" className="relative p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+              <Star className="w-5 h-5 text-white/70" />
+              {hasUpdates && (
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
+              )}
+            </Link>
+          </div>
 
-        {/* Profile Card */}
-        <div className="pack-card mb-6">
-          <div className="flex items-start gap-4">
+          {/* Profile Card */}
+          <div className="flex flex-col items-center text-center">
             {/* Avatar */}
-            <div className="relative flex-shrink-0">
-              <div className="w-20 h-20 rounded-full bg-muted overflow-hidden">
+            <div className="relative mb-4">
+              <div className="w-24 h-24 rounded-full bg-zinc-800 border-2 border-zinc-700 overflow-hidden">
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <User className="w-8 h-8 text-muted-foreground" />
+                    <User className="w-10 h-10 text-zinc-500" />
                   </div>
                 )}
               </div>
               <button 
                 onClick={() => fileInputRef.current?.click()} 
-                className="absolute bottom-0 right-0 w-7 h-7 bg-primary text-primary-foreground rounded-full flex items-center justify-center"
+                className="absolute bottom-0 right-0 w-8 h-8 bg-white text-black rounded-full flex items-center justify-center shadow-lg hover:bg-zinc-200 transition-colors"
               >
-                <Camera className="w-3.5 h-3.5" />
+                <Camera className="w-4 h-4" />
               </button>
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
             </div>
 
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap mb-1">
-                <h3 className="font-bold text-lg truncate">{profile?.artist_name || 'Sem nome'}</h3>
-                {!isEditingProfile && (
-                  <button 
-                    onClick={() => setIsEditingProfile(true)} 
-                    className="p-1 text-muted-foreground hover:text-foreground"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-              {profile?.username && (
-                <p className="text-sm text-muted-foreground mb-2">@{profile.username}</p>
-              )}
-              
-              {/* Badges */}
-              <div className="flex gap-1.5 flex-wrap">
-                {isAdmin && (
-                  <Badge className="bg-destructive/20 text-destructive">
-                    <Shield className="w-3 h-3 mr-1" />
-                    ADM
-                  </Badge>
-                )}
-                {profile?.has_spotify_badge && (
-                  <Badge className="bg-green-500/20 text-green-500">
-                    <svg className="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                    </svg>
-                    Spotify
-                  </Badge>
-                )}
-              </div>
-
-              {/* Bio */}
-              {(profile as any)?.bio && (
-                <p className="text-sm text-muted-foreground mt-2">{(profile as any).bio}</p>
-              )}
-
-              {/* Social Links */}
-              {socialLinks.length > 0 && (
-                <div className="flex gap-2 mt-3">
-                  {socialLinks.map((link, i) => (
-                    <a 
-                      key={i} 
-                      href={link.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className={`w-8 h-8 rounded-lg bg-muted flex items-center justify-center hover:bg-secondary transition-colors ${link.color}`}
-                    >
-                      <link.icon className="w-4 h-4" />
-                    </a>
-                  ))}
+            {/* Name & Username */}
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-xl font-bold text-white">{profile?.artist_name || 'Sem nome'}</h2>
+              {profile?.has_spotify_badge && (
+                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/20 text-green-500">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                  </svg>
+                  <span className="text-xs font-medium">Verificado</span>
                 </div>
               )}
+              <button 
+                onClick={() => setIsEditingProfile(true)} 
+                className="p-1.5 text-zinc-500 hover:text-white transition-colors"
+              >
+                <Edit className="w-4 h-4" />
+              </button>
             </div>
+            
+            {profile?.username && (
+              <p className="text-sm text-zinc-500 mb-3">@{profile.username}</p>
+            )}
+
+            {/* Badges */}
+            <div className="flex gap-2 mb-4">
+              {isAdmin && (
+                <Badge className="bg-red-500/20 text-red-400 border-red-500/30 gap-1">
+                  <Shield className="w-3 h-3" />
+                  ADM
+                </Badge>
+              )}
+            </div>
+
+            {/* Bio */}
+            {profile?.bio && (
+              <p className="text-sm text-zinc-400 max-w-xs mb-4">{profile.bio}</p>
+            )}
+
+            {/* Social Links */}
+            {socialLinks.length > 0 && (
+              <div className="flex gap-3">
+                {socialLinks.map((link, i) => (
+                  <a 
+                    key={i} 
+                    href={link.url || '#'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={`w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center hover:border-zinc-500 transition-colors ${link.color}`}
+                    title={link.label}
+                  >
+                    <link.Icon />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
+      </div>
 
+      <div className="max-w-lg mx-auto px-4 -mt-8">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="pack-card text-center">
-            <Package className="w-5 h-5 mx-auto mb-1 text-primary" />
-            <p className="text-lg font-bold">{userPacks.length}</p>
-            <p className="text-xs text-muted-foreground">Enviados</p>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center">
+            <Package className="w-5 h-5 mx-auto mb-2 text-blue-500" />
+            <p className="text-xl font-bold text-white">{userPacks.length}</p>
+            <p className="text-xs text-zinc-500">Enviados</p>
           </div>
-          <div className="pack-card text-center">
-            <Heart className="w-5 h-5 mx-auto mb-1 text-destructive" />
-            <p className="text-lg font-bold">{likes.length}</p>
-            <p className="text-xs text-muted-foreground">Curtidos</p>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center">
+            <Heart className="w-5 h-5 mx-auto mb-2 text-red-500" />
+            <p className="text-xl font-bold text-white">{likes.length}</p>
+            <p className="text-xs text-zinc-500">Curtidos</p>
           </div>
-          <div className="pack-card text-center">
-            <Bookmark className="w-5 h-5 mx-auto mb-1 text-warning" />
-            <p className="text-lg font-bold">{favorites.length}</p>
-            <p className="text-xs text-muted-foreground">Favoritos</p>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center">
+            <Bookmark className="w-5 h-5 mx-auto mb-2 text-yellow-500" />
+            <p className="text-xl font-bold text-white">{favorites.length}</p>
+            <p className="text-xs text-zinc-500">Favoritos</p>
           </div>
         </div>
 
@@ -236,109 +248,132 @@ const Conta = () => {
         {isAdmin && (
           <Link 
             to="/admin" 
-            className="w-full mb-6 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wide bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
+            className="w-full mb-4 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all shadow-lg"
           >
-            <Shield className="w-4 h-4" />
+            <Shield className="w-5 h-5" />
             Painel de Administração
           </Link>
         )}
 
-        <div className="space-y-3">
+        {/* Actions */}
+        <div className="space-y-2">
           <Button 
             variant="ghost" 
-            className="w-full justify-start text-destructive hover:text-destructive" 
+            className="w-full justify-start text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl h-12" 
             onClick={() => setShowDeleteConfirm(true)}
           >
-            <Trash2 className="w-4 h-4 mr-2" />
+            <Trash2 className="w-5 h-5 mr-3" />
             Excluir minha conta
           </Button>
 
-          <Button variant="ghost" className="w-full justify-start text-muted-foreground" onClick={signOut}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Sair
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-xl h-12" 
+            onClick={signOut}
+          >
+            <LogOut className="w-5 h-5 mr-3" />
+            Sair da conta
           </Button>
         </div>
       </div>
 
       {/* Edit Profile Modal */}
       <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-zinc-900 border-zinc-800">
           <DialogHeader>
-            <DialogTitle>Editar Perfil</DialogTitle>
+            <DialogTitle className="text-white">Editar Perfil</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="label-field flex items-center gap-1">
+              <label className="text-sm text-zinc-400 mb-1 block flex items-center gap-1">
                 <AtSign className="w-3 h-3" />
                 Nome de Usuário
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">@</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">@</span>
                 <Input 
                   value={username} 
                   onChange={e => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))} 
                   placeholder="seunome" 
-                  className="pl-7" 
+                  className="pl-7 bg-zinc-800 border-zinc-700 text-white" 
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Máximo 3 alterações por dia</p>
+              <p className="text-xs text-zinc-500 mt-1">Máximo 3 alterações por dia</p>
             </div>
 
             <div>
-              <label className="label-field">Nome Artístico</label>
-              <Input value={artistName} onChange={e => setArtistName(e.target.value)} placeholder="Seu vulgo" />
+              <label className="text-sm text-zinc-400 mb-1 block">Nome Artístico</label>
+              <Input 
+                value={artistName} 
+                onChange={e => setArtistName(e.target.value)} 
+                placeholder="Seu vulgo" 
+                className="bg-zinc-800 border-zinc-700 text-white"
+              />
             </div>
 
             <div>
-              <label className="label-field">Bio</label>
+              <label className="text-sm text-zinc-400 mb-1 block">Bio</label>
               <Textarea 
                 value={bio} 
                 onChange={e => setBio(e.target.value)} 
                 placeholder="Fale um pouco sobre você..."
                 rows={3}
+                className="bg-zinc-800 border-zinc-700 text-white resize-none"
               />
             </div>
 
-            <div className="border-t pt-4">
-              <p className="text-sm font-bold mb-3">Links Sociais</p>
+            <div className="border-t border-zinc-800 pt-4">
+              <p className="text-sm font-bold text-white mb-3">Links Sociais</p>
               
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Instagram className="w-4 h-4 text-pink-500 flex-shrink-0" />
+                  <Instagram className="w-5 h-5 text-pink-500 flex-shrink-0" />
                   <Input 
                     value={instagramUrl} 
                     onChange={e => setInstagramUrl(e.target.value)} 
                     placeholder="https://instagram.com/..."
+                    className="bg-zinc-800 border-zinc-700 text-white"
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Music className="w-4 h-4 text-green-500 flex-shrink-0" />
+                  <svg className="w-5 h-5 text-green-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                  </svg>
                   <Input 
                     value={spotifyUrl} 
                     onChange={e => setSpotifyUrl(e.target.value)} 
                     placeholder="https://open.spotify.com/..."
+                    className="bg-zinc-800 border-zinc-700 text-white"
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Music className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                  <svg className="w-5 h-5 text-orange-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.052-.1-.084-.1zm-.899 1.075c-.05 0-.09.039-.099.096l-.164 1.08.164 1.063c.009.053.049.09.099.09.05 0 .09-.037.099-.09l.2-1.063-.185-1.08c-.009-.057-.049-.096-.114-.096zm1.956-1.574c-.061 0-.107.048-.117.109l-.205 2.453.205 2.365c.01.061.056.109.117.109.06 0 .107-.048.117-.109l.235-2.365-.235-2.453c-.01-.061-.057-.109-.117-.109zm.943-.109c-.073 0-.126.059-.133.125l-.178 2.562.178 2.453c.007.066.06.125.133.125.073 0 .126-.059.133-.125l.205-2.453-.205-2.562c-.007-.066-.06-.125-.133-.125zm.937-.287c-.08 0-.14.063-.15.143l-.163 2.85.163 2.453c.01.08.07.143.15.143.08 0 .14-.063.15-.143l.19-2.453-.19-2.85c-.01-.08-.07-.143-.15-.143zm.943-.252c-.092 0-.159.07-.168.158l-.14 3.102.14 2.453c.009.088.076.158.168.158.092 0 .159-.07.168-.158l.163-2.453-.163-3.102c-.009-.088-.076-.158-.168-.158zm.949-.252c-.102 0-.176.076-.185.176l-.117 3.354.117 2.416c.009.1.083.176.185.176.102 0 .176-.076.185-.176l.14-2.416-.14-3.354c-.009-.1-.083-.176-.185-.176zm.956-.144c-.11 0-.19.08-.199.19l-.09 3.498.09 2.378c.009.11.089.19.199.19.11 0 .19-.08.199-.19l.107-2.378-.107-3.498c-.009-.11-.089-.19-.199-.19zm.95-.144c-.122 0-.21.088-.22.208l-.068 3.642.068 2.341c.01.12.098.208.22.208.122 0 .21-.088.22-.208l.08-2.341-.08-3.642c-.01-.12-.098-.208-.22-.208zm1.896.496c-.182 0-.326.144-.326.326v7.412c0 .182.144.326.326.326h7.412c1.8 0 3.262-1.462 3.262-3.262s-1.462-3.262-3.262-3.262c-.512 0-.994.118-1.424.326-.26-2.006-1.968-3.56-4.048-3.56-.598 0-1.168.13-1.678.364-.154.07-.194.144-.194.28v5.55z"/>
+                  </svg>
                   <Input 
                     value={soundcloudUrl} 
                     onChange={e => setSoundcloudUrl(e.target.value)} 
                     placeholder="https://soundcloud.com/..."
+                    className="bg-zinc-800 border-zinc-700 text-white"
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Youtube className="w-4 h-4 text-red-500 flex-shrink-0" />
+                  <Youtube className="w-5 h-5 text-red-500 flex-shrink-0" />
                   <Input 
                     value={youtubeUrl} 
                     onChange={e => setYoutubeUrl(e.target.value)} 
                     placeholder="https://youtube.com/..."
+                    className="bg-zinc-800 border-zinc-700 text-white"
                   />
                 </div>
               </div>
             </div>
 
-            <Button onClick={handleSaveProfile} disabled={isUpdating} className="w-full">
+            <Button 
+              onClick={handleSaveProfile} 
+              disabled={isUpdating} 
+              className="w-full bg-white text-black hover:bg-zinc-200"
+            >
               {isUpdating ? 'Salvando...' : 'Salvar Perfil'}
             </Button>
           </div>
@@ -347,16 +382,16 @@ const Conta = () => {
 
       {/* Delete Account Confirmation */}
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <DialogContent>
+        <DialogContent className="bg-zinc-900 border-zinc-800">
           <DialogHeader>
-            <DialogTitle>Excluir conta</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-white">Excluir conta</DialogTitle>
+            <DialogDescription className="text-zinc-400">
               Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.
               Todos os seus dados serão removidos permanentemente.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)} className="border-zinc-700">
               Cancelar
             </Button>
             <Button variant="destructive" onClick={handleDeleteAccount}>

@@ -217,27 +217,31 @@ export function useUserManagement() {
     mutationFn: async ({ userId, enabled }: { userId: string; enabled: boolean }) => {
       const { error } = await supabase
         .from('profiles')
-        .update({ has_spotify_badge: enabled })
+        .update({ has_spotify_badge: enabled, updated_at: new Date().toISOString() })
         .eq('user_id', userId);
       
       if (error) throw error;
     },
     onSuccess: (_, { enabled }) => {
       queryClient.invalidateQueries({ queryKey: ['all_users'] });
-      toast.success(enabled ? 'Badge Spotify ativada!' : 'Badge Spotify removida');
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      toast.success(enabled ? 'Selo Spotify ativado!' : 'Selo Spotify removido');
     },
     onError: (error: Error) => {
       toast.error('Erro: ' + error.message);
     },
   });
 
+  // Check if user is the main protected admin
+  // Uses the first user_id that has admin role as main admin reference
   const isMainAdmin = (userId: string) => {
-    // Check if user email matches main admin
-    const mainAdminUser = users.find(u => u.user_id === userId);
-    // For now, check by a specific user id pattern or role
-    // The actual email check would need to come from auth.users which we can't access directly
-    // So we use the first admin or a hardcoded check
-    return userId === users.find(u => isUserAdmin(u.user_id))?.user_id && userRoles.length === 1;
+    const adminRoles = userRoles.filter(r => r.role === 'admin');
+    if (adminRoles.length === 0) return false;
+    // The first admin created is the main admin
+    const sortedAdminRoles = adminRoles.sort((a, b) => 
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    );
+    return sortedAdminRoles[0]?.user_id === userId;
   };
 
   return {
