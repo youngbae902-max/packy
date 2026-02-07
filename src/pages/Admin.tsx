@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2 } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -18,6 +18,7 @@ import { AddEventModal } from '@/components/AddEventModal';
 import { AddAcapellaModal } from '@/components/AddAcapellaModal';
 import { UserEditModal } from '@/components/UserEditModal';
 import { AlbumLinkEditModal } from '@/components/AlbumLinkEditModal';
+import { BulkLinkInput } from '@/components/BulkLinkInput';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -35,7 +36,7 @@ import { supabase } from '@/integrations/supabase/client';
 type MainTab = 'stats' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
-const MAIN_ADMIN_EMAIL = 'youngbae902@gmail.com';
+const MAIN_ADMIN_USERNAME = 'mathhewdcarmo';
 
 export default function Admin() {
   const { isAdmin, isLoading, user } = useAuth();
@@ -57,9 +58,11 @@ export default function Admin() {
   const [wishResponse, setWishResponse] = useState('');
   const [respondingWish, setRespondingWish] = useState<string | null>(null);
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
+  const [showLinksEditor, setShowLinksEditor] = useState<string | null>(null);
   const [newLinkName, setNewLinkName] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [newLinkDesc, setNewLinkDesc] = useState('');
+  const [showBulkInput, setShowBulkInput] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
   const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
@@ -253,6 +256,28 @@ export default function Admin() {
     setNewLinkName('');
     setNewLinkUrl('');
     setNewLinkDesc('');
+  };
+
+  const handleBulkLinksAdd = async (links: string[], albumId: string) => {
+    const currentLinks = getAlbumLinks(albumId);
+    const available = 10 - currentLinks.length;
+    const linksToAdd = links.slice(0, available);
+    
+    for (let i = 0; i < linksToAdd.length; i++) {
+      const url = linksToAdd[i];
+      // Extract a simple name from URL
+      const urlObj = new URL(url);
+      const name = urlObj.hostname.replace('www.', '') + (urlObj.pathname.length > 1 ? urlObj.pathname.substring(0, 20) : '');
+      
+      addLink({
+        album_id: albumId,
+        name: `Link ${currentLinks.length + i + 1}`,
+        link_url: url,
+      });
+    }
+    
+    setShowBulkInput(false);
+    toast.success(`${linksToAdd.length} links adicionados!`);
   };
 
   const handleAddAdminPack = async (pack: any) => {
@@ -474,13 +499,13 @@ export default function Admin() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="font-bold text-sm truncate">@{u.username || 'sem-username'}</span>
-                    {u.is_online && <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />}
+                    {u.is_online && <span className="w-2 h-2 bg-success rounded-full flex-shrink-0" />}
                   </div>
                   <div className="flex gap-1 mt-0.5 flex-wrap">
                     {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-primary/20 text-primary">ADM</Badge>}
                     {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-warning/20 text-warning">Principal</Badge>}
                     {u.is_banned && <Badge variant="destructive" className="text-[10px] px-1 py-0">Banido</Badge>}
-                    {u.has_spotify_badge && <Badge className="text-[10px] px-1 py-0 bg-green-500/20 text-green-500">Spotify</Badge>}
+                    {u.has_spotify_badge && <Badge className="text-[10px] px-1 py-0 bg-success/20 text-success">Spotify</Badge>}
                   </div>
                 </div>
                 <Button 
@@ -577,7 +602,7 @@ export default function Admin() {
                   <div className="flex flex-col gap-1">
                     {albumSubTab === 'pending' && (
                       <>
-                        <button onClick={() => approveAlbum(a.id)} className="p-1.5 rounded-lg bg-green-500/20 text-green-500 hover:bg-green-500/30">
+                        <button onClick={() => approveAlbum(a.id)} className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30">
                           <Check className="w-4 h-4" />
                         </button>
                         <button onClick={() => rejectAlbum(a.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30">
@@ -594,58 +619,96 @@ export default function Admin() {
                   </div>
                 </div>
 
-                {/* Album Links - Only for approved albums */}
+                {/* Album Links - Hidden by default with pencil icon */}
                 {albumSubTab === 'approved' && (
                   <div className="border-t pt-4">
-                    <p className="text-sm font-medium mb-2">Links Externos ({getAlbumLinks(a.id).length}/10)</p>
-                    <div className="space-y-2 mb-3">
-                      {getAlbumLinks(a.id).map((link) => (
-                        <div key={link.id} className="flex items-center gap-2 bg-muted p-2 rounded-lg">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{link.name}</p>
-                            {link.description && <p className="text-xs text-muted-foreground truncate">{link.description}</p>}
-                          </div>
-                          <a href={link.link_url} target="_blank" rel="noopener noreferrer" className="text-primary flex-shrink-0">
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                          <Button size="sm" variant="ghost" onClick={() => setEditingLink(link)}>
-                            <Edit className="w-3 h-3" />
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => deleteLink(link.id)}>
-                            <X className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      ))}
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium">Links ({getAlbumLinks(a.id).length}/10)</p>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => setShowLinksEditor(showLinksEditor === a.id ? null : a.id)}
+                        className="gap-1"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        {showLinksEditor === a.id ? 'Fechar' : 'Editar Links'}
+                      </Button>
                     </div>
-
-                    {getAlbumLinks(a.id).length < 10 && (
-                      <div className="space-y-2">
-                        {selectedAlbum === a.id ? (
-                          <>
-                            <Input 
-                              placeholder="Nome do link (ex: Pack ZN Vol.1)" 
-                              value={newLinkName} 
-                              onChange={(e) => setNewLinkName(e.target.value)} 
-                            />
-                            <Input 
-                              placeholder="URL externa (https://...)" 
-                              value={newLinkUrl} 
-                              onChange={(e) => setNewLinkUrl(e.target.value)} 
-                            />
-                            <Input 
-                              placeholder="Descrição (opcional)" 
-                              value={newLinkDesc} 
-                              onChange={(e) => setNewLinkDesc(e.target.value)} 
-                            />
-                            <div className="flex gap-2">
-                              <Button size="sm" onClick={handleAddAlbumLink}>Adicionar</Button>
-                              <Button size="sm" variant="outline" onClick={() => setSelectedAlbum(null)}>Cancelar</Button>
+                    
+                    {showLinksEditor === a.id && (
+                      <div className="space-y-3 animate-fade-in">
+                        {/* Existing Links */}
+                        <div className="space-y-2">
+                          {getAlbumLinks(a.id).map((link) => (
+                            <div key={link.id} className="flex items-center gap-2 bg-muted p-2 rounded-lg">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">{link.name}</p>
+                                {link.description && <p className="text-xs text-muted-foreground truncate">{link.description}</p>}
+                              </div>
+                              <a href={link.link_url} target="_blank" rel="noopener noreferrer" className="text-primary flex-shrink-0">
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                              <Button size="sm" variant="ghost" onClick={() => setEditingLink(link)}>
+                                <Edit className="w-3 h-3" />
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={() => deleteLink(link.id)}>
+                                <X className="w-3 h-3" />
+                              </Button>
                             </div>
-                          </>
-                        ) : (
-                          <Button size="sm" variant="outline" onClick={() => setSelectedAlbum(a.id)} className="w-full">
-                            <Plus className="w-3 h-3 mr-1" />Adicionar Link Externo
-                          </Button>
+                          ))}
+                        </div>
+
+                        {getAlbumLinks(a.id).length < 10 && (
+                          <div className="space-y-3 pt-2 border-t border-border">
+                            {/* Toggle between single and bulk add */}
+                            <div className="flex gap-2">
+                              <Button 
+                                size="sm" 
+                                variant={!showBulkInput ? 'default' : 'outline'}
+                                onClick={() => { setShowBulkInput(false); setSelectedAlbum(a.id); }}
+                                className="flex-1"
+                              >
+                                + Um link
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant={showBulkInput ? 'default' : 'outline'}
+                                onClick={() => { setShowBulkInput(true); setSelectedAlbum(a.id); }}
+                                className="flex-1"
+                              >
+                                + Vários links
+                              </Button>
+                            </div>
+
+                            {showBulkInput && selectedAlbum === a.id ? (
+                              <BulkLinkInput 
+                                onLinksConfirmed={(links) => handleBulkLinksAdd(links, a.id)}
+                                maxLinks={10 - getAlbumLinks(a.id).length}
+                              />
+                            ) : selectedAlbum === a.id ? (
+                              <div className="space-y-2">
+                                <Input 
+                                  placeholder="Nome do link (ex: Pack ZN Vol.1)" 
+                                  value={newLinkName} 
+                                  onChange={(e) => setNewLinkName(e.target.value)} 
+                                />
+                                <Input 
+                                  placeholder="URL externa (https://...)" 
+                                  value={newLinkUrl} 
+                                  onChange={(e) => setNewLinkUrl(e.target.value)} 
+                                />
+                                <Input 
+                                  placeholder="Descrição (opcional)" 
+                                  value={newLinkDesc} 
+                                  onChange={(e) => setNewLinkDesc(e.target.value)} 
+                                />
+                                <div className="flex gap-2">
+                                  <Button size="sm" onClick={handleAddAlbumLink}>Adicionar</Button>
+                                  <Button size="sm" variant="outline" onClick={() => setSelectedAlbum(null)}>Cancelar</Button>
+                                </div>
+                              </div>
+                            ) : null}
+                          </div>
                         )}
                       </div>
                     )}
@@ -772,7 +835,7 @@ export default function Admin() {
                 <div className="flex flex-col gap-1">
                   {subTab === 'pending' ? (
                     <>
-                      <button onClick={() => approvePack(pack.id)} className="p-1.5 rounded-lg bg-green-500/20 text-green-500 hover:bg-green-500/30">
+                      <button onClick={() => approvePack(pack.id)} className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30">
                         <Check className="w-4 h-4" />
                       </button>
                       <button onClick={() => rejectPack(pack.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30">
@@ -809,7 +872,7 @@ export default function Admin() {
                 <div className="flex gap-1">
                   {subTab === 'pending' ? (
                     <>
-                      <button onClick={() => approveAcapella(a.id)} className="p-1.5 rounded-lg bg-green-500/20 text-green-500 hover:bg-green-500/30">
+                      <button onClick={() => approveAcapella(a.id)} className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30">
                         <Check className="w-4 h-4" />
                       </button>
                       <button onClick={() => rejectAcapella(a.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30">

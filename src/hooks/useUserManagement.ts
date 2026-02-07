@@ -19,7 +19,7 @@ export interface UserProfile {
   updated_at: string;
 }
 
-const MAIN_ADMIN_EMAIL = 'youngbae902@gmail.com';
+const MAIN_ADMIN_USERNAME = 'mathhewdcarmo';
 
 export interface UserRole {
   id: string;
@@ -232,16 +232,10 @@ export function useUserManagement() {
     },
   });
 
-  // Check if user is the main protected admin
-  // Uses the first user_id that has admin role as main admin reference
+  // Check if user is the main protected admin by username
   const isMainAdmin = (userId: string) => {
-    const adminRoles = userRoles.filter(r => r.role === 'admin');
-    if (adminRoles.length === 0) return false;
-    // The first admin created is the main admin
-    const sortedAdminRoles = adminRoles.sort((a, b) => 
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    );
-    return sortedAdminRoles[0]?.user_id === userId;
+    const userProfile = users.find(u => u.user_id === userId);
+    return userProfile?.username === MAIN_ADMIN_USERNAME;
   };
 
   return {
