@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
 import { FavoritesSection } from '@/components/FavoritesSection';
-import { DiscordStyleProfile } from '@/components/DiscordStyleProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
@@ -16,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, refreshProfile } = useAuth();
@@ -36,6 +36,8 @@ const Conta = () => {
   const [spotifyUrl, setSpotifyUrl] = useState('');
   const [soundcloudUrl, setSoundcloudUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (profile) {
@@ -48,6 +50,19 @@ const Conta = () => {
       setYoutubeUrl(profile.youtube_url || '');
     }
   }, [profile]);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const url = await uploadAvatar(file);
+      await updateProfile({ avatar_url: url });
+      toast.success('Foto atualizada!');
+      refreshProfile();
+    } catch {
+      toast.error('Erro ao atualizar foto');
+    }
+  };
 
   const handleSaveProfile = async () => {
     try {
@@ -116,47 +131,101 @@ const Conta = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Wishlist Button - Top Right */}
-      <div className="absolute top-4 right-4 z-10">
-        <Link to="/desejos" className="relative p-2 rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/70 transition-colors">
-          <Star className="w-5 h-5 text-foreground/70" />
-          {hasUpdates && (
-            <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-success rounded-full" />
-          )}
-        </Link>
-      </div>
+      {/* Header */}
+      <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
+        <div className="max-w-lg mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-lg font-bold tracking-wider text-foreground/90">MINHA CONTA</h1>
+            <Link to="/desejos" className="relative p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 transition-colors">
+              <Star className="w-5 h-5 text-foreground/70" />
+              {hasUpdates && (
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-success rounded-full" />
+              )}
+            </Link>
+          </div>
 
-      {/* Discord Style Profile Header */}
-      <DiscordStyleProfile onEditProfile={() => setIsEditingProfile(true)} />
-
-      {/* Bio */}
-      {profile?.bio && (
-        <div className="px-4 mt-4">
-          <p className="text-sm text-muted-foreground max-w-sm">{profile.bio}</p>
-        </div>
-      )}
-
-      {/* Social Links */}
-      {socialLinks.length > 0 && (
-        <div className="px-4 mt-4">
-          <div className="flex gap-3">
-            {socialLinks.map((link, i) => (
-              <a 
-                key={i} 
-                href={link.url || '#'} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center hover:border-primary/50 transition-colors ${link.color}`}
-                title={link.label}
+          {/* Profile Card */}
+          <div className="flex flex-col items-center text-center">
+            {/* Avatar */}
+            <div className="relative mb-4">
+              <div className="w-24 h-24 rounded-full bg-secondary border-2 border-border overflow-hidden">
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <User className="w-10 h-10 text-muted-foreground" />
+                  </div>
+                )}
+              </div>
+              <button 
+                onClick={() => fileInputRef.current?.click()} 
+                className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg hover:opacity-90 transition-opacity"
               >
-                <link.Icon />
-              </a>
-            ))}
+                <Camera className="w-4 h-4" />
+              </button>
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+            </div>
+
+            {/* Name & Username */}
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
+              {profile?.has_spotify_badge && (
+                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/20 text-success">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                  </svg>
+                  <span className="text-xs font-medium">Verificado</span>
+                </div>
+              )}
+              <button 
+                onClick={() => setIsEditingProfile(true)} 
+                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Edit className="w-4 h-4" />
+              </button>
+            </div>
+            
+            {profile?.username && (
+              <p className="text-sm text-muted-foreground mb-3">@{profile.username}</p>
+            )}
+
+            {/* Badges */}
+            <div className="flex gap-2 mb-4">
+              {isAdmin && (
+                <Badge className="bg-destructive/20 text-destructive border-destructive/30 gap-1">
+                  <Shield className="w-3 h-3" />
+                  ADM
+                </Badge>
+              )}
+            </div>
+
+            {/* Bio */}
+            {profile?.bio && (
+              <p className="text-sm text-muted-foreground max-w-xs mb-4">{profile.bio}</p>
+            )}
+
+            {/* Social Links */}
+            {socialLinks.length > 0 && (
+              <div className="flex gap-3">
+                {socialLinks.map((link, i) => (
+                  <a 
+                    key={i} 
+                    href={link.url || '#'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={`w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center hover:border-primary/50 transition-colors ${link.color}`}
+                    title={link.label}
+                  >
+                    <link.Icon />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
-      <div className="max-w-lg mx-auto px-4 mt-6">
+      <div className="max-w-lg mx-auto px-4 -mt-8">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="bg-secondary border border-border rounded-2xl p-4 text-center">
@@ -264,7 +333,7 @@ const Conta = () => {
               
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Instagram className="w-5 h-5 text-pink-500 flex-shrink-0" />
+                  <Instagram className="w-5 h-5 text-premium flex-shrink-0" />
                   <Input 
                     value={instagramUrl} 
                     onChange={e => setInstagramUrl(e.target.value)} 
