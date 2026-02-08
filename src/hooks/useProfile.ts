@@ -11,6 +11,10 @@ interface ProfileUpdates {
   spotify_url?: string | null;
   soundcloud_url?: string | null;
   youtube_url?: string | null;
+  banner_url?: string | null;
+  status_ring_color?: string | null;
+  thought_bubble?: string | null;
+  theme_preference?: string | null;
 }
 
 export function useProfile() {

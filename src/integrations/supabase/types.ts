@@ -317,6 +317,7 @@ export type Database = {
         Row: {
           artist_name: string | null
           avatar_url: string | null
+          banner_url: string | null
           bio: string | null
           created_at: string | null
           has_spotify_badge: boolean | null
@@ -328,6 +329,9 @@ export type Database = {
           last_username_change_date: string | null
           soundcloud_url: string | null
           spotify_url: string | null
+          status_ring_color: string | null
+          theme_preference: string | null
+          thought_bubble: string | null
           updated_at: string | null
           user_id: string
           username: string | null
@@ -337,6 +341,7 @@ export type Database = {
         Insert: {
           artist_name?: string | null
           avatar_url?: string | null
+          banner_url?: string | null
           bio?: string | null
           created_at?: string | null
           has_spotify_badge?: boolean | null
@@ -348,6 +353,9 @@ export type Database = {
           last_username_change_date?: string | null
           soundcloud_url?: string | null
           spotify_url?: string | null
+          status_ring_color?: string | null
+          theme_preference?: string | null
+          thought_bubble?: string | null
           updated_at?: string | null
           user_id: string
           username?: string | null
@@ -357,6 +365,7 @@ export type Database = {
         Update: {
           artist_name?: string | null
           avatar_url?: string | null
+          banner_url?: string | null
           bio?: string | null
           created_at?: string | null
           has_spotify_badge?: boolean | null
@@ -368,6 +377,9 @@ export type Database = {
           last_username_change_date?: string | null
           soundcloud_url?: string | null
           spotify_url?: string | null
+          status_ring_color?: string | null
+          theme_preference?: string | null
+          thought_bubble?: string | null
           updated_at?: string | null
           user_id?: string
           username?: string | null
@@ -412,6 +424,33 @@ export type Database = {
           title?: string
           type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_icon: string | null
+          badge_name: string
+          badge_type: string
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_icon?: string | null
+          badge_name: string
+          badge_type: string
+          created_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_icon?: string | null
+          badge_name?: string
+          badge_type?: string
+          created_at?: string | null
+          id?: string
+          user_id?: string
         }
         Relationships: []
       }
