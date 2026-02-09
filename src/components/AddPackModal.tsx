@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { X, ArrowLeft, Image as ImageIcon, Upload } from 'lucide-react';
 import { Pack, PackType, packTypeLabels } from '@/types/pack';
+import { ImageCropModal } from '@/components/ImageCropModal';
 import {
   Select,
   SelectContent,
@@ -25,6 +26,8 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [isExclusive, setIsExclusive] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [cropImage, setCropImage] = useState<string | null>(null);
+  const [showCropModal, setShowCropModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,12 +35,23 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result as string;
-        setCoverPreview(result);
-        setCoverUrl(result);
+        setCropImage(reader.result as string);
+        setShowCropModal(true);
       };
       reader.readAsDataURL(file);
+      e.target.value = '';
     }
+  };
+
+  const handleCroppedImage = (blob: Blob) => {
+    const url = URL.createObjectURL(blob);
+    setCoverPreview(url);
+    // Convert blob to base64 for submission
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverUrl(reader.result as string);
+    };
+    reader.readAsDataURL(blob);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -225,6 +239,17 @@ export function AddPackModal({ isOpen, onClose, onAdd }: AddPackModalProps) {
             Voltar à Galeria
           </button>
         </form>
+
+        {cropImage && (
+          <ImageCropModal
+            isOpen={showCropModal}
+            onClose={() => { setShowCropModal(false); setCropImage(null); }}
+            imageSrc={cropImage}
+            onCropComplete={handleCroppedImage}
+            aspectRatio={2.5}
+            title="Ajustar Capa do Pack"
+          />
+        )}
       </div>
     </div>
   );
