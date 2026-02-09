@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, Camera, Package, Heart, Bookmark, AtSign, Trash2, Edit, Star, Instagram, Youtube } from 'lucide-react';
+import { User, LogOut, Shield, Package, Heart, Bookmark, AtSign, Trash2, Edit, Star, Instagram, Youtube } from 'lucide-react';
+import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
@@ -38,6 +39,8 @@ const Conta = () => {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cropImage, setCropImage] = useState<string | null>(null);
+  const [showCropModal, setShowCropModal] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -51,10 +54,21 @@ const Conta = () => {
     }
   }, [profile]);
 
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCropImage(reader.result as string);
+      setShowCropModal(true);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const handleCroppedAvatar = async (blob: Blob) => {
     try {
+      const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
       const url = await uploadAvatar(file);
       await updateProfile({ avatar_url: url });
       toast.success('Foto atualizada!');
@@ -148,7 +162,10 @@ const Conta = () => {
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
             <div className="relative mb-4">
-              <div className="w-24 h-24 rounded-full bg-secondary border-2 border-border overflow-hidden">
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="w-24 h-24 rounded-full bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+              >
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -156,14 +173,10 @@ const Conta = () => {
                     <User className="w-10 h-10 text-muted-foreground" />
                   </div>
                 )}
-              </div>
-              <button 
-                onClick={() => fileInputRef.current?.click()} 
-                className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg hover:opacity-90 transition-opacity"
-              >
-                <Camera className="w-4 h-4" />
               </button>
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+              {/* Green online dot */}
+              <span className="absolute bottom-1 right-1 w-4 h-4 bg-success rounded-full border-2 border-background" />
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarSelect} className="hidden" />
             </div>
 
             {/* Name & Username */}
@@ -406,6 +419,18 @@ const Conta = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Image Crop Modal */}
+      {cropImage && (
+        <ImageCropModal
+          isOpen={showCropModal}
+          onClose={() => { setShowCropModal(false); setCropImage(null); }}
+          imageSrc={cropImage}
+          onCropComplete={handleCroppedAvatar}
+          aspectRatio={1}
+          title="Ajustar Foto de Perfil"
+        />
+      )}
 
       <BottomNav />
     </div>

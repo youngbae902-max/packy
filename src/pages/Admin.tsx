@@ -63,6 +63,7 @@ export default function Admin() {
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [newLinkDesc, setNewLinkDesc] = useState('');
   const [showBulkInput, setShowBulkInput] = useState(false);
+  const [showBulkPackInput, setShowBulkPackInput] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
   const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
@@ -462,17 +463,52 @@ export default function Admin() {
         {/* Sub Tabs for content moderation */}
         {(mainTab === 'packs' || mainTab === 'projetos' || mainTab === 'acapellas') && (
           <div className="space-y-4">
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => {
-                if (mainTab === 'acapellas') setShowAcapellaModal(true);
-                else setShowPackModal(true);
-              }}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Adicionar {mainTab === 'acapellas' ? 'Acapella' : 'Pack'}
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => {
+                  if (mainTab === 'acapellas') setShowAcapellaModal(true);
+                  else setShowPackModal(true);
+                }}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Adicionar {mainTab === 'acapellas' ? 'Acapella' : 'Pack'}
+              </Button>
+              {mainTab !== 'acapellas' && (
+                <Button 
+                  variant="outline"
+                  onClick={() => setShowBulkPackInput(!showBulkPackInput)}
+                >
+                  <LinkIcon className="w-4 h-4 mr-2" />
+                  Em Massa
+                </Button>
+              )}
+            </div>
+
+            {showBulkPackInput && mainTab !== 'acapellas' && (
+              <Card className="p-4">
+                <h3 className="font-bold text-sm mb-2">Adicionar Packs em Massa</h3>
+                <p className="text-xs text-muted-foreground mb-3">Cole vários links de download. Cada link criará um pack separado.</p>
+                <BulkLinkInput 
+                  onLinksConfirmed={async (links) => {
+                    for (let i = 0; i < links.length; i++) {
+                      await addPack({
+                        title: `Pack ${i + 1}`,
+                        author: 'ADM',
+                        type: mainTab === 'projetos' ? 'project' : 'other',
+                        downloadUrl: links[i],
+                        isExclusive: false,
+                        isAnonymous: false,
+                      } as any);
+                    }
+                    toast.success(`${links.length} packs criados!`);
+                    setShowBulkPackInput(false);
+                  }}
+                  maxLinks={20}
+                />
+              </Card>
+            )}
 
             <div className="flex gap-2 overflow-x-auto pb-2">
               {subTabs.map((tab) => (
