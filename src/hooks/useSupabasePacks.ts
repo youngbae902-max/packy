@@ -162,13 +162,13 @@ export function useSupabasePacks() {
 
   // Add pack mutation
   const addPackMutation = useMutation({
-    mutationFn: async (pack: Partial<Pack> & { title: string; download_url: string }) => {
+    mutationFn: async (pack: Omit<Pack, 'id' | 'created_at' | 'updated_at' | 'likes_count' | 'status'>) => {
       const { data, error } = await supabase
         .from('packs')
         .insert({
-          user_id: user?.id,
-          status: 'pending' as const,
           ...pack,
+          user_id: user?.id,
+          status: 'pending',
         })
         .select()
         .single();

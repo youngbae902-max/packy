@@ -146,92 +146,87 @@ const Conta = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <div className="pt-10 pb-12 px-4">
+      <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
         <div className="max-w-lg mx-auto">
-          <div className="flex items-center justify-between mb-10">
-            <h1 className="text-sm font-bold tracking-[0.2em] uppercase text-muted-foreground">Minha Conta</h1>
-            <Link to="/desejos" className="relative p-2 rounded-full hover:bg-secondary transition-colors">
-              <Star className="w-5 h-5 text-muted-foreground" />
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-lg font-bold tracking-wider text-foreground/90">MINHA CONTA</h1>
+            <Link to="/desejos" className="relative p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 transition-colors">
+              <Star className="w-5 h-5 text-foreground/70" />
               {hasUpdates && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-success rounded-full" />
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-success rounded-full" />
               )}
             </Link>
           </div>
 
           {/* Profile Card */}
           <div className="flex flex-col items-center text-center">
-            {/* Avatar with online dot */}
-            <div className="relative mb-5 group">
+            {/* Avatar */}
+            <div className="relative mb-4">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-border hover:border-muted-foreground/40 transition-all duration-200"
+                className="w-24 h-24 rounded-full bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
               >
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-secondary flex items-center justify-center">
-                    <User className="w-12 h-12 text-muted-foreground" />
+                  <div className="w-full h-full flex items-center justify-center">
+                    <User className="w-10 h-10 text-muted-foreground" />
                   </div>
                 )}
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Edit className="w-5 h-5 text-white" />
-                </div>
               </button>
-              {/* Online indicator - precisely positioned */}
-              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-success ring-[3px] ring-background" />
+              {/* Green online dot */}
+              <span className="absolute bottom-1 right-1 w-4 h-4 bg-success rounded-full border-2 border-background" />
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarSelect} className="hidden" />
             </div>
 
-            {/* Name */}
-            <h2 className="text-2xl font-black text-foreground tracking-tight mb-0.5">
-              {profile?.artist_name || 'Sem nome'}
-            </h2>
-
-            {/* Username */}
-            {profile?.username && (
-              <p className="text-sm text-muted-foreground mb-3">@{profile.username}</p>
-            )}
-
-            {/* Badges row */}
-            <div className="flex items-center gap-2 mb-3">
-              {isAdmin && (
-                <Badge className="bg-destructive/20 text-destructive border-destructive/30 gap-1 text-[11px]">
-                  <Shield className="w-3 h-3" />
-                  ADM
-                </Badge>
-              )}
+            {/* Name & Username */}
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
               {profile?.has_spotify_badge && (
-                <Badge className="bg-success/20 text-success border-success/30 gap-1 text-[11px]">
-                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/20 text-success">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                   </svg>
-                  Verificado
-                </Badge>
+                  <span className="text-xs font-medium">Verificado</span>
+                </div>
               )}
               <button 
                 onClick={() => setIsEditingProfile(true)} 
-                className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Edit className="w-4 h-4" />
               </button>
             </div>
+            
+            {profile?.username && (
+              <p className="text-sm text-muted-foreground mb-3">@{profile.username}</p>
+            )}
+
+            {/* Badges */}
+            <div className="flex gap-2 mb-4">
+              {isAdmin && (
+                <Badge className="bg-destructive/20 text-destructive border-destructive/30 gap-1">
+                  <Shield className="w-3 h-3" />
+                  ADM
+                </Badge>
+              )}
+            </div>
 
             {/* Bio */}
             {profile?.bio && (
-              <p className="text-sm text-muted-foreground max-w-xs leading-relaxed mb-5">{profile.bio}</p>
+              <p className="text-sm text-muted-foreground max-w-xs mb-4">{profile.bio}</p>
             )}
 
             {/* Social Links */}
             {socialLinks.length > 0 && (
-              <div className="flex gap-2.5 mb-2">
+              <div className="flex gap-3">
                 {socialLinks.map((link, i) => (
                   <a 
                     key={i} 
                     href={link.url || '#'} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className={`w-9 h-9 rounded-full bg-secondary border border-border flex items-center justify-center hover:border-muted-foreground/40 transition-colors ${link.color}`}
+                    className={`w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center hover:border-primary/50 transition-colors ${link.color}`}
                     title={link.label}
                   >
                     <link.Icon />
@@ -243,23 +238,23 @@ const Conta = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4">
+      <div className="max-w-lg mx-auto px-4 -mt-8">
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-2.5 mb-6">
-          <div className="bg-secondary/50 border border-border rounded-2xl p-4 text-center">
-            <Package className="w-4 h-4 mx-auto mb-1.5 text-muted-foreground" />
-            <p className="text-xl font-black text-foreground">{userPacks.length}</p>
-            <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Enviados</p>
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="bg-secondary border border-border rounded-2xl p-4 text-center">
+            <Package className="w-5 h-5 mx-auto mb-2 text-primary" />
+            <p className="text-xl font-bold text-foreground">{userPacks.length}</p>
+            <p className="text-xs text-muted-foreground">Enviados</p>
           </div>
-          <div className="bg-secondary/50 border border-border rounded-2xl p-4 text-center">
-            <Heart className="w-4 h-4 mx-auto mb-1.5 text-muted-foreground" />
-            <p className="text-xl font-black text-foreground">{likes.length}</p>
-            <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Curtidos</p>
+          <div className="bg-secondary border border-border rounded-2xl p-4 text-center">
+            <Heart className="w-5 h-5 mx-auto mb-2 text-destructive" />
+            <p className="text-xl font-bold text-foreground">{likes.length}</p>
+            <p className="text-xs text-muted-foreground">Curtidos</p>
           </div>
-          <div className="bg-secondary/50 border border-border rounded-2xl p-4 text-center">
-            <Bookmark className="w-4 h-4 mx-auto mb-1.5 text-muted-foreground" />
-            <p className="text-xl font-black text-foreground">{favorites.length}</p>
-            <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Favoritos</p>
+          <div className="bg-secondary border border-border rounded-2xl p-4 text-center">
+            <Bookmark className="w-5 h-5 mx-auto mb-2 text-warning" />
+            <p className="text-xl font-bold text-foreground">{favorites.length}</p>
+            <p className="text-xs text-muted-foreground">Favoritos</p>
           </div>
         </div>
 
@@ -272,30 +267,30 @@ const Conta = () => {
         {isAdmin && (
           <Link 
             to="/admin" 
-            className="w-full mb-5 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-all"
+            className="w-full mb-4 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm bg-gradient-to-r from-destructive to-destructive/80 text-destructive-foreground hover:opacity-90 transition-all shadow-lg"
           >
-            <Shield className="w-4 h-4" />
+            <Shield className="w-5 h-5" />
             Painel de Administração
           </Link>
         )}
 
         {/* Actions */}
-        <div className="space-y-1 border-t border-border pt-4">
+        <div className="space-y-2">
           <Button 
             variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl h-11 text-sm" 
+            className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-12" 
             onClick={() => setShowDeleteConfirm(true)}
           >
-            <Trash2 className="w-4 h-4 mr-3" />
+            <Trash2 className="w-5 h-5 mr-3" />
             Excluir minha conta
           </Button>
 
           <Button 
             variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-xl h-11 text-sm" 
+            className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl h-12" 
             onClick={signOut}
           >
-            <LogOut className="w-4 h-4 mr-3" />
+            <LogOut className="w-5 h-5 mr-3" />
             Sair da conta
           </Button>
         </div>
@@ -351,7 +346,7 @@ const Conta = () => {
               
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Instagram className="w-5 h-5 text-pink-500 flex-shrink-0" />
+                  <Instagram className="w-5 h-5 text-premium flex-shrink-0" />
                   <Input 
                     value={instagramUrl} 
                     onChange={e => setInstagramUrl(e.target.value)} 

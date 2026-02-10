@@ -495,15 +495,11 @@ export default function Admin() {
                     for (let i = 0; i < links.length; i++) {
                       await addPack({
                         title: `Pack ${i + 1}`,
-                        author_name: 'ADM',
-                        pack_type: mainTab === 'projetos' ? 'project' : 'other',
-                        download_url: links[i],
-                        is_exclusive: false,
-                        is_anonymous: false,
-                        is_admin_pack: true,
-                        is_premium: false,
-                        is_pinned: false,
-                        status: 'approved',
+                        author: 'ADM',
+                        type: mainTab === 'projetos' ? 'project' : 'other',
+                        downloadUrl: links[i],
+                        isExclusive: false,
+                        isAnonymous: false,
                       } as any);
                     }
                     toast.success(`${links.length} packs criados!`);
