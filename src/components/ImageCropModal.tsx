@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Cropper, { Area } from 'react-easy-crop';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { RotateCw, ZoomIn, X, Check } from 'lucide-react';
@@ -10,7 +10,7 @@ interface ImageCropModalProps {
   onClose: () => void;
   imageSrc: string;
   onCropComplete: (croppedBlob: Blob) => void;
-  aspectRatio?: number; // 1 for profile (1:1), 2.5 for banner (5:2)
+  aspectRatio?: number;
   title?: string;
 }
 
@@ -103,13 +103,38 @@ export function ImageCropModal({
     onClose();
   };
 
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="max-w-md p-0 overflow-hidden bg-card border-border z-[100]">
-        <DialogHeader className="p-4 pb-0">
-          <DialogTitle className="text-foreground">{title}</DialogTitle>
-        </DialogHeader>
+  // Lock body scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [isOpen]);
 
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/80"
+        onClick={handleClose}
+      />
+
+      {/* Modal */}
+      <div className="relative w-full max-w-md bg-card border border-border rounded-2xl overflow-hidden shadow-2xl animate-scale-in">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 pb-2">
+          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+          <button
+            onClick={handleClose}
+            className="p-1 rounded-full hover:bg-muted transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Cropper */}
         <div className="relative w-full h-72 bg-black">
           <Cropper
             image={imageSrc}
@@ -126,6 +151,7 @@ export function ImageCropModal({
           />
         </div>
 
+        {/* Controls */}
         <div className="p-4 space-y-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -163,7 +189,8 @@ export function ImageCropModal({
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>,
+    document.body
   );
 }
