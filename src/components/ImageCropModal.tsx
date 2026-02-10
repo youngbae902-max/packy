@@ -105,7 +105,7 @@ export function ImageCropModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="max-w-md p-0 overflow-hidden bg-card border-border z-[100]">
+      <DialogContent className="max-w-md p-0 overflow-hidden bg-card border-border">
         <DialogHeader className="p-4 pb-0">
           <DialogTitle className="text-foreground">{title}</DialogTitle>
         </DialogHeader>
