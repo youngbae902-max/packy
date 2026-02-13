@@ -65,62 +65,65 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
   return (
     <>
-      <div className="group relative rounded-xl overflow-hidden bg-secondary border border-border/50 hover:border-border transition-all">
-        {/* Image */}
-        <div className="relative">
+      <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] transition-all">
+        {/* Banner image */}
+        <div className="relative w-full aspect-[16/9]">
           {pack.cover_url ? (
             <img 
               src={pack.cover_url} 
               alt={pack.title} 
-              className="w-full object-cover"
-              style={{ minHeight: '120px' }}
+              className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full aspect-[4/3] bg-muted flex items-center justify-center">
-              <ImageIcon className="w-10 h-10 text-muted-foreground/30" />
+            <div className="w-full h-full bg-[hsl(0,0%,8%)] flex items-center justify-center">
+              <ImageIcon className="w-10 h-10 text-muted-foreground/20" />
             </div>
           )}
+
+          {/* Gradient fade on right edge for favorite button */}
+          <div className="absolute top-0 right-0 h-full w-20 bg-gradient-to-l from-[hsl(0,0%,0%)/0.7] to-transparent pointer-events-none" />
+
+          {/* Favorite button - white icon with blur at top right */}
+          <button
+            onClick={handleFavoriteClick}
+            className="absolute top-3 right-3 z-10 flex items-center justify-center transition-all"
+          >
+            <Bookmark className={`w-5 h-5 drop-shadow-lg ${
+              hasFavorited ? 'text-foreground fill-current' : 'text-foreground/90'
+            }`} />
+          </button>
           
           {/* Pin icon overlay */}
           {pack.is_pinned && (
-            <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-primary flex items-center justify-center shadow-lg">
-              <Pin className="w-3.5 h-3.5 text-primary-foreground" />
+            <div className="absolute top-3 left-3 z-10">
+              <Pin className="w-4 h-4 text-foreground drop-shadow-lg" />
             </div>
           )}
 
-          {/* Favorite button overlay */}
-          <button
-            onClick={handleFavoriteClick}
-            className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-lg ${
-              hasFavorited 
-                ? 'bg-warning text-warning-foreground' 
-                : 'bg-background/70 text-foreground/70 opacity-0 group-hover:opacity-100'
-            }`}
-          >
-            <Bookmark className={`w-4 h-4 ${hasFavorited ? 'fill-current' : ''}`} />
-          </button>
-
           {/* Premium badge */}
           {pack.is_premium && (
-            <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-2 py-0.5 rounded-full text-xs font-bold backdrop-blur-sm">
+            <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-premium/90 text-premium-foreground px-2 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
               <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
             </div>
           )}
+
+          {/* Bottom gradient for text readability */}
+          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[hsl(0,0%,4%)] to-transparent pointer-events-none" />
         </div>
 
-        {/* Info */}
-        <div className="p-3">
-          <div className="flex items-start justify-between gap-2">
+        {/* Info below banner */}
+        <div className="px-3 pt-2 pb-3 bg-[hsl(0,0%,4%)]">
+          <div className="flex items-center justify-between gap-2">
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-bold text-foreground truncate">{pack.title}</h3>
-              <p className="text-xs text-muted-foreground truncate mt-0.5">@{displayAuthor}</p>
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5">@{displayAuthor}</p>
             </div>
             
             {/* 3 dots menu */}
             <button
               onClick={(e) => { e.stopPropagation(); setShowDetails(true); }}
-              className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex-shrink-0"
+              className="p-1 rounded-full text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
@@ -129,7 +132,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           {/* Download button */}
           <button
             onClick={handleDownloadClick}
-            className="w-full mt-3 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wide hover:opacity-90 transition-opacity"
+            className="w-full mt-2.5 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-foreground/10 border border-border/50 text-foreground text-xs font-bold uppercase tracking-wide hover:bg-foreground/15 transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito' : 'Baixar'}
