@@ -28,7 +28,7 @@ export function FavoritesSection() {
     );
   }
 
-  const displayFavorites = favorites.slice(0, 5);
+  const displayFavorites = favorites.slice(0, 4);
 
   return (
     <>
@@ -38,7 +38,7 @@ export function FavoritesSection() {
             <Bookmark className="w-4 h-4 text-warning" />
             <span className="text-sm font-bold text-foreground">Favoritos</span>
           </div>
-          {favorites.length > 5 && (
+          {favorites.length > 4 && (
             <button 
               onClick={() => setShowAll(true)}
               className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
