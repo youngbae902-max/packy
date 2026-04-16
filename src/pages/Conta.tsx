@@ -54,16 +54,31 @@ const Conta = () => {
     }
   }, [profile]);
 
-  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    e.target.value = '';
+
+    // GIFs são enviados direto para preservar a animação (sem crop)
+    const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
+    if (isGif) {
+      try {
+        const url = await uploadAvatar(file);
+        await updateProfile({ avatar_url: url });
+        toast.success('GIF atualizado!');
+        refreshProfile();
+      } catch {
+        toast.error('Erro ao atualizar GIF');
+      }
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setCropImage(reader.result as string);
       setShowCropModal(true);
     };
     reader.readAsDataURL(file);
-    e.target.value = '';
   };
 
   const handleCroppedAvatar = async (blob: Blob) => {
