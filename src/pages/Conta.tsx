@@ -191,7 +191,7 @@ const Conta = () => {
               </button>
               {/* Green online dot */}
               <span className="absolute bottom-1 right-1 w-4 h-4 bg-success rounded-full border-2 border-background" />
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarSelect} className="hidden" />
+              <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
             </div>
 
             {/* Name & Username */}
