@@ -207,7 +207,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               <button 
                 onClick={handleLikeClick} 
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  hasLiked ? 'bg-destructive/20 text-destructive' : 'bg-secondary text-muted-foreground hover:text-foreground'
+                  hasLiked ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <Heart className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
@@ -216,7 +216,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               <button 
                 onClick={handleFavoriteClick} 
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  hasFavorited ? 'bg-warning/20 text-warning' : 'bg-secondary text-muted-foreground hover:text-foreground'
+                  hasFavorited ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <Bookmark className={`w-4 h-4 ${hasFavorited ? 'fill-current' : ''}`} />
