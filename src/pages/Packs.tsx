@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Plus, Search, Crown, Mic, Folder, Inbox, Star } from 'lucide-react';
+import { Plus, Search, Crown, Mic, Folder, Inbox, Star, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
+import { SideMenu } from '@/components/SideMenu';
 import { PackCardV2 } from '@/components/PackCardV2';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { AddPackModalV2 } from '@/components/AddPackModalV2';
@@ -20,6 +21,7 @@ const Packs = () => {
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [contentTab, setContentTab] = useState<ContentTab>('packs');
   const [activeSection, setActiveSection] = useState<'free' | 'premium'>('free');
   const [searchQuery, setSearchQuery] = useState('');
@@ -64,19 +66,23 @@ const Packs = () => {
       <div className="max-w-lg mx-auto px-4 pt-6">
         {/* Header with Inbox */}
         <header className="flex items-center justify-between py-4">
-          <div className="flex-1" />
+          <button
+            onClick={() => setShowMenu(true)}
+            className="p-2 -ml-2 rounded-full hover:bg-foreground/5 transition-colors"
+            aria-label="Abrir menu"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
           <div className="text-center">
             <h1 className="text-3xl font-black tracking-tighter">PACKY</h1>
             <p className="text-sm text-muted-foreground mt-1">Packs para os mano de produtora</p>
           </div>
-          <div className="flex-1 flex justify-end">
-            <Link to="/inbox" className="relative p-2">
-              <Inbox className="w-6 h-6" />
-              {hasUnread && (
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
-              )}
-            </Link>
-          </div>
+          <Link to="/inbox" className="relative p-2">
+            <Inbox className="w-6 h-6" />
+            {hasUnread && (
+              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
+            )}
+          </Link>
         </header>
 
         {/* Active Events */}
@@ -205,6 +211,7 @@ const Packs = () => {
       </div>
 
       <BottomNav />
+      <SideMenu isOpen={showMenu} onClose={() => setShowMenu(false)} />
 
       {user && (
         <AddPackModalV2 

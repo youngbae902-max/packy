@@ -256,18 +256,18 @@ const Conta = () => {
       <div className="max-w-lg mx-auto px-4 -mt-8">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-secondary border border-border rounded-2xl p-4 text-center">
-            <Package className="w-5 h-5 mx-auto mb-2 text-primary" />
+          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
+            <Package className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
             <p className="text-xl font-bold text-foreground">{userPacks.length}</p>
             <p className="text-xs text-muted-foreground">Enviados</p>
           </div>
-          <div className="bg-secondary border border-border rounded-2xl p-4 text-center">
-            <Heart className="w-5 h-5 mx-auto mb-2 text-destructive" />
+          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
+            <Heart className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
             <p className="text-xl font-bold text-foreground">{likes.length}</p>
             <p className="text-xs text-muted-foreground">Curtidos</p>
           </div>
-          <div className="bg-secondary border border-border rounded-2xl p-4 text-center">
-            <Bookmark className="w-5 h-5 mx-auto mb-2 text-warning" />
+          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
+            <Bookmark className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
             <p className="text-xl font-bold text-foreground">{favorites.length}</p>
             <p className="text-xs text-muted-foreground">Favoritos</p>
           </div>
