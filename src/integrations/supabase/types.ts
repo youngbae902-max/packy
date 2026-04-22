@@ -427,6 +427,45 @@ export type Database = {
         }
         Relationships: []
       }
+      sites: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          site_url: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          site_url: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          site_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_badges: {
         Row: {
           badge_icon: string | null
