@@ -20,7 +20,7 @@ export function FavoritesSection() {
 
   if (favorites.length === 0) {
     return (
-      <div className="p-6 rounded-2xl bg-secondary/50 border border-border text-center">
+      <div className="p-6 rounded-2xl bg-[hsl(0,0%,3%)] border border-border/60 text-center">
         <Bookmark className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" />
         <p className="text-sm text-muted-foreground">Nenhum favorito ainda</p>
         <p className="text-xs text-muted-foreground/60 mt-1">Salve packs para acessar rapidamente</p>
@@ -35,7 +35,7 @@ export function FavoritesSection() {
       <div className="space-y-2">
         <div className="flex items-center justify-between px-1 mb-1">
           <div className="flex items-center gap-2">
-            <Bookmark className="w-4 h-4 text-warning" />
+            <Bookmark className="w-4 h-4 text-foreground/80" />
             <span className="text-sm font-bold text-foreground">Favoritos</span>
           </div>
           {favorites.length > 4 && (
@@ -53,9 +53,9 @@ export function FavoritesSection() {
           <button
             key={pack.id}
             onClick={() => setShowAll(true)}
-            className="w-full flex items-center gap-3 p-3 rounded-xl bg-secondary/60 border border-border/50 hover:border-border hover:bg-secondary transition-all text-left group"
+            className="w-full flex items-center gap-3 p-3 rounded-xl bg-[hsl(0,0%,3%)] border border-border/50 hover:border-border hover:bg-[hsl(0,0%,5%)] transition-all text-left group"
           >
-            <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+            <div className="w-12 h-12 rounded-lg overflow-hidden bg-[hsl(0,0%,2%)] flex-shrink-0">
               {pack.cover_url ? (
                 <img 
                   src={pack.cover_url} 
@@ -88,10 +88,10 @@ export function FavoritesSection() {
       </div>
 
       <Dialog open={showAll} onOpenChange={setShowAll}>
-        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto bg-card border-border">
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto bg-[hsl(0,0%,3%)] border-border">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-foreground">
-              <Bookmark className="w-5 h-5 text-warning" />
+              <Bookmark className="w-5 h-5 text-foreground/80" />
               Meus Favoritos ({favorites.length})
             </DialogTitle>
           </DialogHeader>

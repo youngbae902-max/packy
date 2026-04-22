@@ -143,12 +143,12 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       {/* Details Bottom Sheet */}
       {showDetails && (
         <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setShowDetails(false)}>
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
-            className="relative w-full max-w-lg bg-card border-t border-border rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
+            className="relative w-full max-w-lg bg-[hsl(0,0%,3%)] border-t border-border rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
             onClick={e => e.stopPropagation()}
           >
-            <div className="w-10 h-1 bg-muted-foreground/30 rounded-full mx-auto mb-5" />
+            <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
             
             <button 
               onClick={() => setShowDetails(false)} 
@@ -158,7 +158,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             </button>
 
             <div className="flex items-start gap-4 mb-5">
-              <div className="w-16 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+              <div className="w-16 h-16 rounded-lg overflow-hidden bg-[hsl(0,0%,2%)] flex-shrink-0">
                 {pack.cover_url ? (
                   <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
                 ) : (
