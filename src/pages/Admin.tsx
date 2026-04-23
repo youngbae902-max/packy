@@ -19,6 +19,7 @@ import { AddAcapellaModal } from '@/components/AddAcapellaModal';
 import { UserEditModal } from '@/components/UserEditModal';
 import { AlbumLinkEditModal } from '@/components/AlbumLinkEditModal';
 import { BulkLinkInput } from '@/components/BulkLinkInput';
+import { AppLogoSettings } from '@/components/AppLogoSettings';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -377,6 +378,11 @@ export default function Admin() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div className="pt-4 border-t border-border/40">
+              <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3">Aparência</p>
+              <AppLogoSettings />
             </div>
           </div>
         )}
