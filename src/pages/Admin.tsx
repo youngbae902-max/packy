@@ -675,7 +675,7 @@ export default function Admin() {
                         {/* Existing Links */}
                         <div className="space-y-2">
                           {getAlbumLinks(a.id).map((link) => (
-                            <div key={link.id} className="flex items-center gap-2 bg-muted p-2 rounded-lg">
+                            <div key={link.id} className="flex items-center gap-2 bg-[hsl(0,0%,4%)] border border-border/40 p-2 rounded-lg">
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium truncate">{link.name}</p>
                                 {link.description && <p className="text-xs text-muted-foreground truncate">{link.description}</p>}
@@ -863,7 +863,7 @@ export default function Admin() {
                   <p className="text-xs text-muted-foreground">@{pack.author_name}</p>
                   <div className="flex gap-1 mt-1 flex-wrap">
                     <Badge variant="outline" className="text-[10px]">{pack.pack_type}</Badge>
-                    {pack.is_premium && <Badge className="bg-warning/20 text-warning text-[10px]">Premium</Badge>}
+                    {pack.is_premium && <Badge className="bg-foreground/10 text-foreground text-[10px] border-0">Premium</Badge>}
                     {pack.is_pinned && <Badge className="text-[10px]"><Pin className="w-2 h-2" /></Badge>}
                   </div>
                 </div>
