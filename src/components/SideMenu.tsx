@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { X, Globe, Disc, Mail, Star, Shield, Home } from 'lucide-react';
+import { X, Globe, Disc, Mail, Star, Shield, Home, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface SideMenuProps {
@@ -8,7 +8,7 @@ interface SideMenuProps {
 }
 
 export function SideMenu({ isOpen, onClose }: SideMenuProps) {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
 
   const items = [
     { to: '/', icon: Home, label: 'Início' },
@@ -22,51 +22,72 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
 
   return (
     <div className="fixed inset-0 z-[60]">
+      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-fade-in"
+        className="absolute inset-0 bg-black/85 backdrop-blur-md animate-fade-in"
         onClick={onClose}
       />
-      <aside className="absolute top-0 left-0 h-full w-[78%] max-w-xs bg-[hsl(0,0%,3%)] border-r border-border flex flex-col animate-slide-in-right">
-        <div className="flex items-center justify-between p-5 border-b border-border">
-          <h2 className="text-lg font-black tracking-tight">MENU</h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-foreground/10 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+
+      {/* Drawer */}
+      <aside className="absolute top-0 left-0 h-full w-[80%] max-w-[300px] bg-[hsl(0,0%,2%)] border-r border-border/60 flex flex-col animate-slide-in-right shadow-[8px_0_40px_rgba(0,0,0,0.6)]">
+        {/* Brand header */}
+        <div className="px-6 pt-8 pb-6 border-b border-border/40">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <span className="text-2xl font-black tracking-tighter">PACKY</span>
+              <Zap className="w-4 h-4 text-foreground/70 fill-foreground/70" />
+            </div>
+            <button
+              onClick={onClose}
+              aria-label="Fechar menu"
+              className="p-2 -mr-2 rounded-full hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mt-3">
+            Menu
+          </p>
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-3">
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
           {items.map(({ to, icon: Icon, label }) => (
             <Link
               key={to}
               to={to}
               onClick={onClose}
-              className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-foreground/85 hover:bg-foreground/5 hover:text-foreground transition-colors"
+              className="group flex items-center gap-4 px-4 py-3 rounded-xl text-foreground/80 hover:bg-foreground/[0.06] hover:text-foreground transition-all"
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-sm font-semibold">{label}</span>
+              <span className="w-9 h-9 rounded-lg bg-[hsl(0,0%,5%)] border border-border/50 flex items-center justify-center group-hover:bg-[hsl(0,0%,8%)] group-hover:border-border transition-colors">
+                <Icon className="w-4 h-4" />
+              </span>
+              <span className="text-sm font-medium">{label}</span>
             </Link>
           ))}
 
           {isAdmin && (
             <>
-              <div className="my-3 mx-4 border-t border-border" />
+              <div className="my-3 mx-4 border-t border-border/40" />
               <Link
                 to="/admin"
                 onClick={onClose}
-                className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-destructive hover:bg-destructive/10 transition-colors"
+                className="group flex items-center gap-4 px-4 py-3 rounded-xl text-foreground/90 hover:bg-foreground/[0.06] transition-all"
               >
-                <Shield className="w-5 h-5" />
+                <span className="w-9 h-9 rounded-lg bg-[hsl(0,0%,5%)] border border-border/50 flex items-center justify-center">
+                  <Shield className="w-4 h-4" />
+                </span>
                 <span className="text-sm font-semibold">Painel Admin</span>
               </Link>
             </>
           )}
         </nav>
 
-        <div className="p-5 text-xs text-muted-foreground border-t border-border">
-          PACKY · v1.0
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-border/40">
+          <p className="text-[11px] text-muted-foreground">
+            {user ? 'Conectado' : 'Visitante'} · v1.0
+          </p>
         </div>
       </aside>
     </div>
