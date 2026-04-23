@@ -155,7 +155,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
       {/* Details Bottom Sheet */}
       {showDetails && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setShowDetails(false)}>
+        <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => setShowDetails(false)}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
             className="relative w-full max-w-lg bg-[hsl(0,0%,3%)] border-t border-border rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
@@ -185,6 +185,9 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                   <User className="w-3 h-3" />
                   @{displayAuthor}
+                  {isOwner && !pack.is_anonymous && (
+                    <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 ml-0.5" aria-label="Dono verificado" />
+                  )}
                 </p>
               </div>
             </div>
@@ -210,6 +213,13 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-2.5 py-1 rounded-full text-xs font-bold">ADM</span>
               )}
             </div>
+
+            {isOwner && !pack.is_anonymous && (
+              <div className="flex items-center gap-1.5 mb-3 text-xs text-sky-400">
+                <BadgeCheck className="w-4 h-4 fill-sky-400/20" />
+                <span className="font-semibold">Dono do aplicativo</span>
+              </div>
+            )}
 
             <div className="text-sm text-muted-foreground mb-5">
               Publicado em {formattedDate}
@@ -250,7 +260,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
       {/* Credit Flow Modal */}
       {showCreditFlow && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setShowCreditFlow(false)} />
           <div className="relative w-full max-w-sm bg-card border border-border rounded-2xl p-6 shadow-2xl">
             <h3 className="text-lg font-black uppercase text-center mb-4">Liberar Download</h3>
