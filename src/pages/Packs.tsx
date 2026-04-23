@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Plus, Search, Crown, Mic, Folder, Inbox, Menu, Gift, X } from 'lucide-react';
+import { Upload, Search, Crown, Mic, Folder, Inbox, Menu, Gift, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -13,6 +13,7 @@ import { useAcapellas } from '@/hooks/useAcapellas';
 import { useSiteEvents } from '@/hooks/useSiteEvents';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInbox } from '@/hooks/useInbox';
+import { useAppLogo } from '@/hooks/useAppLogo';
 
 type FilterType = 'free' | 'premium' | 'acapellas' | 'projetos';
 
@@ -37,6 +38,7 @@ const Packs = () => {
   const { acapellas, isLoading: acapellasLoading } = useAcapellas();
   const { activeEvents } = useSiteEvents();
   const { hasUnread } = useInbox();
+  const { logoUrl } = useAppLogo();
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -95,7 +97,15 @@ const Packs = () => {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt="Logo do app"
+              className="w-9 h-9 rounded-xl object-cover border border-border/40"
+            />
+          ) : (
+            <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>
+          )}
           <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
             <Inbox className="w-6 h-6" />
             {hasUnread && (
@@ -116,19 +126,19 @@ const Packs = () => {
         {/* Search + discreet add button + floating filter popup */}
         <div className="flex items-center gap-2 mt-4 mb-5 relative" ref={popupRef}>
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               onFocus={() => q.length > 0 && setPopupOpen(true)}
-              className="input-field pl-10 pr-9"
+              className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-11 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all"
               placeholder="Buscar..."
             />
             {searchQuery && (
               <button
                 onClick={() => { setSearchQuery(''); setPopupOpen(false); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-foreground/10 text-muted-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-foreground/10 text-muted-foreground"
                 aria-label="Limpar"
               >
                 <X className="w-3.5 h-3.5" />
@@ -138,10 +148,10 @@ const Packs = () => {
           {showAddButton && (
             <button
               onClick={handleNewPack}
-              aria-label="Adicionar"
+              aria-label="Enviar pack"
               className="shrink-0 w-10 h-10 rounded-full bg-[hsl(0,0%,6%)] border border-border/60 flex items-center justify-center text-foreground/80 hover:bg-[hsl(0,0%,9%)] hover:text-foreground transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <Upload className="w-4 h-4" />
             </button>
           )}
 

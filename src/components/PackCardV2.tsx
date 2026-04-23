@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pack } from '@/hooks/useSupabasePacks';
-import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User } from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,6 +28,9 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showCreditFlow, setShowCreditFlow] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [showDownloadConfirm, setShowDownloadConfirm] = useState(false);
+
+  const isOwner = (pack.author_name || '').toLowerCase().replace(/^@/, '') === 'goat';
 
   const formattedDate = format(new Date(pack.created_at), "dd/MM/yyyy", { locale: ptBR });
   const displayAuthor = pack.is_anonymous ? 'Anônimo' : pack.author_name || 'Desconhecido';
@@ -47,10 +50,15 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
     } catch { toast.error('Erro ao favoritar'); }
   };
 
-  const handleDownloadClick = async (e: React.MouseEvent) => {
+  const handleDownloadClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) { setShowAuthModal(true); return; }
     if (pack.credit_channel_url && !isDownloadUnlocked) { setShowCreditFlow(true); return; }
+    setShowDownloadConfirm(true);
+  };
+
+  const confirmDownload = () => {
+    setShowDownloadConfirm(false);
     window.open(pack.download_url, '_blank');
   };
 
@@ -65,7 +73,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
   return (
     <>
-      <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] transition-all">
+      <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] border border-border/40 transition-all">
         {/* Banner image */}
         <div className="relative w-full aspect-[16/9]">
           {pack.cover_url ? (
@@ -117,7 +125,12 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-bold text-foreground truncate">{pack.title}</h3>
-              <p className="text-[11px] text-muted-foreground truncate mt-0.5">@{displayAuthor}</p>
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1">
+                @{displayAuthor}
+                {isOwner && !pack.is_anonymous && (
+                  <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
+                )}
+              </p>
             </div>
             
             {/* 3 dots menu */}
@@ -142,7 +155,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
       {/* Details Bottom Sheet */}
       {showDetails && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setShowDetails(false)}>
+        <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => setShowDetails(false)}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
             className="relative w-full max-w-lg bg-[hsl(0,0%,3%)] border-t border-border rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
@@ -172,6 +185,9 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                   <User className="w-3 h-3" />
                   @{displayAuthor}
+                  {isOwner && !pack.is_anonymous && (
+                    <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 ml-0.5" aria-label="Dono verificado" />
+                  )}
                 </p>
               </div>
             </div>
@@ -197,6 +213,13 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-2.5 py-1 rounded-full text-xs font-bold">ADM</span>
               )}
             </div>
+
+            {isOwner && !pack.is_anonymous && (
+              <div className="flex items-center gap-1.5 mb-3 text-xs text-sky-400">
+                <BadgeCheck className="w-4 h-4 fill-sky-400/20" />
+                <span className="font-semibold">Dono do aplicativo</span>
+              </div>
+            )}
 
             <div className="text-sm text-muted-foreground mb-5">
               Publicado em {formattedDate}
@@ -237,7 +260,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
       {/* Credit Flow Modal */}
       {showCreditFlow && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setShowCreditFlow(false)} />
           <div className="relative w-full max-w-sm bg-card border border-border rounded-2xl p-6 shadow-2xl">
             <h3 className="text-lg font-black uppercase text-center mb-4">Liberar Download</h3>
@@ -251,6 +274,41 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             <button onClick={() => setShowCreditFlow(false)} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2 mt-3 text-center">
               Cancelar
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Download confirm */}
+      {showDownloadConfirm && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+            onClick={() => setShowDownloadConfirm(false)}
+          />
+          <div className="relative w-full max-w-sm bg-[hsl(0,0%,4%)] border border-border/40 rounded-2xl p-6 shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center mx-auto mb-4">
+              <Download className="w-5 h-5 text-foreground" />
+            </div>
+            <h3 className="text-base font-bold text-foreground text-center mb-1">
+              Baixar este pack?
+            </h3>
+            <p className="text-sm text-muted-foreground text-center mb-5">
+              Você quer mesmo baixar <span className="text-foreground font-semibold">{pack.title}</span> de @{displayAuthor}?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowDownloadConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl bg-[hsl(0,0%,7%)] border border-border/40 text-muted-foreground text-sm font-semibold hover:text-foreground transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmDownload}
+                className="flex-1 py-2.5 rounded-xl bg-foreground text-background text-sm font-bold hover:opacity-90 transition flex items-center justify-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" /> Baixar
+              </button>
+            </div>
           </div>
         </div>
       )}
