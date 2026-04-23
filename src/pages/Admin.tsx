@@ -505,13 +505,15 @@ export default function Admin() {
               </Card>
             )}
 
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
               {subTabs.map((tab) => (
-                <button 
-                  key={tab.id} 
+                <button
+                  key={tab.id}
                   onClick={() => setSubTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap ${
-                    subTab === tab.id ? 'bg-muted text-foreground' : 'text-muted-foreground'
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
+                    subTab === tab.id
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground'
                   }`}
                 >
                   <tab.icon className="w-3 h-3" />{tab.label}
