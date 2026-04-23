@@ -535,10 +535,10 @@ export default function Admin() {
                     {u.is_online && <span className="w-2 h-2 bg-success rounded-full flex-shrink-0" />}
                   </div>
                   <div className="flex gap-1 mt-0.5 flex-wrap">
-                    {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-primary/20 text-primary">ADM</Badge>}
-                    {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-warning/20 text-warning">Principal</Badge>}
-                    {u.is_banned && <Badge variant="destructive" className="text-[10px] px-1 py-0">Banido</Badge>}
-                    {u.has_spotify_badge && <Badge className="text-[10px] px-1 py-0 bg-success/20 text-success">Spotify</Badge>}
+                    {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground/10 text-foreground border-0">ADM</Badge>}
+                    {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground text-background border-0">Principal</Badge>}
+                    {u.is_banned && <Badge variant="destructive" className="text-[10px] px-1.5 py-0">Banido</Badge>}
+                    {u.has_spotify_badge && <Badge className="text-[10px] px-1.5 py-0 bg-success/15 text-success border-0">Spotify</Badge>}
                   </div>
                 </div>
                 <Button 
