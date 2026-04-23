@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pack } from '@/hooks/useSupabasePacks';
-import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User } from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,6 +28,9 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showCreditFlow, setShowCreditFlow] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [showDownloadConfirm, setShowDownloadConfirm] = useState(false);
+
+  const isOwner = (pack.author_name || '').toLowerCase().replace(/^@/, '') === 'goat';
 
   const formattedDate = format(new Date(pack.created_at), "dd/MM/yyyy", { locale: ptBR });
   const displayAuthor = pack.is_anonymous ? 'Anônimo' : pack.author_name || 'Desconhecido';
@@ -47,10 +50,15 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
     } catch { toast.error('Erro ao favoritar'); }
   };
 
-  const handleDownloadClick = async (e: React.MouseEvent) => {
+  const handleDownloadClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) { setShowAuthModal(true); return; }
     if (pack.credit_channel_url && !isDownloadUnlocked) { setShowCreditFlow(true); return; }
+    setShowDownloadConfirm(true);
+  };
+
+  const confirmDownload = () => {
+    setShowDownloadConfirm(false);
     window.open(pack.download_url, '_blank');
   };
 
@@ -65,7 +73,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
   return (
     <>
-      <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] transition-all">
+      <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] border border-border/40 transition-all">
         {/* Banner image */}
         <div className="relative w-full aspect-[16/9]">
           {pack.cover_url ? (
@@ -117,7 +125,12 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-bold text-foreground truncate">{pack.title}</h3>
-              <p className="text-[11px] text-muted-foreground truncate mt-0.5">@{displayAuthor}</p>
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1">
+                @{displayAuthor}
+                {isOwner && !pack.is_anonymous && (
+                  <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
+                )}
+              </p>
             </div>
             
             {/* 3 dots menu */}
