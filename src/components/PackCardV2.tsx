@@ -278,6 +278,41 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </div>
       )}
 
+      {/* Download confirm */}
+      {showDownloadConfirm && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+            onClick={() => setShowDownloadConfirm(false)}
+          />
+          <div className="relative w-full max-w-sm bg-[hsl(0,0%,4%)] border border-border/40 rounded-2xl p-6 shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center mx-auto mb-4">
+              <Download className="w-5 h-5 text-foreground" />
+            </div>
+            <h3 className="text-base font-bold text-foreground text-center mb-1">
+              Baixar este pack?
+            </h3>
+            <p className="text-sm text-muted-foreground text-center mb-5">
+              Você quer mesmo baixar <span className="text-foreground font-semibold">{pack.title}</span> de @{displayAuthor}?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowDownloadConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl bg-[hsl(0,0%,7%)] border border-border/40 text-muted-foreground text-sm font-semibold hover:text-foreground transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmDownload}
+                className="flex-1 py-2.5 rounded-xl bg-foreground text-background text-sm font-bold hover:opacity-90 transition flex items-center justify-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" /> Baixar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </>
   );
