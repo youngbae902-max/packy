@@ -105,27 +105,30 @@ const Packs = () => {
           )}
         </div>
 
-        {/* Filter chips (inside search area) */}
-        <div className="flex gap-2 mb-5 overflow-x-auto scrollbar-hide -mx-1 px-1">
-          {FILTERS.map(f => {
-            const Icon = f.icon;
-            const active = filter === f.id;
-            return (
-              <button
-                key={f.id}
-                onClick={() => setFilter(f.id)}
-                className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
-                  active
-                    ? 'bg-foreground text-background border-foreground'
-                    : 'bg-[hsl(0,0%,5%)] text-muted-foreground border-border/60 hover:text-foreground'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {f.label}
-              </button>
-            );
-          })}
-        </div>
+        {/* Filter chips — only visible while searching */}
+        {searchQuery.trim() !== '' && (
+          <div className="flex gap-2 mb-5 overflow-x-auto scrollbar-hide -mx-1 px-1 animate-fade-in">
+            {FILTERS.map(f => {
+              const Icon = f.icon;
+              const active = filter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setFilter(f.id)}
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                    active
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-[hsl(0,0%,5%)] text-muted-foreground border-border/60 hover:text-foreground'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        {searchQuery.trim() === '' && <div className="mb-5" />}
 
         {/* Content */}
         {filter === 'free' && (
