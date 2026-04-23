@@ -311,24 +311,28 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 py-6">
+        {/* Top bar */}
         <div className="flex items-center justify-between mb-6">
-          <Link to="/conta" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/conta" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4" />Voltar
           </Link>
-          <h1 className="text-xl font-black uppercase">Painel ADM</h1>
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Painel</span>
+            <h1 className="text-base font-black uppercase tracking-wider">Administração</h1>
+          </div>
           <div className="w-16" />
         </div>
 
-        {/* Main Tabs - Scrollable */}
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-2 -mx-4 px-4">
+        {/* Main Tabs - Scrollable, deep-black pill nav */}
+        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
           {mainTabs.map((tab) => (
-            <button 
-              key={tab.id} 
+            <button
+              key={tab.id}
               onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
-                mainTab === tab.id 
-                  ? 'bg-primary text-primary-foreground' 
-                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors flex-shrink-0 border ${
+                mainTab === tab.id
+                  ? 'bg-foreground text-background border-foreground'
+                  : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground hover:bg-[hsl(0,0%,7%)]'
               }`}
             >
               <tab.icon className="w-3.5 h-3.5" />{tab.label}
@@ -338,49 +342,40 @@ export default function Admin() {
 
         {/* Stats Tab */}
         {mainTab === 'stats' && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <Card className="p-4 text-center">
-                <p className="text-2xl font-bold text-primary">{stats.totalDownloads}</p>
-                <p className="text-xs text-muted-foreground">Downloads</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-2xl font-bold text-destructive">{stats.totalLikes}</p>
-                <p className="text-xs text-muted-foreground">Curtidas</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-2xl font-bold">{stats.totalPacks}</p>
-                <p className="text-xs text-muted-foreground">Packs</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-2xl font-bold">{stats.totalAcapellas}</p>
-                <p className="text-xs text-muted-foreground">Acapellas</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-2xl font-bold">{stats.totalUsers}</p>
-                <p className="text-xs text-muted-foreground">Usuários</p>
-              </Card>
-              <Card className="p-4 text-center">
-                <p className="text-2xl font-bold text-warning">{stats.pendingPacks + stats.pendingAcapellas}</p>
-                <p className="text-xs text-muted-foreground">Pendentes</p>
-              </Card>
+          <div className="space-y-5">
+            <div className="grid grid-cols-2 gap-2.5">
+              {[
+                { label: 'Downloads', value: stats.totalDownloads },
+                { label: 'Curtidas', value: stats.totalLikes },
+                { label: 'Packs', value: stats.totalPacks },
+                { label: 'Acapellas', value: stats.totalAcapellas },
+                { label: 'Usuários', value: stats.totalUsers },
+                { label: 'Pendentes', value: stats.pendingPacks + stats.pendingAcapellas },
+              ].map(s => (
+                <div key={s.label} className="rounded-2xl bg-[hsl(0,0%,4%)] border border-border/40 p-4">
+                  <p className="text-2xl font-black text-foreground">{s.value}</p>
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">{s.label}</p>
+                </div>
+              ))}
             </div>
 
-            <div className="pt-4 border-t">
-              <p className="text-sm font-bold mb-3">Ações Rápidas</p>
+            <div className="pt-4 border-t border-border/40">
+              <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3">Ações Rápidas</p>
               <div className="grid grid-cols-2 gap-2">
-                <Button size="sm" variant="outline" onClick={() => setShowPackModal(true)}>
-                  <Plus className="w-3 h-3 mr-1" />Pack
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setShowPremiumPackModal(true)}>
-                  <Crown className="w-3 h-3 mr-1" />Premium
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setShowAcapellaModal(true)}>
-                  <Mic className="w-3 h-3 mr-1" />Acapella
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setMainTab('giftall')}>
-                  <Send className="w-3 h-3 mr-1" />Gift All
-                </Button>
+                {[
+                  { icon: Plus, label: 'Pack', onClick: () => setShowPackModal(true) },
+                  { icon: Crown, label: 'Premium', onClick: () => setShowPremiumPackModal(true) },
+                  { icon: Mic, label: 'Acapella', onClick: () => setShowAcapellaModal(true) },
+                  { icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
+                ].map(a => (
+                  <button
+                    key={a.label}
+                    onClick={a.onClick}
+                    className="flex items-center justify-center gap-2 py-3 rounded-xl bg-[hsl(0,0%,4%)] border border-border/40 text-foreground hover:bg-[hsl(0,0%,7%)] transition-colors text-sm font-medium"
+                  >
+                    <a.icon className="w-4 h-4" />{a.label}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -510,13 +505,15 @@ export default function Admin() {
               </Card>
             )}
 
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
               {subTabs.map((tab) => (
-                <button 
-                  key={tab.id} 
+                <button
+                  key={tab.id}
                   onClick={() => setSubTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap ${
-                    subTab === tab.id ? 'bg-muted text-foreground' : 'text-muted-foreground'
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
+                    subTab === tab.id
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground'
                   }`}
                 >
                   <tab.icon className="w-3 h-3" />{tab.label}
@@ -538,10 +535,10 @@ export default function Admin() {
                     {u.is_online && <span className="w-2 h-2 bg-success rounded-full flex-shrink-0" />}
                   </div>
                   <div className="flex gap-1 mt-0.5 flex-wrap">
-                    {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-primary/20 text-primary">ADM</Badge>}
-                    {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1 py-0 bg-warning/20 text-warning">Principal</Badge>}
-                    {u.is_banned && <Badge variant="destructive" className="text-[10px] px-1 py-0">Banido</Badge>}
-                    {u.has_spotify_badge && <Badge className="text-[10px] px-1 py-0 bg-success/20 text-success">Spotify</Badge>}
+                    {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground/10 text-foreground border-0">ADM</Badge>}
+                    {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground text-background border-0">Principal</Badge>}
+                    {u.is_banned && <Badge variant="destructive" className="text-[10px] px-1.5 py-0">Banido</Badge>}
+                    {u.has_spotify_badge && <Badge className="text-[10px] px-1.5 py-0 bg-success/15 text-success border-0">Spotify</Badge>}
                   </div>
                 </div>
                 <Button 
@@ -612,13 +609,15 @@ export default function Admin() {
             </Button>
 
             {/* Album Sub Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
               {subTabs.map((tab) => (
-                <button 
-                  key={tab.id} 
+                <button
+                  key={tab.id}
                   onClick={() => setAlbumSubTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap ${
-                    albumSubTab === tab.id ? 'bg-muted text-foreground' : 'text-muted-foreground'
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
+                    albumSubTab === tab.id
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground'
                   }`}
                 >
                   <tab.icon className="w-3 h-3" />{tab.label}
@@ -676,7 +675,7 @@ export default function Admin() {
                         {/* Existing Links */}
                         <div className="space-y-2">
                           {getAlbumLinks(a.id).map((link) => (
-                            <div key={link.id} className="flex items-center gap-2 bg-muted p-2 rounded-lg">
+                            <div key={link.id} className="flex items-center gap-2 bg-[hsl(0,0%,4%)] border border-border/40 p-2 rounded-lg">
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium truncate">{link.name}</p>
                                 {link.description && <p className="text-xs text-muted-foreground truncate">{link.description}</p>}
@@ -864,7 +863,7 @@ export default function Admin() {
                   <p className="text-xs text-muted-foreground">@{pack.author_name}</p>
                   <div className="flex gap-1 mt-1 flex-wrap">
                     <Badge variant="outline" className="text-[10px]">{pack.pack_type}</Badge>
-                    {pack.is_premium && <Badge className="bg-warning/20 text-warning text-[10px]">Premium</Badge>}
+                    {pack.is_premium && <Badge className="bg-foreground/10 text-foreground text-[10px] border-0">Premium</Badge>}
                     {pack.is_pinned && <Badge className="text-[10px]"><Pin className="w-2 h-2" /></Badge>}
                   </div>
                 </div>
