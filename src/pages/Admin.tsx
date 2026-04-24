@@ -490,23 +490,41 @@ export default function Admin() {
             {showBulkPackInput && mainTab !== 'acapellas' && (
               <Card className="p-4">
                 <h3 className="font-bold text-sm mb-2">Adicionar Packs em Massa</h3>
-                <p className="text-xs text-muted-foreground mb-3">Cole vários links de download. Cada link criará um pack separado.</p>
-                <BulkLinkInput 
+                <p className="text-xs text-muted-foreground mb-3">
+                  Cole vários links de download. Cada link cria um pack <span className="text-foreground font-semibold">pendente</span>.
+                  Depois aprove um a um ou em massa na aba "Pendentes".
+                </p>
+                <BulkLinkInput
                   onLinksConfirmed={async (links) => {
+                    let created = 0;
                     for (let i = 0; i < links.length; i++) {
-                      await addPack({
-                        title: `Pack ${i + 1}`,
-                        author: 'ADM',
-                        type: mainTab === 'projetos' ? 'project' : 'other',
-                        downloadUrl: links[i],
-                        isExclusive: false,
-                        isAnonymous: false,
-                      } as any);
+                      try {
+                        await addPack({
+                          title: `Pack pendente ${Date.now() + i}`,
+                          author_name: 'ADM',
+                          pack_type: mainTab === 'projetos' ? 'project' : 'other',
+                          download_url: links[i],
+                          cover_url: null,
+                          credit_channel_url: null,
+                          is_exclusive: false,
+                          is_anonymous: false,
+                          is_premium: false,
+                          is_admin_pack: true,
+                          is_pinned: false,
+                          price: null,
+                          user_id: user?.id ?? null,
+                        } as any);
+                        created++;
+                      } catch (err) {
+                        console.error('Erro ao criar pack em massa', err);
+                      }
                     }
-                    toast.success(`${links.length} packs criados!`);
+                    if (created === 0) toast.error('Nenhum pack foi criado. Verifique os links.');
+                    else toast.success(`${created} pack(s) criado(s) e enviados para Pendentes!`);
                     setShowBulkPackInput(false);
+                    setSubTab('pending');
                   }}
-                  maxLinks={20}
+                  maxLinks={50}
                 />
               </Card>
             )}
