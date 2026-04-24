@@ -137,14 +137,19 @@ export default function Admin() {
 
   const handleSendGift = async () => {
     if (!giftModal) return;
-    
+
     if (giftType === 'external') {
       if (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()) {
         toast.error('Preencha nome e link');
         return;
       }
-      
-      // Create a pack for the external gift
+
+      if (!user?.id) {
+        toast.error('Sessão expirada — faça login novamente');
+        return;
+      }
+
+      // Create a pack for the external gift (admin owns it)
       const { data: newPack, error } = await supabase
         .from('packs')
         .insert({
@@ -153,12 +158,14 @@ export default function Admin() {
           author_name: 'ADM',
           is_admin_pack: true,
           status: 'approved',
+          user_id: user.id,
         })
         .select()
         .single();
 
       if (error) {
-        toast.error('Erro ao criar pack');
+        console.error('Erro criando pack externo (user gift)', error);
+        toast.error('Erro ao criar pack: ' + error.message);
         return;
       }
 
@@ -170,8 +177,7 @@ export default function Admin() {
       }
       sendGift({ userId: giftModal.userId, packId: selectedGiftPack, message: giftMessage || undefined });
     }
-    
-    toast.success('Presente enviado!');
+
     setGiftModal(null);
     setSelectedGiftPack('');
     setGiftMessage('');
@@ -185,8 +191,13 @@ export default function Admin() {
       toast.error('Preencha nome e link');
       return;
     }
-    
-    // Create a pack for the external gift
+
+    if (!user?.id) {
+      toast.error('Sessão expirada — faça login novamente');
+      return;
+    }
+
+    // Create a pack for the external gift (admin owns it)
     const { data: newPack, error } = await supabase
       .from('packs')
       .insert({
@@ -196,35 +207,28 @@ export default function Admin() {
         author_name: 'ADM',
         is_admin_pack: true,
         status: 'approved',
+        user_id: user.id,
       })
       .select()
       .single();
 
     if (error) {
-      toast.error('Erro ao criar pack');
+      console.error('Erro criando pack externo', error);
+      toast.error('Erro ao criar pack: ' + error.message);
       return;
     }
 
     // Send to all users
     sendGiftToAll({ packId: newPack.id, message: giftMessage || 'Presente do admin!' });
-    toast.success('Gift enviado para todos!');
-    
+
     setExternalGiftUrl('');
     setExternalGiftName('');
     setExternalGiftCover('');
     setGiftMessage('');
   };
 
-  const handleSendPackGiftToAll = () => {
-    if (!selectedGiftPack) {
-      toast.error('Selecione um pack');
-      return;
-    }
-    sendGiftToAll({ packId: selectedGiftPack, message: giftMessage || undefined });
-    toast.success('Gift enviado para todos!');
-    setSelectedGiftPack('');
-    setGiftMessage('');
-  };
+
+
 
   const handleRestorePack = async (pack: Pack) => {
     await updatePack({ id: pack.id, status: 'pending' });
@@ -435,29 +439,6 @@ export default function Admin() {
               </div>
             </Card>
 
-            <Card className="p-4">
-              <h3 className="font-bold mb-4 flex items-center gap-2">
-                <Package className="w-4 h-4" />
-                Enviar Pack Existente para Todos
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <Label>Selecione um pack</Label>
-                  <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                    <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                    <SelectContent>
-                      {allApprovedPacks.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button onClick={handleSendPackGiftToAll} className="w-full" disabled={!selectedGiftPack}>
-                  <Send className="w-4 h-4 mr-2" />
-                  Enviar Pack para Todos
-                </Button>
-              </div>
-            </Card>
           </div>
         )}
 
@@ -490,23 +471,41 @@ export default function Admin() {
             {showBulkPackInput && mainTab !== 'acapellas' && (
               <Card className="p-4">
                 <h3 className="font-bold text-sm mb-2">Adicionar Packs em Massa</h3>
-                <p className="text-xs text-muted-foreground mb-3">Cole vários links de download. Cada link criará um pack separado.</p>
-                <BulkLinkInput 
+                <p className="text-xs text-muted-foreground mb-3">
+                  Cole vários links de download. Cada link cria um pack <span className="text-foreground font-semibold">pendente</span>.
+                  Depois aprove um a um ou em massa na aba "Pendentes".
+                </p>
+                <BulkLinkInput
                   onLinksConfirmed={async (links) => {
+                    let created = 0;
                     for (let i = 0; i < links.length; i++) {
-                      await addPack({
-                        title: `Pack ${i + 1}`,
-                        author: 'ADM',
-                        type: mainTab === 'projetos' ? 'project' : 'other',
-                        downloadUrl: links[i],
-                        isExclusive: false,
-                        isAnonymous: false,
-                      } as any);
+                      try {
+                        await addPack({
+                          title: `Pack pendente ${Date.now() + i}`,
+                          author_name: 'ADM',
+                          pack_type: mainTab === 'projetos' ? 'project' : 'other',
+                          download_url: links[i],
+                          cover_url: null,
+                          credit_channel_url: null,
+                          is_exclusive: false,
+                          is_anonymous: false,
+                          is_premium: false,
+                          is_admin_pack: true,
+                          is_pinned: false,
+                          price: null,
+                          user_id: user?.id ?? null,
+                        } as any);
+                        created++;
+                      } catch (err) {
+                        console.error('Erro ao criar pack em massa', err);
+                      }
                     }
-                    toast.success(`${links.length} packs criados!`);
+                    if (created === 0) toast.error('Nenhum pack foi criado. Verifique os links.');
+                    else toast.success(`${created} pack(s) criado(s) e enviados para Pendentes!`);
                     setShowBulkPackInput(false);
+                    setSubTab('pending');
                   }}
-                  maxLinks={20}
+                  maxLinks={50}
                 />
               </Card>
             )}
@@ -861,25 +860,62 @@ export default function Admin() {
         {/* Packs/Projects content */}
         {(mainTab === 'packs' || mainTab === 'projetos') && (
           <div className="space-y-3 mt-4">
+            {/* Bulk approve banner — only on pending tab when there's something to approve */}
+            {subTab === 'pending' && getPacksContent().length > 0 && (
+              <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[hsl(0,0%,4%)] border border-border/40">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-foreground">{getPacksContent().length} pack(s) pendente(s)</p>
+                  <p className="text-[11px] text-muted-foreground">Envie todos para a home de uma vez.</p>
+                </div>
+                <button
+                  onClick={async () => {
+                    const items = getPacksContent();
+                    let ok = 0;
+                    for (const p of items) {
+                      try { await approvePack(p.id); ok++; } catch (e) { console.error(e); }
+                    }
+                    toast.success(`${ok} pack(s) enviados para a home!`);
+                  }}
+                  className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-foreground text-background text-xs font-bold uppercase tracking-wide hover:opacity-90 transition"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  Enviar todos
+                </button>
+              </div>
+            )}
+
             {getPacksContent().map((pack) => (
               <div key={pack.id} className="pack-card flex gap-3">
                 <img src={pack.cover_url || '/placeholder.svg'} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-sm truncate">{pack.title}</h3>
-                  <p className="text-xs text-muted-foreground">@{pack.author_name}</p>
+                  <p className="text-xs text-muted-foreground truncate">@{pack.author_name}</p>
                   <div className="flex gap-1 mt-1 flex-wrap">
                     <Badge variant="outline" className="text-[10px]">{pack.pack_type}</Badge>
                     {pack.is_premium && <Badge className="bg-foreground/10 text-foreground text-[10px] border-0">Premium</Badge>}
                     {pack.is_pinned && <Badge className="text-[10px]"><Pin className="w-2 h-2" /></Badge>}
                   </div>
+                  {subTab === 'pending' && (
+                    <a href={pack.download_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground mt-1 truncate max-w-full">
+                      <ExternalLink className="w-2.5 h-2.5 flex-shrink-0" />
+                      <span className="truncate">{pack.download_url}</span>
+                    </a>
+                  )}
                 </div>
                 <div className="flex flex-col gap-1">
                   {subTab === 'pending' ? (
                     <>
-                      <button onClick={() => approvePack(pack.id)} className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30">
-                        <Check className="w-4 h-4" />
+                      <button
+                        onClick={() => approvePack(pack.id)}
+                        title="Enviar para home"
+                        className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30"
+                      >
+                        <Send className="w-4 h-4" />
                       </button>
-                      <button onClick={() => rejectPack(pack.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30">
+                      <button onClick={() => setEditingPack(pack)} className="p-1.5 rounded-lg bg-secondary hover:bg-secondary/80" title="Editar">
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => rejectPack(pack.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30" title="Rejeitar">
                         <X className="w-4 h-4" />
                       </button>
                     </>

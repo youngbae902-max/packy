@@ -163,15 +163,6 @@ const Conta = () => {
       {/* Header */}
       <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
         <div className="max-w-lg mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-lg font-bold tracking-wider text-foreground/90">MINHA CONTA</h1>
-            <Link to="/desejos" className="relative p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 transition-colors">
-              <Star className="w-5 h-5 text-foreground/70" />
-              {hasUpdates && (
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-success rounded-full" />
-              )}
-            </Link>
-          </div>
 
           {/* Profile Card */}
           <div className="flex flex-col items-center text-center">
