@@ -439,29 +439,6 @@ export default function Admin() {
               </div>
             </Card>
 
-            <Card className="p-4">
-              <h3 className="font-bold mb-4 flex items-center gap-2">
-                <Package className="w-4 h-4" />
-                Enviar Pack Existente para Todos
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <Label>Selecione um pack</Label>
-                  <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                    <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                    <SelectContent>
-                      {allApprovedPacks.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button onClick={handleSendPackGiftToAll} className="w-full" disabled={!selectedGiftPack}>
-                  <Send className="w-4 h-4 mr-2" />
-                  Enviar Pack para Todos
-                </Button>
-              </div>
-            </Card>
           </div>
         )}
 
