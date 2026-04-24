@@ -83,208 +83,65 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
   return (
     <>
-      {/* Compact horizontal card — square cover left, info right */}
-      <div className="group relative flex gap-3 p-2.5 rounded-2xl bg-[hsl(0,0%,4%)] border border-border/40 hover:border-border/70 transition-all">
-        {/* Cover — square */}
-        <button
-          onClick={() => setShowDetails(true)}
-          className="relative w-[88px] h-[88px] rounded-xl overflow-hidden bg-[hsl(0,0%,7%)] flex-shrink-0"
-        >
-          {pack.cover_url ? (
-            <img
-              src={pack.cover_url}
+      {/* Card vertical — design anterior */}
+      <div className="pack-card animate-fade-in overflow-hidden">
+        {pack.cover_url ? (
+          <div className="relative -mx-5 -mt-5 mb-4 h-40 overflow-hidden rounded-t-xl">
+            <img 
+              src={pack.cover_url} 
               alt={pack.title}
               className="w-full h-full object-cover"
             />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <ImageIcon className="w-7 h-7 text-muted-foreground/25" />
-            </div>
-          )}
-
-          {pack.is_pinned && (
-            <span className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
-              <Pin className="w-2.5 h-2.5 text-foreground" />
-            </span>
-          )}
-
-          {pack.is_premium && (
-            <span className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-md text-[9px] font-bold backdrop-blur-sm">
-              <Crown className="w-2.5 h-2.5" />
-              R$ {pack.price?.toFixed(2)}
-            </span>
-          )}
-        </button>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-          <div className="min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="text-sm font-bold text-foreground leading-tight line-clamp-2 break-words">
-                {pack.title}
-              </h3>
-              <button
-                onClick={(e) => { e.stopPropagation(); setShowDetails(true); }}
-                aria-label="Ver detalhes"
-                className="p-1 -mt-1 -mr-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors flex-shrink-0"
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
-            </div>
-
-            <p className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1 truncate">
-              <span className="truncate">@{displayAuthor}</span>
-              {isOwner && !pack.is_anonymous && (
-                <BadgeCheck className="w-3 h-3 text-sky-400 fill-sky-400/20 flex-shrink-0" aria-label="Dono verificado" />
-              )}
-              <span className="text-muted-foreground/40">·</span>
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
-                {packTypeLabels[pack.pack_type] || 'Pack'}
-              </span>
-            </p>
+            <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent" />
           </div>
-
-          {/* Actions row */}
-          <div className="flex items-center gap-1.5 mt-2">
-            <button
-              onClick={handleDownloadClick}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 h-8 px-3 rounded-full bg-foreground text-background text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition"
-            >
-              <ArrowDownToLine className="w-3.5 h-3.5" />
-              {needsCredit ? 'Crédito' : 'Baixar'}
-            </button>
-
-            <button
-              onClick={handleLikeClick}
-              aria-label="Curtir"
-              className={`h-8 w-8 inline-flex items-center justify-center rounded-full border transition ${
-                hasLiked
-                  ? 'bg-foreground/10 border-foreground/30 text-foreground'
-                  : 'border-border/40 text-muted-foreground hover:text-foreground hover:border-border'
-              }`}
-            >
-              <Heart className={`w-3.5 h-3.5 ${hasLiked ? 'fill-current' : ''}`} />
-            </button>
-
-            <button
-              onClick={handleFavoriteClick}
-              aria-label="Favoritar"
-              className={`h-8 w-8 inline-flex items-center justify-center rounded-full border transition ${
-                hasFavorited
-                  ? 'bg-foreground/10 border-foreground/30 text-foreground'
-                  : 'border-border/40 text-muted-foreground hover:text-foreground hover:border-border'
-              }`}
-            >
-              <Bookmark className={`w-3.5 h-3.5 ${hasFavorited ? 'fill-current' : ''}`} />
-            </button>
+        ) : (
+          <div className="relative -mx-5 -mt-5 mb-4 h-24 overflow-hidden rounded-t-xl bg-muted flex items-center justify-center">
+            <ImageIcon className="w-8 h-8 text-muted-foreground/40" />
           </div>
-        </div>
-      </div>
-
-      {/* Details Bottom Sheet */}
-      {showDetails && (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => setShowDetails(false)}>
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-          <div
-            className="relative w-full max-w-lg bg-[hsl(0,0%,3%)] border-t border-border rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
-
-            <button
-              onClick={() => setShowDetails(false)}
-              className="absolute top-4 right-4 p-1 text-muted-foreground hover:text-foreground"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-start gap-4 mb-5">
-              <div className="w-16 h-16 rounded-lg overflow-hidden bg-[hsl(0,0%,2%)] flex-shrink-0">
-                {pack.cover_url ? (
-                  <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-6 h-6 text-muted-foreground/40" />
-                  </div>
-                )}
-              </div>
-              <div className="min-w-0">
-                <h3 className="font-bold text-foreground text-lg">{pack.title}</h3>
-                <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
-                  <User className="w-3 h-3" />
-                  @{displayAuthor}
-                  {isOwner && !pack.is_anonymous && (
-                    <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 ml-0.5" aria-label="Dono verificado" />
-                  )}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2 mb-5">
-              <span className="badge-exclusive text-xs">
-                {packTypeLabels[pack.pack_type] || pack.pack_type}
+        )}
+        
+        <div className="flex flex-col items-center text-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="badge-exclusive">
+              {packTypeLabels[pack.pack_type] || pack.pack_type}
+            </span>
+            
+            {pack.is_exclusive && (
+              <span className="badge-star">
+                ⭐ Exclusivo
               </span>
-              {pack.is_exclusive && <span className="badge-star text-xs">⭐ Exclusivo</span>}
-              {pack.is_premium && (
-                <span className="badge-premium text-xs">
-                  <Crown className="w-3 h-3" /> R$ {pack.price?.toFixed(2)}
-                </span>
-              )}
-              {pack.is_pinned && (
-                <span className="inline-flex items-center gap-1 bg-primary/20 text-primary px-2.5 py-1 rounded-full text-xs font-bold">
-                  <Pin className="w-3 h-3" /> Fixado
-                </span>
-              )}
-              {showAdminBadge && pack.is_admin_pack && (
-                <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-2.5 py-1 rounded-full text-xs font-bold">
-                  ADM
-                </span>
-              )}
-            </div>
-
-            {isOwner && !pack.is_anonymous && (
-              <div className="flex items-center gap-1.5 mb-3 text-xs text-sky-400">
-                <BadgeCheck className="w-4 h-4 fill-sky-400/20" />
-                <span className="font-semibold">Dono do aplicativo</span>
-              </div>
             )}
 
-            <div className="text-sm text-muted-foreground mb-5">
-              Publicado em {formattedDate}
-            </div>
-
-            {/* Actions */}
-            <div className="flex items-center gap-3 mb-5">
-              <button
-                onClick={handleLikeClick}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  hasLiked ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Heart className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
-                {pack.likes_count || 0}
-              </button>
-              <button
-                onClick={handleFavoriteClick}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  hasFavorited ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Bookmark className={`w-4 h-4 ${hasFavorited ? 'fill-current' : ''}`} />
-                Salvar
-              </button>
-            </div>
-
-            <button
-              onClick={handleDownloadClick}
-              className="btn-primary w-full flex items-center justify-center gap-2"
-            >
-              <Download className="w-4 h-4" />
-              {needsCredit ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
-            </button>
+            {pack.is_premium && (
+              <span className="badge-premium">
+                <Crown className="w-3 h-3" />
+                R$ {pack.price?.toFixed(2)}
+              </span>
+            )}
           </div>
+          
+          <h3 className="text-xl font-black uppercase tracking-tight">
+            {pack.title}
+          </h3>
+          
+          <p className="text-sm text-muted-foreground flex items-center gap-1">
+            @{displayAuthor}
+            {isOwner && !pack.is_anonymous && (
+              <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
+            )}
+            <span className="text-muted-foreground/40">·</span>
+            {formattedDate}
+          </p>
+          
+          <button 
+            onClick={handleDownloadClick}
+            className="btn-download mt-2"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {needsCredit ? 'Dar Crédito' : 'BAIXAR'}
+          </button>
         </div>
-      )}
+      </div>
 
       {/* Credit Flow Modal */}
       {showCreditFlow && (
