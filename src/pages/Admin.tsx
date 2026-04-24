@@ -185,8 +185,13 @@ export default function Admin() {
       toast.error('Preencha nome e link');
       return;
     }
-    
-    // Create a pack for the external gift
+
+    if (!user?.id) {
+      toast.error('Sessão expirada — faça login novamente');
+      return;
+    }
+
+    // Create a pack for the external gift (admin owns it)
     const { data: newPack, error } = await supabase
       .from('packs')
       .insert({
@@ -196,19 +201,20 @@ export default function Admin() {
         author_name: 'ADM',
         is_admin_pack: true,
         status: 'approved',
+        user_id: user.id,
       })
       .select()
       .single();
 
     if (error) {
-      toast.error('Erro ao criar pack');
+      console.error('Erro criando pack externo', error);
+      toast.error('Erro ao criar pack: ' + error.message);
       return;
     }
 
     // Send to all users
     sendGiftToAll({ packId: newPack.id, message: giftMessage || 'Presente do admin!' });
-    toast.success('Gift enviado para todos!');
-    
+
     setExternalGiftUrl('');
     setExternalGiftName('');
     setExternalGiftCover('');
