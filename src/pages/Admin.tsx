@@ -879,25 +879,62 @@ export default function Admin() {
         {/* Packs/Projects content */}
         {(mainTab === 'packs' || mainTab === 'projetos') && (
           <div className="space-y-3 mt-4">
+            {/* Bulk approve banner — only on pending tab when there's something to approve */}
+            {subTab === 'pending' && getPacksContent().length > 0 && (
+              <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[hsl(0,0%,4%)] border border-border/40">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-foreground">{getPacksContent().length} pack(s) pendente(s)</p>
+                  <p className="text-[11px] text-muted-foreground">Envie todos para a home de uma vez.</p>
+                </div>
+                <button
+                  onClick={async () => {
+                    const items = getPacksContent();
+                    let ok = 0;
+                    for (const p of items) {
+                      try { await approvePack(p.id); ok++; } catch (e) { console.error(e); }
+                    }
+                    toast.success(`${ok} pack(s) enviados para a home!`);
+                  }}
+                  className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-foreground text-background text-xs font-bold uppercase tracking-wide hover:opacity-90 transition"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  Enviar todos
+                </button>
+              </div>
+            )}
+
             {getPacksContent().map((pack) => (
               <div key={pack.id} className="pack-card flex gap-3">
                 <img src={pack.cover_url || '/placeholder.svg'} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-sm truncate">{pack.title}</h3>
-                  <p className="text-xs text-muted-foreground">@{pack.author_name}</p>
+                  <p className="text-xs text-muted-foreground truncate">@{pack.author_name}</p>
                   <div className="flex gap-1 mt-1 flex-wrap">
                     <Badge variant="outline" className="text-[10px]">{pack.pack_type}</Badge>
                     {pack.is_premium && <Badge className="bg-foreground/10 text-foreground text-[10px] border-0">Premium</Badge>}
                     {pack.is_pinned && <Badge className="text-[10px]"><Pin className="w-2 h-2" /></Badge>}
                   </div>
+                  {subTab === 'pending' && (
+                    <a href={pack.download_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground mt-1 truncate max-w-full">
+                      <ExternalLink className="w-2.5 h-2.5 flex-shrink-0" />
+                      <span className="truncate">{pack.download_url}</span>
+                    </a>
+                  )}
                 </div>
                 <div className="flex flex-col gap-1">
                   {subTab === 'pending' ? (
                     <>
-                      <button onClick={() => approvePack(pack.id)} className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30">
-                        <Check className="w-4 h-4" />
+                      <button
+                        onClick={() => approvePack(pack.id)}
+                        title="Enviar para home"
+                        className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30"
+                      >
+                        <Send className="w-4 h-4" />
                       </button>
-                      <button onClick={() => rejectPack(pack.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30">
+                      <button onClick={() => setEditingPack(pack)} className="p-1.5 rounded-lg bg-secondary hover:bg-secondary/80" title="Editar">
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => rejectPack(pack.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30" title="Rejeitar">
                         <X className="w-4 h-4" />
                       </button>
                     </>
