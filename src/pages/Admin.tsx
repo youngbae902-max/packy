@@ -227,16 +227,8 @@ export default function Admin() {
     setGiftMessage('');
   };
 
-  const handleSendPackGiftToAll = () => {
-    if (!selectedGiftPack) {
-      toast.error('Selecione um pack');
-      return;
-    }
-    sendGiftToAll({ packId: selectedGiftPack, message: giftMessage || undefined });
-    toast.success('Gift enviado para todos!');
-    setSelectedGiftPack('');
-    setGiftMessage('');
-  };
+
+
 
   const handleRestorePack = async (pack: Pack) => {
     await updatePack({ id: pack.id, status: 'pending' });
