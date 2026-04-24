@@ -137,14 +137,19 @@ export default function Admin() {
 
   const handleSendGift = async () => {
     if (!giftModal) return;
-    
+
     if (giftType === 'external') {
       if (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()) {
         toast.error('Preencha nome e link');
         return;
       }
-      
-      // Create a pack for the external gift
+
+      if (!user?.id) {
+        toast.error('Sessão expirada — faça login novamente');
+        return;
+      }
+
+      // Create a pack for the external gift (admin owns it)
       const { data: newPack, error } = await supabase
         .from('packs')
         .insert({
@@ -153,12 +158,14 @@ export default function Admin() {
           author_name: 'ADM',
           is_admin_pack: true,
           status: 'approved',
+          user_id: user.id,
         })
         .select()
         .single();
 
       if (error) {
-        toast.error('Erro ao criar pack');
+        console.error('Erro criando pack externo (user gift)', error);
+        toast.error('Erro ao criar pack: ' + error.message);
         return;
       }
 
@@ -170,8 +177,7 @@ export default function Admin() {
       }
       sendGift({ userId: giftModal.userId, packId: selectedGiftPack, message: giftMessage || undefined });
     }
-    
-    toast.success('Presente enviado!');
+
     setGiftModal(null);
     setSelectedGiftPack('');
     setGiftMessage('');
