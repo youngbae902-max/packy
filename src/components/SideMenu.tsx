@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { X, Globe, Disc, Mail, Star, Shield, Home, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppLogo } from '@/hooks/useAppLogo';
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface SideMenuProps {
 
 export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const { isAdmin, user } = useAuth();
+  const { logoUrl } = useAppLogo();
 
   const items = [
     { to: '/', icon: Home, label: 'Início' },
