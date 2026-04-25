@@ -196,9 +196,7 @@ export default function Admin() {
       return;
     }
 
-    // Send to all users
-    sendGiftToAll({ packId: newPack.id, message: giftMessage || 'Presente do admin!' });
-    toast.success('Gift enviado para todos!');
+    await sendGiftToAll({ packId: newPack.id, message: giftMessage || 'Presente do admin!' });
     
     setExternalGiftUrl('');
     setExternalGiftName('');
@@ -206,15 +204,14 @@ export default function Admin() {
     setGiftMessage('');
   };
 
-  const handleSendPackGiftToAll = () => {
-    if (!selectedGiftPack) {
-      toast.error('Selecione um pack');
+  const handleSendPendingToHome = async (packIds?: string[]) => {
+    const ids = packIds ?? pendingHomePacks.map((pack) => pack.id);
+    if (ids.length === 0) {
+      toast.error('Nenhum pack pendente');
       return;
     }
-    sendGiftToAll({ packId: selectedGiftPack, message: giftMessage || undefined });
-    toast.success('Gift enviado para todos!');
-    setSelectedGiftPack('');
-    setGiftMessage('');
+    await Promise.all(ids.map((id) => approvePack(id)));
+    toast.success(`${ids.length} pack(s) enviados para home!`);
   };
 
   const handleRestorePack = async (pack: Pack) => {
@@ -426,29 +423,6 @@ export default function Admin() {
               </div>
             </Card>
 
-            <Card className="p-4">
-              <h3 className="font-bold mb-4 flex items-center gap-2">
-                <Package className="w-4 h-4" />
-                Enviar Pack Existente para Todos
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <Label>Selecione um pack</Label>
-                  <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                    <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                    <SelectContent>
-                      {allApprovedPacks.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button onClick={handleSendPackGiftToAll} className="w-full" disabled={!selectedGiftPack}>
-                  <Send className="w-4 h-4 mr-2" />
-                  Enviar Pack para Todos
-                </Button>
-              </div>
-            </Card>
           </div>
         )}
 
