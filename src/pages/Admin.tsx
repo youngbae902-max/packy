@@ -1153,8 +1153,7 @@ function AdminPackForm({
             <SelectItem value="samples">Samples</SelectItem>
             <SelectItem value="drumkit">Drumkit</SelectItem>
             <SelectItem value="loops">Loops</SelectItem>
-            <SelectItem value="midi">MIDI</SelectItem>
-            <SelectItem value="preset">Preset</SelectItem>
+            <SelectItem value="presets">Presets</SelectItem>
             <SelectItem value="project">Projeto</SelectItem>
             <SelectItem value="other">Outro</SelectItem>
           </SelectContent>
