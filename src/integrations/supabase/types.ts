@@ -184,6 +184,36 @@ export type Database = {
         }
         Relationships: []
       }
+      pack_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_pinned: boolean
+          pack_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          pack_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          pack_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       pack_downloads: {
         Row: {
           id: string
@@ -270,6 +300,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      pack_reposts: {
+        Row: {
+          created_at: string
+          id: string
+          pack_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pack_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pack_id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       packs: {
         Row: {
@@ -514,6 +565,27 @@ export type Database = {
           created_at?: string | null
           id?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
         }
         Relationships: []
       }
