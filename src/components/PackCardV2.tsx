@@ -83,101 +83,78 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
   return (
     <>
-      {/* Compact horizontal card — square cover left, info right */}
-      <div className="group relative flex gap-3 p-2.5 rounded-2xl bg-[hsl(0,0%,4%)] border border-border/40 hover:border-border/70 transition-all">
-        {/* Cover — square */}
+      {/* Feed card — large image, black base, subtle gray border */}
+      <article className="group relative overflow-hidden rounded-[2rem] bg-card border border-border/60 transition-colors hover:border-border">
         <button
           onClick={() => setShowDetails(true)}
-          className="relative w-[88px] h-[88px] rounded-xl overflow-hidden bg-[hsl(0,0%,7%)] flex-shrink-0"
+          className="relative block w-full aspect-[4/3] overflow-hidden bg-secondary/30 text-left"
         >
           {pack.cover_url ? (
             <img
               src={pack.cover_url}
               alt={pack.title}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <ImageIcon className="w-7 h-7 text-muted-foreground/25" />
+            <div className="h-full w-full flex items-center justify-center bg-secondary/40">
+              <ImageIcon className="w-10 h-10 text-muted-foreground/30" />
             </div>
           )}
 
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-card via-card/65 to-transparent" />
+
+          <button
+            onClick={handleFavoriteClick}
+            aria-label="Favoritar"
+            className="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-xl text-foreground drop-shadow-lg transition-transform hover:scale-105"
+          >
+            <Bookmark className={`w-7 h-7 stroke-[2.5] ${hasFavorited ? 'fill-current' : ''}`} />
+          </button>
+
           {pack.is_pinned && (
-            <span className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
-              <Pin className="w-2.5 h-2.5 text-foreground" />
+            <span className="absolute top-4 left-4 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-card/80 border border-border/50 backdrop-blur-md">
+              <Pin className="w-4 h-4 text-foreground" />
             </span>
           )}
 
           {pack.is_premium && (
-            <span className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-md text-[9px] font-bold backdrop-blur-sm">
-              <Crown className="w-2.5 h-2.5" />
+            <span className="absolute left-4 bottom-4 z-10 inline-flex items-center gap-1 rounded-full bg-premium/90 text-premium-foreground px-3 py-1 text-xs font-bold backdrop-blur-md">
+              <Crown className="w-3.5 h-3.5" />
               R$ {pack.price?.toFixed(2)}
             </span>
           )}
         </button>
 
-        {/* Info */}
-        <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-          <div className="min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="text-sm font-bold text-foreground leading-tight line-clamp-2 break-words">
+        <div className="p-4 pt-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="text-xl font-black leading-tight text-foreground line-clamp-2 break-words">
                 {pack.title}
               </h3>
-              <button
-                onClick={(e) => { e.stopPropagation(); setShowDetails(true); }}
-                aria-label="Ver detalhes"
-                className="p-1 -mt-1 -mr-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors flex-shrink-0"
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
+              <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground truncate">
+                <span className="truncate">@{displayAuthor}</span>
+                {isOwner && !pack.is_anonymous && (
+                  <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 flex-shrink-0" aria-label="Dono verificado" />
+                )}
+              </p>
             </div>
 
-            <p className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1 truncate">
-              <span className="truncate">@{displayAuthor}</span>
-              {isOwner && !pack.is_anonymous && (
-                <BadgeCheck className="w-3 h-3 text-sky-400 fill-sky-400/20 flex-shrink-0" aria-label="Dono verificado" />
-              )}
-              <span className="text-muted-foreground/40">·</span>
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
-                {packTypeLabels[pack.pack_type] || 'Pack'}
-              </span>
-            </p>
-          </div>
-
-          {/* Actions row */}
-          <div className="flex items-center gap-1.5 mt-2">
             <button
-              onClick={handleDownloadClick}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 h-8 px-3 rounded-full bg-foreground text-background text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition"
+              onClick={(e) => { e.stopPropagation(); setShowDetails(true); }}
+              aria-label="Ver detalhes"
+              className="mt-2 inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-foreground hover:bg-secondary/80 transition-colors"
             >
-              <ArrowDownToLine className="w-3.5 h-3.5" />
-              {needsCredit ? 'Crédito' : 'Baixar'}
-            </button>
-
-            <button
-              onClick={handleLikeClick}
-              aria-label="Curtir"
-              className={`h-8 w-8 inline-flex items-center justify-center rounded-full border transition ${
-                hasLiked
-                  ? 'bg-foreground/10 border-foreground/30 text-foreground'
-                  : 'border-border/40 text-muted-foreground hover:text-foreground hover:border-border'
-              }`}
-            >
-              <Heart className={`w-3.5 h-3.5 ${hasLiked ? 'fill-current' : ''}`} />
-            </button>
-
-            <button
-              onClick={handleFavoriteClick}
-              aria-label="Favoritar"
-              className={`h-8 w-8 inline-flex items-center justify-center rounded-full border transition ${
-                hasFavorited
-                  ? 'bg-foreground/10 border-foreground/30 text-foreground'
-                  : 'border-border/40 text-muted-foreground hover:text-foreground hover:border-border'
-              }`}
-            >
-              <Bookmark className={`w-3.5 h-3.5 ${hasFavorited ? 'fill-current' : ''}`} />
+              <MoreHorizontal className="w-6 h-6" />
             </button>
           </div>
+
+          <button
+            onClick={handleDownloadClick}
+            className="mt-5 inline-flex h-14 w-full items-center justify-center gap-3 rounded-[1.35rem] bg-secondary text-foreground text-base font-black uppercase tracking-wide hover:bg-secondary/80 transition-colors"
+          >
+            <ArrowDownToLine className="w-5 h-5" />
+            {needsCredit ? 'Crédito' : 'Baixar'}
+          </button>
         </div>
       </div>
 
