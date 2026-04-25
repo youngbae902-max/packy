@@ -1,12 +1,16 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
-import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck } from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePackInteractions } from '@/hooks/usePackInteractions';
 import { AuthModal } from './AuthModal';
 import { toast } from 'sonner';
+import { usePackComments, useRepost } from '@/hooks/useSocial';
+import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const packTypeLabels: Record<string, string> = {
   samples: 'Samples',
@@ -23,17 +27,22 @@ interface PackCardV2Props {
 }
 
 export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { hasLiked, hasFavorited, isDownloadUnlocked, toggleLike, toggleFavorite, unlockDownload } = usePackInteractions(pack.id);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showCreditFlow, setShowCreditFlow] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showDownloadConfirm, setShowDownloadConfirm] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [editingComment, setEditingComment] = useState<{ id: string; content: string } | null>(null);
+  const { hasReposted, toggleRepost } = useRepost(pack.id);
+  const { comments, addComment, updateComment, deleteComment, pinComment } = usePackComments(pack.id);
 
   const isOwner = (pack.author_name || '').toLowerCase().replace(/^@/, '') === 'goat';
 
   const formattedDate = format(new Date(pack.created_at), "dd/MM/yyyy", { locale: ptBR });
   const displayAuthor = pack.is_anonymous ? 'Anônimo' : pack.author_name || 'Desconhecido';
+  const authorProfileUrl = pack.user_id && !pack.is_anonymous ? `/perfil/${pack.user_id}` : null;
 
   const handleLikeClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -69,6 +78,29 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       setShowCreditFlow(false);
       toast.success('Download liberado!');
     } catch { toast.error('Erro ao liberar download'); }
+  };
+
+  const handleRepostClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) { setShowAuthModal(true); return; }
+    try { await toggleRepost(); } catch { toast.error('Erro ao republicar'); }
+  };
+
+  const handleAddComment = async () => {
+    if (!user) { setShowAuthModal(true); return; }
+    if (!commentText.trim()) return;
+    try {
+      await addComment(commentText);
+      setCommentText('');
+    } catch { toast.error('Erro ao comentar'); }
+  };
+
+  const handleUpdateComment = async () => {
+    if (!editingComment || !editingComment.content.trim()) return;
+    try {
+      await updateComment({ id: editingComment.id, content: editingComment.content });
+      setEditingComment(null);
+    } catch { toast.error('Erro ao editar comentário'); }
   };
 
   return (
@@ -145,7 +177,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           {/* Download button */}
           <button
             onClick={handleDownloadClick}
-            className="w-full mt-2.5 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-foreground/10 border border-border/50 text-foreground text-xs font-bold uppercase tracking-wide hover:bg-foreground/15 transition-colors"
+            className="w-full mt-2.5 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[hsl(0,0%,2%)] border border-border/60 text-foreground text-xs font-bold uppercase tracking-wide hover:bg-[hsl(0,0%,6%)] transition-colors shadow-inner"
           >
             <Download className="w-3.5 h-3.5" />
             {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito' : 'Baixar'}
@@ -184,7 +216,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 <h3 className="font-bold text-foreground text-lg">{pack.title}</h3>
                 <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                   <User className="w-3 h-3" />
-                  @{displayAuthor}
+                  {authorProfileUrl ? (
+                    <Link to={authorProfileUrl} className="hover:text-foreground transition" onClick={(e) => e.stopPropagation()}>@{displayAuthor}</Link>
+                  ) : (
+                    <>@{displayAuthor}</>
+                  )}
                   {isOwner && !pack.is_anonymous && (
                     <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 ml-0.5" aria-label="Dono verificado" />
                   )}
@@ -245,11 +281,99 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 <Bookmark className={`w-4 h-4 ${hasFavorited ? 'fill-current' : ''}`} />
                 Salvar
               </button>
+              <button 
+                onClick={handleRepostClick} 
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                  hasReposted ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <Repeat2 className="w-4 h-4" />
+                Republicar
+              </button>
+            </div>
+
+            {authorProfileUrl && (
+              <Link
+                to={authorProfileUrl}
+                className="mb-5 flex items-center justify-center gap-2 rounded-xl bg-[hsl(0,0%,6%)] border border-border/40 py-2.5 text-sm font-semibold text-foreground hover:bg-[hsl(0,0%,9%)] transition"
+              >
+                <User className="w-4 h-4" /> Ver perfil do criador
+              </Link>
+            )}
+
+            <div className="mb-5 rounded-2xl border border-border/40 bg-[hsl(0,0%,5%)] p-3">
+              <div className="flex items-center gap-2 mb-3 text-sm font-bold text-foreground">
+                <MessageCircle className="w-4 h-4" /> Comentários
+              </div>
+              <div className="flex items-start gap-2 mb-3">
+                <Textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Dar feedback..."
+                  className="min-h-[54px] rounded-xl bg-[hsl(0,0%,3%)] border-border/40 resize-none"
+                />
+                <button onClick={handleAddComment} className="h-[54px] w-12 rounded-xl bg-foreground text-background flex items-center justify-center shrink-0">
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {comments.length === 0 ? (
+                  <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
+                ) : comments.map((comment) => {
+                  const canEdit = user?.id === comment.user_id;
+                  const canDelete = canEdit || isAdmin;
+                  const name = comment.profiles?.username || comment.profiles?.artist_name || 'Usuário';
+                  return (
+                    <div key={comment.id} className="rounded-xl bg-[hsl(0,0%,3%)] border border-border/30 p-2.5">
+                      <div className="flex items-start gap-2">
+                        <Avatar className="w-8 h-8">
+                          <AvatarImage src={comment.profiles?.avatar_url || undefined} />
+                          <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-bold truncate">@{name}</span>
+                            {comment.is_pinned && <span className="text-[10px] text-foreground/80">Fixado</span>}
+                          </div>
+                          {editingComment?.id === comment.id ? (
+                            <div className="mt-2 space-y-2">
+                              <Textarea value={editingComment.content} onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })} className="min-h-[52px] rounded-xl bg-background" />
+                              <div className="flex gap-2">
+                                <button onClick={handleUpdateComment} className="text-xs font-bold text-foreground">Salvar</button>
+                                <button onClick={() => setEditingComment(null)} className="text-xs text-muted-foreground">Cancelar</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{comment.content}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {isAdmin && (
+                            <button onClick={() => pinComment({ id: comment.id, pinned: !comment.is_pinned })} className="p-1 text-muted-foreground hover:text-foreground">
+                              <Pin className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                          {canEdit && (
+                            <button onClick={() => setEditingComment({ id: comment.id, content: comment.content })} className="p-1 text-muted-foreground hover:text-foreground">
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                          {canDelete && (
+                            <button onClick={() => deleteComment(comment.id)} className="p-1 text-muted-foreground hover:text-destructive">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <button
               onClick={handleDownloadClick}
-              className="btn-primary w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[hsl(0,0%,2%)] border border-border/60 text-foreground py-3 font-bold hover:bg-[hsl(0,0%,6%)] transition"
             >
               <Download className="w-4 h-4" />
               {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
