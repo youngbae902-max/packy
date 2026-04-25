@@ -10,7 +10,6 @@ import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useUserFavorites, useUserLikes } from '@/hooks/usePackInteractions';
 import { useUserManagement } from '@/hooks/useUserManagement';
-import { useWishlist } from '@/hooks/useWishlist';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
