@@ -34,7 +34,7 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 
-type MainTab = 'stats' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'mathhewdcarmo';
@@ -116,8 +116,11 @@ export default function Admin() {
     return rejectedAlbums;
   };
 
+  const pendingHomePacks = pendingPacks.filter(p => p.pack_type !== 'project');
+
   const mainTabs = [
     { id: 'stats' as const, label: 'Stats', icon: BarChart3 },
+    { id: 'pendentes' as const, label: 'Packs Pendentes', icon: Clock },
     { id: 'packs' as const, label: 'Packs', icon: Package },
     { id: 'projetos' as const, label: 'Projetos', icon: Folder },
     { id: 'acapellas' as const, label: 'Acapellas', icon: Music },
@@ -137,39 +140,27 @@ export default function Admin() {
 
   const handleSendGift = async () => {
     if (!giftModal) return;
-    
-    if (giftType === 'external') {
-      if (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()) {
-        toast.error('Preencha nome e link');
-        return;
-      }
-      
-      // Create a pack for the external gift
-      const { data: newPack, error } = await supabase
-        .from('packs')
-        .insert({
-          title: externalGiftNameForUser.trim(),
-          download_url: externalGiftUrlForUser.trim(),
-          author_name: 'ADM',
-          is_admin_pack: true,
-          status: 'approved',
-        })
-        .select()
-        .single();
-
-      if (error) {
-        toast.error('Erro ao criar pack');
-        return;
-      }
-
-      sendGift({ userId: giftModal.userId, packId: newPack.id, message: giftMessage || undefined });
-    } else {
-      if (!selectedGiftPack) {
-        toast.error('Selecione um pack');
-        return;
-      }
-      sendGift({ userId: giftModal.userId, packId: selectedGiftPack, message: giftMessage || undefined });
+    if (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()) {
+      toast.error('Preencha nome e link');
+      return;
     }
+    const { data: newPack, error } = await supabase
+      .from('packs')
+      .insert({
+        title: externalGiftNameForUser.trim(),
+        download_url: externalGiftUrlForUser.trim(),
+        author_name: 'ADM',
+        is_admin_pack: true,
+        status: 'approved',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      toast.error('Erro ao criar pack');
+      return;
+    }
+    sendGift({ userId: giftModal.userId, packId: newPack.id, message: giftMessage || undefined });
     
     toast.success('Presente enviado!');
     setGiftModal(null);
