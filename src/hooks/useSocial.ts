@@ -88,14 +88,24 @@ export function usePublicProfile(userId?: string) {
   const likesQuery = useQuery({
     queryKey: ['profile-liked-packs', userId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: likes, error } = await supabase
         .from('pack_likes')
-        .select('packs (*)')
+        .select('pack_id')
         .eq('user_id', userId!)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []).map((item: any) => item.packs).filter(Boolean) as Pack[];
+      const ids = (likes || []).map(item => item.pack_id);
+      if (ids.length === 0) return [];
+
+      const { data: packs, error: packsError } = await supabase
+        .from('packs')
+        .select('*')
+        .in('id', ids)
+        .eq('status', 'approved');
+
+      if (packsError) throw packsError;
+      return ids.map(id => (packs || []).find(pack => pack.id === id)).filter(Boolean) as Pack[];
     },
     enabled: !!userId,
   });
@@ -103,14 +113,24 @@ export function usePublicProfile(userId?: string) {
   const repostsQuery = useQuery({
     queryKey: ['profile-reposts', userId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data: reposts, error } = await (supabase as any)
         .from('pack_reposts')
-        .select('packs (*)')
+        .select('pack_id')
         .eq('user_id', userId!)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []).map((item: any) => item.packs).filter(Boolean) as Pack[];
+      const ids = (reposts || []).map((item: any) => item.pack_id);
+      if (ids.length === 0) return [];
+
+      const { data: packs, error: packsError } = await supabase
+        .from('packs')
+        .select('*')
+        .in('id', ids)
+        .eq('status', 'approved');
+
+      if (packsError) throw packsError;
+      return ids.map((id: string) => (packs || []).find(pack => pack.id === id)).filter(Boolean) as Pack[];
     },
     enabled: !!userId,
   });
@@ -219,15 +239,27 @@ export function usePackComments(packId?: string) {
   const commentsQuery = useQuery({
     queryKey: ['pack-comments', packId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data: comments, error } = await (supabase as any)
         .from('pack_comments')
-        .select('*, profiles:user_id(id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url)')
+        .select('*')
         .eq('pack_id', packId!)
         .order('is_pinned', { ascending: false })
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []) as PackComment[];
+      const userIds = Array.from(new Set((comments || []).map((comment: any) => comment.user_id)));
+      if (userIds.length === 0) return [];
+
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url')
+        .in('user_id', userIds);
+
+      if (profilesError) throw profilesError;
+      return (comments || []).map((comment: any) => ({
+        ...comment,
+        profiles: (profiles || []).find(profile => profile.user_id === comment.user_id) || null,
+      })) as PackComment[];
     },
     enabled: !!packId,
   });
