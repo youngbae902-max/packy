@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { X, Globe, Disc, Mail, Star, Shield, Home, Zap } from 'lucide-react';
+import { X, Globe, Disc, Mail, Star, Shield, Home } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppLogo } from '@/hooks/useAppLogo';
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface SideMenuProps {
 
 export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const { isAdmin, user } = useAuth();
+  const { logoUrl } = useAppLogo();
 
   const items = [
     { to: '/', icon: Home, label: 'Início' },
@@ -32,22 +34,23 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
       <aside className="absolute top-0 left-0 h-full w-[80%] max-w-[300px] bg-[hsl(0,0%,2%)] border-r border-border/60 flex flex-col animate-slide-in-right shadow-[8px_0_40px_rgba(0,0,0,0.6)]">
         {/* Brand header */}
         <div className="px-6 pt-8 pb-6 border-b border-border/40">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <span className="text-2xl font-black tracking-tighter">PACKY</span>
-              <Zap className="w-4 h-4 text-foreground/70 fill-foreground/70" />
+          <div className="grid grid-cols-[40px_1fr_40px] items-center">
+            <div />
+            <div className="flex justify-center">
+              {logoUrl ? (
+                <img src={logoUrl} alt="Logo" className="w-16 h-16 rounded-2xl object-cover border border-border/50" />
+              ) : (
+                <div className="w-16 h-16 rounded-2xl bg-secondary border border-border flex items-center justify-center text-lg font-black">P</div>
+              )}
             </div>
             <button
               onClick={onClose}
               aria-label="Fechar menu"
-              className="p-2 -mr-2 rounded-full hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 rounded-full hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mt-3">
-            Menu
-          </p>
         </div>
 
         {/* Nav */}

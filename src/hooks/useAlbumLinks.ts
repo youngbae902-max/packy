@@ -108,7 +108,7 @@ export function useAlbumLinks(albumId?: string) {
     albumLinks,
     isLoading,
     getAlbumLinks,
-    addLink: addLinkMutation.mutate,
+    addLink: addLinkMutation.mutateAsync,
     updateLink: updateLinkMutation.mutate,
     deleteLink: deleteLinkMutation.mutate,
   };

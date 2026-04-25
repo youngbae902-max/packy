@@ -34,7 +34,7 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 
-type MainTab = 'stats' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'mathhewdcarmo';
@@ -116,8 +116,11 @@ export default function Admin() {
     return rejectedAlbums;
   };
 
+  const pendingHomePacks = pendingPacks.filter(p => p.pack_type !== 'project');
+
   const mainTabs = [
     { id: 'stats' as const, label: 'Stats', icon: BarChart3 },
+    { id: 'pendentes' as const, label: 'Packs Pendentes', icon: Clock },
     { id: 'packs' as const, label: 'Packs', icon: Package },
     { id: 'projetos' as const, label: 'Projetos', icon: Folder },
     { id: 'acapellas' as const, label: 'Acapellas', icon: Music },
@@ -137,39 +140,28 @@ export default function Admin() {
 
   const handleSendGift = async () => {
     if (!giftModal) return;
-    
-    if (giftType === 'external') {
-      if (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()) {
-        toast.error('Preencha nome e link');
-        return;
-      }
-      
-      // Create a pack for the external gift
-      const { data: newPack, error } = await supabase
-        .from('packs')
-        .insert({
-          title: externalGiftNameForUser.trim(),
-          download_url: externalGiftUrlForUser.trim(),
-          author_name: 'ADM',
-          is_admin_pack: true,
-          status: 'approved',
-        })
-        .select()
-        .single();
-
-      if (error) {
-        toast.error('Erro ao criar pack');
-        return;
-      }
-
-      sendGift({ userId: giftModal.userId, packId: newPack.id, message: giftMessage || undefined });
-    } else {
-      if (!selectedGiftPack) {
-        toast.error('Selecione um pack');
-        return;
-      }
-      sendGift({ userId: giftModal.userId, packId: selectedGiftPack, message: giftMessage || undefined });
+    if (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()) {
+      toast.error('Preencha nome e link');
+      return;
     }
+    const { data: newPack, error } = await supabase
+      .from('packs')
+      .insert({
+        title: externalGiftNameForUser.trim(),
+        download_url: externalGiftUrlForUser.trim(),
+          user_id: user?.id,
+        author_name: 'ADM',
+        is_admin_pack: true,
+        status: 'approved',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      toast.error('Erro ao criar pack');
+      return;
+    }
+    sendGift({ userId: giftModal.userId, packId: newPack.id, message: giftMessage || undefined });
     
     toast.success('Presente enviado!');
     setGiftModal(null);
@@ -192,6 +184,7 @@ export default function Admin() {
       .insert({
         title: externalGiftName.trim(),
         download_url: externalGiftUrl.trim(),
+        user_id: user?.id,
         cover_url: externalGiftCover.trim() || null,
         author_name: 'ADM',
         is_admin_pack: true,
@@ -205,9 +198,7 @@ export default function Admin() {
       return;
     }
 
-    // Send to all users
-    sendGiftToAll({ packId: newPack.id, message: giftMessage || 'Presente do admin!' });
-    toast.success('Gift enviado para todos!');
+    await sendGiftToAll({ packId: newPack.id, message: giftMessage || 'Presente do admin!' });
     
     setExternalGiftUrl('');
     setExternalGiftName('');
@@ -215,15 +206,14 @@ export default function Admin() {
     setGiftMessage('');
   };
 
-  const handleSendPackGiftToAll = () => {
-    if (!selectedGiftPack) {
-      toast.error('Selecione um pack');
+  const handleSendPendingToHome = async (packIds?: string[]) => {
+    const ids = packIds ?? pendingHomePacks.map((pack) => pack.id);
+    if (ids.length === 0) {
+      toast.error('Nenhum pack pendente');
       return;
     }
-    sendGiftToAll({ packId: selectedGiftPack, message: giftMessage || undefined });
-    toast.success('Gift enviado para todos!');
-    setSelectedGiftPack('');
-    setGiftMessage('');
+    await Promise.all(ids.map((id) => approvePack(id)));
+    toast.success(`${ids.length} pack(s) enviados para home!`);
   };
 
   const handleRestorePack = async (pack: Pack) => {
@@ -267,11 +257,7 @@ export default function Admin() {
     
     for (let i = 0; i < linksToAdd.length; i++) {
       const url = linksToAdd[i];
-      // Extract a simple name from URL
-      const urlObj = new URL(url);
-      const name = urlObj.hostname.replace('www.', '') + (urlObj.pathname.length > 1 ? urlObj.pathname.substring(0, 20) : '');
-      
-      addLink({
+      await addLink({
         album_id: albumId,
         name: `Link ${currentLinks.length + i + 1}`,
         link_url: url,
@@ -435,29 +421,6 @@ export default function Admin() {
               </div>
             </Card>
 
-            <Card className="p-4">
-              <h3 className="font-bold mb-4 flex items-center gap-2">
-                <Package className="w-4 h-4" />
-                Enviar Pack Existente para Todos
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <Label>Selecione um pack</Label>
-                  <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                    <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                    <SelectContent>
-                      {allApprovedPacks.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button onClick={handleSendPackGiftToAll} className="w-full" disabled={!selectedGiftPack}>
-                  <Send className="w-4 h-4 mr-2" />
-                  Enviar Pack para Todos
-                </Button>
-              </div>
-            </Card>
           </div>
         )}
 
@@ -496,14 +459,14 @@ export default function Admin() {
                     for (let i = 0; i < links.length; i++) {
                       await addPack({
                         title: `Pack ${i + 1}`,
-                        author: 'ADM',
-                        type: mainTab === 'projetos' ? 'project' : 'other',
-                        downloadUrl: links[i],
-                        isExclusive: false,
-                        isAnonymous: false,
-                      } as any);
+                        author_name: 'ADM',
+                        pack_type: mainTab === 'projetos' ? 'project' : 'other',
+                        download_url: links[i],
+                        is_admin_pack: true,
+                        status: 'pending',
+                      });
                     }
-                    toast.success(`${links.length} packs criados!`);
+                    toast.success(`${links.length} packs salvos em pendentes!`);
                     setShowBulkPackInput(false);
                   }}
                   maxLinks={20}
@@ -526,6 +489,70 @@ export default function Admin() {
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Pending packs ready to send home */}
+        {mainTab === 'pendentes' && (
+          <div className="space-y-4">
+            <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="font-bold">Packs pendentes</h3>
+                  <p className="text-xs text-muted-foreground">Links salvos aqui só aparecem na home quando forem enviados.</p>
+                </div>
+                <Button size="sm" onClick={() => handleSendPendingToHome()} disabled={pendingHomePacks.length === 0}>
+                  <Send className="w-4 h-4 mr-1" />Enviar todos
+                </Button>
+              </div>
+            </Card>
+
+            <Button variant="outline" onClick={() => setShowBulkPackInput(!showBulkPackInput)} className="w-full">
+              <LinkIcon className="w-4 h-4 mr-2" />Adicionar links em massa
+            </Button>
+
+            {showBulkPackInput && (
+              <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
+                <BulkLinkInput
+                  onLinksConfirmed={async (links) => {
+                    for (let i = 0; i < links.length; i++) {
+                      await addPack({
+                        title: `Pack pendente ${pendingHomePacks.length + i + 1}`,
+                        author_name: 'ADM',
+                        pack_type: 'other',
+                        download_url: links[i],
+                        is_admin_pack: true,
+                        status: 'pending',
+                      });
+                    }
+                    toast.success(`${links.length} pack(s) guardados em pendentes!`);
+                    setShowBulkPackInput(false);
+                  }}
+                  maxLinks={50}
+                />
+              </Card>
+            )}
+
+            {pendingHomePacks.map((pack) => (
+              <div key={pack.id} className="pack-card flex gap-3">
+                <img src={pack.cover_url || '/placeholder.svg'} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-sm truncate">{pack.title}</h3>
+                  <p className="text-xs text-muted-foreground truncate">{pack.download_url}</p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Button size="sm" onClick={() => handleSendPendingToHome([pack.id])}>
+                    <Send className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={() => rejectPack(pack.id)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+            {pendingHomePacks.length === 0 && (
+              <p className="text-center py-8 text-muted-foreground">Nenhum pack pendente</p>
+            )}
           </div>
         )}
 
@@ -976,60 +1003,24 @@ export default function Admin() {
             <DialogTitle>Enviar Presente para @{giftModal?.username}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Toggle between pack and external link */}
-            <div className="flex gap-2">
-              <Button 
-                variant={giftType === 'pack' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setGiftType('pack')}
-                className="flex-1"
-              >
-                <Package className="w-4 h-4 mr-1" />
-                Pack do Site
-              </Button>
-              <Button 
-                variant={giftType === 'external' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setGiftType('external')}
-                className="flex-1"
-              >
-                <LinkIcon className="w-4 h-4 mr-1" />
-                Link Externo
-              </Button>
-            </div>
-
-            {giftType === 'pack' ? (
+            <div className="space-y-3">
               <div>
-                <Label>Selecione um pack</Label>
-                <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                  <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                  <SelectContent>
-                    {allApprovedPacks.map((p) => (
-                      <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Nome do Pack</Label>
+                <Input 
+                  value={externalGiftNameForUser} 
+                  onChange={(e) => setExternalGiftNameForUser(e.target.value)} 
+                  placeholder="Ex: Pack Especial Vol.1"
+                />
               </div>
-            ) : (
-              <div className="space-y-3">
-                <div>
-                  <Label>Nome do Pack</Label>
-                  <Input 
-                    value={externalGiftNameForUser} 
-                    onChange={(e) => setExternalGiftNameForUser(e.target.value)} 
-                    placeholder="Ex: Pack Especial Vol.1"
-                  />
-                </div>
-                <div>
-                  <Label>Link de Download</Label>
-                  <Input 
-                    value={externalGiftUrlForUser} 
-                    onChange={(e) => setExternalGiftUrlForUser(e.target.value)} 
-                    placeholder="https://..."
-                  />
-                </div>
+              <div>
+                <Label>Link de Download</Label>
+                <Input 
+                  value={externalGiftUrlForUser} 
+                  onChange={(e) => setExternalGiftUrlForUser(e.target.value)} 
+                  placeholder="https://..."
+                />
               </div>
-            )}
+            </div>
 
             <div>
               <Label>Mensagem (opcional)</Label>
@@ -1041,7 +1032,7 @@ export default function Admin() {
             </div>
             <Button 
               onClick={handleSendGift} 
-              disabled={giftType === 'pack' ? !selectedGiftPack : (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim())} 
+              disabled={!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()} 
               className="w-full"
             >
               <Gift className="w-4 h-4 mr-2" />Enviar Presente
@@ -1162,8 +1153,7 @@ function AdminPackForm({
             <SelectItem value="samples">Samples</SelectItem>
             <SelectItem value="drumkit">Drumkit</SelectItem>
             <SelectItem value="loops">Loops</SelectItem>
-            <SelectItem value="midi">MIDI</SelectItem>
-            <SelectItem value="preset">Preset</SelectItem>
+            <SelectItem value="presets">Presets</SelectItem>
             <SelectItem value="project">Projeto</SelectItem>
             <SelectItem value="other">Outro</SelectItem>
           </SelectContent>

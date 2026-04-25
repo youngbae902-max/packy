@@ -174,6 +174,8 @@ export function useUserManagement() {
       return data as number;
     },
     onSuccess: (count) => {
+      queryClient.invalidateQueries({ queryKey: ['packs'] });
+      queryClient.invalidateQueries({ queryKey: ['inbox'] });
       toast.success(`Presente enviado para ${count} usuários!`);
     },
     onError: (error: Error) => {
@@ -246,7 +248,7 @@ export function useUserManagement() {
     isMainAdmin,
     banUser: banUserMutation.mutate,
     sendGift: sendGiftMutation.mutate,
-    sendGiftToAll: sendGiftToAllMutation.mutate,
+    sendGiftToAll: sendGiftToAllMutation.mutateAsync,
     toggleAdmin: toggleAdminMutation.mutate,
     updateUsername: updateUsernameMutation.mutate,
     updateOnlineStatus: updateOnlineStatusMutation.mutate,

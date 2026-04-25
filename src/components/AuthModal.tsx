@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Mail, Lock, User } from 'lucide-react';
+import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -13,8 +13,19 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
   const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, resetPassword } = useAuth();
+
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      toast.error('Digite seu email primeiro');
+      return;
+    }
+    const { error } = await resetPassword(email.trim());
+    if (error) toast.error(error.message);
+    else toast.success('Link de redefinição enviado para o email');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +81,12 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {mode === 'signup' && (
+            <p className="rounded-xl border border-border bg-muted/40 p-3 text-xs font-bold uppercase leading-relaxed text-foreground">
+              INVENTE UM EMAIL APENAS PARA ESSE SITE, NÃO PRECISA SER VERIFICADO PELO GOOGLE E INVENTE UMA SENHA
+            </p>
+          )}
+
           <div>
             <label className="label-field flex items-center gap-1">
               <Mail className="w-3 h-3" />
@@ -90,16 +107,36 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
               <Lock className="w-3 h-3" />
               Senha
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="input-field"
-              required
-              minLength={6}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="input-field pr-12"
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
+
+          {mode === 'login' && (
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Esqueci a senha
+            </button>
+          )}
 
           <button 
             type="submit" 
