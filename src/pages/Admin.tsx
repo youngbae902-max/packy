@@ -461,14 +461,14 @@ export default function Admin() {
                     for (let i = 0; i < links.length; i++) {
                       await addPack({
                         title: `Pack ${i + 1}`,
-                        author: 'ADM',
-                        type: mainTab === 'projetos' ? 'project' : 'other',
-                        downloadUrl: links[i],
-                        isExclusive: false,
-                        isAnonymous: false,
-                      } as any);
+                        author_name: 'ADM',
+                        pack_type: mainTab === 'projetos' ? 'project' : 'other',
+                        download_url: links[i],
+                        is_admin_pack: true,
+                        status: 'pending',
+                      });
                     }
-                    toast.success(`${links.length} packs criados!`);
+                    toast.success(`${links.length} packs salvos em pendentes!`);
                     setShowBulkPackInput(false);
                   }}
                   maxLinks={20}
@@ -491,6 +491,70 @@ export default function Admin() {
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Pending packs ready to send home */}
+        {mainTab === 'pendentes' && (
+          <div className="space-y-4">
+            <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="font-bold">Packs pendentes</h3>
+                  <p className="text-xs text-muted-foreground">Links salvos aqui só aparecem na home quando forem enviados.</p>
+                </div>
+                <Button size="sm" onClick={() => handleSendPendingToHome()} disabled={pendingHomePacks.length === 0}>
+                  <Send className="w-4 h-4 mr-1" />Enviar todos
+                </Button>
+              </div>
+            </Card>
+
+            <Button variant="outline" onClick={() => setShowBulkPackInput(!showBulkPackInput)} className="w-full">
+              <LinkIcon className="w-4 h-4 mr-2" />Adicionar links em massa
+            </Button>
+
+            {showBulkPackInput && (
+              <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
+                <BulkLinkInput
+                  onLinksConfirmed={async (links) => {
+                    for (let i = 0; i < links.length; i++) {
+                      await addPack({
+                        title: `Pack pendente ${pendingHomePacks.length + i + 1}`,
+                        author_name: 'ADM',
+                        pack_type: 'other',
+                        download_url: links[i],
+                        is_admin_pack: true,
+                        status: 'pending',
+                      });
+                    }
+                    toast.success(`${links.length} pack(s) guardados em pendentes!`);
+                    setShowBulkPackInput(false);
+                  }}
+                  maxLinks={50}
+                />
+              </Card>
+            )}
+
+            {pendingHomePacks.map((pack) => (
+              <div key={pack.id} className="pack-card flex gap-3">
+                <img src={pack.cover_url || '/placeholder.svg'} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-sm truncate">{pack.title}</h3>
+                  <p className="text-xs text-muted-foreground truncate">{pack.download_url}</p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Button size="sm" onClick={() => handleSendPendingToHome([pack.id])}>
+                    <Send className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={() => rejectPack(pack.id)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+            {pendingHomePacks.length === 0 && (
+              <p className="text-center py-8 text-muted-foreground">Nenhum pack pendente</p>
+            )}
           </div>
         )}
 
