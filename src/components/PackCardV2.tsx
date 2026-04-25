@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Pack } from '@/hooks/useSupabasePacks';
-import {
-  Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin,
-  MoreHorizontal, Download, X, User, BadgeCheck, ArrowDownToLine
-} from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,7 +14,7 @@ const packTypeLabels: Record<string, string> = {
   loops: 'Loops',
   presets: 'Presets',
   project: 'Projeto',
-  other: 'Outros',
+  other: 'Outros'
 };
 
 interface PackCardV2Props {
@@ -27,17 +24,15 @@ interface PackCardV2Props {
 
 export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   const { user } = useAuth();
-  const {
-    hasLiked, hasFavorited, isDownloadUnlocked,
-    toggleLike, toggleFavorite, unlockDownload,
-  } = usePackInteractions(pack.id);
+  const { hasLiked, hasFavorited, isDownloadUnlocked, toggleLike, toggleFavorite, unlockDownload } = usePackInteractions(pack.id);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showCreditFlow, setShowCreditFlow] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showDownloadConfirm, setShowDownloadConfirm] = useState(false);
 
   const isOwner = (pack.author_name || '').toLowerCase().replace(/^@/, '') === 'goat';
-  const formattedDate = format(new Date(pack.created_at), 'dd/MM/yyyy', { locale: ptBR });
+
+  const formattedDate = format(new Date(pack.created_at), "dd/MM/yyyy", { locale: ptBR });
   const displayAuthor = pack.is_anonymous ? 'Anônimo' : pack.author_name || 'Desconhecido';
 
   const handleLikeClick = async (e: React.MouseEvent) => {
@@ -58,10 +53,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   const handleDownloadClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) { setShowAuthModal(true); return; }
-    if (pack.credit_channel_url && !isDownloadUnlocked) {
-      setShowCreditFlow(true);
-      return;
-    }
+    if (pack.credit_channel_url && !isDownloadUnlocked) { setShowCreditFlow(true); return; }
     setShowDownloadConfirm(true);
   };
 
@@ -79,97 +71,100 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
     } catch { toast.error('Erro ao liberar download'); }
   };
 
-  const needsCredit = pack.credit_channel_url && !isDownloadUnlocked && user;
-
   return (
     <>
-      {/* Feed card — large image, black base, subtle gray border */}
-      <article className="group relative overflow-hidden rounded-[2rem] bg-card border border-border/60 transition-colors hover:border-border">
-        <button
-          onClick={() => setShowDetails(true)}
-          className="relative block w-full aspect-[4/3] overflow-hidden bg-secondary/30 text-left"
-        >
+      <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] border border-border/40 transition-all">
+        {/* Banner image */}
+        <div className="relative w-full aspect-[16/9]">
           {pack.cover_url ? (
-            <img
-              src={pack.cover_url}
-              alt={pack.title}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            <img 
+              src={pack.cover_url} 
+              alt={pack.title} 
+              className="w-full h-full object-cover"
             />
           ) : (
-            <div className="h-full w-full flex items-center justify-center bg-secondary/40">
-              <ImageIcon className="w-10 h-10 text-muted-foreground/30" />
+            <div className="w-full h-full bg-[hsl(0,0%,8%)] flex items-center justify-center">
+              <ImageIcon className="w-10 h-10 text-muted-foreground/20" />
             </div>
           )}
 
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-card via-card/65 to-transparent" />
+          {/* Gradient fade on right edge for favorite button */}
+          <div className="absolute top-0 right-0 h-full w-20 bg-gradient-to-l from-[hsl(0,0%,0%)/0.7] to-transparent pointer-events-none" />
 
+          {/* Favorite button - white icon with blur at top right */}
           <button
             onClick={handleFavoriteClick}
-            aria-label="Favoritar"
-            className="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-xl text-foreground drop-shadow-lg transition-transform hover:scale-105"
+            className="absolute top-3 right-3 z-10 flex items-center justify-center transition-all"
           >
-            <Bookmark className={`w-7 h-7 stroke-[2.5] ${hasFavorited ? 'fill-current' : ''}`} />
+            <Bookmark className={`w-5 h-5 drop-shadow-lg ${
+              hasFavorited ? 'text-foreground fill-current' : 'text-foreground/90'
+            }`} />
           </button>
-
+          
+          {/* Pin icon overlay */}
           {pack.is_pinned && (
-            <span className="absolute top-4 left-4 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-card/80 border border-border/50 backdrop-blur-md">
-              <Pin className="w-4 h-4 text-foreground" />
-            </span>
+            <div className="absolute top-3 left-3 z-10">
+              <Pin className="w-4 h-4 text-foreground drop-shadow-lg" />
+            </div>
           )}
 
+          {/* Premium badge */}
           {pack.is_premium && (
-            <span className="absolute left-4 bottom-4 z-10 inline-flex items-center gap-1 rounded-full bg-premium/90 text-premium-foreground px-3 py-1 text-xs font-bold backdrop-blur-md">
-              <Crown className="w-3.5 h-3.5" />
+            <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-premium/90 text-premium-foreground px-2 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
+              <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
-            </span>
+            </div>
           )}
-        </button>
 
-        <div className="p-4 pt-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <h3 className="text-xl font-black leading-tight text-foreground line-clamp-2 break-words">
-                {pack.title}
-              </h3>
-              <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground truncate">
-                <span className="truncate">@{displayAuthor}</span>
+          {/* Bottom gradient for text readability */}
+          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[hsl(0,0%,4%)] to-transparent pointer-events-none" />
+        </div>
+
+        {/* Info below banner */}
+        <div className="px-3 pt-2 pb-3 bg-[hsl(0,0%,4%)]">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-bold text-foreground truncate">{pack.title}</h3>
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1">
+                @{displayAuthor}
                 {isOwner && !pack.is_anonymous && (
-                  <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 flex-shrink-0" aria-label="Dono verificado" />
+                  <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
                 )}
               </p>
             </div>
-
+            
+            {/* 3 dots menu */}
             <button
               onClick={(e) => { e.stopPropagation(); setShowDetails(true); }}
-              aria-label="Ver detalhes"
-              className="mt-2 inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-foreground hover:bg-secondary/80 transition-colors"
+              className="p-1 rounded-full text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
             >
-              <MoreHorizontal className="w-6 h-6" />
+              <MoreHorizontal className="w-4 h-4" />
             </button>
           </div>
 
+          {/* Download button */}
           <button
             onClick={handleDownloadClick}
-            className="mt-5 inline-flex h-14 w-full items-center justify-center gap-3 rounded-[1.35rem] bg-secondary text-foreground text-base font-black uppercase tracking-wide hover:bg-secondary/80 transition-colors"
+            className="w-full mt-2.5 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-foreground/10 border border-border/50 text-foreground text-xs font-bold uppercase tracking-wide hover:bg-foreground/15 transition-colors"
           >
-            <ArrowDownToLine className="w-5 h-5" />
-            {needsCredit ? 'Crédito' : 'Baixar'}
+            <Download className="w-3.5 h-3.5" />
+            {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito' : 'Baixar'}
           </button>
         </div>
-      </article>
+      </div>
 
       {/* Details Bottom Sheet */}
       {showDetails && (
         <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => setShowDetails(false)}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-          <div
+          <div 
             className="relative w-full max-w-lg bg-[hsl(0,0%,3%)] border-t border-border rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
-
-            <button
-              onClick={() => setShowDetails(false)}
+            
+            <button 
+              onClick={() => setShowDetails(false)} 
               className="absolute top-4 right-4 p-1 text-muted-foreground hover:text-foreground"
             >
               <X className="w-5 h-5" />
@@ -201,7 +196,9 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               <span className="badge-exclusive text-xs">
                 {packTypeLabels[pack.pack_type] || pack.pack_type}
               </span>
-              {pack.is_exclusive && <span className="badge-star text-xs">⭐ Exclusivo</span>}
+              {pack.is_exclusive && (
+                <span className="badge-star text-xs">⭐ Exclusivo</span>
+              )}
               {pack.is_premium && (
                 <span className="badge-premium text-xs">
                   <Crown className="w-3 h-3" /> R$ {pack.price?.toFixed(2)}
@@ -213,9 +210,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 </span>
               )}
               {showAdminBadge && pack.is_admin_pack && (
-                <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-2.5 py-1 rounded-full text-xs font-bold">
-                  ADM
-                </span>
+                <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-2.5 py-1 rounded-full text-xs font-bold">ADM</span>
               )}
             </div>
 
@@ -232,8 +227,8 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
             {/* Actions */}
             <div className="flex items-center gap-3 mb-5">
-              <button
-                onClick={handleLikeClick}
+              <button 
+                onClick={handleLikeClick} 
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                   hasLiked ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
                 }`}
@@ -241,8 +236,8 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 <Heart className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
                 {pack.likes_count || 0}
               </button>
-              <button
-                onClick={handleFavoriteClick}
+              <button 
+                onClick={handleFavoriteClick} 
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                   hasFavorited ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
                 }`}
@@ -257,7 +252,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               className="btn-primary w-full flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" />
-              {needsCredit ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
+              {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
             </button>
           </div>
         </div>
@@ -276,10 +271,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               <ExternalLink className="w-4 h-4" />
               Acessar Canal
             </button>
-            <button
-              onClick={() => setShowCreditFlow(false)}
-              className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2 mt-3 text-center"
-            >
+            <button onClick={() => setShowCreditFlow(false)} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2 mt-3 text-center">
               Cancelar
             </button>
           </div>
