@@ -14,6 +14,7 @@ import Sites from "./pages/Sites";
 import Wishlist from "./pages/Wishlist";
 import Inbox from "./pages/Inbox";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/desejos" element={<Wishlist />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/conta" element={<Conta />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
