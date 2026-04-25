@@ -156,7 +156,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             {needsCredit ? 'Crédito' : 'Baixar'}
           </button>
         </div>
-      </div>
+      </article>
 
       {/* Details Bottom Sheet */}
       {showDetails && (
