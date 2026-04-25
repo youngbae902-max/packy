@@ -14,6 +14,7 @@ import { useSiteEvents } from '@/hooks/useSiteEvents';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInbox } from '@/hooks/useInbox';
 import { useAppLogo } from '@/hooks/useAppLogo';
+import { useProfileSearch } from '@/hooks/useSocial';
 
 type FilterType = 'free' | 'premium' | 'acapellas' | 'projetos';
 
@@ -39,6 +40,7 @@ const Packs = () => {
   const { activeEvents } = useSiteEvents();
   const { hasUnread } = useInbox();
   const { logoUrl } = useAppLogo();
+  const { data: searchedProfiles = [] } = useProfileSearch(searchQuery);
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -178,6 +180,27 @@ const Packs = () => {
               )}
 
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 mb-1.5">Filtrar por</p>
+              {searchedProfiles.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 mb-1.5">Usuários</p>
+                  <div className="space-y-1.5">
+                    {searchedProfiles.map(profile => (
+                      <Link
+                        key={profile.user_id}
+                        to={`/perfil/${profile.user_id}`}
+                        className="flex items-center gap-2 rounded-xl bg-[hsl(0,0%,7%)] px-3 py-2 text-sm font-semibold hover:bg-[hsl(0,0%,10%)] transition"
+                      >
+                        {profile.avatar_url ? (
+                          <img src={profile.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-muted" />
+                        )}
+                        <span className="truncate">@{profile.username || profile.artist_name || 'usuário'}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-1.5">
                 {FILTERS.map(f => {
                   const Icon = f.icon;
