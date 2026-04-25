@@ -255,11 +255,7 @@ export default function Admin() {
     
     for (let i = 0; i < linksToAdd.length; i++) {
       const url = linksToAdd[i];
-      // Extract a simple name from URL
-      const urlObj = new URL(url);
-      const name = urlObj.hostname.replace('www.', '') + (urlObj.pathname.length > 1 ? urlObj.pathname.substring(0, 20) : '');
-      
-      addLink({
+      await addLink({
         album_id: albumId,
         name: `Link ${currentLinks.length + i + 1}`,
         link_url: url,
