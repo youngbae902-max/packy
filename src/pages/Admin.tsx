@@ -149,6 +149,7 @@ export default function Admin() {
       .insert({
         title: externalGiftNameForUser.trim(),
         download_url: externalGiftUrlForUser.trim(),
+          user_id: user?.id,
         author_name: 'ADM',
         is_admin_pack: true,
         status: 'approved',
@@ -183,6 +184,7 @@ export default function Admin() {
       .insert({
         title: externalGiftName.trim(),
         download_url: externalGiftUrl.trim(),
+        user_id: user?.id,
         cover_url: externalGiftCover.trim() || null,
         author_name: 'ADM',
         is_admin_pack: true,
