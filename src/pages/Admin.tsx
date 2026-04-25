@@ -1005,60 +1005,24 @@ export default function Admin() {
             <DialogTitle>Enviar Presente para @{giftModal?.username}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Toggle between pack and external link */}
-            <div className="flex gap-2">
-              <Button 
-                variant={giftType === 'pack' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setGiftType('pack')}
-                className="flex-1"
-              >
-                <Package className="w-4 h-4 mr-1" />
-                Pack do Site
-              </Button>
-              <Button 
-                variant={giftType === 'external' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setGiftType('external')}
-                className="flex-1"
-              >
-                <LinkIcon className="w-4 h-4 mr-1" />
-                Link Externo
-              </Button>
-            </div>
-
-            {giftType === 'pack' ? (
+            <div className="space-y-3">
               <div>
-                <Label>Selecione um pack</Label>
-                <Select value={selectedGiftPack} onValueChange={setSelectedGiftPack}>
-                  <SelectTrigger><SelectValue placeholder="Selecione um pack" /></SelectTrigger>
-                  <SelectContent>
-                    {allApprovedPacks.map((p) => (
-                      <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Nome do Pack</Label>
+                <Input 
+                  value={externalGiftNameForUser} 
+                  onChange={(e) => setExternalGiftNameForUser(e.target.value)} 
+                  placeholder="Ex: Pack Especial Vol.1"
+                />
               </div>
-            ) : (
-              <div className="space-y-3">
-                <div>
-                  <Label>Nome do Pack</Label>
-                  <Input 
-                    value={externalGiftNameForUser} 
-                    onChange={(e) => setExternalGiftNameForUser(e.target.value)} 
-                    placeholder="Ex: Pack Especial Vol.1"
-                  />
-                </div>
-                <div>
-                  <Label>Link de Download</Label>
-                  <Input 
-                    value={externalGiftUrlForUser} 
-                    onChange={(e) => setExternalGiftUrlForUser(e.target.value)} 
-                    placeholder="https://..."
-                  />
-                </div>
+              <div>
+                <Label>Link de Download</Label>
+                <Input 
+                  value={externalGiftUrlForUser} 
+                  onChange={(e) => setExternalGiftUrlForUser(e.target.value)} 
+                  placeholder="https://..."
+                />
               </div>
-            )}
+            </div>
 
             <div>
               <Label>Mensagem (opcional)</Label>
@@ -1070,7 +1034,7 @@ export default function Admin() {
             </div>
             <Button 
               onClick={handleSendGift} 
-              disabled={giftType === 'pack' ? !selectedGiftPack : (!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim())} 
+              disabled={!externalGiftNameForUser.trim() || !externalGiftUrlForUser.trim()} 
               className="w-full"
             >
               <Gift className="w-4 h-4 mr-2" />Enviar Presente
