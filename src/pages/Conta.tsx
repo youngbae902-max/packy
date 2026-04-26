@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, Package, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Palette } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, Heart } from 'lucide-react';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
@@ -9,6 +9,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useUserManagement } from '@/hooks/useUserManagement';
 import { usePublicProfile } from '@/hooks/useSocial';
+import { useUserFavorites } from '@/hooks/usePackInteractions';
+import { ProfilePackRow } from '@/components/ProfilePackRow';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +29,8 @@ const Conta = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  const [recoveryKeyword, setRecoveryKeyword] = useState('');
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
   
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
@@ -51,8 +55,15 @@ const Conta = () => {
       setSoundcloudUrl(profile.soundcloud_url || '');
       setYoutubeUrl(profile.youtube_url || '');
       setThemeColor(profile.theme_accent_color || profile.online_accent_color || '#3b82f6');
+      setThemeMode((profile.theme_mode as 'dark' | 'light') || 'dark');
+      setRecoveryKeyword(profile.recovery_keyword || '');
     }
   }, [profile]);
+  const { favorites } = useUserFavorites();
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', themeMode === 'light');
+  }, [themeMode]);
 
   const handleAvatarSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -98,6 +109,14 @@ const Conta = () => {
   };
 
   const handleSaveProfile = async () => {
+    if (!profile?.avatar_url && !cropImage) {
+      toast.error('Coloque uma foto de perfil');
+      return;
+    }
+    if (!artistName.trim() || !username.trim()) {
+      toast.error('Nome e username são obrigatórios');
+      return;
+    }
     try {
       await updateProfile({ 
         artist_name: artistName,
@@ -108,6 +127,7 @@ const Conta = () => {
         youtube_url: youtubeUrl || null,
         theme_accent_color: themeColor,
         online_accent_color: themeColor,
+        recovery_keyword: recoveryKeyword.trim() || null,
       });
       
       if (username.trim() && username !== profile?.username) {
@@ -139,6 +159,13 @@ const Conta = () => {
       toast.success('Senha alterada!');
       setNewPassword('');
     }
+  };
+
+  const handleThemeChange = async (mode: 'dark' | 'light') => {
+    setThemeMode(mode);
+    await updateProfile({ theme_mode: mode });
+    document.documentElement.classList.toggle('light', mode === 'light');
+    toast.success(mode === 'light' ? 'Tema branco ativado' : 'Tema preto ativado');
   };
 
   const SpotifyIcon = () => (
