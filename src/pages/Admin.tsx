@@ -450,15 +450,13 @@ export default function Admin() {
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar {mainTab === 'acapellas' ? 'Acapella' : 'Pack'}
               </Button>
-              {mainTab !== 'acapellas' && (
-                <Button 
-                  variant="outline"
-                  onClick={() => setShowBulkPackInput(!showBulkPackInput)}
-                >
-                  <LinkIcon className="w-4 h-4 mr-2" />
-                  Em Massa
-                </Button>
-              )}
+              <Button 
+                variant="outline"
+                onClick={() => mainTab === 'acapellas' ? setShowBulkAcapellaInput(!showBulkAcapellaInput) : setShowBulkPackInput(!showBulkPackInput)}
+              >
+                <LinkIcon className="w-4 h-4 mr-2" />
+                Em Massa
+              </Button>
             </div>
 
             {showBulkPackInput && mainTab !== 'acapellas' && (
@@ -481,6 +479,23 @@ export default function Admin() {
                     setShowBulkPackInput(false);
                   }}
                   maxLinks={20}
+                />
+              </Card>
+            )}
+
+            {showBulkAcapellaInput && mainTab === 'acapellas' && (
+              <Card className="p-4 rounded-3xl border-border/50 bg-card">
+                <h3 className="font-bold text-sm mb-2">Adicionar Acapellas em Massa</h3>
+                <p className="text-xs text-muted-foreground mb-3">Cole links de áudio ou download. Cada link cria uma acapella pendente.</p>
+                <BulkLinkInput 
+                  onLinksConfirmed={async (links) => {
+                    for (let i = 0; i < links.length; i++) {
+                      await addAcapella({ artist_name: `Acapella ${i + 1}`, audio_url: links[i], download_url: links[i], duration_seconds: null });
+                    }
+                    toast.success(`${links.length} acapellas salvas em pendentes!`);
+                    setShowBulkAcapellaInput(false);
+                  }}
+                  maxLinks={50}
                 />
               </Card>
             )}
