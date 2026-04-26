@@ -592,8 +592,8 @@ export default function Admin() {
                   <Edit className="w-4 h-4" />
                 </Button>
                 {isMainAdmin(user?.id || '') && (
-                  <Button size="sm" variant="outline" onClick={() => handleImpersonate(u.user_id, u.username)}>
-                    <Eye className="w-4 h-4" />
+                  <Button size="sm" variant="outline" onClick={() => handleImpersonate(u.user_id, u.username)} className="gap-1">
+                    <Eye className="w-4 h-4" /> Entrar na conta
                   </Button>
                 )}
               </div>
