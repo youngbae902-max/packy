@@ -15,6 +15,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useInbox } from '@/hooks/useInbox';
 import { useAppLogo } from '@/hooks/useAppLogo';
 import { useProfileSearch } from '@/hooks/useSocial';
+import { useCustomPages } from '@/hooks/useCustomPages';
 
 type FilterType = 'free' | 'premium' | 'acapellas' | 'projetos';
 
@@ -33,6 +34,7 @@ const Packs = () => {
   const [filter, setFilter] = useState<FilterType>('free');
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
+  const [logoBubble, setLogoBubble] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
@@ -41,6 +43,7 @@ const Packs = () => {
   const { hasUnread } = useInbox();
   const { logoUrl } = useAppLogo();
   const { data: searchedProfiles = [] } = useProfileSearch(searchQuery);
+  const { pages } = useCustomPages();
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -99,15 +102,10 @@ const Packs = () => {
           >
             <Menu className="w-6 h-6" />
           </button>
-          {logoUrl ? (
-            <img
-              src={logoUrl}
-              alt="Logo do app"
-              className="w-9 h-9 rounded-xl object-cover border border-border/40"
-            />
-          ) : (
-            <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>
-          )}
+          <button onClick={() => { setLogoBubble(true); setTimeout(() => setLogoBubble(false), 2200); }} className="relative">
+            {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
+            {logoBubble && <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap rounded-2xl bg-foreground text-background px-3 py-1.5 text-xs font-black shadow-xl">obgg por usar</span>}
+          </button>
           <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
             <Inbox className="w-6 h-6" />
             {hasUnread && (
@@ -121,6 +119,16 @@ const Packs = () => {
           <div className="space-y-2 my-4">
             {activeEvents.map(event => (
               <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+        )}
+
+        {pages.filter(page => page.is_active && page.placement === 'home').length > 0 && (
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide my-4">
+            {pages.filter(page => page.is_active && page.placement === 'home').map(page => (
+              <Link key={page.id} to={`/pagina/${page.slug}`} className="shrink-0 rounded-full border border-border/50 bg-[hsl(0,0%,5%)] px-4 py-2 text-sm font-bold text-foreground">
+                {page.title}
+              </Link>
             ))}
           </div>
         )}
