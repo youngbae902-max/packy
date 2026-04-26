@@ -448,10 +448,12 @@ export type Database = {
           last_seen: string | null
           last_username_change_date: string | null
           online_accent_color: string | null
+          recovery_keyword: string | null
           soundcloud_url: string | null
           spotify_url: string | null
           status_ring_color: string | null
           theme_accent_color: string | null
+          theme_mode: string
           theme_preference: string | null
           thought_bubble: string | null
           updated_at: string | null
@@ -474,10 +476,12 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
+          recovery_keyword?: string | null
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null
           theme_accent_color?: string | null
+          theme_mode?: string
           theme_preference?: string | null
           thought_bubble?: string | null
           updated_at?: string | null
@@ -500,10 +504,12 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
+          recovery_keyword?: string | null
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null
           theme_accent_color?: string | null
+          theme_mode?: string
           theme_preference?: string | null
           thought_bubble?: string | null
           updated_at?: string | null
@@ -741,6 +747,14 @@ export type Database = {
     }
     Functions: {
       admin_delete_user: { Args: { target_user_id: string }; Returns: boolean }
+      admin_get_user_login: {
+        Args: { target_user_id: string }
+        Returns: string
+      }
+      admin_set_user_password: {
+        Args: { new_password: string; target_user_id: string }
+        Returns: boolean
+      }
       delete_my_account: { Args: never; Returns: boolean }
       has_role: {
         Args: {
@@ -752,6 +766,10 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       promote_to_admin: {
         Args: { admin_password: string; user_email: string }
+        Returns: boolean
+      }
+      reset_password_with_keyword: {
+        Args: { account_email: string; keyword: string; new_password: string }
         Returns: boolean
       }
       send_gift: {

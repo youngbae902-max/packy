@@ -66,6 +66,7 @@ export default function Admin() {
   const [newLinkDesc, setNewLinkDesc] = useState('');
   const [showBulkInput, setShowBulkInput] = useState(false);
   const [showBulkPackInput, setShowBulkPackInput] = useState(false);
+  const [showBulkAcapellaInput, setShowBulkAcapellaInput] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
   const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
@@ -88,7 +89,7 @@ export default function Admin() {
   
   const { 
     users, isUserAdmin, banUser, sendGift, toggleAdmin, 
-    sendGiftToAll, toggleSpotifyBadge, deleteUser, isMainAdmin 
+    sendGiftToAll, toggleSpotifyBadge, deleteUser, isMainAdmin, adminSetUserPassword, getUserLogin 
   } = useUserManagement();
   
   const { pendingWishlists, respondToWish } = useWishlist();
@@ -449,15 +450,13 @@ export default function Admin() {
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar {mainTab === 'acapellas' ? 'Acapella' : 'Pack'}
               </Button>
-              {mainTab !== 'acapellas' && (
-                <Button 
-                  variant="outline"
-                  onClick={() => setShowBulkPackInput(!showBulkPackInput)}
-                >
-                  <LinkIcon className="w-4 h-4 mr-2" />
-                  Em Massa
-                </Button>
-              )}
+              <Button 
+                variant="outline"
+                onClick={() => mainTab === 'acapellas' ? setShowBulkAcapellaInput(!showBulkAcapellaInput) : setShowBulkPackInput(!showBulkPackInput)}
+              >
+                <LinkIcon className="w-4 h-4 mr-2" />
+                Em Massa
+              </Button>
             </div>
 
             {showBulkPackInput && mainTab !== 'acapellas' && (
@@ -480,6 +479,23 @@ export default function Admin() {
                     setShowBulkPackInput(false);
                   }}
                   maxLinks={20}
+                />
+              </Card>
+            )}
+
+            {showBulkAcapellaInput && mainTab === 'acapellas' && (
+              <Card className="p-4 rounded-3xl border-border/50 bg-card">
+                <h3 className="font-bold text-sm mb-2">Adicionar Acapellas em Massa</h3>
+                <p className="text-xs text-muted-foreground mb-3">Cole links de áudio ou download. Cada link cria uma acapella pendente.</p>
+                <BulkLinkInput 
+                  onLinksConfirmed={async (links) => {
+                    for (let i = 0; i < links.length; i++) {
+                      await addAcapella({ artist_name: `Acapella ${i + 1}`, audio_url: links[i], download_url: links[i], duration_seconds: null });
+                    }
+                    toast.success(`${links.length} acapellas salvas em pendentes!`);
+                    setShowBulkAcapellaInput(false);
+                  }}
+                  maxLinks={50}
                 />
               </Card>
             )}
@@ -575,7 +591,7 @@ export default function Admin() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="font-bold text-sm truncate">@{u.username || 'sem-username'}</span>
-                    {u.is_online && <span className="w-2 h-2 bg-success rounded-full flex-shrink-0" />}
+                    {u.is_online && <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: u.online_accent_color || u.theme_accent_color || 'hsl(var(--success))' }} />}
                   </div>
                   <div className="flex gap-1 mt-0.5 flex-wrap">
                     {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground/10 text-foreground border-0">ADM</Badge>}
@@ -1014,6 +1030,9 @@ export default function Admin() {
         onToggleSpotify={(userId, enabled) => toggleSpotifyBadge({ userId, enabled })}
         onDelete={handleDeleteUser}
         onSendGift={(userId, username) => setGiftModal({ userId, username })}
+        canEnterAccount={isMainAdmin(user?.id || '')}
+        onSetPassword={(userId, password) => adminSetUserPassword({ userId, password }).then(() => undefined)}
+        onGetLogin={getUserLogin}
       />
 
       {/* Album Link Edit Modal */}

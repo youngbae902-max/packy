@@ -15,6 +15,8 @@ export interface UserProfile {
   username_changes_today: number;
   last_username_change_date: string | null;
   has_spotify_badge: boolean | null;
+  theme_accent_color?: string | null;
+  online_accent_color?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -234,6 +236,26 @@ export function useUserManagement() {
     },
   });
 
+  const adminSetUserPasswordMutation = useMutation({
+    mutationFn: async ({ userId, password }: { userId: string; password: string }) => {
+      const { data, error } = await supabase.rpc('admin_set_user_password' as any, {
+        target_user_id: userId,
+        new_password: password,
+      });
+      if (error) throw error;
+      if (!data) throw new Error('Apenas o @goat pode trocar a senha de outro usuário');
+      return data;
+    },
+    onSuccess: () => toast.success('Senha temporária definida!'),
+    onError: (error: Error) => toast.error(error.message),
+  });
+
+  const getUserLogin = async (userId: string) => {
+    const { data, error } = await supabase.rpc('admin_get_user_login' as any, { target_user_id: userId });
+    if (error) throw error;
+    return data as string | null;
+  };
+
   // Check if user is the main protected admin by username
   const isMainAdmin = (userId: string) => {
     const userProfile = users.find(u => u.user_id === userId);
@@ -255,5 +277,7 @@ export function useUserManagement() {
     deleteUser: deleteUserMutation.mutate,
     deleteMyAccount: deleteMyAccountMutation.mutate,
     toggleSpotifyBadge: toggleSpotifyBadgeMutation.mutate,
+    adminSetUserPassword: adminSetUserPasswordMutation.mutateAsync,
+    getUserLogin,
   };
 }

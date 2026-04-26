@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { X, Mail, Lock, User, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
   const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [forgotByKeyword, setForgotByKeyword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signUp, resetPassword } = useAuth();
@@ -25,6 +28,24 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
     const { error } = await resetPassword(email.trim());
     if (error) toast.error(error.message);
     else toast.success('Link de redefinição enviado para o email');
+  };
+
+  const handleKeywordReset = async () => {
+    if (!email.trim() || !keyword.trim() || password.length < 6) {
+      toast.error('Preencha email, palavra-chave e uma nova senha');
+      return;
+    }
+    const { data, error } = await supabase.rpc('reset_password_with_keyword' as any, {
+      account_email: email.trim(),
+      keyword: keyword.trim(),
+      new_password: password,
+    });
+    if (error || !data) toast.error('Palavra-chave incorreta');
+    else {
+      toast.success('Senha alterada! Agora entre com a nova senha');
+      setForgotByKeyword(false);
+      setKeyword('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,6 +123,16 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             />
           </div>
 
+          {forgotByKeyword && mode === 'login' && (
+            <div>
+              <label className="label-field flex items-center gap-1">
+                <KeyRound className="w-3 h-3" /> Palavra-chave
+              </label>
+              <input value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="Sua palavra-chave" className="input-field" />
+              <p className="text-[11px] text-muted-foreground mt-1">Digite a nova senha no campo de senha acima.</p>
+            </div>
+          )}
+
           <div>
             <label className="label-field flex items-center gap-1">
               <Lock className="w-3 h-3" />
@@ -129,13 +160,14 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           </div>
 
           {mode === 'login' && (
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Esqueci a senha
-            </button>
+            <div className="flex items-center justify-between gap-2">
+              <button type="button" onClick={handleForgotPassword} className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">Esqueci a senha</button>
+              <button type="button" onClick={() => setForgotByKeyword(!forgotByKeyword)} className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">Palavra-chave</button>
+            </div>
+          )}
+
+          {forgotByKeyword && mode === 'login' && (
+            <button type="button" onClick={handleKeywordReset} className="btn-secondary w-full">Trocar senha com palavra-chave</button>
           )}
 
           <button 
