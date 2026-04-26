@@ -1105,7 +1105,42 @@ export default function Admin() {
       <AddAlbumModal isOpen={showAlbumModal} onClose={() => setShowAlbumModal(false)} />
       <AddEventModal isOpen={showEventModal} onClose={() => setShowEventModal(false)} />
       <AddAcapellaModal isOpen={showAcapellaModal} onClose={() => setShowAcapellaModal(false)} onAdd={addAcapella} />
+      <CustomPageModal page={editingPage} onClose={() => setEditingPage(null)} onSave={savePage} />
     </div>
+  );
+}
+
+function CustomPageModal({ page, onClose, onSave }: { page: CustomPage | null; onClose: () => void; onSave: (page: any) => Promise<void> }) {
+  const [title, setTitle] = useState(page?.title || '');
+  const [slug, setSlug] = useState(page?.slug || '');
+  const [content, setContent] = useState(page?.content || '');
+  const [coverUrl, setCoverUrl] = useState(page?.cover_url || '');
+  const [placement, setPlacement] = useState(page?.placement || 'home');
+  const [isActive, setIsActive] = useState(page?.is_active ?? true);
+
+  if (!page) return null;
+
+  const submit = async () => {
+    if (!title.trim() || !slug.trim()) return toast.error('Preencha título e link');
+    await onSave({ id: page.id || undefined, title, slug, content, cover_url: coverUrl || null, placement, is_active: isActive });
+    onClose();
+  };
+
+  return (
+    <Dialog open={!!page} onOpenChange={onClose}>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogHeader><DialogTitle>{page.id ? 'Editar aba' : 'Nova aba'}</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <div><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Sites úteis" /></div>
+          <div><Label>Link da página</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="sites-uteis" /></div>
+          <div><Label>Capa (opcional)</Label><Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://..." /></div>
+          <div><Label>Onde aparece</Label><Select value={placement} onValueChange={setPlacement}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="home">Home</SelectItem><SelectItem value="bottom">Botões de baixo</SelectItem><SelectItem value="hidden">Oculta</SelectItem></SelectContent></Select></div>
+          <div><Label>Conteúdo</Label><Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={8} placeholder="Escreva ou cole o conteúdo da aba..." /></div>
+          <Button variant={isActive ? 'default' : 'outline'} onClick={() => setIsActive(!isActive)} className="w-full">{isActive ? 'Ativa' : 'Inativa'}</Button>
+          <Button onClick={submit} className="w-full">Salvar aba</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
