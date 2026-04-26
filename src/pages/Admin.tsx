@@ -851,6 +851,26 @@ export default function Admin() {
           </div>
         )}
 
+        {mainTab === 'paginas' && (
+          <div className="space-y-4">
+            <Button onClick={() => setEditingPage({ id: '', title: '', slug: '', content: '', cover_url: '', icon_name: 'file', placement: 'home', is_active: true, display_order: 0 })} className="w-full">
+              <Plus className="w-4 h-4 mr-2" />Nova aba personalizada
+            </Button>
+            {pages.map((page) => (
+              <div key={page.id} className="pack-card flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-[hsl(0,0%,7%)] flex items-center justify-center shrink-0"><FileText className="w-5 h-5" /></div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-bold text-sm truncate">{page.title}</h3>
+                  <p className="text-xs text-muted-foreground truncate">/{page.slug} · {page.placement === 'bottom' ? 'botões de baixo' : page.placement === 'home' ? 'home' : 'oculta'}</p>
+                </div>
+                <Button size="sm" variant="outline" onClick={() => setEditingPage(page)}><Edit className="w-4 h-4" /></Button>
+                <Button size="sm" variant="destructive" onClick={() => deletePage(page.id)}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            ))}
+            {pages.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhuma aba criada</p>}
+          </div>
+        )}
+
         {/* Trash Tab */}
         {mainTab === 'lixeira' && (
           <div className="space-y-4">
