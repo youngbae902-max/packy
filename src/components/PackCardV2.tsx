@@ -301,8 +301,8 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               </Link>
             )}
 
-            <div className="mb-5 rounded-2xl border border-border/40 bg-[hsl(0,0%,5%)] p-3">
-              <div className="flex items-center gap-2 mb-3 text-sm font-bold text-foreground">
+            <div className="mb-5 border-t border-border/40 pt-4">
+              <div className="flex items-center gap-2 mb-4 text-base font-black text-foreground">
                 <MessageCircle className="w-4 h-4" /> Comentários
               </div>
               <div className="flex items-start gap-2 mb-3">
@@ -310,13 +310,13 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   placeholder="Dar feedback..."
-                  className="min-h-[54px] rounded-xl bg-[hsl(0,0%,3%)] border-border/40 resize-none"
+                  className="min-h-[46px] rounded-2xl bg-transparent border-border/40 resize-none"
                 />
-                <button onClick={handleAddComment} className="h-[54px] w-12 rounded-xl bg-foreground text-background flex items-center justify-center shrink-0">
+                <button onClick={handleAddComment} className="h-[46px] w-11 rounded-full bg-foreground text-background flex items-center justify-center shrink-0">
                   <Send className="w-4 h-4" />
                 </button>
               </div>
-              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+              <div className="space-y-4 max-h-64 overflow-y-auto pr-1">
                 {comments.length === 0 ? (
                   <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
                 ) : comments.map((comment) => {
@@ -324,16 +324,16 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                   const canDelete = canEdit || isAdmin;
                   const name = comment.profiles?.username || comment.profiles?.artist_name || 'Usuário';
                   return (
-                    <div key={comment.id} className="rounded-xl bg-[hsl(0,0%,3%)] border border-border/30 p-2.5">
+                    <div key={comment.id} className="bg-transparent">
                       <div className="flex items-start gap-2">
-                        <Avatar className="w-8 h-8">
+                        <Avatar className="w-9 h-9">
                           <AvatarImage src={comment.profiles?.avatar_url || undefined} />
                           <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-xs font-bold truncate">@{name}</span>
-                            {comment.is_pinned && <span className="text-[10px] text-foreground/80">Fixado</span>}
+                              <span className="text-sm font-bold truncate">@{name}</span>
+                              {comment.is_pinned && <span className="text-[10px] text-primary font-bold">Fixado</span>}
                           </div>
                           {editingComment?.id === comment.id ? (
                             <div className="mt-2 space-y-2">
@@ -344,7 +344,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                               </div>
                             </div>
                           ) : (
-                            <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{comment.content}</p>
+                            <p className="text-sm text-foreground/90 mt-0.5 whitespace-pre-wrap leading-snug">{comment.content}</p>
                           )}
                         </div>
                         <div className="flex items-center gap-1">
