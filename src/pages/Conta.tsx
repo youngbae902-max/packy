@@ -58,13 +58,15 @@ const Conta = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
+    const detectedColor = await getDominantColor(file).catch(() => null);
+    if (detectedColor) setThemeColor(detectedColor);
 
     // GIFs são enviados direto para preservar a animação (sem crop)
     const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
     if (isGif) {
       try {
         const url = await uploadAvatar(file);
-        await updateProfile({ avatar_url: url });
+        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
         toast.success('GIF atualizado!');
         refreshProfile();
       } catch {
@@ -84,8 +86,10 @@ const Conta = () => {
   const handleCroppedAvatar = async (blob: Blob) => {
     try {
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
+      const detectedColor = await getDominantColor(file).catch(() => null);
       const url = await uploadAvatar(file);
-      await updateProfile({ avatar_url: url });
+      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
+      if (detectedColor) setThemeColor(detectedColor);
       toast.success('Foto atualizada!');
       refreshProfile();
     } catch {
