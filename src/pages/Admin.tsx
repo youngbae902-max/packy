@@ -299,6 +299,12 @@ export default function Admin() {
     deleteUser(userId);
   };
 
+  const handleImpersonate = (targetUserId: string, username?: string | null) => {
+    sessionStorage.setItem('admin_view_user_id', targetUserId);
+    toast.success(`Visualizando como @${username || 'usuário'} sem acessar senha/sessão`);
+    window.open(`/perfil/${targetUserId}?adminView=1`, '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 py-6">
