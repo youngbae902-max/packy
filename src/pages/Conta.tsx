@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, Package, Heart, Bookmark, AtSign, Trash2, Edit, Instagram, Youtube } from 'lucide-react';
+import { User, LogOut, Shield, Package, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Palette } from 'lucide-react';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
-import { FavoritesSection } from '@/components/FavoritesSection';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
-import { useUserFavorites, useUserLikes } from '@/hooks/usePackInteractions';
 import { useUserManagement } from '@/hooks/useUserManagement';
+import { usePublicProfile } from '@/hooks/useSocial';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,15 +17,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Badge } from '@/components/ui/badge';
 
 const Conta = () => {
-  const { user, profile, isAdmin, signOut, refreshProfile } = useAuth();
+  const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
   const { updateProfile, uploadAvatar, isUpdating } = useProfile();
   const { userPacks } = useSupabasePacks();
-  const { favorites } = useUserFavorites();
-  const { likes } = useUserLikes();
+  const { followersCount, followingCount } = usePublicProfile(user?.id);
   const { updateUsername, deleteMyAccount } = useUserManagement();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
   
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
@@ -35,6 +35,7 @@ const Conta = () => {
   const [spotifyUrl, setSpotifyUrl] = useState('');
   const [soundcloudUrl, setSoundcloudUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [themeColor, setThemeColor] = useState('#3b82f6');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [cropImage, setCropImage] = useState<string | null>(null);
@@ -49,6 +50,7 @@ const Conta = () => {
       setSpotifyUrl(profile.spotify_url || '');
       setSoundcloudUrl(profile.soundcloud_url || '');
       setYoutubeUrl(profile.youtube_url || '');
+      setThemeColor(profile.theme_accent_color || profile.online_accent_color || '#3b82f6');
     }
   }, [profile]);
 
@@ -56,13 +58,15 @@ const Conta = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
+    const detectedColor = await getDominantColor(file).catch(() => null);
+    if (detectedColor) setThemeColor(detectedColor);
 
     // GIFs são enviados direto para preservar a animação (sem crop)
     const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
     if (isGif) {
       try {
         const url = await uploadAvatar(file);
-        await updateProfile({ avatar_url: url });
+        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
         toast.success('GIF atualizado!');
         refreshProfile();
       } catch {
@@ -82,8 +86,10 @@ const Conta = () => {
   const handleCroppedAvatar = async (blob: Blob) => {
     try {
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
+      const detectedColor = await getDominantColor(file).catch(() => null);
       const url = await uploadAvatar(file);
-      await updateProfile({ avatar_url: url });
+      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
+      if (detectedColor) setThemeColor(detectedColor);
       toast.success('Foto atualizada!');
       refreshProfile();
     } catch {
@@ -100,6 +106,8 @@ const Conta = () => {
         spotify_url: spotifyUrl || null,
         soundcloud_url: soundcloudUrl || null,
         youtube_url: youtubeUrl || null,
+        theme_accent_color: themeColor,
+        online_accent_color: themeColor,
       });
       
       if (username.trim() && username !== profile?.username) {
@@ -118,6 +126,19 @@ const Conta = () => {
     deleteMyAccount();
     setShowDeleteConfirm(false);
     signOut();
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast.error('A senha precisa ter pelo menos 6 caracteres');
+      return;
+    }
+    const { error } = await updatePassword(newPassword);
+    if (error) toast.error('Erro ao alterar senha');
+    else {
+      toast.success('Senha alterada!');
+      setNewPassword('');
+    }
   };
 
   const SpotifyIcon = () => (
@@ -244,29 +265,15 @@ const Conta = () => {
       </div>
 
       <div className="max-w-lg mx-auto px-4 -mt-8">
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
-            <Package className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
-            <p className="text-xl font-bold text-foreground">{userPacks.length}</p>
-            <p className="text-xs text-muted-foreground">Enviados</p>
-          </div>
-          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
-            <Heart className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
-            <p className="text-xl font-bold text-foreground">{likes.length}</p>
-            <p className="text-xs text-muted-foreground">Curtidos</p>
-          </div>
-          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
-            <Bookmark className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
-            <p className="text-xl font-bold text-foreground">{favorites.length}</p>
-            <p className="text-xs text-muted-foreground">Favoritos</p>
-          </div>
+        <div className="grid grid-cols-3 gap-2 mb-6 text-center">
+          <div><p className="text-xl font-black text-foreground">{userPacks.length}</p><p className="text-xs text-muted-foreground">Enviados</p></div>
+          <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs text-muted-foreground">Seguidores</p></div>
+          <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        {/* Favorites Section */}
-        <div className="mb-6">
-          <FavoritesSection />
-        </div>
+        <Button onClick={() => setShowSettings(true)} className="w-full mb-4 rounded-2xl h-12 gap-2">
+          <Settings className="w-5 h-5" /> Configurações
+        </Button>
 
         {/* Admin Panel Access */}
         {isAdmin && (
@@ -279,27 +286,37 @@ const Conta = () => {
           </Link>
         )}
 
-        {/* Actions */}
-        <div className="space-y-2">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-12" 
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            <Trash2 className="w-5 h-5 mr-3" />
-            Excluir minha conta
-          </Button>
-
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl h-12" 
-            onClick={signOut}
-          >
-            <LogOut className="w-5 h-5 mr-3" />
-            Sair da conta
-          </Button>
-        </div>
+        <div className="h-4" />
       </div>
+
+      <Dialog open={showSettings} onOpenChange={setShowSettings}>
+        <DialogContent className="max-w-md bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Configurações</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-border/50 bg-[hsl(0,0%,4%)] p-4 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-bold"><Palette className="w-4 h-4" /> Trocar de cor</div>
+              <div className="flex gap-2">
+                {['#3b82f6', '#22c55e', '#f97316', '#ec4899', '#a855f7'].map((color) => (
+                  <button key={color} onClick={() => { setThemeColor(color); updateProfile({ theme_accent_color: color, online_accent_color: color }); }} className="w-10 h-10 rounded-full border-2" style={{ backgroundColor: color, borderColor: themeColor === color ? 'hsl(var(--foreground))' : 'hsl(var(--border))' }} aria-label="Trocar cor" />
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border/50 bg-[hsl(0,0%,4%)] p-4 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-bold"><KeyRound className="w-4 h-4" /> Alterar senha principal da conta</div>
+              <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Nova senha" className="bg-secondary border-border" />
+              <Button onClick={handleChangePassword} className="w-full">Alterar senha</Button>
+            </div>
+            <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl h-12" onClick={signOut}>
+              <LogOut className="w-5 h-5 mr-3" /> Sair da minha conta
+            </Button>
+            <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-12" onClick={() => setShowDeleteConfirm(true)}>
+              <Trash2 className="w-5 h-5 mr-3" /> Excluir a conta
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Profile Modal */}
       <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
@@ -339,11 +356,13 @@ const Conta = () => {
               <label className="text-sm text-muted-foreground mb-1 block">Bio</label>
               <Textarea 
                 value={bio} 
-                onChange={e => setBio(e.target.value)} 
+                onChange={e => setBio(e.target.value.slice(0, 160))} 
                 placeholder="Fale um pouco sobre você..."
                 rows={3}
+                maxLength={160}
                 className="bg-secondary border-border text-foreground resize-none"
               />
+              <p className="text-xs text-muted-foreground mt-1 text-right">{bio.length}/160</p>
             </div>
 
             <div className="border-t border-border pt-4">
@@ -441,5 +460,30 @@ const Conta = () => {
     </div>
   );
 };
+
+function getDominantColor(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 24;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject(new Error('Canvas indisponível'));
+      ctx.drawImage(img, 0, 0, size, size);
+      const data = ctx.getImageData(0, 0, size, size).data;
+      let r = 0, g = 0, b = 0, count = 0;
+      for (let i = 0; i < data.length; i += 16) {
+        r += data[i]; g += data[i + 1]; b += data[i + 2]; count++;
+      }
+      URL.revokeObjectURL(url);
+      resolve(`rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`);
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
 
 export default Conta;

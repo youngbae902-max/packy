@@ -17,6 +17,8 @@ export interface PublicProfile {
   spotify_url: string | null;
   soundcloud_url: string | null;
   youtube_url: string | null;
+  theme_accent_color?: string | null;
+  online_accent_color?: string | null;
 }
 
 export interface PackComment {
@@ -39,7 +41,7 @@ export function useProfileSearch(query: string) {
       if (q.length < 2) return [];
       const { data, error } = await (supabase as any)
         .from('profiles')
-        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url')
+        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color')
         .or(`username.ilike.%${q}%,artist_name.ilike.%${q}%`)
         .limit(5);
 
@@ -59,7 +61,7 @@ export function usePublicProfile(userId?: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url')
+        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color')
         .eq('user_id', userId!)
         .single();
 
@@ -247,12 +249,12 @@ export function usePackComments(packId?: string) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      const userIds = Array.from(new Set((comments || []).map((comment: any) => comment.user_id)));
+      const userIds = Array.from(new Set<string>((comments || []).map((comment: any) => String(comment.user_id))));
       if (userIds.length === 0) return [];
 
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url')
+        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color')
         .in('user_id', userIds);
 
       if (profilesError) throw profilesError;

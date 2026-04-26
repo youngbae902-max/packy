@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, Eye } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -20,6 +20,7 @@ import { UserEditModal } from '@/components/UserEditModal';
 import { AlbumLinkEditModal } from '@/components/AlbumLinkEditModal';
 import { BulkLinkInput } from '@/components/BulkLinkInput';
 import { AppLogoSettings } from '@/components/AppLogoSettings';
+import { useCustomPages, CustomPage } from '@/hooks/useCustomPages';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -34,10 +35,10 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
-const MAIN_ADMIN_USERNAME = 'mathhewdcarmo';
+const MAIN_ADMIN_USERNAME = 'goat';
 
 export default function Admin() {
   const { isAdmin, isLoading, user } = useAuth();
@@ -68,6 +69,7 @@ export default function Admin() {
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
   const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
+  const [editingPage, setEditingPage] = useState<CustomPage | null>(null);
   const [albumSubTab, setAlbumSubTab] = useState<SubTab>('pending');
   const [giftType, setGiftType] = useState<'pack' | 'external'>('pack');
   const [externalGiftUrlForUser, setExternalGiftUrlForUser] = useState('');
@@ -93,6 +95,7 @@ export default function Admin() {
   const { albums, pendingAlbums, approvedAlbums, rejectedAlbums, approveAlbum, rejectAlbum, deleteAlbum, updateAlbum } = useAlbums();
   const { getAlbumLinks, addLink, deleteLink, updateLink } = useAlbumLinks();
   const { events, deleteEvent, toggleEventActive } = useSiteEvents();
+  const { pages, savePage, deletePage } = useCustomPages();
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
@@ -128,6 +131,7 @@ export default function Admin() {
     { id: 'desejos' as const, label: 'Pedidos', icon: Gift },
     { id: 'albuns' as const, label: 'Álbuns', icon: Disc },
     { id: 'eventos' as const, label: 'Eventos', icon: Megaphone },
+    { id: 'paginas' as const, label: 'Abas', icon: FileText },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
@@ -293,6 +297,12 @@ export default function Admin() {
       return;
     }
     deleteUser(userId);
+  };
+
+  const handleImpersonate = (targetUserId: string, username?: string | null) => {
+    sessionStorage.setItem('admin_view_user_id', targetUserId);
+    toast.success(`Visualizando como @${username || 'usuário'} sem acessar senha/sessão`);
+    window.open(`/perfil/${targetUserId}?adminView=1`, '_blank');
   };
 
   return (
@@ -581,6 +591,11 @@ export default function Admin() {
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
+                {isMainAdmin(user?.id || '') && (
+                  <Button size="sm" variant="outline" onClick={() => handleImpersonate(u.user_id, u.username)} className="gap-1">
+                    <Eye className="w-4 h-4" /> Entrar na conta
+                  </Button>
+                )}
               </div>
             ))}
           </div>
@@ -836,6 +851,26 @@ export default function Admin() {
           </div>
         )}
 
+        {mainTab === 'paginas' && (
+          <div className="space-y-4">
+            <Button onClick={() => setEditingPage({ id: '', title: '', slug: '', content: '', cover_url: '', icon_name: 'file', placement: 'home', is_active: true, display_order: 0 })} className="w-full">
+              <Plus className="w-4 h-4 mr-2" />Nova aba personalizada
+            </Button>
+            {pages.map((page) => (
+              <div key={page.id} className="pack-card flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-[hsl(0,0%,7%)] flex items-center justify-center shrink-0"><FileText className="w-5 h-5" /></div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-bold text-sm truncate">{page.title}</h3>
+                  <p className="text-xs text-muted-foreground truncate">/{page.slug} · {page.placement === 'bottom' ? 'botões de baixo' : page.placement === 'home' ? 'home' : 'oculta'}</p>
+                </div>
+                <Button size="sm" variant="outline" onClick={() => setEditingPage(page)}><Edit className="w-4 h-4" /></Button>
+                <Button size="sm" variant="destructive" onClick={() => deletePage(page.id)}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            ))}
+            {pages.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhuma aba criada</p>}
+          </div>
+        )}
+
         {/* Trash Tab */}
         {mainTab === 'lixeira' && (
           <div className="space-y-4">
@@ -1070,7 +1105,51 @@ export default function Admin() {
       <AddAlbumModal isOpen={showAlbumModal} onClose={() => setShowAlbumModal(false)} />
       <AddEventModal isOpen={showEventModal} onClose={() => setShowEventModal(false)} />
       <AddAcapellaModal isOpen={showAcapellaModal} onClose={() => setShowAcapellaModal(false)} onAdd={addAcapella} />
+      <CustomPageModal page={editingPage} onClose={() => setEditingPage(null)} onSave={savePage} />
     </div>
+  );
+}
+
+function CustomPageModal({ page, onClose, onSave }: { page: CustomPage | null; onClose: () => void; onSave: (page: any) => Promise<void> }) {
+  const [title, setTitle] = useState(page?.title || '');
+  const [slug, setSlug] = useState(page?.slug || '');
+  const [content, setContent] = useState(page?.content || '');
+  const [coverUrl, setCoverUrl] = useState(page?.cover_url || '');
+  const [placement, setPlacement] = useState(page?.placement || 'home');
+  const [isActive, setIsActive] = useState(page?.is_active ?? true);
+
+  useEffect(() => {
+    setTitle(page?.title || '');
+    setSlug(page?.slug || '');
+    setContent(page?.content || '');
+    setCoverUrl(page?.cover_url || '');
+    setPlacement(page?.placement || 'home');
+    setIsActive(page?.is_active ?? true);
+  }, [page]);
+
+  if (!page) return null;
+
+  const submit = async () => {
+    if (!title.trim() || !slug.trim()) return toast.error('Preencha título e link');
+    await onSave({ id: page.id || undefined, title, slug, content, cover_url: coverUrl || null, placement, is_active: isActive });
+    onClose();
+  };
+
+  return (
+    <Dialog open={!!page} onOpenChange={onClose}>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogHeader><DialogTitle>{page.id ? 'Editar aba' : 'Nova aba'}</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <div><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Sites úteis" /></div>
+          <div><Label>Link da página</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="sites-uteis" /></div>
+          <div><Label>Capa (opcional)</Label><Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://..." /></div>
+          <div><Label>Onde aparece</Label><Select value={placement} onValueChange={(value) => setPlacement(value as CustomPage['placement'])}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="home">Home</SelectItem><SelectItem value="bottom">Botões de baixo</SelectItem><SelectItem value="hidden">Oculta</SelectItem></SelectContent></Select></div>
+          <div><Label>Conteúdo</Label><Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={8} placeholder="Escreva ou cole o conteúdo da aba..." /></div>
+          <Button variant={isActive ? 'default' : 'outline'} onClick={() => setIsActive(!isActive)} className="w-full">{isActive ? 'Ativa' : 'Inativa'}</Button>
+          <Button onClick={submit} className="w-full">Salvar aba</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

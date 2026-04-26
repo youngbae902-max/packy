@@ -14,6 +14,8 @@ interface Profile {
   spotify_url: string | null;
   soundcloud_url: string | null;
   youtube_url: string | null;
+  theme_accent_color?: string | null;
+  online_accent_color?: string | null;
 }
 
 interface AuthContextType {
@@ -43,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from('profiles')
-      .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url')
+      .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color')
       .eq('user_id', userId)
       .single();
     

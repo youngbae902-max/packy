@@ -19,7 +19,7 @@ export interface UserProfile {
   updated_at: string;
 }
 
-const MAIN_ADMIN_USERNAME = 'mathhewdcarmo';
+const MAIN_ADMIN_USERNAME = 'goat';
 
 export interface UserRole {
   id: string;
