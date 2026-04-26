@@ -66,6 +66,7 @@ export default function Admin() {
   const [newLinkDesc, setNewLinkDesc] = useState('');
   const [showBulkInput, setShowBulkInput] = useState(false);
   const [showBulkPackInput, setShowBulkPackInput] = useState(false);
+  const [showBulkAcapellaInput, setShowBulkAcapellaInput] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
   const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
@@ -88,7 +89,7 @@ export default function Admin() {
   
   const { 
     users, isUserAdmin, banUser, sendGift, toggleAdmin, 
-    sendGiftToAll, toggleSpotifyBadge, deleteUser, isMainAdmin 
+    sendGiftToAll, toggleSpotifyBadge, deleteUser, isMainAdmin, adminSetUserPassword, getUserLogin 
   } = useUserManagement();
   
   const { pendingWishlists, respondToWish } = useWishlist();
