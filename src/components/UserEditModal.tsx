@@ -1,7 +1,10 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Ban, Shield, Trash2, Gift, X } from 'lucide-react';
+import { useState } from 'react';
+import { Ban, Shield, Trash2, Gift, X, KeyRound, Copy } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 interface UserProfile {
   id: string;
@@ -12,6 +15,8 @@ interface UserProfile {
   is_banned: boolean | null;
   is_online: boolean | null;
   has_spotify_badge: boolean | null;
+  online_accent_color?: string | null;
+  theme_accent_color?: string | null;
 }
 
 interface UserEditModalProps {
@@ -25,6 +30,9 @@ interface UserEditModalProps {
   onToggleSpotify: (userId: string, enabled: boolean) => void;
   onDelete: (userId: string) => void;
   onSendGift: (userId: string, username: string) => void;
+  onSetPassword?: (userId: string, password: string) => Promise<void>;
+  onGetLogin?: (userId: string) => Promise<string | null>;
+  canEnterAccount?: boolean;
 }
 
 export function UserEditModal({
@@ -38,15 +46,21 @@ export function UserEditModal({
   onToggleSpotify,
   onDelete,
   onSendGift,
+  onSetPassword,
+  onGetLogin,
+  canEnterAccount = false,
 }: UserEditModalProps) {
+  const [loginEmail, setLoginEmail] = useState<string | null>(null);
+  const [tempPassword, setTempPassword] = useState('');
   if (!user) return null;
 
   const isProtected = isMainAdmin(user.user_id);
   const userIsAdmin = isUserAdmin(user.user_id);
+  const accent = user.online_accent_color || user.theme_accent_color || 'hsl(var(--primary))';
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="max-w-sm rounded-[2rem] border-border bg-card">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             <img 
@@ -65,8 +79,8 @@ export function UserEditModal({
           {userIsAdmin && <Badge className="bg-primary/20 text-primary">Admin</Badge>}
           {isProtected && <Badge className="bg-yellow-500/20 text-yellow-500">Principal</Badge>}
           {user.is_banned && <Badge variant="destructive">Banido</Badge>}
-          {user.has_spotify_badge && <Badge className="bg-green-500/20 text-green-500">Spotify</Badge>}
-          {user.is_online && <Badge variant="outline" className="text-green-500 border-green-500">Online</Badge>}
+          {user.has_spotify_badge && <Badge style={{ color: accent, borderColor: accent }} className="bg-transparent">Spotify</Badge>}
+          {user.is_online && <Badge variant="outline" style={{ color: accent, borderColor: accent }}>Online</Badge>}
         </div>
 
         <div className="space-y-2">
@@ -125,6 +139,24 @@ export function UserEditModal({
                 Excluir Conta Permanentemente
               </Button>
             </>
+          )}
+
+          {canEnterAccount && !isProtected && (
+            <div className="rounded-3xl border border-border/50 bg-secondary/40 p-3 space-y-2">
+              <p className="text-xs font-black uppercase text-muted-foreground">Entrar na conta</p>
+              <Button variant="outline" className="w-full justify-start" onClick={async () => setLoginEmail(await onGetLogin?.(user.user_id) || null)}>
+                <KeyRound className="w-4 h-4 mr-2" /> Mostrar login
+              </Button>
+              {loginEmail && (
+                <button className="w-full flex items-center justify-between rounded-2xl bg-background px-3 py-2 text-sm" onClick={() => { navigator.clipboard.writeText(loginEmail); toast.success('Login copiado'); }}>
+                  <span className="truncate">{loginEmail}</span><Copy className="w-4 h-4" />
+                </button>
+              )}
+              <Input value={tempPassword} onChange={(e) => setTempPassword(e.target.value)} placeholder="Senha temporária nova" className="rounded-2xl" />
+              <Button className="w-full" disabled={tempPassword.length < 6} onClick={async () => { await onSetPassword?.(user.user_id, tempPassword); setTempPassword(''); }}>
+                Definir senha temporária
+              </Button>
+            </div>
           )}
         </div>
 
