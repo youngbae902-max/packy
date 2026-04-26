@@ -591,6 +591,11 @@ export default function Admin() {
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
+                {isMainAdmin(user?.id || '') && (
+                  <Button size="sm" variant="outline" onClick={() => handleImpersonate(u.user_id, u.username)}>
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                )}
               </div>
             ))}
           </div>
