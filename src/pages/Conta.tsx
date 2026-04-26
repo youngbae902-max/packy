@@ -50,6 +50,7 @@ const Conta = () => {
       setSpotifyUrl(profile.spotify_url || '');
       setSoundcloudUrl(profile.soundcloud_url || '');
       setYoutubeUrl(profile.youtube_url || '');
+      setThemeColor(profile.theme_accent_color || profile.online_accent_color || '#3b82f6');
     }
   }, [profile]);
 
@@ -101,6 +102,8 @@ const Conta = () => {
         spotify_url: spotifyUrl || null,
         soundcloud_url: soundcloudUrl || null,
         youtube_url: youtubeUrl || null,
+        theme_accent_color: themeColor,
+        online_accent_color: themeColor,
       });
       
       if (username.trim() && username !== profile?.username) {
@@ -119,6 +122,19 @@ const Conta = () => {
     deleteMyAccount();
     setShowDeleteConfirm(false);
     signOut();
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast.error('A senha precisa ter pelo menos 6 caracteres');
+      return;
+    }
+    const { error } = await updatePassword(newPassword);
+    if (error) toast.error('Erro ao alterar senha');
+    else {
+      toast.success('Senha alterada!');
+      setNewPassword('');
+    }
   };
 
   const SpotifyIcon = () => (
