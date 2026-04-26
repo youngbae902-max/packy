@@ -1031,7 +1031,7 @@ export default function Admin() {
         onDelete={handleDeleteUser}
         onSendGift={(userId, username) => setGiftModal({ userId, username })}
         canEnterAccount={isMainAdmin(user?.id || '')}
-        onSetPassword={adminSetUserPassword}
+        onSetPassword={(userId, password) => adminSetUserPassword({ userId, password }).then(() => undefined)}
         onGetLogin={getUserLogin}
       />
 
