@@ -51,7 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .eq('user_id', userId)
       .single();
     
-    setProfile(data as Profile | null);
+    const loadedProfile = data as Profile | null;
+    setProfile(loadedProfile);
+    document.documentElement.classList.toggle('light', loadedProfile?.theme_mode === 'light');
   };
 
   const checkAdminRole = async (userId: string) => {
