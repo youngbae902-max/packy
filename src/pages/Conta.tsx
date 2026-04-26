@@ -282,27 +282,37 @@ const Conta = () => {
           </Link>
         )}
 
-        {/* Actions */}
-        <div className="space-y-2">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-12" 
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            <Trash2 className="w-5 h-5 mr-3" />
-            Excluir minha conta
-          </Button>
-
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl h-12" 
-            onClick={signOut}
-          >
-            <LogOut className="w-5 h-5 mr-3" />
-            Sair da conta
-          </Button>
-        </div>
+        <div className="h-4" />
       </div>
+
+      <Dialog open={showSettings} onOpenChange={setShowSettings}>
+        <DialogContent className="max-w-md bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Configurações</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-border/50 bg-[hsl(0,0%,4%)] p-4 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-bold"><Palette className="w-4 h-4" /> Trocar de cor</div>
+              <div className="flex gap-2">
+                {['#3b82f6', '#22c55e', '#f97316', '#ec4899', '#a855f7'].map((color) => (
+                  <button key={color} onClick={() => { setThemeColor(color); updateProfile({ theme_accent_color: color, online_accent_color: color }); }} className="w-10 h-10 rounded-full border-2" style={{ backgroundColor: color, borderColor: themeColor === color ? 'hsl(var(--foreground))' : 'hsl(var(--border))' }} aria-label="Trocar cor" />
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border/50 bg-[hsl(0,0%,4%)] p-4 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-bold"><KeyRound className="w-4 h-4" /> Alterar senha principal da conta</div>
+              <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Nova senha" className="bg-secondary border-border" />
+              <Button onClick={handleChangePassword} className="w-full">Alterar senha</Button>
+            </div>
+            <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl h-12" onClick={signOut}>
+              <LogOut className="w-5 h-5 mr-3" /> Sair da minha conta
+            </Button>
+            <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-12" onClick={() => setShowDeleteConfirm(true)}>
+              <Trash2 className="w-5 h-5 mr-3" /> Excluir a conta
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Profile Modal */}
       <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
