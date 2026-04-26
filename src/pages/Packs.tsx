@@ -102,9 +102,9 @@ const Packs = () => {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <button onClick={() => { setLogoBubble(true); setTimeout(() => setLogoBubble(false), 2200); }} className="relative">
+          <button onClick={() => { setLogoBubble(true); setTimeout(() => setLogoBubble(false), 2200); }} className="relative z-[90]">
             {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
-            {logoBubble && <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap rounded-2xl bg-foreground text-background px-3 py-1.5 text-xs font-black shadow-xl">obgg por usar</span>}
+            {logoBubble && <span className="absolute top-full left-1/2 z-[100] -translate-x-1/2 mt-2 whitespace-nowrap rounded-2xl bg-foreground text-background px-3 py-1.5 text-xs font-black shadow-xl">obgg por usar</span>}
           </button>
           <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
             <Inbox className="w-6 h-6" />
@@ -168,7 +168,7 @@ const Packs = () => {
           {/* Floating filter popup */}
           {popupOpen && (
             <div
-              className="absolute top-full left-0 right-0 mt-2 z-40 rounded-2xl border border-border/60 bg-[hsl(0,0%,3%)]/95 backdrop-blur-xl shadow-2xl shadow-black/60 p-3 animate-fade-in"
+               className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-border/60 bg-[hsl(0,0%,3%)]/95 backdrop-blur-xl shadow-2xl shadow-black/60 p-3 animate-fade-in"
             >
               {suggestedFilter && (
                 <div className="mb-2">
