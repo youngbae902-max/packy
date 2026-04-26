@@ -352,11 +352,13 @@ const Conta = () => {
               <label className="text-sm text-muted-foreground mb-1 block">Bio</label>
               <Textarea 
                 value={bio} 
-                onChange={e => setBio(e.target.value)} 
+                onChange={e => setBio(e.target.value.slice(0, 160))} 
                 placeholder="Fale um pouco sobre você..."
                 rows={3}
+                maxLength={160}
                 className="bg-secondary border-border text-foreground resize-none"
               />
+              <p className="text-xs text-muted-foreground mt-1 text-right">{bio.length}/160</p>
             </div>
 
             <div className="border-t border-border pt-4">
