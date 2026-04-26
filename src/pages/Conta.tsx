@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, Package, Heart, Bookmark, AtSign, Trash2, Edit, Instagram, Youtube } from 'lucide-react';
+import { User, LogOut, Shield, Package, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Palette } from 'lucide-react';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { AuthModal } from '@/components/AuthModal';
-import { FavoritesSection } from '@/components/FavoritesSection';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
-import { useUserFavorites, useUserLikes } from '@/hooks/usePackInteractions';
 import { useUserManagement } from '@/hooks/useUserManagement';
+import { usePublicProfile } from '@/hooks/useSocial';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,15 +17,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Badge } from '@/components/ui/badge';
 
 const Conta = () => {
-  const { user, profile, isAdmin, signOut, refreshProfile } = useAuth();
+  const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
   const { updateProfile, uploadAvatar, isUpdating } = useProfile();
   const { userPacks } = useSupabasePacks();
-  const { favorites } = useUserFavorites();
-  const { likes } = useUserLikes();
+  const { followersCount, followingCount } = usePublicProfile(user?.id);
   const { updateUsername, deleteMyAccount } = useUserManagement();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
   
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
@@ -35,6 +35,7 @@ const Conta = () => {
   const [spotifyUrl, setSpotifyUrl] = useState('');
   const [soundcloudUrl, setSoundcloudUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [themeColor, setThemeColor] = useState('#3b82f6');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [cropImage, setCropImage] = useState<string | null>(null);
