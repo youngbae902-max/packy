@@ -16,6 +16,7 @@ import Inbox from "./pages/Inbox";
 import NotFound from "./pages/NotFound";
 import ResetPassword from "./pages/ResetPassword";
 import PublicProfile from "./pages/PublicProfile";
+import CustomPage from "./pages/CustomPage";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/desejos" element={<Wishlist />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/perfil/:userId" element={<PublicProfile />} />
+            <Route path="/pagina/:slug" element={<CustomPage />} />
             <Route path="/conta" element={<Conta />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={<Admin />} />
