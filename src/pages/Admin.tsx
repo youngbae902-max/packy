@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, Eye } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -1118,6 +1118,15 @@ function CustomPageModal({ page, onClose, onSave }: { page: CustomPage | null; o
   const [placement, setPlacement] = useState(page?.placement || 'home');
   const [isActive, setIsActive] = useState(page?.is_active ?? true);
 
+  useEffect(() => {
+    setTitle(page?.title || '');
+    setSlug(page?.slug || '');
+    setContent(page?.content || '');
+    setCoverUrl(page?.cover_url || '');
+    setPlacement(page?.placement || 'home');
+    setIsActive(page?.is_active ?? true);
+  }, [page]);
+
   if (!page) return null;
 
   const submit = async () => {
@@ -1134,7 +1143,7 @@ function CustomPageModal({ page, onClose, onSave }: { page: CustomPage | null; o
           <div><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Sites úteis" /></div>
           <div><Label>Link da página</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="sites-uteis" /></div>
           <div><Label>Capa (opcional)</Label><Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://..." /></div>
-          <div><Label>Onde aparece</Label><Select value={placement} onValueChange={setPlacement}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="home">Home</SelectItem><SelectItem value="bottom">Botões de baixo</SelectItem><SelectItem value="hidden">Oculta</SelectItem></SelectContent></Select></div>
+          <div><Label>Onde aparece</Label><Select value={placement} onValueChange={(value) => setPlacement(value as CustomPage['placement'])}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="home">Home</SelectItem><SelectItem value="bottom">Botões de baixo</SelectItem><SelectItem value="hidden">Oculta</SelectItem></SelectContent></Select></div>
           <div><Label>Conteúdo</Label><Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={8} placeholder="Escreva ou cole o conteúdo da aba..." /></div>
           <Button variant={isActive ? 'default' : 'outline'} onClick={() => setIsActive(!isActive)} className="w-full">{isActive ? 'Ativa' : 'Inativa'}</Button>
           <Button onClick={submit} className="w-full">Salvar aba</Button>
