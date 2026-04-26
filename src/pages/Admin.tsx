@@ -591,7 +591,7 @@ export default function Admin() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="font-bold text-sm truncate">@{u.username || 'sem-username'}</span>
-                    {u.is_online && <span className="w-2 h-2 bg-success rounded-full flex-shrink-0" />}
+                    {u.is_online && <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: u.online_accent_color || u.theme_accent_color || 'hsl(var(--success))' }} />}
                   </div>
                   <div className="flex gap-1 mt-0.5 flex-wrap">
                     {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground/10 text-foreground border-0">ADM</Badge>}
@@ -1030,6 +1030,9 @@ export default function Admin() {
         onToggleSpotify={(userId, enabled) => toggleSpotifyBadge({ userId, enabled })}
         onDelete={handleDeleteUser}
         onSendGift={(userId, username) => setGiftModal({ userId, username })}
+        canEnterAccount={isMainAdmin(user?.id || '')}
+        onSetPassword={adminSetUserPassword}
+        onGetLogin={getUserLogin}
       />
 
       {/* Album Link Edit Modal */}
