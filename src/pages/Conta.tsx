@@ -353,9 +353,10 @@ const Conta = () => {
 
       {/* Edit Profile Modal */}
       <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card border-border">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card border-border rounded-[2rem]">
           <DialogHeader>
             <DialogTitle className="text-foreground">Editar Perfil</DialogTitle>
+            <DialogDescription>Foto, nome e username são obrigatórios.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -458,7 +459,7 @@ const Conta = () => {
 
       {/* Delete Account Confirmation */}
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <DialogContent className="bg-card border-border">
+        <DialogContent className="bg-card border-border rounded-[2rem]">
           <DialogHeader>
             <DialogTitle className="text-foreground">Excluir conta</DialogTitle>
             <DialogDescription className="text-muted-foreground">
