@@ -11,6 +11,8 @@ interface ProfileUpdates {
   spotify_url?: string | null;
   soundcloud_url?: string | null;
   youtube_url?: string | null;
+  theme_accent_color?: string | null;
+  online_accent_color?: string | null;
 }
 
 export function useProfile() {
