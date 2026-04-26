@@ -261,29 +261,15 @@ const Conta = () => {
       </div>
 
       <div className="max-w-lg mx-auto px-4 -mt-8">
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
-            <Package className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
-            <p className="text-xl font-bold text-foreground">{userPacks.length}</p>
-            <p className="text-xs text-muted-foreground">Enviados</p>
-          </div>
-          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
-            <Heart className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
-            <p className="text-xl font-bold text-foreground">{likes.length}</p>
-            <p className="text-xs text-muted-foreground">Curtidos</p>
-          </div>
-          <div className="bg-[hsl(0,0%,3%)] border border-border/60 rounded-2xl p-4 text-center">
-            <Bookmark className="w-5 h-5 mx-auto mb-2 text-foreground/80" />
-            <p className="text-xl font-bold text-foreground">{favorites.length}</p>
-            <p className="text-xs text-muted-foreground">Favoritos</p>
-          </div>
+        <div className="grid grid-cols-3 gap-2 mb-6 text-center">
+          <div><p className="text-xl font-black text-foreground">{userPacks.length}</p><p className="text-xs text-muted-foreground">Enviados</p></div>
+          <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs text-muted-foreground">Seguidores</p></div>
+          <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        {/* Favorites Section */}
-        <div className="mb-6">
-          <FavoritesSection />
-        </div>
+        <Button onClick={() => setShowSettings(true)} className="w-full mb-4 rounded-2xl h-12 gap-2">
+          <Settings className="w-5 h-5" /> Configurações
+        </Button>
 
         {/* Admin Panel Access */}
         {isAdmin && (
