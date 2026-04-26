@@ -184,6 +184,51 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_pages: {
+        Row: {
+          content: string | null
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          display_order: number
+          icon_name: string | null
+          id: string
+          is_active: boolean
+          placement: string
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean
+          placement?: string
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean
+          placement?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pack_comments: {
         Row: {
           content: string
@@ -402,9 +447,11 @@ export type Database = {
           is_online: boolean | null
           last_seen: string | null
           last_username_change_date: string | null
+          online_accent_color: string | null
           soundcloud_url: string | null
           spotify_url: string | null
           status_ring_color: string | null
+          theme_accent_color: string | null
           theme_preference: string | null
           thought_bubble: string | null
           updated_at: string | null
@@ -426,9 +473,11 @@ export type Database = {
           is_online?: boolean | null
           last_seen?: string | null
           last_username_change_date?: string | null
+          online_accent_color?: string | null
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null
+          theme_accent_color?: string | null
           theme_preference?: string | null
           thought_bubble?: string | null
           updated_at?: string | null
@@ -450,9 +499,11 @@ export type Database = {
           is_online?: boolean | null
           last_seen?: string | null
           last_username_change_date?: string | null
+          online_accent_color?: string | null
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null
+          theme_accent_color?: string | null
           theme_preference?: string | null
           thought_bubble?: string | null
           updated_at?: string | null
