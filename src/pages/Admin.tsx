@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2 } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, Eye } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -20,6 +20,7 @@ import { UserEditModal } from '@/components/UserEditModal';
 import { AlbumLinkEditModal } from '@/components/AlbumLinkEditModal';
 import { BulkLinkInput } from '@/components/BulkLinkInput';
 import { AppLogoSettings } from '@/components/AppLogoSettings';
+import { useCustomPages, CustomPage } from '@/hooks/useCustomPages';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -34,10 +35,10 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
-const MAIN_ADMIN_USERNAME = 'mathhewdcarmo';
+const MAIN_ADMIN_USERNAME = 'goat';
 
 export default function Admin() {
   const { isAdmin, isLoading, user } = useAuth();
@@ -68,6 +69,7 @@ export default function Admin() {
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editingLink, setEditingLink] = useState<AlbumLink | null>(null);
   const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
+  const [editingPage, setEditingPage] = useState<CustomPage | null>(null);
   const [albumSubTab, setAlbumSubTab] = useState<SubTab>('pending');
   const [giftType, setGiftType] = useState<'pack' | 'external'>('pack');
   const [externalGiftUrlForUser, setExternalGiftUrlForUser] = useState('');
@@ -93,6 +95,7 @@ export default function Admin() {
   const { albums, pendingAlbums, approvedAlbums, rejectedAlbums, approveAlbum, rejectAlbum, deleteAlbum, updateAlbum } = useAlbums();
   const { getAlbumLinks, addLink, deleteLink, updateLink } = useAlbumLinks();
   const { events, deleteEvent, toggleEventActive } = useSiteEvents();
+  const { pages, savePage, deletePage } = useCustomPages();
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
