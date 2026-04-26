@@ -316,24 +316,31 @@ const Conta = () => {
       </div>
 
       <Dialog open={showSettings} onOpenChange={setShowSettings}>
-        <DialogContent className="max-w-md bg-card border-border">
+        <DialogContent className="max-w-md bg-card border-border rounded-[2rem]">
           <DialogHeader>
             <DialogTitle className="text-foreground">Configurações</DialogTitle>
+            <DialogDescription>Edite sua conta e preferências.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="rounded-2xl border border-border/50 bg-[hsl(0,0%,4%)] p-4 space-y-3">
               <div className="flex items-center gap-2 text-sm font-bold"><Moon className="w-4 h-4" /> Trocar tema</div>
-              <div className="flex gap-2">
-                {['#3b82f6', '#22c55e', '#f97316', '#ec4899', '#a855f7'].map((color) => (
-                  <button key={color} onClick={() => { setThemeColor(color); updateProfile({ theme_accent_color: color, online_accent_color: color }); }} className="w-10 h-10 rounded-full border-2" style={{ backgroundColor: color, borderColor: themeColor === color ? 'hsl(var(--foreground))' : 'hsl(var(--border))' }} aria-label="Trocar cor" />
-                ))}
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant={themeMode === 'dark' ? 'default' : 'outline'} onClick={() => handleThemeChange('dark')} className="rounded-2xl"><Moon className="w-4 h-4 mr-2" />Preto</Button>
+                <Button variant={themeMode === 'light' ? 'default' : 'outline'} onClick={() => handleThemeChange('light')} className="rounded-2xl"><Sun className="w-4 h-4 mr-2" />Branco</Button>
               </div>
             </div>
             <div className="rounded-2xl border border-border/50 bg-[hsl(0,0%,4%)] p-4 space-y-3">
               <div className="flex items-center gap-2 text-sm font-bold"><KeyRound className="w-4 h-4" /> Alterar senha principal da conta</div>
               <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Nova senha" className="bg-secondary border-border" />
               <Button onClick={handleChangePassword} className="w-full">Alterar senha</Button>
+              <Input value={recoveryKeyword} onChange={(e) => setRecoveryKeyword(e.target.value)} placeholder="Palavra-chave se esquecer a senha" className="bg-secondary border-border" />
+              <Button variant="outline" onClick={async () => { await updateProfile({ recovery_keyword: recoveryKeyword.trim() || null }); toast.success('Palavra-chave salva'); }} className="w-full">Salvar palavra-chave</Button>
             </div>
+            {isAdmin && (
+              <Link to="/admin" className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm bg-secondary text-foreground border border-border/60">
+                <Shield className="w-5 h-5" /> Painel de Administração
+              </Link>
+            )}
             <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl h-12" onClick={signOut}>
               <LogOut className="w-5 h-5 mr-3" /> Sair da minha conta
             </Button>
