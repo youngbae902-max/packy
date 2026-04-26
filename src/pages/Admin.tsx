@@ -131,6 +131,7 @@ export default function Admin() {
     { id: 'desejos' as const, label: 'Pedidos', icon: Gift },
     { id: 'albuns' as const, label: 'Álbuns', icon: Disc },
     { id: 'eventos' as const, label: 'Eventos', icon: Megaphone },
+    { id: 'paginas' as const, label: 'Abas', icon: FileText },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
