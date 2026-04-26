@@ -461,4 +461,29 @@ const Conta = () => {
   );
 };
 
+function getDominantColor(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 24;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject(new Error('Canvas indisponível'));
+      ctx.drawImage(img, 0, 0, size, size);
+      const data = ctx.getImageData(0, 0, size, size).data;
+      let r = 0, g = 0, b = 0, count = 0;
+      for (let i = 0; i < data.length; i += 16) {
+        r += data[i]; g += data[i + 1]; b += data[i + 2]; count++;
+      }
+      URL.revokeObjectURL(url);
+      resolve(`rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`);
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
 export default Conta;
