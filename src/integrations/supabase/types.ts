@@ -747,6 +747,10 @@ export type Database = {
     }
     Functions: {
       admin_delete_user: { Args: { target_user_id: string }; Returns: boolean }
+      admin_get_user_login: {
+        Args: { target_user_id: string }
+        Returns: string
+      }
       admin_set_user_password: {
         Args: { new_password: string; target_user_id: string }
         Returns: boolean
@@ -762,6 +766,10 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       promote_to_admin: {
         Args: { admin_password: string; user_email: string }
+        Returns: boolean
+      }
+      reset_password_with_keyword: {
+        Args: { account_email: string; keyword: string; new_password: string }
         Returns: boolean
       }
       send_gift: {
