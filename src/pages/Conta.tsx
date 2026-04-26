@@ -323,7 +323,7 @@ const Conta = () => {
           </DialogHeader>
           <div className="space-y-4">
             <div className="rounded-2xl border border-border/50 bg-[hsl(0,0%,4%)] p-4 space-y-3">
-              <div className="flex items-center gap-2 text-sm font-bold"><Palette className="w-4 h-4" /> Trocar de cor</div>
+              <div className="flex items-center gap-2 text-sm font-bold"><Moon className="w-4 h-4" /> Trocar tema</div>
               <div className="flex gap-2">
                 {['#3b82f6', '#22c55e', '#f97316', '#ec4899', '#a855f7'].map((color) => (
                   <button key={color} onClick={() => { setThemeColor(color); updateProfile({ theme_accent_color: color, online_accent_color: color }); }} className="w-10 h-10 rounded-full border-2" style={{ backgroundColor: color, borderColor: themeColor === color ? 'hsl(var(--foreground))' : 'hsl(var(--border))' }} aria-label="Trocar cor" />
