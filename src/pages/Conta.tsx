@@ -209,7 +209,11 @@ const Conta = () => {
       {/* Header */}
       <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
         <div className="max-w-lg mx-auto">
-          <div className="h-6 mb-8" />
+          <div className="flex justify-end mb-8">
+            <button onClick={() => setShowSettings(true)} className="w-11 h-11 rounded-full bg-secondary border border-border/50 flex items-center justify-center" aria-label="Configurações">
+              <Settings className="w-5 h-5" />
+            </button>
+          </div>
 
           {/* Profile Card */}
           <div className="flex flex-col items-center text-center">
@@ -228,7 +232,7 @@ const Conta = () => {
                 )}
               </button>
               {/* Green online dot */}
-              <span className="absolute bottom-1 right-1 w-4 h-4 bg-success rounded-full border-2 border-background" />
+              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background" style={{ backgroundColor: themeColor }} />
               <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
             </div>
 
@@ -236,7 +240,7 @@ const Conta = () => {
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
               {profile?.has_spotify_badge && (
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/20 text-success">
+                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ color: themeColor, backgroundColor: `${themeColor}22` }}>
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                   </svg>
@@ -258,7 +262,7 @@ const Conta = () => {
             {/* Badges */}
             <div className="flex gap-2 mb-4">
               {isAdmin && (
-                <Badge className="bg-destructive/20 text-destructive border-destructive/30 gap-1">
+                <Badge className="border gap-1" style={{ color: themeColor, borderColor: `${themeColor}66`, backgroundColor: `${themeColor}22` }}>
                   <Shield className="w-3 h-3" />
                   ADM
                 </Badge>
@@ -298,20 +302,15 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        <Button onClick={() => setShowSettings(true)} className="w-full mb-4 rounded-2xl h-12 gap-2">
-          <Settings className="w-5 h-5" /> Configurações
-        </Button>
-
-        {/* Admin Panel Access */}
-        {isAdmin && (
-          <Link 
-            to="/admin" 
-            className="w-full mb-4 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm bg-gradient-to-r from-destructive to-destructive/80 text-destructive-foreground hover:opacity-90 transition-all shadow-lg"
-          >
-            <Shield className="w-5 h-5" />
-            Painel de Administração
-          </Link>
-        )}
+        <div className="mb-4 flex items-center gap-2 text-foreground">
+          <Heart className="w-4 h-4" />
+          <h3 className="font-black">Favoritos</h3>
+        </div>
+        <div className="divide-y divide-border/30">
+          {favorites.length > 0 ? favorites.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} />) : (
+            <p className="text-center text-muted-foreground py-8">Nenhum favorito ainda</p>
+          )}
+        </div>
 
         <div className="h-4" />
       </div>
