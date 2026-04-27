@@ -34,7 +34,6 @@ const Packs = () => {
   const [filter, setFilter] = useState<FilterType>('free');
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
-  const [logoBubble, setLogoBubble] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
@@ -102,10 +101,9 @@ const Packs = () => {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <button onClick={() => { setLogoBubble(true); setTimeout(() => setLogoBubble(false), 2200); }} className="relative z-[90]">
+          <div className="relative z-10 pointer-events-none">
             {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
-            {logoBubble && <span className="absolute top-full left-1/2 z-[100] -translate-x-1/2 mt-2 whitespace-nowrap rounded-2xl bg-foreground text-background px-3 py-1.5 text-xs font-black shadow-xl">obgg por usar</span>}
-          </button>
+          </div>
           <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
             <Inbox className="w-6 h-6" />
             {hasUnread && (

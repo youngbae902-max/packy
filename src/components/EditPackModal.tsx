@@ -36,6 +36,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
   const [coverUrl, setCoverUrl] = useState('');
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [isExclusive, setIsExclusive] = useState(false);
+  const [requiresShortener, setRequiresShortener] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [price, setPrice] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -52,6 +53,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
       setCoverUrl(pack.cover_url || '');
       setCoverPreview(pack.cover_url || null);
       setIsExclusive(pack.is_exclusive);
+      setRequiresShortener(!!pack.requires_shortener);
       setIsPremium(pack.is_premium);
       setPrice(pack.price?.toString() || '');
     }
@@ -100,6 +102,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
         credit_channel_url: creditChannelUrl.trim() || null,
         cover_url: coverUrl || null,
         is_exclusive: isExclusive,
+        requires_shortener: requiresShortener,
         is_premium: isPremium,
         price: price ? parseFloat(price) : null,
       });
@@ -248,6 +251,17 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
               <label htmlFor="exclusive-edit" className="text-sm text-muted-foreground cursor-pointer flex items-center gap-1">
                 <Star className="w-3 h-3 text-warning" />
                 Marcar como Exclusivo
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="shortener-edit"
+                checked={requiresShortener}
+                onCheckedChange={(checked) => setRequiresShortener(checked === true)}
+              />
+              <label htmlFor="shortener-edit" className="text-sm text-muted-foreground cursor-pointer">
+                Passar pelo encurtador
               </label>
             </div>
 

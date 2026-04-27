@@ -184,6 +184,39 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_emojis: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          is_active: boolean
+          name: string
+          shortcode: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean
+          name: string
+          shortcode: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          name?: string
+          shortcode?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       custom_pages: {
         Row: {
           content: string | null
@@ -384,6 +417,7 @@ export type Database = {
           likes_count: number | null
           pack_type: Database["public"]["Enums"]["pack_type"] | null
           price: number | null
+          requires_shortener: boolean
           status: Database["public"]["Enums"]["pack_status"] | null
           title: string
           updated_at: string | null
@@ -405,6 +439,7 @@ export type Database = {
           likes_count?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null
           price?: number | null
+          requires_shortener?: boolean
           status?: Database["public"]["Enums"]["pack_status"] | null
           title: string
           updated_at?: string | null
@@ -426,6 +461,7 @@ export type Database = {
           likes_count?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null
           price?: number | null
+          requires_shortener?: boolean
           status?: Database["public"]["Enums"]["pack_status"] | null
           title?: string
           updated_at?: string | null
@@ -435,6 +471,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          admin_badge_color: string | null
           artist_name: string | null
           avatar_url: string | null
           banner_url: string | null
@@ -460,9 +497,11 @@ export type Database = {
           user_id: string
           username: string | null
           username_changes_today: number | null
+          verified_badge_color: string | null
           youtube_url: string | null
         }
         Insert: {
+          admin_badge_color?: string | null
           artist_name?: string | null
           avatar_url?: string | null
           banner_url?: string | null
@@ -488,9 +527,11 @@ export type Database = {
           user_id: string
           username?: string | null
           username_changes_today?: number | null
+          verified_badge_color?: string | null
           youtube_url?: string | null
         }
         Update: {
+          admin_badge_color?: string | null
           artist_name?: string | null
           avatar_url?: string | null
           banner_url?: string | null
@@ -516,6 +557,7 @@ export type Database = {
           user_id?: string
           username?: string | null
           username_changes_today?: number | null
+          verified_badge_color?: string | null
           youtube_url?: string | null
         }
         Relationships: []

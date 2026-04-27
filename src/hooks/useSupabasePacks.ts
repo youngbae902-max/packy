@@ -16,6 +16,7 @@ export interface Pack {
   is_premium: boolean;
   is_admin_pack: boolean;
   is_pinned: boolean;
+  requires_shortener?: boolean;
   price: number | null;
   status: 'pending' | 'approved' | 'rejected';
   likes_count: number;

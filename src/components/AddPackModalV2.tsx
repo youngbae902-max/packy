@@ -37,6 +37,7 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
   const [creditChannelUrl, setCreditChannelUrl] = useState('');
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [isExclusive, setIsExclusive] = useState(false);
+  const [requiresShortener, setRequiresShortener] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -89,6 +90,7 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
         is_premium: false,
         is_admin_pack: false,
         is_pinned: false,
+        requires_shortener: requiresShortener,
         price: null,
       });
 
@@ -102,6 +104,7 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
       setCreditChannelUrl('');
       setCoverPreview(null);
       setIsExclusive(false);
+      setRequiresShortener(false);
       setIsAnonymous(false);
       onClose();
     } catch (error) {
@@ -262,6 +265,17 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
             />
             <label htmlFor="exclusive" className="text-sm text-muted-foreground cursor-pointer">
               Marcar como Exclusivo ⭐
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="shortener"
+              checked={requiresShortener}
+              onCheckedChange={(checked) => setRequiresShortener(checked === true)}
+            />
+            <label htmlFor="shortener" className="text-sm text-muted-foreground cursor-pointer">
+              Passar pelo encurtador
             </label>
           </div>
 

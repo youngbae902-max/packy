@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
-import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2 } from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { usePackComments, useRepost } from '@/hooks/useSocial';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { EmojiText } from '@/components/EmojiText';
 
 const packTypeLabels: Record<string, string> = {
   samples: 'Samples',
@@ -147,6 +148,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               R$ {pack.price?.toFixed(2)}
             </div>
           )}
+          {pack.requires_shortener && (
+            <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-foreground text-background px-2 py-0.5 rounded-full text-[10px] font-black backdrop-blur-sm">
+              <LinkIcon className="w-3 h-3" /> Passar pelo encurtador
+            </div>
+          )}
 
           {/* Bottom gradient for text readability */}
           <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[hsl(0,0%,4%)] to-transparent pointer-events-none" />
@@ -243,6 +249,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               {pack.is_pinned && (
                 <span className="inline-flex items-center gap-1 bg-primary/20 text-primary px-2.5 py-1 rounded-full text-xs font-bold">
                   <Pin className="w-3 h-3" /> Fixado
+                </span>
+              )}
+              {pack.requires_shortener && (
+                <span className="inline-flex items-center gap-1 bg-foreground text-background px-2.5 py-1 rounded-full text-xs font-bold">
+                  <LinkIcon className="w-3 h-3" /> Passar pelo encurtador
                 </span>
               )}
               {showAdminBadge && pack.is_admin_pack && (
@@ -344,7 +355,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                               </div>
                             </div>
                           ) : (
-                            <p className="text-sm text-foreground/90 mt-0.5 whitespace-pre-wrap leading-snug">{comment.content}</p>
+                            <p className="text-sm text-foreground/90 mt-0.5 whitespace-pre-wrap leading-snug"><EmojiText text={comment.content} /></p>
                           )}
                         </div>
                         <div className="flex items-center gap-1">
