@@ -471,6 +471,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          admin_badge_color: string | null
           artist_name: string | null
           avatar_url: string | null
           banner_url: string | null
@@ -496,9 +497,11 @@ export type Database = {
           user_id: string
           username: string | null
           username_changes_today: number | null
+          verified_badge_color: string | null
           youtube_url: string | null
         }
         Insert: {
+          admin_badge_color?: string | null
           artist_name?: string | null
           avatar_url?: string | null
           banner_url?: string | null
@@ -524,9 +527,11 @@ export type Database = {
           user_id: string
           username?: string | null
           username_changes_today?: number | null
+          verified_badge_color?: string | null
           youtube_url?: string | null
         }
         Update: {
+          admin_badge_color?: string | null
           artist_name?: string | null
           avatar_url?: string | null
           banner_url?: string | null
@@ -552,6 +557,7 @@ export type Database = {
           user_id?: string
           username?: string | null
           username_changes_today?: number | null
+          verified_badge_color?: string | null
           youtube_url?: string | null
         }
         Relationships: []
