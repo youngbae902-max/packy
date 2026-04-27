@@ -17,6 +17,8 @@ interface UserProfile {
   has_spotify_badge: boolean | null;
   online_accent_color?: string | null;
   theme_accent_color?: string | null;
+  admin_badge_color?: string | null;
+  verified_badge_color?: string | null;
 }
 
 interface UserEditModalProps {
@@ -51,6 +53,7 @@ export function UserEditModal({
   canEnterAccount = false,
 }: UserEditModalProps) {
   const [loginEmail, setLoginEmail] = useState<string | null>(null);
+  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
   const [tempPassword, setTempPassword] = useState('');
   if (!user) return null;
 
@@ -143,14 +146,21 @@ export function UserEditModal({
 
           {canEnterAccount && !isProtected && (
             <div className="rounded-3xl border border-border/50 bg-secondary/40 p-3 space-y-2">
-              <p className="text-xs font-black uppercase text-muted-foreground">Entrar na conta</p>
-              <Button variant="outline" className="w-full justify-start" onClick={async () => setLoginEmail(await onGetLogin?.(user.user_id) || null)}>
-                <KeyRound className="w-4 h-4 mr-2" /> Mostrar login
+              <p className="text-xs font-black uppercase text-muted-foreground">Entrar com @{user.username || 'usuário'}</p>
+              <Button variant="outline" className="w-full justify-start" disabled={isLoadingLogin} onClick={async () => { setIsLoadingLogin(true); try { setLoginEmail(await onGetLogin?.(user.user_id) || null); } catch { toast.error('Erro ao buscar login'); } finally { setIsLoadingLogin(false); } }}>
+                <KeyRound className="w-4 h-4 mr-2" /> Entrar com @{user.username || 'usuário'}
               </Button>
               {loginEmail && (
-                <button className="w-full flex items-center justify-between rounded-2xl bg-background px-3 py-2 text-sm" onClick={() => { navigator.clipboard.writeText(loginEmail); toast.success('Login copiado'); }}>
-                  <span className="truncate">{loginEmail}</span><Copy className="w-4 h-4" />
-                </button>
+                <div className="space-y-2">
+                  <button className="w-full flex items-center justify-between rounded-2xl bg-background px-3 py-2 text-sm" onClick={() => { navigator.clipboard.writeText(loginEmail); toast.success('Login copiado'); }}>
+                    <span className="truncate">Login: {loginEmail}</span><Copy className="w-4 h-4" />
+                  </button>
+                  {tempPassword && (
+                    <button className="w-full flex items-center justify-between rounded-2xl bg-background px-3 py-2 text-sm" onClick={() => { navigator.clipboard.writeText(tempPassword); toast.success('Senha copiada'); }}>
+                      <span className="truncate">Senha: {tempPassword}</span><Copy className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               )}
               <Input value={tempPassword} onChange={(e) => setTempPassword(e.target.value)} placeholder="Senha temporária nova" className="rounded-2xl" />
               <Button className="w-full" disabled={tempPassword.length < 6} onClick={async () => { await onSetPassword?.(user.user_id, tempPassword); setTempPassword(''); }}>
