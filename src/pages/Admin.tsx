@@ -893,6 +893,35 @@ export default function Admin() {
           </div>
         )}
 
+        {mainTab === 'emojis' && (
+          <div className="space-y-4">
+            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
+              <h3 className="font-bold flex items-center gap-2"><SmilePlus className="w-4 h-4" /> Novo emoji</h3>
+              <Input value={emojiName} onChange={(e) => setEmojiName(e.target.value)} placeholder="Nome do emoji" />
+              <Input value={emojiCode} onChange={(e) => setEmojiCode(e.target.value.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase())} placeholder="codigo sem dois pontos" />
+              <Input type="file" accept="image/*" onChange={(e) => setEmojiFile(e.target.files?.[0] || null)} />
+              <Button className="w-full" disabled={!emojiName.trim() || !emojiCode.trim() || !emojiFile || isSavingEmoji} onClick={async () => { if (!emojiFile) return; await saveEmoji({ name: emojiName, shortcode: emojiCode, file: emojiFile }); setEmojiName(''); setEmojiCode(''); setEmojiFile(null); }}>
+                Enviar emoji
+              </Button>
+              <p className="text-xs text-muted-foreground">Use na bio ou comentário assim: :{emojiCode || 'codigo'}:</p>
+            </Card>
+
+            <div className="space-y-2">
+              {emojis.map((emoji) => (
+                <div key={emoji.id} className="pack-card flex items-center gap-3">
+                  <img src={emoji.image_url} alt={emoji.name} className="w-10 h-10 object-contain rounded-lg bg-secondary" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm truncate">{emoji.name}</p>
+                    <p className="text-xs text-muted-foreground">:{emoji.shortcode}:</p>
+                  </div>
+                  <Button size="sm" variant="destructive" onClick={() => deleteEmoji(emoji.id)}><Trash2 className="w-4 h-4" /></Button>
+                </div>
+              ))}
+              {emojis.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhum emoji criado</p>}
+            </div>
+          </div>
+        )}
+
         {/* Trash Tab */}
         {mainTab === 'lixeira' && (
           <div className="space-y-4">
