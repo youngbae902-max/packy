@@ -40,9 +40,12 @@ const Conta = () => {
   const [spotifyUrl, setSpotifyUrl] = useState('');
   const [soundcloudUrl, setSoundcloudUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
-  const [themeColor, setThemeColor] = useState('#3b82f6');
-  const [verifiedBadgeColor, setVerifiedBadgeColor] = useState('#10b981');
-  const [adminBadgeColor, setAdminBadgeColor] = useState('#10b981');
+  const [themeColor, setThemeColor] = useState('#16A249');
+  const [verifiedBadgeBgColor, setVerifiedBadgeBgColor] = useState('#0F2B1A');
+  const [verifiedBadgeTextColor, setVerifiedBadgeTextColor] = useState('#16A249');
+  const [adminBadgeBgColor, setAdminBadgeBgColor] = useState('#082D0F');
+  const [adminBadgeBorderColor, setAdminBadgeBorderColor] = useState('#085A18');
+  const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [cropImage, setCropImage] = useState<string | null>(null);
@@ -57,11 +60,14 @@ const Conta = () => {
       setSpotifyUrl(profile.spotify_url || '');
       setSoundcloudUrl(profile.soundcloud_url || '');
       setYoutubeUrl(profile.youtube_url || '');
-      setThemeColor(profile.theme_accent_color || profile.online_accent_color || '#3b82f6');
+      setThemeColor(profile.online_accent_color || profile.theme_accent_color || '#16A249');
       setThemeMode((profile.theme_mode as 'dark' | 'light') || 'dark');
       setRecoveryKeyword(profile.recovery_keyword || '');
-      setVerifiedBadgeColor(profile.verified_badge_color || '#10b981');
-      setAdminBadgeColor(profile.admin_badge_color || '#10b981');
+      setVerifiedBadgeBgColor(profile.verified_badge_bg_color || profile.verified_badge_color || '#0F2B1A');
+      setVerifiedBadgeTextColor(profile.verified_badge_text_color || '#16A249');
+      setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
+      setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
+      setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
     }
   }, [profile]);
 
@@ -132,8 +138,13 @@ const Conta = () => {
         theme_accent_color: themeColor,
         online_accent_color: themeColor,
         recovery_keyword: recoveryKeyword.trim() || null,
-        verified_badge_color: verifiedBadgeColor || '#10b981',
-        admin_badge_color: adminBadgeColor || '#10b981',
+        verified_badge_color: verifiedBadgeBgColor || '#0F2B1A',
+        verified_badge_bg_color: verifiedBadgeBgColor || '#0F2B1A',
+        verified_badge_text_color: verifiedBadgeTextColor || '#16A249',
+        admin_badge_color: adminBadgeBgColor || '#082D0F',
+        admin_badge_bg_color: adminBadgeBgColor || '#082D0F',
+        admin_badge_border_color: adminBadgeBorderColor || '#085A18',
+        admin_badge_text_color: adminBadgeTextColor || '#05BD2A',
       });
       
       if (username.trim() && username !== profile?.username) {
