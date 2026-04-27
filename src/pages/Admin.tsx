@@ -42,7 +42,7 @@ type SubTab = 'pending' | 'approved' | 'rejected';
 const MAIN_ADMIN_USERNAME = 'goat';
 
 export default function Admin() {
-  const { isAdmin, isLoading, user } = useAuth();
+  const { isAdmin, isLoading, user, profile } = useAuth();
   const [mainTab, setMainTab] = useState<MainTab>('stats');
   const [subTab, setSubTab] = useState<SubTab>('pending');
   const [editingPack, setEditingPack] = useState<Pack | null>(null);
@@ -1054,7 +1054,7 @@ export default function Admin() {
         onToggleSpotify={(userId, enabled) => toggleSpotifyBadge({ userId, enabled })}
         onDelete={handleDeleteUser}
         onSendGift={(userId, username) => setGiftModal({ userId, username })}
-        canEnterAccount={isMainAdmin(user?.id || '')}
+        canEnterAccount={(profile?.username || '').toLowerCase().replace(/^@/, '') === MAIN_ADMIN_USERNAME}
         onSetPassword={(userId, password) => adminSetUserPassword({ userId, password }).then(() => undefined)}
         onGetLogin={getUserLogin}
       />

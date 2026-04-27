@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { X, Globe, Disc, Mail, Star, Shield, Home } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppLogo } from '@/hooks/useAppLogo';
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface SideMenuProps {
 
 export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const { isAdmin, user } = useAuth();
+  const { logoUrl } = useAppLogo();
 
   const items = [
     { to: '/', icon: Home, label: 'Início' },
@@ -35,7 +37,9 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
           <div className="grid grid-cols-[40px_1fr_40px] items-center">
             <div />
             <div className="flex justify-center">
-              <div className="w-16 h-16 rounded-2xl bg-secondary border border-border flex items-center justify-center text-lg font-black">P</div>
+              <div className="w-16 h-16 rounded-2xl bg-secondary border border-border flex items-center justify-center overflow-hidden text-lg font-black">
+                {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> : 'P'}
+              </div>
             </div>
             <button
               onClick={onClose}

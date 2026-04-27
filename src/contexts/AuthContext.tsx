@@ -17,7 +17,12 @@ interface Profile {
   theme_accent_color?: string | null;
   online_accent_color?: string | null;
   verified_badge_color?: string | null;
+  verified_badge_bg_color?: string | null;
+  verified_badge_text_color?: string | null;
   admin_badge_color?: string | null;
+  admin_badge_bg_color?: string | null;
+  admin_badge_border_color?: string | null;
+  admin_badge_text_color?: string | null;
   theme_mode?: 'dark' | 'light' | null;
   recovery_keyword?: string | null;
 }
@@ -49,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from('profiles')
-      .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, admin_badge_color, theme_mode, recovery_keyword')
+      .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, verified_badge_bg_color, verified_badge_text_color, admin_badge_color, admin_badge_bg_color, admin_badge_border_color, admin_badge_text_color, theme_mode, recovery_keyword')
       .eq('user_id', userId)
       .single();
     
@@ -138,8 +143,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updatePassword = async (password: string) => {
-    const { error } = await supabase.auth.updateUser({ password });
-    return { error: error as Error | null };
+    const { data, error } = await supabase.rpc('change_my_password' as any, { new_password: password });
+    if (error) return { error: error as Error | null };
+    if (!data) return { error: new Error('Não foi possível alterar a senha') };
+    await supabase.auth.refreshSession();
+    return { error: null };
   };
 
   const signOut = async () => {

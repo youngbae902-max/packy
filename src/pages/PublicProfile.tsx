@@ -34,8 +34,11 @@ export default function PublicProfile() {
   const isOwner = (profile?.username || '').toLowerCase().replace(/^@/, '') === 'goat';
   const isSelf = user?.id === userId;
   const accent = profile?.online_accent_color || profile?.theme_accent_color || 'hsl(var(--primary))';
-  const verifiedColor = profile?.verified_badge_color || '#10b981';
-  const adminColor = profile?.admin_badge_color || '#10b981';
+  const verifiedBg = profile?.verified_badge_bg_color || profile?.verified_badge_color || '#0F2B1A';
+  const verifiedText = profile?.verified_badge_text_color || '#16A249';
+  const adminBg = profile?.admin_badge_bg_color || profile?.admin_badge_color || '#082D0F';
+  const adminBorder = profile?.admin_badge_border_color || '#085A18';
+  const adminText = profile?.admin_badge_text_color || '#05BD2A';
   const bio = profile?.bio || '';
   const shouldClampBio = bio.length > BIO_LIMIT;
   const shownBio = shouldClampBio && !bioExpanded ? `${bio.slice(0, BIO_LIMIT).trim()}...` : bio;
@@ -96,8 +99,8 @@ export default function PublicProfile() {
 
           <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
             <h1 className="text-2xl font-black text-foreground leading-none">{displayName}</h1>
-            {profile.has_spotify_badge && <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-black" style={{ color: shadeColor(verifiedColor, -45), backgroundColor: verifiedColor }}><BadgeCheck className="w-3.5 h-3.5" /> Verificado</span>}
-            {isOwner && <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-black" style={{ color: shadeColor(adminColor, -45), backgroundColor: adminColor }}><BadgeCheck className="w-3.5 h-3.5" /> ADM</span>}
+            {profile.has_spotify_badge && <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-black" style={{ color: verifiedText, backgroundColor: verifiedBg }}><BadgeCheck className="w-3.5 h-3.5" /> Verificado</span>}
+            {isOwner && <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-black" style={{ color: adminText, backgroundColor: adminBg, borderColor: adminBorder }}><BadgeCheck className="w-3.5 h-3.5" /> ADM</span>}
           </div>
           {profile.username && <p className="text-lg text-muted-foreground mb-3">@{profile.username}</p>}
 
@@ -172,14 +175,4 @@ export default function PublicProfile() {
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
-}
-
-function shadeColor(color: string, percent: number) {
-  if (!color.startsWith('#')) return color;
-  const num = parseInt(color.slice(1), 16);
-  const amt = Math.round(2.55 * percent);
-  const r = Math.max(0, Math.min(255, (num >> 16) + amt));
-  const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00ff) + amt));
-  const b = Math.max(0, Math.min(255, (num & 0x0000ff) + amt));
-  return `#${(0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1)}`;
 }

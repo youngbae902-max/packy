@@ -40,9 +40,12 @@ const Conta = () => {
   const [spotifyUrl, setSpotifyUrl] = useState('');
   const [soundcloudUrl, setSoundcloudUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
-  const [themeColor, setThemeColor] = useState('#3b82f6');
-  const [verifiedBadgeColor, setVerifiedBadgeColor] = useState('#10b981');
-  const [adminBadgeColor, setAdminBadgeColor] = useState('#10b981');
+  const [themeColor, setThemeColor] = useState('#16A249');
+  const [verifiedBadgeBgColor, setVerifiedBadgeBgColor] = useState('#0F2B1A');
+  const [verifiedBadgeTextColor, setVerifiedBadgeTextColor] = useState('#16A249');
+  const [adminBadgeBgColor, setAdminBadgeBgColor] = useState('#082D0F');
+  const [adminBadgeBorderColor, setAdminBadgeBorderColor] = useState('#085A18');
+  const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [cropImage, setCropImage] = useState<string | null>(null);
@@ -57,11 +60,14 @@ const Conta = () => {
       setSpotifyUrl(profile.spotify_url || '');
       setSoundcloudUrl(profile.soundcloud_url || '');
       setYoutubeUrl(profile.youtube_url || '');
-      setThemeColor(profile.theme_accent_color || profile.online_accent_color || '#3b82f6');
+      setThemeColor(profile.online_accent_color || profile.theme_accent_color || '#16A249');
       setThemeMode((profile.theme_mode as 'dark' | 'light') || 'dark');
       setRecoveryKeyword(profile.recovery_keyword || '');
-      setVerifiedBadgeColor(profile.verified_badge_color || '#10b981');
-      setAdminBadgeColor(profile.admin_badge_color || '#10b981');
+      setVerifiedBadgeBgColor(profile.verified_badge_bg_color || profile.verified_badge_color || '#0F2B1A');
+      setVerifiedBadgeTextColor(profile.verified_badge_text_color || '#16A249');
+      setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
+      setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
+      setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
     }
   }, [profile]);
 
@@ -132,8 +138,13 @@ const Conta = () => {
         theme_accent_color: themeColor,
         online_accent_color: themeColor,
         recovery_keyword: recoveryKeyword.trim() || null,
-        verified_badge_color: verifiedBadgeColor || '#10b981',
-        admin_badge_color: adminBadgeColor || '#10b981',
+        verified_badge_color: verifiedBadgeBgColor || '#0F2B1A',
+        verified_badge_bg_color: verifiedBadgeBgColor || '#0F2B1A',
+        verified_badge_text_color: verifiedBadgeTextColor || '#16A249',
+        admin_badge_color: adminBadgeBgColor || '#082D0F',
+        admin_badge_bg_color: adminBadgeBgColor || '#082D0F',
+        admin_badge_border_color: adminBadgeBorderColor || '#085A18',
+        admin_badge_text_color: adminBadgeTextColor || '#05BD2A',
       });
       
       if (username.trim() && username !== profile?.username) {
@@ -246,7 +257,7 @@ const Conta = () => {
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
               {profile?.has_spotify_badge && (
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ color: shadeColor(verifiedBadgeColor, -45), backgroundColor: verifiedBadgeColor }}>
+                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}>
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                   </svg>
@@ -268,7 +279,7 @@ const Conta = () => {
             {/* Badges */}
             <div className="flex gap-2 mb-4">
               {isAdmin && (
-                <Badge className="border gap-1" style={{ color: shadeColor(adminBadgeColor, -45), borderColor: adminBadgeColor, backgroundColor: adminBadgeColor }}>
+                <Badge className="border gap-1" style={{ color: adminBadgeTextColor, borderColor: adminBadgeBorderColor, backgroundColor: adminBadgeBgColor }}>
                   <Shield className="w-3 h-3" />
                   ADM
                 </Badge>
@@ -335,17 +346,22 @@ const Conta = () => {
 
               <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
                 <div className="flex items-center gap-2 text-sm font-bold"><BadgeCheck className="w-4 h-4" /> Cores dos selos</div>
-                <div className="grid grid-cols-[1fr_88px] gap-2 items-end">
-                  <div><label className="label-field">Verificado</label><Input value={verifiedBadgeColor} onChange={(e) => setVerifiedBadgeColor(e.target.value)} placeholder="#10b981" /></div>
-                  <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: verifiedBadgeColor }} />
+                <div className="grid grid-cols-2 gap-2">
+                  <div><label className="label-field">Fundo verificado</label><Input value={verifiedBadgeBgColor} onChange={(e) => setVerifiedBadgeBgColor(e.target.value)} placeholder="#0F2B1A" /></div>
+                  <div><label className="label-field">Texto verificado</label><Input value={verifiedBadgeTextColor} onChange={(e) => setVerifiedBadgeTextColor(e.target.value)} placeholder="#16A249" /></div>
                 </div>
-                <div className="grid grid-cols-[1fr_88px] gap-2 items-end">
-                  <div><label className="label-field">ADM</label><Input value={adminBadgeColor} onChange={(e) => setAdminBadgeColor(e.target.value)} placeholder="#10b981" /></div>
-                  <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: adminBadgeColor }} />
+                <div className="grid grid-cols-3 gap-2">
+                  <div><label className="label-field">Fundo ADM</label><Input value={adminBadgeBgColor} onChange={(e) => setAdminBadgeBgColor(e.target.value)} placeholder="#082D0F" /></div>
+                  <div><label className="label-field">Borda ADM</label><Input value={adminBadgeBorderColor} onChange={(e) => setAdminBadgeBorderColor(e.target.value)} placeholder="#085A18" /></div>
+                  <div><label className="label-field">Texto ADM</label><Input value={adminBadgeTextColor} onChange={(e) => setAdminBadgeTextColor(e.target.value)} placeholder="#05BD2A" /></div>
+                </div>
+                <div className="grid grid-cols-[1fr_52px] gap-2 items-end">
+                  <div><label className="label-field">Bolinha online</label><Input value={themeColor} onChange={(e) => setThemeColor(e.target.value)} placeholder="#16A249" /></div>
+                  <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: themeColor }} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" onClick={() => { setVerifiedBadgeColor('#10b981'); setAdminBadgeColor('#10b981'); }}><RotateCcw className="w-4 h-4 mr-2" />Padrão</Button>
-                  <Button onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeColor, admin_badge_color: adminBadgeColor }); toast.success('Cores dos selos salvas'); }}>Salvar cores</Button>
+                  <Button variant="outline" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}><RotateCcw className="w-4 h-4 mr-2" />Padrão</Button>
+                  <Button onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>Salvar cores</Button>
                 </div>
               </div>
 
