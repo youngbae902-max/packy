@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, Eye } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, Eye, SmilePlus } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -34,8 +34,9 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
+import { useCustomEmojis } from '@/hooks/useCustomEmojis';
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'goat';
@@ -75,6 +76,9 @@ export default function Admin() {
   const [giftType, setGiftType] = useState<'pack' | 'external'>('pack');
   const [externalGiftUrlForUser, setExternalGiftUrlForUser] = useState('');
   const [externalGiftNameForUser, setExternalGiftNameForUser] = useState('');
+  const [emojiName, setEmojiName] = useState('');
+  const [emojiCode, setEmojiCode] = useState('');
+  const [emojiFile, setEmojiFile] = useState<File | null>(null);
   
   const { 
     pendingPacks, allApprovedPacks, rejectedPacks, 
@@ -97,6 +101,7 @@ export default function Admin() {
   const { getAlbumLinks, addLink, deleteLink, updateLink } = useAlbumLinks();
   const { events, deleteEvent, toggleEventActive } = useSiteEvents();
   const { pages, savePage, deletePage } = useCustomPages();
+  const { emojis, saveEmoji, deleteEmoji, isSaving: isSavingEmoji } = useCustomEmojis();
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
@@ -133,6 +138,7 @@ export default function Admin() {
     { id: 'albuns' as const, label: 'Álbuns', icon: Disc },
     { id: 'eventos' as const, label: 'Eventos', icon: Megaphone },
     { id: 'paginas' as const, label: 'Abas', icon: FileText },
+    { id: 'emojis' as const, label: 'Emojis', icon: SmilePlus },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
