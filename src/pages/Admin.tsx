@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, Eye, SmilePlus } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -306,12 +306,6 @@ export default function Admin() {
     deleteUser(userId);
   };
 
-  const handleImpersonate = (targetUserId: string, username?: string | null) => {
-    sessionStorage.setItem('admin_view_user_id', targetUserId);
-    toast.success(`Visualizando como @${username || 'usuário'} sem acessar senha/sessão`);
-    window.open(`/perfil/${targetUserId}?adminView=1`, '_blank');
-  };
-
   return (
     <div className="min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 py-6">
@@ -613,11 +607,6 @@ export default function Admin() {
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
-                {isMainAdmin(user?.id || '') && (
-                  <Button size="sm" variant="outline" onClick={() => handleImpersonate(u.user_id, u.username)} className="gap-1">
-                    <Eye className="w-4 h-4" /> Entrar na conta
-                  </Button>
-                )}
               </div>
             ))}
           </div>
