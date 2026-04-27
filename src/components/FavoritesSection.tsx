@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Bookmark, ChevronRight, Image as ImageIcon, Heart, Download } from 'lucide-react';
+import { Bookmark, ChevronRight, Image as ImageIcon, Heart } from 'lucide-react';
 import { useUserFavorites } from '@/hooks/usePackInteractions';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { PackCardV2 } from './PackCardV2';
+import { ProfilePackRow } from './ProfilePackRow';
 
 export function FavoritesSection() {
   const { favorites, isLoading } = useUserFavorites();
@@ -97,7 +97,7 @@ export function FavoritesSection() {
           </DialogHeader>
           <div className="space-y-4 mt-4">
             {favorites.map((pack: any) => (
-              <PackCardV2 key={pack.id} pack={pack} />
+              <ProfilePackRow key={pack.id} pack={pack} />
             ))}
           </div>
         </DialogContent>
