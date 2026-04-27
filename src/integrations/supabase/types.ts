@@ -184,6 +184,39 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_emojis: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          is_active: boolean
+          name: string
+          shortcode: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean
+          name: string
+          shortcode: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          name?: string
+          shortcode?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       custom_pages: {
         Row: {
           content: string | null
@@ -384,6 +417,7 @@ export type Database = {
           likes_count: number | null
           pack_type: Database["public"]["Enums"]["pack_type"] | null
           price: number | null
+          requires_shortener: boolean
           status: Database["public"]["Enums"]["pack_status"] | null
           title: string
           updated_at: string | null
@@ -405,6 +439,7 @@ export type Database = {
           likes_count?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null
           price?: number | null
+          requires_shortener?: boolean
           status?: Database["public"]["Enums"]["pack_status"] | null
           title: string
           updated_at?: string | null
@@ -426,6 +461,7 @@ export type Database = {
           likes_count?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null
           price?: number | null
+          requires_shortener?: boolean
           status?: Database["public"]["Enums"]["pack_status"] | null
           title?: string
           updated_at?: string | null
