@@ -1223,6 +1223,7 @@ function AdminPackForm({
   const [downloadUrl, setDownloadUrl] = useState('');
   const [coverUrl, setCoverUrl] = useState('');
   const [price, setPrice] = useState('');
+  const [requiresShortener, setRequiresShortener] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverFile, setCoverFile] = useState<File | null>(null);
 
@@ -1258,6 +1259,7 @@ function AdminPackForm({
         pack_type: packType,
         download_url: downloadUrl.trim(),
         cover_url: coverUrl || null,
+        requires_shortener: requiresShortener,
         price: isPremium && price ? Number(price) : null,
       });
       onClose();
@@ -1303,6 +1305,10 @@ function AdminPackForm({
         <Label>Link de Download *</Label>
         <Input value={downloadUrl} onChange={e => setDownloadUrl(e.target.value)} placeholder="https://..." />
       </div>
+      <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+        <input type="checkbox" checked={requiresShortener} onChange={(e) => setRequiresShortener(e.target.checked)} />
+        Passar pelo encurtador
+      </label>
       {isPremium && (
         <div>
           <Label>Preço (R$)</Label>
