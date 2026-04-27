@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, Heart, ArrowLeft, BadgeCheck, RotateCcw } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw } from 'lucide-react';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
@@ -9,8 +9,6 @@ import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useUserManagement } from '@/hooks/useUserManagement';
 import { usePublicProfile } from '@/hooks/useSocial';
-import { useUserFavorites } from '@/hooks/usePackInteractions';
-import { ProfilePackRow } from '@/components/ProfilePackRow';
 import { FavoritesSection } from '@/components/FavoritesSection';
 import { EmojiText } from '@/components/EmojiText';
 import { toast } from 'sonner';
