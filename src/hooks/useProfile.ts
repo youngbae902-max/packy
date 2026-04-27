@@ -13,6 +13,8 @@ interface ProfileUpdates {
   youtube_url?: string | null;
   theme_accent_color?: string | null;
   online_accent_color?: string | null;
+  verified_badge_color?: string | null;
+  admin_badge_color?: string | null;
   theme_mode?: 'dark' | 'light' | null;
   recovery_keyword?: string | null;
 }
