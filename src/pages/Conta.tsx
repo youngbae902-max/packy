@@ -346,17 +346,22 @@ const Conta = () => {
 
               <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
                 <div className="flex items-center gap-2 text-sm font-bold"><BadgeCheck className="w-4 h-4" /> Cores dos selos</div>
-                <div className="grid grid-cols-[1fr_88px] gap-2 items-end">
-                  <div><label className="label-field">Verificado</label><Input value={verifiedBadgeColor} onChange={(e) => setVerifiedBadgeColor(e.target.value)} placeholder="#10b981" /></div>
-                  <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: verifiedBadgeColor }} />
+                <div className="grid grid-cols-2 gap-2">
+                  <div><label className="label-field">Fundo verificado</label><Input value={verifiedBadgeBgColor} onChange={(e) => setVerifiedBadgeBgColor(e.target.value)} placeholder="#0F2B1A" /></div>
+                  <div><label className="label-field">Texto verificado</label><Input value={verifiedBadgeTextColor} onChange={(e) => setVerifiedBadgeTextColor(e.target.value)} placeholder="#16A249" /></div>
                 </div>
-                <div className="grid grid-cols-[1fr_88px] gap-2 items-end">
-                  <div><label className="label-field">ADM</label><Input value={adminBadgeColor} onChange={(e) => setAdminBadgeColor(e.target.value)} placeholder="#10b981" /></div>
-                  <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: adminBadgeColor }} />
+                <div className="grid grid-cols-3 gap-2">
+                  <div><label className="label-field">Fundo ADM</label><Input value={adminBadgeBgColor} onChange={(e) => setAdminBadgeBgColor(e.target.value)} placeholder="#082D0F" /></div>
+                  <div><label className="label-field">Borda ADM</label><Input value={adminBadgeBorderColor} onChange={(e) => setAdminBadgeBorderColor(e.target.value)} placeholder="#085A18" /></div>
+                  <div><label className="label-field">Texto ADM</label><Input value={adminBadgeTextColor} onChange={(e) => setAdminBadgeTextColor(e.target.value)} placeholder="#05BD2A" /></div>
+                </div>
+                <div className="grid grid-cols-[1fr_52px] gap-2 items-end">
+                  <div><label className="label-field">Bolinha online</label><Input value={themeColor} onChange={(e) => setThemeColor(e.target.value)} placeholder="#16A249" /></div>
+                  <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: themeColor }} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" onClick={() => { setVerifiedBadgeColor('#10b981'); setAdminBadgeColor('#10b981'); }}><RotateCcw className="w-4 h-4 mr-2" />Padrão</Button>
-                  <Button onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeColor, admin_badge_color: adminBadgeColor }); toast.success('Cores dos selos salvas'); }}>Salvar cores</Button>
+                  <Button variant="outline" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}><RotateCcw className="w-4 h-4 mr-2" />Padrão</Button>
+                  <Button onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>Salvar cores</Button>
                 </div>
               </div>
 
