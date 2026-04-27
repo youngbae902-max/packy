@@ -471,7 +471,10 @@ export type Database = {
       }
       profiles: {
         Row: {
+          admin_badge_bg_color: string | null
+          admin_badge_border_color: string | null
           admin_badge_color: string | null
+          admin_badge_text_color: string | null
           artist_name: string | null
           avatar_url: string | null
           banner_url: string | null
@@ -497,11 +500,16 @@ export type Database = {
           user_id: string
           username: string | null
           username_changes_today: number | null
+          verified_badge_bg_color: string | null
           verified_badge_color: string | null
+          verified_badge_text_color: string | null
           youtube_url: string | null
         }
         Insert: {
+          admin_badge_bg_color?: string | null
+          admin_badge_border_color?: string | null
           admin_badge_color?: string | null
+          admin_badge_text_color?: string | null
           artist_name?: string | null
           avatar_url?: string | null
           banner_url?: string | null
@@ -527,11 +535,16 @@ export type Database = {
           user_id: string
           username?: string | null
           username_changes_today?: number | null
+          verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
+          verified_badge_text_color?: string | null
           youtube_url?: string | null
         }
         Update: {
+          admin_badge_bg_color?: string | null
+          admin_badge_border_color?: string | null
           admin_badge_color?: string | null
+          admin_badge_text_color?: string | null
           artist_name?: string | null
           avatar_url?: string | null
           banner_url?: string | null
@@ -557,7 +570,9 @@ export type Database = {
           user_id?: string
           username?: string | null
           username_changes_today?: number | null
+          verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
+          verified_badge_text_color?: string | null
           youtube_url?: string | null
         }
         Relationships: []
@@ -797,6 +812,7 @@ export type Database = {
         Args: { new_password: string; target_user_id: string }
         Returns: boolean
       }
+      change_my_password: { Args: { new_password: string }; Returns: boolean }
       delete_my_account: { Args: never; Returns: boolean }
       has_role: {
         Args: {
