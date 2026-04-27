@@ -20,7 +20,12 @@ export interface PublicProfile {
   theme_accent_color?: string | null;
   online_accent_color?: string | null;
   verified_badge_color?: string | null;
+  verified_badge_bg_color?: string | null;
+  verified_badge_text_color?: string | null;
   admin_badge_color?: string | null;
+  admin_badge_bg_color?: string | null;
+  admin_badge_border_color?: string | null;
+  admin_badge_text_color?: string | null;
 }
 
 export interface PackComment {
@@ -43,7 +48,7 @@ export function useProfileSearch(query: string) {
       if (q.length < 2) return [];
       const { data, error } = await (supabase as any)
         .from('profiles')
-        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, admin_badge_color')
+        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, verified_badge_bg_color, verified_badge_text_color, admin_badge_color, admin_badge_bg_color, admin_badge_border_color, admin_badge_text_color')
         .or(`username.ilike.%${q}%,artist_name.ilike.%${q}%`)
         .limit(5);
 
@@ -63,7 +68,7 @@ export function usePublicProfile(userId?: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, admin_badge_color')
+        .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, verified_badge_bg_color, verified_badge_text_color, admin_badge_color, admin_badge_bg_color, admin_badge_border_color, admin_badge_text_color')
         .eq('user_id', userId!)
         .single();
 
