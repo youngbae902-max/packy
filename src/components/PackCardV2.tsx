@@ -180,13 +180,13 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             </button>
           </div>
 
-          {/* Download button */}
+          {/* Download button (apenas ícone) */}
           <button
             onClick={handleDownloadClick}
-            className="w-full mt-2.5 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[hsl(0,0%,2%)] border border-border/60 text-foreground text-xs font-bold uppercase tracking-wide hover:bg-[hsl(0,0%,6%)] transition-colors shadow-inner"
+            aria-label={pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito' : 'Baixar'}
+            className="w-full mt-2.5 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[hsl(0,0%,1%)] border border-border/60 text-foreground hover:bg-[hsl(0,0%,4%)] transition-colors shadow-inner"
           >
-            <Download className="w-3.5 h-3.5" />
-            {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito' : 'Baixar'}
+            <Download className="w-4 h-4" />
           </button>
         </div>
       </div>
