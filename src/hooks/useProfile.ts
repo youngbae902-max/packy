@@ -22,6 +22,11 @@ interface ProfileUpdates {
   admin_badge_text_color?: string | null;
   theme_mode?: 'dark' | 'light' | null;
   recovery_keyword?: string | null;
+  thought_bubble?: string | null;
+  show_badges_in_bio?: boolean;
+  show_badges_in_thought?: boolean;
+  profile_decoration_url?: string | null;
+  profile_decoration_position?: any;
 }
 
 export function useProfile() {
