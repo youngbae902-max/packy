@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { X, Globe, Disc, Mail, Star, Shield, Home } from 'lucide-react';
+import { X, Globe, Disc, Mail, Star, Monitor, Home } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
 
@@ -74,11 +74,12 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 to="/admin"
                 onClick={onClose}
                 className="group flex items-center gap-4 px-4 py-3 rounded-xl text-foreground/90 hover:bg-foreground/[0.06] transition-all"
+                aria-label="Painel"
               >
                 <span className="w-9 h-9 rounded-lg bg-[hsl(0,0%,5%)] border border-border/50 flex items-center justify-center">
-                  <Shield className="w-4 h-4" />
+                  <Monitor className="w-4 h-4" />
                 </span>
-                <span className="text-sm font-semibold">Painel Admin</span>
+                <span className="text-sm font-semibold">Painel</span>
               </Link>
             </>
           )}

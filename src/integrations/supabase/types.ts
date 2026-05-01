@@ -50,6 +50,39 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_badges: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          image_url: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       album_links: {
         Row: {
           album_id: string
@@ -469,6 +502,33 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_decorations: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          is_active: boolean
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           admin_badge_bg_color: string | null
@@ -488,7 +548,12 @@ export type Database = {
           last_seen: string | null
           last_username_change_date: string | null
           online_accent_color: string | null
+          profile_decoration_position: Json | null
+          profile_decoration_url: string | null
           recovery_keyword: string | null
+          saved_themes: Json
+          show_badges_in_bio: boolean | null
+          show_badges_in_thought: boolean | null
           soundcloud_url: string | null
           spotify_url: string | null
           status_ring_color: string | null
@@ -503,6 +568,7 @@ export type Database = {
           verified_badge_bg_color: string | null
           verified_badge_color: string | null
           verified_badge_text_color: string | null
+          wallet_balance: number
           youtube_url: string | null
         }
         Insert: {
@@ -523,7 +589,12 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
+          profile_decoration_position?: Json | null
+          profile_decoration_url?: string | null
           recovery_keyword?: string | null
+          saved_themes?: Json
+          show_badges_in_bio?: boolean | null
+          show_badges_in_thought?: boolean | null
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null
@@ -538,6 +609,7 @@ export type Database = {
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
           verified_badge_text_color?: string | null
+          wallet_balance?: number
           youtube_url?: string | null
         }
         Update: {
@@ -558,7 +630,12 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
+          profile_decoration_position?: Json | null
+          profile_decoration_url?: string | null
           recovery_keyword?: string | null
+          saved_themes?: Json
+          show_badges_in_bio?: boolean | null
+          show_badges_in_thought?: boolean | null
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null
@@ -573,6 +650,7 @@ export type Database = {
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
           verified_badge_text_color?: string | null
+          wallet_balance?: number
           youtube_url?: string | null
         }
         Relationships: []
@@ -654,6 +732,38 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      user_admin_badges: {
+        Row: {
+          badge_id: string
+          granted_at: string
+          granted_by: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_admin_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "admin_badges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_badges: {
         Row: {
@@ -812,8 +922,13 @@ export type Database = {
         Args: { new_password: string; target_user_id: string }
         Returns: boolean
       }
+      admin_set_wallet_balance: {
+        Args: { new_balance: number; target_user_id: string }
+        Returns: boolean
+      }
       change_my_password: { Args: { new_password: string }; Returns: boolean }
       delete_my_account: { Args: never; Returns: boolean }
+      email_for_username: { Args: { uname: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

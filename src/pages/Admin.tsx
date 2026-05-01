@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -35,8 +35,9 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useCustomEmojis } from '@/hooks/useCustomEmojis';
+import { useAdminBadges } from '@/hooks/useAdminBadges';
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'goat';
@@ -79,6 +80,10 @@ export default function Admin() {
   const [emojiName, setEmojiName] = useState('');
   const [emojiCode, setEmojiCode] = useState('');
   const [emojiFile, setEmojiFile] = useState<File | null>(null);
+  const [badgeName, setBadgeName] = useState('');
+  const [badgeDesc, setBadgeDesc] = useState('');
+  const [badgeFile, setBadgeFile] = useState<File | null>(null);
+  const [grantBadgeUserId, setGrantBadgeUserId] = useState('');
   
   const { 
     pendingPacks, allApprovedPacks, rejectedPacks, 
@@ -102,6 +107,7 @@ export default function Admin() {
   const { events, deleteEvent, toggleEventActive } = useSiteEvents();
   const { pages, savePage, deletePage } = useCustomPages();
   const { emojis, saveEmoji, deleteEmoji, isSaving: isSavingEmoji } = useCustomEmojis();
+  const { badges: adminBadges, createBadge, deleteBadge, grantBadge, isCreating: isCreatingBadge } = useAdminBadges();
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
@@ -139,6 +145,7 @@ export default function Admin() {
     { id: 'eventos' as const, label: 'Eventos', icon: Megaphone },
     { id: 'paginas' as const, label: 'Abas', icon: FileText },
     { id: 'emojis' as const, label: 'Emojis', icon: SmilePlus },
+    { id: 'selos' as const, label: 'Selos', icon: BadgeCheck },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
@@ -907,6 +914,42 @@ export default function Admin() {
                 </div>
               ))}
               {emojis.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhum emoji criado</p>}
+            </div>
+          </div>
+        )}
+
+        {mainTab === 'selos' && (
+          <div className="space-y-4">
+            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
+              <h3 className="font-bold flex items-center gap-2"><BadgeCheck className="w-4 h-4" /> Novo selo</h3>
+              <Input value={badgeName} onChange={(e) => setBadgeName(e.target.value)} placeholder="Nome do selo" />
+              <Input value={badgeDesc} onChange={(e) => setBadgeDesc(e.target.value)} placeholder="Descrição (opcional)" />
+              <Input type="file" accept="image/*" onChange={(e) => setBadgeFile(e.target.files?.[0] || null)} />
+              <Button className="w-full" disabled={!badgeName.trim() || !badgeFile || isCreatingBadge} onClick={async () => { if (!badgeFile) return; await createBadge({ name: badgeName, description: badgeDesc, file: badgeFile }); setBadgeName(''); setBadgeDesc(''); setBadgeFile(null); }}>
+                Criar selo
+              </Button>
+              <p className="text-xs text-muted-foreground">Os selos só aparecem quando você presenteia um usuário.</p>
+            </Card>
+
+            <div className="space-y-2">
+              {adminBadges.map((badge) => (
+                <Card key={badge.id} className="p-3 rounded-2xl border-border/50 bg-card flex items-center gap-3">
+                  <img src={badge.image_url} alt={badge.name} className="w-10 h-10 object-contain rounded-lg bg-secondary" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm truncate">{badge.name}</p>
+                    {badge.description && <p className="text-xs text-muted-foreground truncate">{badge.description}</p>}
+                  </div>
+                  <Button size="sm" variant="outline" onClick={async () => {
+                    const uname = prompt('Username (sem @) para enviar este selo:');
+                    if (!uname) return;
+                    const target = users?.find((u: any) => u.username?.toLowerCase() === uname.trim().toLowerCase());
+                    if (!target) { toast.error('Usuário não encontrado'); return; }
+                    try { await grantBadge({ user_id: target.user_id, badge_id: badge.id }); } catch {}
+                  }}><Send className="w-4 h-4" /></Button>
+                  <Button size="sm" variant="destructive" onClick={() => deleteBadge(badge.id)}><Trash2 className="w-4 h-4" /></Button>
+                </Card>
+              ))}
+              {adminBadges.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhum selo criado</p>}
             </div>
           </div>
         )}

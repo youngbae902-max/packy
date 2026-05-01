@@ -8,6 +8,7 @@ import { usePublicProfile } from '@/hooks/useSocial';
 import { AuthModal } from '@/components/AuthModal';
 import { useMemo, useState } from 'react';
 import { EmojiText } from '@/components/EmojiText';
+import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 
 const BIO_LIMIT = 115;
 
@@ -29,6 +30,7 @@ export default function PublicProfile() {
     toggleFollow,
     isLoading,
   } = usePublicProfile(userId);
+  const { badges: userBadges } = useUserAdminBadges(userId);
 
   const displayName = profile?.artist_name || profile?.username || 'Usuário';
   const isOwner = (profile?.username || '').toLowerCase().replace(/^@/, '') === 'goat';
@@ -95,6 +97,14 @@ export default function PublicProfile() {
               <AvatarFallback><User className="w-14 h-14" /></AvatarFallback>
             </Avatar>
             <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-background" style={{ backgroundColor: accent }} />
+            {(profile as any).thought_bubble && (
+              <div className="absolute -top-2 left-full ml-3 max-w-[200px] bg-secondary border border-border/60 rounded-2xl rounded-bl-sm px-3 py-2 text-xs text-foreground/90 text-left">
+                <EmojiText text={(profile as any).thought_bubble} />
+                {(profile as any).show_badges_in_thought && userBadges.length > 0 && (
+                  <div className="flex gap-1 mt-1">{userBadges.map(b => b.badge && <img key={b.id} src={b.badge.image_url} alt={b.badge.name} className="w-4 h-4" />)}</div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
@@ -129,6 +139,17 @@ export default function PublicProfile() {
                 </button>
               )}
             </p>
+          )}
+
+          {((profile as any).show_badges_in_bio !== false) && userBadges.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 justify-center mt-1">
+              {userBadges.map(b => b.badge && (
+                <span key={b.id} title={b.badge.name} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary border border-border/40 text-[11px] font-semibold">
+                  <img src={b.badge.image_url} alt={b.badge.name} className="w-3.5 h-3.5" />
+                  {b.badge.name}
+                </span>
+              ))}
+            </div>
           )}
         </section>
 

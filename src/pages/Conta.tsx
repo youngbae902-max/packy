@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X, Award } from 'lucide-react';
+import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
@@ -20,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
+  const { badges: myBadges } = useUserAdminBadges(user?.id);
   const { updateProfile, uploadAvatar, isUpdating } = useProfile();
   const { userPacks } = useSupabasePacks();
   const { followersCount, followingCount } = usePublicProfile(user?.id);
@@ -32,6 +34,8 @@ const Conta = () => {
   const [newPassword, setNewPassword] = useState('');
   const [recoveryKeyword, setRecoveryKeyword] = useState('');
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+  const [showThoughtModal, setShowThoughtModal] = useState(false);
+  const [thoughtDraft, setThoughtDraft] = useState('');
   
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
@@ -68,6 +72,7 @@ const Conta = () => {
       setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
+      setThoughtDraft((profile as any)?.thought_bubble || '');
     }
   }, [profile]);
 
@@ -251,6 +256,25 @@ const Conta = () => {
               {/* Green online dot */}
               <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background" style={{ backgroundColor: themeColor }} />
               <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
+
+              {/* Thought bubble */}
+              {(profile as any)?.thought_bubble ? (
+                <button
+                  onClick={() => { setThoughtDraft((profile as any).thought_bubble); setShowThoughtModal(true); }}
+                  className="absolute -top-2 left-full ml-2 max-w-[180px] bg-secondary border border-border/60 rounded-2xl rounded-bl-sm px-3 py-1.5 text-xs text-foreground/90 text-left line-clamp-2 hover:bg-foreground/[0.06] transition-colors"
+                >
+                  <EmojiText text={(profile as any).thought_bubble} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setThoughtDraft(''); setShowThoughtModal(true); }}
+                  aria-label="Adicionar pensamento"
+                  className="absolute -top-1 -left-1 w-7 h-7 rounded-full bg-secondary border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] transition-colors"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <Plus className="w-2.5 h-2.5 absolute -top-0.5 -right-0.5 bg-background rounded-full" />
+                </button>
+              )}
             </div>
 
             {/* Name & Username */}
@@ -371,6 +395,33 @@ const Conta = () => {
                 <Button onClick={handleChangePassword} className="w-full">Alterar senha principal</Button>
                 <Input value={recoveryKeyword} onChange={(e) => setRecoveryKeyword(e.target.value)} placeholder="Palavra-chave se esquecer a senha" />
                 <Button variant="outline" onClick={async () => { await updateProfile({ recovery_keyword: recoveryKeyword.trim() || null }); toast.success('Palavra-chave salva'); }} className="w-full">Salvar palavra-chave</Button>
+              </div>
+
+              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
+                <div className="flex items-center gap-2 text-sm font-bold"><Award className="w-4 h-4" /> Meus selos</div>
+                {myBadges.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Você ainda não recebeu selos. Selos são enviados pelo ADM.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {myBadges.map(b => b.badge && (
+                      <span key={b.id} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary border border-border/40 text-[11px] font-semibold">
+                        <img src={b.badge.image_url} alt={b.badge.name} className="w-4 h-4" /> {b.badge.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
+                  <span className="text-xs text-muted-foreground">Exibir selos na bio</span>
+                  <Button size="sm" variant={(profile as any)?.show_badges_in_bio !== false ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_badges_in_bio: !((profile as any)?.show_badges_in_bio !== false) } as any); refreshProfile(); }}>
+                    {(profile as any)?.show_badges_in_bio !== false ? 'Sim' : 'Não'}
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs text-muted-foreground">Exibir selos no pensamento</span>
+                  <Button size="sm" variant={(profile as any)?.show_badges_in_thought ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_badges_in_thought: !(profile as any)?.show_badges_in_thought } as any); refreshProfile(); }}>
+                    {(profile as any)?.show_badges_in_thought ? 'Sim' : 'Não'}
+                  </Button>
+                </div>
               </div>
 
               {isAdmin && (
@@ -513,6 +564,35 @@ const Conta = () => {
               Excluir permanentemente
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Thought Bubble Modal */}
+      <Dialog open={showThoughtModal} onOpenChange={setShowThoughtModal}>
+        <DialogContent className="bg-card border-border rounded-[2rem] max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-foreground text-center">Defina seu status</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Textarea
+              value={thoughtDraft}
+              onChange={(e) => setThoughtDraft(e.target.value.slice(0, 120))}
+              placeholder="O que você tá pensando?"
+              rows={3}
+              className="bg-secondary border-border text-foreground resize-none rounded-2xl"
+              maxLength={120}
+            />
+            <p className="text-[11px] text-muted-foreground text-right">{thoughtDraft.length}/120</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" onClick={() => setShowThoughtModal(false)} className="rounded-2xl">Sair</Button>
+              <Button onClick={async () => { await updateProfile({ thought_bubble: thoughtDraft.trim() || null } as any); refreshProfile(); setShowThoughtModal(false); toast.success('Status salvo'); }} className="rounded-2xl">Salvar</Button>
+            </div>
+            {(profile as any)?.thought_bubble && (
+              <Button variant="ghost" className="w-full text-destructive hover:text-destructive rounded-2xl" onClick={async () => { await updateProfile({ thought_bubble: null } as any); refreshProfile(); setThoughtDraft(''); setShowThoughtModal(false); toast.success('Removido'); }}>
+                <X className="w-4 h-4 mr-2" /> Remover pensamento
+              </Button>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
 

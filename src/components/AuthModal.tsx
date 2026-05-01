@@ -53,20 +53,31 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
     setIsLoading(true);
 
     try {
+      let loginEmail = email.trim();
+      // Permite login com @username
+      if (mode === 'login' && !loginEmail.includes('@')) {
+        const cleaned = loginEmail.replace(/^@/, '');
+        const { data } = await supabase.rpc('email_for_username' as any, { uname: cleaned });
+        if (data) loginEmail = data as string;
+      } else if (mode === 'login' && loginEmail.startsWith('@')) {
+        const { data } = await supabase.rpc('email_for_username' as any, { uname: loginEmail.slice(1) });
+        if (data) loginEmail = data as string;
+      }
+
       if (mode === 'signup') {
-        const { error } = await signUp(email, password);
+        const { error } = await signUp(loginEmail, password);
         if (error) {
           toast.error(error.message);
         } else {
-          toast.success('Conta criada com sucesso!');
+          toast.success('Conta criada!');
           onClose();
         }
       } else {
-        const { error } = await signIn(email, password);
+        const { error } = await signIn(loginEmail, password);
         if (error) {
-          toast.error('Email ou senha incorretos');
+          toast.error('Login incorreto');
         } else {
-          toast.success('Login realizado!');
+          toast.success('Bem-vindo!');
           onClose();
         }
       }
@@ -84,7 +95,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-sm bg-card border border-border rounded-2xl p-8 shadow-2xl animate-scale-in">
+      <div className="relative w-full max-w-sm bg-card border border-border rounded-[2rem] p-8 shadow-2xl animate-scale-in">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-colors"
@@ -102,22 +113,16 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === 'signup' && (
-            <p className="rounded-xl border border-border bg-muted/40 p-3 text-xs font-bold uppercase leading-relaxed text-foreground">
-              INVENTE UM EMAIL APENAS PARA ESSE SITE, NÃO PRECISA SER VERIFICADO PELO GOOGLE E INVENTE UMA SENHA
-            </p>
-          )}
-
           <div>
             <label className="label-field flex items-center gap-1">
               <Mail className="w-3 h-3" />
-              Email
+              {mode === 'login' ? 'Email ou @usuário' : 'Email'}
             </label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="seu@email.com"
+              placeholder={mode === 'login' ? 'seu@email.com ou @user' : 'seu@email.com'}
               className="input-field"
               required
             />

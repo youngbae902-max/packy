@@ -96,7 +96,7 @@ const Packs = () => {
         <header className="flex items-center justify-between py-2">
           <button
             onClick={() => setShowMenu(true)}
-            className="p-2 -ml-2 rounded-full bg-[hsl(0,0%,4%)] border border-border/50 hover:bg-[hsl(0,0%,8%)] transition-colors"
+            className="p-2 -ml-2 rounded-full text-foreground hover:bg-foreground/10 transition-colors"
             aria-label="Abrir menu"
           >
             <Menu className="w-6 h-6" />
