@@ -918,6 +918,42 @@ export default function Admin() {
           </div>
         )}
 
+        {mainTab === 'selos' && (
+          <div className="space-y-4">
+            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
+              <h3 className="font-bold flex items-center gap-2"><BadgeCheck className="w-4 h-4" /> Novo selo</h3>
+              <Input value={badgeName} onChange={(e) => setBadgeName(e.target.value)} placeholder="Nome do selo" />
+              <Input value={badgeDesc} onChange={(e) => setBadgeDesc(e.target.value)} placeholder="Descrição (opcional)" />
+              <Input type="file" accept="image/*" onChange={(e) => setBadgeFile(e.target.files?.[0] || null)} />
+              <Button className="w-full" disabled={!badgeName.trim() || !badgeFile || isCreatingBadge} onClick={async () => { if (!badgeFile) return; await createBadge({ name: badgeName, description: badgeDesc, file: badgeFile }); setBadgeName(''); setBadgeDesc(''); setBadgeFile(null); }}>
+                Criar selo
+              </Button>
+              <p className="text-xs text-muted-foreground">Os selos só aparecem quando você presenteia um usuário.</p>
+            </Card>
+
+            <div className="space-y-2">
+              {adminBadges.map((badge) => (
+                <Card key={badge.id} className="p-3 rounded-2xl border-border/50 bg-card flex items-center gap-3">
+                  <img src={badge.image_url} alt={badge.name} className="w-10 h-10 object-contain rounded-lg bg-secondary" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm truncate">{badge.name}</p>
+                    {badge.description && <p className="text-xs text-muted-foreground truncate">{badge.description}</p>}
+                  </div>
+                  <Button size="sm" variant="outline" onClick={async () => {
+                    const uname = prompt('Username (sem @) para enviar este selo:');
+                    if (!uname) return;
+                    const target = users?.find((u: any) => u.username?.toLowerCase() === uname.trim().toLowerCase());
+                    if (!target) { toast.error('Usuário não encontrado'); return; }
+                    try { await grantBadge({ user_id: target.user_id, badge_id: badge.id }); } catch {}
+                  }}><Send className="w-4 h-4" /></Button>
+                  <Button size="sm" variant="destructive" onClick={() => deleteBadge(badge.id)}><Trash2 className="w-4 h-4" /></Button>
+                </Card>
+              ))}
+              {adminBadges.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhum selo criado</p>}
+            </div>
+          </div>
+        )}
+
         {/* Trash Tab */}
         {mainTab === 'lixeira' && (
           <div className="space-y-4">
