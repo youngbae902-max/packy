@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X, Award } from 'lucide-react';
+import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
@@ -20,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
+  const { badges: myBadges } = useUserAdminBadges(user?.id);
   const { updateProfile, uploadAvatar, isUpdating } = useProfile();
   const { userPacks } = useSupabasePacks();
   const { followersCount, followingCount } = usePublicProfile(user?.id);
