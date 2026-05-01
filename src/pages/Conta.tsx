@@ -538,6 +538,35 @@ const Conta = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Thought Bubble Modal */}
+      <Dialog open={showThoughtModal} onOpenChange={setShowThoughtModal}>
+        <DialogContent className="bg-card border-border rounded-[2rem] max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-foreground text-center">Defina seu status</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Textarea
+              value={thoughtDraft}
+              onChange={(e) => setThoughtDraft(e.target.value.slice(0, 120))}
+              placeholder="O que você tá pensando?"
+              rows={3}
+              className="bg-secondary border-border text-foreground resize-none rounded-2xl"
+              maxLength={120}
+            />
+            <p className="text-[11px] text-muted-foreground text-right">{thoughtDraft.length}/120</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" onClick={() => setShowThoughtModal(false)} className="rounded-2xl">Sair</Button>
+              <Button onClick={async () => { await updateProfile({ thought_bubble: thoughtDraft.trim() || null } as any); refreshProfile(); setShowThoughtModal(false); toast.success('Status salvo'); }} className="rounded-2xl">Salvar</Button>
+            </div>
+            {(profile as any)?.thought_bubble && (
+              <Button variant="ghost" className="w-full text-destructive hover:text-destructive rounded-2xl" onClick={async () => { await updateProfile({ thought_bubble: null } as any); refreshProfile(); setThoughtDraft(''); setShowThoughtModal(false); toast.success('Removido'); }}>
+                <X className="w-4 h-4 mr-2" /> Remover pensamento
+              </Button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Image Crop Modal */}
       {cropImage && (
         <ImageCropModal
