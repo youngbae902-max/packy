@@ -80,6 +80,10 @@ export default function Admin() {
   const [emojiName, setEmojiName] = useState('');
   const [emojiCode, setEmojiCode] = useState('');
   const [emojiFile, setEmojiFile] = useState<File | null>(null);
+  const [badgeName, setBadgeName] = useState('');
+  const [badgeDesc, setBadgeDesc] = useState('');
+  const [badgeFile, setBadgeFile] = useState<File | null>(null);
+  const [grantBadgeUserId, setGrantBadgeUserId] = useState('');
   
   const { 
     pendingPacks, allApprovedPacks, rejectedPacks, 
@@ -103,6 +107,7 @@ export default function Admin() {
   const { events, deleteEvent, toggleEventActive } = useSiteEvents();
   const { pages, savePage, deletePage } = useCustomPages();
   const { emojis, saveEmoji, deleteEmoji, isSaving: isSavingEmoji } = useCustomEmojis();
+  const { badges: adminBadges, createBadge, deleteBadge, grantBadge, isCreating: isCreatingBadge } = useAdminBadges();
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
