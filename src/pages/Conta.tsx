@@ -397,6 +397,33 @@ const Conta = () => {
                 <Button variant="outline" onClick={async () => { await updateProfile({ recovery_keyword: recoveryKeyword.trim() || null }); toast.success('Palavra-chave salva'); }} className="w-full">Salvar palavra-chave</Button>
               </div>
 
+              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
+                <div className="flex items-center gap-2 text-sm font-bold"><Award className="w-4 h-4" /> Meus selos</div>
+                {myBadges.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Você ainda não recebeu selos. Selos são enviados pelo ADM.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {myBadges.map(b => b.badge && (
+                      <span key={b.id} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary border border-border/40 text-[11px] font-semibold">
+                        <img src={b.badge.image_url} alt={b.badge.name} className="w-4 h-4" /> {b.badge.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
+                  <span className="text-xs text-muted-foreground">Exibir selos na bio</span>
+                  <Button size="sm" variant={(profile as any)?.show_badges_in_bio !== false ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_badges_in_bio: !((profile as any)?.show_badges_in_bio !== false) } as any); refreshProfile(); }}>
+                    {(profile as any)?.show_badges_in_bio !== false ? 'Sim' : 'Não'}
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs text-muted-foreground">Exibir selos no pensamento</span>
+                  <Button size="sm" variant={(profile as any)?.show_badges_in_thought ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_badges_in_thought: !(profile as any)?.show_badges_in_thought } as any); refreshProfile(); }}>
+                    {(profile as any)?.show_badges_in_thought ? 'Sim' : 'Não'}
+                  </Button>
+                </div>
+              </div>
+
               {isAdmin && (
                 <Link to="/admin" className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm bg-secondary text-foreground border border-border/60">
                   <Shield className="w-5 h-5" /> Painel de Administração
