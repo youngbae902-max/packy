@@ -35,8 +35,9 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useCustomEmojis } from '@/hooks/useCustomEmojis';
+import { useAdminBadges } from '@/hooks/useAdminBadges';
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'goat';
@@ -139,6 +140,7 @@ export default function Admin() {
     { id: 'eventos' as const, label: 'Eventos', icon: Megaphone },
     { id: 'paginas' as const, label: 'Abas', icon: FileText },
     { id: 'emojis' as const, label: 'Emojis', icon: SmilePlus },
+    { id: 'selos' as const, label: 'Selos', icon: BadgeCheck },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
