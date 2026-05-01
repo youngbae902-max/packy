@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X } from 'lucide-react';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
@@ -32,6 +32,8 @@ const Conta = () => {
   const [newPassword, setNewPassword] = useState('');
   const [recoveryKeyword, setRecoveryKeyword] = useState('');
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+  const [showThoughtModal, setShowThoughtModal] = useState(false);
+  const [thoughtDraft, setThoughtDraft] = useState('');
   
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
@@ -68,6 +70,7 @@ const Conta = () => {
       setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
+      setThoughtDraft((profile as any)?.thought_bubble || '');
     }
   }, [profile]);
 
