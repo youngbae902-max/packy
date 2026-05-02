@@ -350,6 +350,24 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
+        {/* Carteira */}
+        <div className="rounded-3xl border border-border/50 bg-card p-4 mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
+            <span className="text-xl font-black tabular-nums">R$ {Number((profile as any)?.wallet_balance || 0).toFixed(2)}</span>
+          </div>
+          {walletTx.length > 0 && (
+            <div className="space-y-1 mt-3 max-h-40 overflow-y-auto">
+              {walletTx.slice(0, 5).map(tx => (
+                <div key={tx.id} className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="truncate mr-2">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</span>
+                  <span className={tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <FavoritesSection />
 
         <div className="h-4" />
