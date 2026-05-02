@@ -28,6 +28,8 @@ const Conta = () => {
   const { userPacks } = useSupabasePacks();
   const { followersCount, followingCount } = usePublicProfile(user?.id);
   const { updateUsername, deleteMyAccount } = useUserManagement();
+  const { decorations } = useDecorations();
+  const { transactions: walletTx } = useWallet(user?.id);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
