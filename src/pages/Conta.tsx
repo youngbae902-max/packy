@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X, Award } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X, Award, Wallet, Sparkles } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -10,6 +10,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useUserManagement } from '@/hooks/useUserManagement';
 import { usePublicProfile } from '@/hooks/useSocial';
+import { useDecorations } from '@/hooks/useDecorations';
+import { useWallet } from '@/hooks/useWallet';
 import { FavoritesSection } from '@/components/FavoritesSection';
 import { EmojiText } from '@/components/EmojiText';
 import { toast } from 'sonner';
