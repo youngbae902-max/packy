@@ -449,6 +449,31 @@ const Conta = () => {
                 </div>
               </div>
 
+              {/* Decorações */}
+              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
+                <div className="flex items-center gap-2 text-sm font-bold"><Sparkles className="w-4 h-4" /> Decoração do perfil</div>
+                <p className="text-[11px] text-muted-foreground">Escolha um PNG para enquadrar sua foto.</p>
+                <div className="grid grid-cols-4 gap-2">
+                  <button
+                    onClick={async () => { await updateProfile({ profile_decoration_url: null }); toast.success('Decoração removida'); refreshProfile(); }}
+                    className={`aspect-square rounded-2xl border ${!(profile as any)?.profile_decoration_url ? 'border-primary' : 'border-border/40'} bg-secondary flex items-center justify-center text-[10px] text-muted-foreground`}
+                  >
+                    Nenhuma
+                  </button>
+                  {decorations.map(d => (
+                    <button
+                      key={d.id}
+                      onClick={async () => { await updateProfile({ profile_decoration_url: d.image_url }); toast.success('Decoração aplicada'); refreshProfile(); }}
+                      className={`relative aspect-square rounded-2xl border overflow-hidden ${(profile as any)?.profile_decoration_url === d.image_url ? 'border-primary' : 'border-border/40'} bg-secondary`}
+                      title={d.name}
+                    >
+                      <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
+                    </button>
+                  ))}
+                </div>
+                {decorations.length === 0 && <p className="text-[11px] text-muted-foreground">Nenhuma decoração disponível ainda.</p>}
+              </div>
+
               {isAdmin && (
                 <Link to="/admin" className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm bg-secondary text-foreground border border-border/60">
                   <Shield className="w-5 h-5" /> Painel de Administração
