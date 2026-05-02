@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X, Award } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X, Award, Wallet, Sparkles } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -10,6 +10,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useUserManagement } from '@/hooks/useUserManagement';
 import { usePublicProfile } from '@/hooks/useSocial';
+import { useDecorations } from '@/hooks/useDecorations';
+import { useWallet } from '@/hooks/useWallet';
 import { FavoritesSection } from '@/components/FavoritesSection';
 import { EmojiText } from '@/components/EmojiText';
 import { toast } from 'sonner';
@@ -26,6 +28,8 @@ const Conta = () => {
   const { userPacks } = useSupabasePacks();
   const { followersCount, followingCount } = usePublicProfile(user?.id);
   const { updateUsername, deleteMyAccount } = useUserManagement();
+  const { decorations } = useDecorations();
+  const { transactions: walletTx } = useWallet(user?.id);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -253,8 +257,11 @@ const Conta = () => {
                   </div>
                 )}
               </button>
+              {(profile as any)?.profile_decoration_url && (
+                <img src={(profile as any).profile_decoration_url} alt="" aria-hidden className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: 'scale(1.35)' }} />
+              )}
               {/* Green online dot */}
-              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background" style={{ backgroundColor: themeColor }} />
+              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
               <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
 
               {/* Thought bubble */}
@@ -343,6 +350,24 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
+        {/* Carteira */}
+        <div className="rounded-3xl border border-border/50 bg-card p-4 mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
+            <span className="text-xl font-black tabular-nums">R$ {Number((profile as any)?.wallet_balance || 0).toFixed(2)}</span>
+          </div>
+          {walletTx.length > 0 && (
+            <div className="space-y-1 mt-3 max-h-40 overflow-y-auto">
+              {walletTx.slice(0, 5).map(tx => (
+                <div key={tx.id} className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="truncate mr-2">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</span>
+                  <span className={tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <FavoritesSection />
 
         <div className="h-4" />
@@ -422,6 +447,31 @@ const Conta = () => {
                     {(profile as any)?.show_badges_in_thought ? 'Sim' : 'Não'}
                   </Button>
                 </div>
+              </div>
+
+              {/* Decorações */}
+              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
+                <div className="flex items-center gap-2 text-sm font-bold"><Sparkles className="w-4 h-4" /> Decoração do perfil</div>
+                <p className="text-[11px] text-muted-foreground">Escolha um PNG para enquadrar sua foto.</p>
+                <div className="grid grid-cols-4 gap-2">
+                  <button
+                    onClick={async () => { await updateProfile({ profile_decoration_url: null }); toast.success('Decoração removida'); refreshProfile(); }}
+                    className={`aspect-square rounded-2xl border ${!(profile as any)?.profile_decoration_url ? 'border-primary' : 'border-border/40'} bg-secondary flex items-center justify-center text-[10px] text-muted-foreground`}
+                  >
+                    Nenhuma
+                  </button>
+                  {decorations.map(d => (
+                    <button
+                      key={d.id}
+                      onClick={async () => { await updateProfile({ profile_decoration_url: d.image_url }); toast.success('Decoração aplicada'); refreshProfile(); }}
+                      className={`relative aspect-square rounded-2xl border overflow-hidden ${(profile as any)?.profile_decoration_url === d.image_url ? 'border-primary' : 'border-border/40'} bg-secondary`}
+                      title={d.name}
+                    >
+                      <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
+                    </button>
+                  ))}
+                </div>
+                {decorations.length === 0 && <p className="text-[11px] text-muted-foreground">Nenhuma decoração disponível ainda.</p>}
               </div>
 
               {isAdmin && (

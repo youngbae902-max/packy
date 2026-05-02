@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -36,8 +36,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useCustomEmojis } from '@/hooks/useCustomEmojis';
 import { useAdminBadges } from '@/hooks/useAdminBadges';
+import { useDecorations } from '@/hooks/useDecorations';
+import { useWallet } from '@/hooks/useWallet';
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'goat';
@@ -108,6 +110,13 @@ export default function Admin() {
   const { pages, savePage, deletePage } = useCustomPages();
   const { emojis, saveEmoji, deleteEmoji, isSaving: isSavingEmoji } = useCustomEmojis();
   const { badges: adminBadges, createBadge, deleteBadge, grantBadge, isCreating: isCreatingBadge } = useAdminBadges();
+  const { decorations, createDecoration, deleteDecoration } = useDecorations();
+  const { adjustBalance } = useWallet();
+  const [decoName, setDecoName] = useState('');
+  const [decoFile, setDecoFile] = useState<File | null>(null);
+  const [walletUsername, setWalletUsername] = useState('');
+  const [walletAmount, setWalletAmount] = useState('');
+  const [walletReason, setWalletReason] = useState('');
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
@@ -146,6 +155,8 @@ export default function Admin() {
     { id: 'paginas' as const, label: 'Abas', icon: FileText },
     { id: 'emojis' as const, label: 'Emojis', icon: SmilePlus },
     { id: 'selos' as const, label: 'Selos', icon: BadgeCheck },
+    { id: 'decoracoes' as const, label: 'Decorações', icon: Sparkles },
+    { id: 'carteira' as const, label: 'Carteira', icon: Wallet },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
@@ -951,6 +962,73 @@ export default function Admin() {
               ))}
               {adminBadges.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhum selo criado</p>}
             </div>
+          </div>
+        )}
+
+        {mainTab === 'decoracoes' && (
+          <div className="space-y-4">
+            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
+              <h3 className="font-bold flex items-center gap-2"><Sparkles className="w-4 h-4" /> Nova decoração</h3>
+              <Input value={decoName} onChange={(e) => setDecoName(e.target.value)} placeholder="Nome (ex: Coroa Dourada)" />
+              <Input type="file" accept="image/png,image/webp" onChange={(e) => setDecoFile(e.target.files?.[0] || null)} />
+              <Button className="w-full" disabled={!decoName.trim() || !decoFile} onClick={async () => {
+                if (!decoFile) return;
+                try {
+                  await createDecoration({ file: decoFile, name: decoName });
+                  setDecoName(''); setDecoFile(null);
+                  toast.success('Decoração criada');
+                } catch (e: any) { toast.error(e.message || 'Erro'); }
+              }}>Enviar decoração</Button>
+              <p className="text-xs text-muted-foreground">PNG transparente recomendado. Todos os usuários poderão escolher.</p>
+            </Card>
+
+            <div className="grid grid-cols-3 gap-2">
+              {decorations.map((d) => (
+                <Card key={d.id} className="p-2 rounded-2xl border-border/50 bg-card flex flex-col items-center gap-2">
+                  <div className="w-full aspect-square rounded-xl bg-secondary overflow-hidden flex items-center justify-center">
+                    <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
+                  </div>
+                  <p className="text-xs font-bold truncate w-full text-center">{d.name}</p>
+                  <Button size="sm" variant="destructive" className="w-full" onClick={() => deleteDecoration(d.id)}><Trash2 className="w-3 h-3" /></Button>
+                </Card>
+              ))}
+              {decorations.length === 0 && <p className="col-span-3 text-center py-8 text-muted-foreground">Nenhuma decoração criada</p>}
+            </div>
+          </div>
+        )}
+
+        {mainTab === 'carteira' && (
+          <div className="space-y-4">
+            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
+              <h3 className="font-bold flex items-center gap-2"><Wallet className="w-4 h-4" /> Ajustar saldo de usuário</h3>
+              <Input value={walletUsername} onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))} placeholder="Username (sem @)" />
+              <Input type="number" step="0.01" value={walletAmount} onChange={(e) => setWalletAmount(e.target.value)} placeholder="Valor (use negativo para debitar)" />
+              <Input value={walletReason} onChange={(e) => setWalletReason(e.target.value)} placeholder="Motivo (opcional)" />
+              <Button className="w-full" disabled={!walletUsername.trim() || !walletAmount} onClick={async () => {
+                const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
+                if (!target) { toast.error('Usuário não encontrado'); return; }
+                const amt = parseFloat(walletAmount);
+                if (!amt) { toast.error('Valor inválido'); return; }
+                try {
+                  const newBal = await adjustBalance({ targetUserId: target.user_id, amount: amt, reason: walletReason });
+                  toast.success(`Novo saldo: R$ ${Number(newBal).toFixed(2)}`);
+                  setWalletUsername(''); setWalletAmount(''); setWalletReason('');
+                } catch (e: any) { toast.error(e.message || 'Erro'); }
+              }}>Aplicar ajuste</Button>
+              <p className="text-xs text-muted-foreground">Use valores positivos para creditar e negativos para debitar.</p>
+            </Card>
+
+            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-2">
+              <h3 className="font-bold text-sm">Saldos atuais</h3>
+              <div className="max-h-96 overflow-y-auto space-y-1">
+                {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
+                  <div key={u.user_id} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-secondary/40">
+                    <span className="text-xs truncate mr-2">@{u.username || '—'}</span>
+                    <span className="text-xs font-bold tabular-nums">R$ {Number(u.wallet_balance || 0).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
           </div>
         )}
 
