@@ -110,6 +110,13 @@ export default function Admin() {
   const { pages, savePage, deletePage } = useCustomPages();
   const { emojis, saveEmoji, deleteEmoji, isSaving: isSavingEmoji } = useCustomEmojis();
   const { badges: adminBadges, createBadge, deleteBadge, grantBadge, isCreating: isCreatingBadge } = useAdminBadges();
+  const { decorations, createDecoration, deleteDecoration } = useDecorations();
+  const { adjustBalance } = useWallet();
+  const [decoName, setDecoName] = useState('');
+  const [decoFile, setDecoFile] = useState<File | null>(null);
+  const [walletUsername, setWalletUsername] = useState('');
+  const [walletAmount, setWalletAmount] = useState('');
+  const [walletReason, setWalletReason] = useState('');
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
