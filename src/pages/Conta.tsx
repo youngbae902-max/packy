@@ -257,8 +257,11 @@ const Conta = () => {
                   </div>
                 )}
               </button>
+              {(profile as any)?.profile_decoration_url && (
+                <img src={(profile as any).profile_decoration_url} alt="" aria-hidden className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: 'scale(1.35)' }} />
+              )}
               {/* Green online dot */}
-              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background" style={{ backgroundColor: themeColor }} />
+              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
               <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
 
               {/* Thought bubble */}
