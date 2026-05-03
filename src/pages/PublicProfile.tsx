@@ -96,21 +96,24 @@ export default function PublicProfile() {
               <AvatarImage src={profile.avatar_url || undefined} />
               <AvatarFallback><User className="w-14 h-14" /></AvatarFallback>
             </Avatar>
-            <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-background" style={{ backgroundColor: accent }} />
-            {(profile as any).thought_bubble && (
-              <div className="absolute -top-2 left-full ml-3 max-w-[200px] bg-secondary border border-border/60 rounded-2xl rounded-bl-sm px-3 py-2 text-xs text-foreground/90 text-left">
-                <EmojiText text={(profile as any).thought_bubble} />
-                {(profile as any).show_badges_in_thought && userBadges.length > 0 && (
-                  <div className="flex gap-1 mt-1">{userBadges.map(b => b.badge && <img key={b.id} src={b.badge.image_url} alt={b.badge.name} className="w-4 h-4" />)}</div>
-                )}
-              </div>
+            {(profile as any).profile_decoration_url && (
+              <img
+                src={(profile as any).profile_decoration_url}
+                alt=""
+                aria-hidden
+                className="absolute inset-0 w-full h-full pointer-events-none rounded-full"
+                style={{
+                  transform: `translate(${(profile as any)?.profile_decoration_position?.x || 0}px, ${(profile as any)?.profile_decoration_position?.y || 0}px) scale(${(profile as any)?.profile_decoration_position?.scale || 1.35})`,
+                }}
+              />
             )}
+            <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-background" style={{ backgroundColor: accent }} />
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
             <h1 className="text-2xl font-black text-foreground leading-none">{displayName}</h1>
             {profile.has_spotify_badge && <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-black" style={{ color: verifiedText, backgroundColor: verifiedBg }}><BadgeCheck className="w-3.5 h-3.5" /> Verificado</span>}
-            {isOwner && <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-black" style={{ color: adminText, backgroundColor: adminBg, borderColor: adminBorder }}><BadgeCheck className="w-3.5 h-3.5" /> ADM</span>}
+            {isOwner && ((profile as any)?.show_admin_badge !== false) && <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-black" style={{ color: adminText, backgroundColor: adminBg, borderColor: adminBorder }}><BadgeCheck className="w-3.5 h-3.5" /> ADM</span>}
           </div>
           {profile.username && <p className="text-lg text-muted-foreground mb-3">@{profile.username}</p>}
 
