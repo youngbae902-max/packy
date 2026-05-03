@@ -258,30 +258,18 @@ const Conta = () => {
                 )}
               </button>
               {(profile as any)?.profile_decoration_url && (
-                <img src={(profile as any).profile_decoration_url} alt="" aria-hidden className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: 'scale(1.35)' }} />
+                <img
+                  src={(profile as any).profile_decoration_url}
+                  alt=""
+                  aria-hidden
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  style={{
+                    transform: `translate(${(profile as any)?.profile_decoration_position?.x || 0}px, ${(profile as any)?.profile_decoration_position?.y || 0}px) scale(${(profile as any)?.profile_decoration_position?.scale || 1.35})`,
+                  }}
+                />
               )}
-              {/* Green online dot */}
               <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
               <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
-
-              {/* Thought bubble */}
-              {(profile as any)?.thought_bubble ? (
-                <button
-                  onClick={() => { setThoughtDraft((profile as any).thought_bubble); setShowThoughtModal(true); }}
-                  className="absolute -top-2 left-full ml-2 max-w-[180px] bg-secondary border border-border/60 rounded-2xl rounded-bl-sm px-3 py-1.5 text-xs text-foreground/90 text-left line-clamp-2 hover:bg-foreground/[0.06] transition-colors"
-                >
-                  <EmojiText text={(profile as any).thought_bubble} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => { setThoughtDraft(''); setShowThoughtModal(true); }}
-                  aria-label="Adicionar pensamento"
-                  className="absolute -top-1 -left-1 w-7 h-7 rounded-full bg-secondary border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] transition-colors"
-                >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <Plus className="w-2.5 h-2.5 absolute -top-0.5 -right-0.5 bg-background rounded-full" />
-                </button>
-              )}
             </div>
 
             {/* Name & Username */}
