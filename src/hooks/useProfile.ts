@@ -27,6 +27,7 @@ interface ProfileUpdates {
   show_badges_in_thought?: boolean;
   profile_decoration_url?: string | null;
   profile_decoration_position?: any;
+  show_admin_badge?: boolean;
 }
 
 export function useProfile() {

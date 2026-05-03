@@ -552,6 +552,7 @@ export type Database = {
           profile_decoration_url: string | null
           recovery_keyword: string | null
           saved_themes: Json
+          show_admin_badge: boolean
           show_badges_in_bio: boolean | null
           show_badges_in_thought: boolean | null
           soundcloud_url: string | null
@@ -593,6 +594,7 @@ export type Database = {
           profile_decoration_url?: string | null
           recovery_keyword?: string | null
           saved_themes?: Json
+          show_admin_badge?: boolean
           show_badges_in_bio?: boolean | null
           show_badges_in_thought?: boolean | null
           soundcloud_url?: string | null
@@ -634,6 +636,7 @@ export type Database = {
           profile_decoration_url?: string | null
           recovery_keyword?: string | null
           saved_themes?: Json
+          show_admin_badge?: boolean
           show_badges_in_bio?: boolean | null
           show_badges_in_thought?: boolean | null
           soundcloud_url?: string | null

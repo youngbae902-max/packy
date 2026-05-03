@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, MessageCircle, Plus, X, Award, Wallet, Sparkles } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -38,8 +38,10 @@ const Conta = () => {
   const [newPassword, setNewPassword] = useState('');
   const [recoveryKeyword, setRecoveryKeyword] = useState('');
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
-  const [showThoughtModal, setShowThoughtModal] = useState(false);
-  const [thoughtDraft, setThoughtDraft] = useState('');
+  const [showBalance, setShowBalance] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [decorPickerOpen, setDecorPickerOpen] = useState(false);
+  const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
@@ -76,7 +78,7 @@ const Conta = () => {
       setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
-      setThoughtDraft((profile as any)?.thought_bubble || '');
+      
     }
   }, [profile]);
 
@@ -258,30 +260,18 @@ const Conta = () => {
                 )}
               </button>
               {(profile as any)?.profile_decoration_url && (
-                <img src={(profile as any).profile_decoration_url} alt="" aria-hidden className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: 'scale(1.35)' }} />
+                <img
+                  src={(profile as any).profile_decoration_url}
+                  alt=""
+                  aria-hidden
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  style={{
+                    transform: `translate(${(profile as any)?.profile_decoration_position?.x || 0}px, ${(profile as any)?.profile_decoration_position?.y || 0}px) scale(${(profile as any)?.profile_decoration_position?.scale || 1.35})`,
+                  }}
+                />
               )}
-              {/* Green online dot */}
               <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
               <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
-
-              {/* Thought bubble */}
-              {(profile as any)?.thought_bubble ? (
-                <button
-                  onClick={() => { setThoughtDraft((profile as any).thought_bubble); setShowThoughtModal(true); }}
-                  className="absolute -top-2 left-full ml-2 max-w-[180px] bg-secondary border border-border/60 rounded-2xl rounded-bl-sm px-3 py-1.5 text-xs text-foreground/90 text-left line-clamp-2 hover:bg-foreground/[0.06] transition-colors"
-                >
-                  <EmojiText text={(profile as any).thought_bubble} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => { setThoughtDraft(''); setShowThoughtModal(true); }}
-                  aria-label="Adicionar pensamento"
-                  className="absolute -top-1 -left-1 w-7 h-7 rounded-full bg-secondary border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] transition-colors"
-                >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <Plus className="w-2.5 h-2.5 absolute -top-0.5 -right-0.5 bg-background rounded-full" />
-                </button>
-              )}
             </div>
 
             {/* Name & Username */}
@@ -309,7 +299,7 @@ const Conta = () => {
 
             {/* Badges */}
             <div className="flex gap-2 mb-4">
-              {isAdmin && (
+              {isAdmin && ((profile as any)?.show_admin_badge !== false) && (
                 <Badge className="border gap-1" style={{ color: adminBadgeTextColor, borderColor: adminBadgeBorderColor, backgroundColor: adminBadgeBgColor }}>
                   <Shield className="w-3 h-3" />
                   ADM
@@ -351,22 +341,25 @@ const Conta = () => {
         </div>
 
         {/* Carteira */}
-        <div className="rounded-3xl border border-border/50 bg-card p-4 mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
-            <span className="text-xl font-black tabular-nums">R$ {Number((profile as any)?.wallet_balance || 0).toFixed(2)}</span>
+        <button
+          onClick={() => setShowHistory(true)}
+          className="w-full rounded-3xl border border-border/50 bg-card p-4 mb-4 flex items-center justify-between text-left hover:bg-foreground/[0.03] transition-colors"
+        >
+          <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-black tabular-nums">
+              {showBalance ? `R$ ${Number((profile as any)?.wallet_balance || 0).toFixed(2)}` : '****'}
+            </span>
+            <span
+              role="button"
+              onClick={(e) => { e.stopPropagation(); setShowBalance(s => !s); }}
+              className="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground"
+              aria-label="Mostrar saldo"
+            >
+              {showBalance ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </span>
           </div>
-          {walletTx.length > 0 && (
-            <div className="space-y-1 mt-3 max-h-40 overflow-y-auto">
-              {walletTx.slice(0, 5).map(tx => (
-                <div key={tx.id} className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span className="truncate mr-2">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</span>
-                  <span className={tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        </button>
 
         <FavoritesSection />
 
@@ -441,12 +434,14 @@ const Conta = () => {
                     {(profile as any)?.show_badges_in_bio !== false ? 'Sim' : 'Não'}
                   </Button>
                 </div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-muted-foreground">Exibir selos no pensamento</span>
-                  <Button size="sm" variant={(profile as any)?.show_badges_in_thought ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_badges_in_thought: !(profile as any)?.show_badges_in_thought } as any); refreshProfile(); }}>
-                    {(profile as any)?.show_badges_in_thought ? 'Sim' : 'Não'}
-                  </Button>
-                </div>
+                {isAdmin && (
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs text-muted-foreground">Exibir selo de ADM no perfil</span>
+                    <Button size="sm" variant={(profile as any)?.show_admin_badge !== false ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_admin_badge: !((profile as any)?.show_admin_badge !== false) } as any); refreshProfile(); }}>
+                      {(profile as any)?.show_admin_badge !== false ? 'Sim' : 'Não'}
+                    </Button>
+                  </div>
+                )}
               </div>
 
               {/* Decorações */}
@@ -463,7 +458,12 @@ const Conta = () => {
                   {decorations.map(d => (
                     <button
                       key={d.id}
-                      onClick={async () => { await updateProfile({ profile_decoration_url: d.image_url }); toast.success('Decoração aplicada'); refreshProfile(); }}
+                      onClick={() => setDecorEditing({
+                        url: d.image_url,
+                        x: (profile as any)?.profile_decoration_position?.x || 0,
+                        y: (profile as any)?.profile_decoration_position?.y || 0,
+                        scale: (profile as any)?.profile_decoration_position?.scale || 1.35,
+                      })}
                       className={`relative aspect-square rounded-2xl border overflow-hidden ${(profile as any)?.profile_decoration_url === d.image_url ? 'border-primary' : 'border-border/40'} bg-secondary`}
                       title={d.name}
                     >
@@ -617,32 +617,52 @@ const Conta = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Thought Bubble Modal */}
-      <Dialog open={showThoughtModal} onOpenChange={setShowThoughtModal}>
+      {/* Wallet history modal */}
+      <Dialog open={showHistory} onOpenChange={setShowHistory}>
+        <DialogContent className="bg-card border-border rounded-[2rem] max-w-md max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-foreground flex items-center gap-2"><History className="w-4 h-4" /> Histórico da carteira</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2 mt-2">
+            {walletTx.length === 0 && <p className="text-sm text-muted-foreground text-center py-6">Sem transações ainda</p>}
+            {walletTx.map(tx => (
+              <div key={tx.id} className="flex items-center justify-between text-sm border-b border-border/30 py-2">
+                <div className="min-w-0 mr-2">
+                  <p className="truncate text-foreground">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</p>
+                  <p className="text-[10px] text-muted-foreground">{new Date(tx.created_at).toLocaleString('pt-BR')}</p>
+                </div>
+                <span className={tx.type === 'credit' ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Decoration positioning modal */}
+      <Dialog open={!!decorEditing} onOpenChange={(o) => !o && setDecorEditing(null)}>
         <DialogContent className="bg-card border-border rounded-[2rem] max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-foreground text-center">Defina seu status</DialogTitle>
+            <DialogTitle className="text-foreground text-center">Posicionar decoração</DialogTitle>
+            <DialogDescription className="text-center">Ajuste a posição e o tamanho sobre sua foto</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <Textarea
-              value={thoughtDraft}
-              onChange={(e) => setThoughtDraft(e.target.value.slice(0, 120))}
-              placeholder="O que você tá pensando?"
-              rows={3}
-              className="bg-secondary border-border text-foreground resize-none rounded-2xl"
-              maxLength={120}
-            />
-            <p className="text-[11px] text-muted-foreground text-right">{thoughtDraft.length}/120</p>
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" onClick={() => setShowThoughtModal(false)} className="rounded-2xl">Sair</Button>
-              <Button onClick={async () => { await updateProfile({ thought_bubble: thoughtDraft.trim() || null } as any); refreshProfile(); setShowThoughtModal(false); toast.success('Status salvo'); }} className="rounded-2xl">Salvar</Button>
+          {decorEditing && (
+            <div className="space-y-4">
+              <div className="relative w-44 h-44 mx-auto rounded-full bg-secondary border border-border overflow-hidden">
+                {profile?.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><User className="w-16 h-16 text-muted-foreground" /></div>}
+                <img src={decorEditing.url} alt="" className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: `translate(${decorEditing.x}px, ${decorEditing.y}px) scale(${decorEditing.scale})` }} />
+                <span className="absolute bottom-2 right-2 w-4 h-4 rounded-full border-2 border-background" style={{ backgroundColor: themeColor }} />
+              </div>
+              <div className="space-y-2">
+                <div><label className="label-field">Horizontal: {decorEditing.x}px</label><input type="range" min="-40" max="40" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Vertical: {decorEditing.y}px</label><input type="range" min="-40" max="40" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Tamanho: {decorEditing.scale.toFixed(2)}x</label><input type="range" min="0.8" max="2" step="0.05" value={decorEditing.scale} onChange={e => setDecorEditing({ ...decorEditing, scale: Number(e.target.value) })} className="w-full" /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" className="rounded-2xl" onClick={() => setDecorEditing(null)}>Cancelar</Button>
+                <Button className="rounded-2xl" onClick={async () => { await updateProfile({ profile_decoration_url: decorEditing.url, profile_decoration_position: { x: decorEditing.x, y: decorEditing.y, scale: decorEditing.scale } } as any); refreshProfile(); setDecorEditing(null); toast.success('Decoração aplicada'); }}>Salvar</Button>
+              </div>
             </div>
-            {(profile as any)?.thought_bubble && (
-              <Button variant="ghost" className="w-full text-destructive hover:text-destructive rounded-2xl" onClick={async () => { await updateProfile({ thought_bubble: null } as any); refreshProfile(); setThoughtDraft(''); setShowThoughtModal(false); toast.success('Removido'); }}>
-                <X className="w-4 h-4 mr-2" /> Remover pensamento
-              </Button>
-            )}
-          </div>
+          )}
         </DialogContent>
       </Dialog>
 
