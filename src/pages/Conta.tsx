@@ -78,7 +78,7 @@ const Conta = () => {
       setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
-      setThoughtDraft((profile as any)?.thought_bubble || '');
+      
     }
   }, [profile]);
 
