@@ -299,7 +299,7 @@ const Conta = () => {
 
             {/* Badges */}
             <div className="flex gap-2 mb-4">
-              {isAdmin && (
+              {isAdmin && ((profile as any)?.show_admin_badge !== false) && (
                 <Badge className="border gap-1" style={{ color: adminBadgeTextColor, borderColor: adminBadgeBorderColor, backgroundColor: adminBadgeBgColor }}>
                   <Shield className="w-3 h-3" />
                   ADM
@@ -341,22 +341,25 @@ const Conta = () => {
         </div>
 
         {/* Carteira */}
-        <div className="rounded-3xl border border-border/50 bg-card p-4 mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
-            <span className="text-xl font-black tabular-nums">R$ {Number((profile as any)?.wallet_balance || 0).toFixed(2)}</span>
+        <button
+          onClick={() => setShowHistory(true)}
+          className="w-full rounded-3xl border border-border/50 bg-card p-4 mb-4 flex items-center justify-between text-left hover:bg-foreground/[0.03] transition-colors"
+        >
+          <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-black tabular-nums">
+              {showBalance ? `R$ ${Number((profile as any)?.wallet_balance || 0).toFixed(2)}` : '****'}
+            </span>
+            <span
+              role="button"
+              onClick={(e) => { e.stopPropagation(); setShowBalance(s => !s); }}
+              className="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground"
+              aria-label="Mostrar saldo"
+            >
+              {showBalance ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </span>
           </div>
-          {walletTx.length > 0 && (
-            <div className="space-y-1 mt-3 max-h-40 overflow-y-auto">
-              {walletTx.slice(0, 5).map(tx => (
-                <div key={tx.id} className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span className="truncate mr-2">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</span>
-                  <span className={tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        </button>
 
         <FavoritesSection />
 
