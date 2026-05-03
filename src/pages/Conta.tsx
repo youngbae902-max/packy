@@ -607,32 +607,52 @@ const Conta = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Thought Bubble Modal */}
-      <Dialog open={showThoughtModal} onOpenChange={setShowThoughtModal}>
+      {/* Wallet history modal */}
+      <Dialog open={showHistory} onOpenChange={setShowHistory}>
+        <DialogContent className="bg-card border-border rounded-[2rem] max-w-md max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-foreground flex items-center gap-2"><History className="w-4 h-4" /> Histórico da carteira</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2 mt-2">
+            {walletTx.length === 0 && <p className="text-sm text-muted-foreground text-center py-6">Sem transações ainda</p>}
+            {walletTx.map(tx => (
+              <div key={tx.id} className="flex items-center justify-between text-sm border-b border-border/30 py-2">
+                <div className="min-w-0 mr-2">
+                  <p className="truncate text-foreground">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</p>
+                  <p className="text-[10px] text-muted-foreground">{new Date(tx.created_at).toLocaleString('pt-BR')}</p>
+                </div>
+                <span className={tx.type === 'credit' ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Decoration positioning modal */}
+      <Dialog open={!!decorEditing} onOpenChange={(o) => !o && setDecorEditing(null)}>
         <DialogContent className="bg-card border-border rounded-[2rem] max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-foreground text-center">Defina seu status</DialogTitle>
+            <DialogTitle className="text-foreground text-center">Posicionar decoração</DialogTitle>
+            <DialogDescription className="text-center">Ajuste a posição e o tamanho sobre sua foto</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <Textarea
-              value={thoughtDraft}
-              onChange={(e) => setThoughtDraft(e.target.value.slice(0, 120))}
-              placeholder="O que você tá pensando?"
-              rows={3}
-              className="bg-secondary border-border text-foreground resize-none rounded-2xl"
-              maxLength={120}
-            />
-            <p className="text-[11px] text-muted-foreground text-right">{thoughtDraft.length}/120</p>
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" onClick={() => setShowThoughtModal(false)} className="rounded-2xl">Sair</Button>
-              <Button onClick={async () => { await updateProfile({ thought_bubble: thoughtDraft.trim() || null } as any); refreshProfile(); setShowThoughtModal(false); toast.success('Status salvo'); }} className="rounded-2xl">Salvar</Button>
+          {decorEditing && (
+            <div className="space-y-4">
+              <div className="relative w-44 h-44 mx-auto rounded-full bg-secondary border border-border overflow-hidden">
+                {profile?.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><User className="w-16 h-16 text-muted-foreground" /></div>}
+                <img src={decorEditing.url} alt="" className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: `translate(${decorEditing.x}px, ${decorEditing.y}px) scale(${decorEditing.scale})` }} />
+                <span className="absolute bottom-2 right-2 w-4 h-4 rounded-full border-2 border-background" style={{ backgroundColor: themeColor }} />
+              </div>
+              <div className="space-y-2">
+                <div><label className="label-field">Horizontal: {decorEditing.x}px</label><input type="range" min="-40" max="40" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Vertical: {decorEditing.y}px</label><input type="range" min="-40" max="40" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Tamanho: {decorEditing.scale.toFixed(2)}x</label><input type="range" min="0.8" max="2" step="0.05" value={decorEditing.scale} onChange={e => setDecorEditing({ ...decorEditing, scale: Number(e.target.value) })} className="w-full" /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" className="rounded-2xl" onClick={() => setDecorEditing(null)}>Cancelar</Button>
+                <Button className="rounded-2xl" onClick={async () => { await updateProfile({ profile_decoration_url: decorEditing.url, profile_decoration_position: { x: decorEditing.x, y: decorEditing.y, scale: decorEditing.scale } } as any); refreshProfile(); setDecorEditing(null); toast.success('Decoração aplicada'); }}>Salvar</Button>
+              </div>
             </div>
-            {(profile as any)?.thought_bubble && (
-              <Button variant="ghost" className="w-full text-destructive hover:text-destructive rounded-2xl" onClick={async () => { await updateProfile({ thought_bubble: null } as any); refreshProfile(); setThoughtDraft(''); setShowThoughtModal(false); toast.success('Removido'); }}>
-                <X className="w-4 h-4 mr-2" /> Remover pensamento
-              </Button>
-            )}
-          </div>
+          )}
         </DialogContent>
       </Dialog>
 
