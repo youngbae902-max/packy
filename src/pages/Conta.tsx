@@ -38,8 +38,10 @@ const Conta = () => {
   const [newPassword, setNewPassword] = useState('');
   const [recoveryKeyword, setRecoveryKeyword] = useState('');
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
-  const [showThoughtModal, setShowThoughtModal] = useState(false);
-  const [thoughtDraft, setThoughtDraft] = useState('');
+  const [showBalance, setShowBalance] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [decorPickerOpen, setDecorPickerOpen] = useState(false);
+  const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
   const [username, setUsername] = useState('');
