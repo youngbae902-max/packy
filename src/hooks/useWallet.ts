@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,6 +32,21 @@ export function useWallet(userId?: string) {
     },
     enabled: !!targetId,
   });
+
+  useEffect(() => {
+    if (!targetId) return;
+    const channel = supabase
+      .channel(`wallet-${targetId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'wallet_transactions', filter: `user_id=eq.${targetId}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ['wallet-tx', targetId] });
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `user_id=eq.${targetId}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [targetId, queryClient]);
 
   const adjustMutation = useMutation({
     mutationFn: async ({ targetUserId, amount, reason }: { targetUserId: string; amount: number; reason?: string }) => {
