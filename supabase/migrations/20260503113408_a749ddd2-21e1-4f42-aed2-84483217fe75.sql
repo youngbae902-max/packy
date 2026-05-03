@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS show_admin_badge BOOLEAN NOT NULL DEFAULT true;
