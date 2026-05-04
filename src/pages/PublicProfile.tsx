@@ -96,18 +96,25 @@ export default function PublicProfile() {
               <AvatarImage src={profile.avatar_url || undefined} />
               <AvatarFallback><User className="w-14 h-14" /></AvatarFallback>
             </Avatar>
-            {(profile as any).profile_decoration_url && (
-              <img
-                src={(profile as any).profile_decoration_url}
-                alt=""
-                aria-hidden
-                className="absolute inset-0 w-full h-full pointer-events-none rounded-full"
-                style={{
-                  transform: `translate(${(profile as any)?.profile_decoration_position?.x || 0}px, ${(profile as any)?.profile_decoration_position?.y || 0}px) scale(${(profile as any)?.profile_decoration_position?.scale || 1.35})`,
-                }}
-              />
-            )}
-            <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-background" style={{ backgroundColor: accent }} />
+            <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-background z-10" style={{ backgroundColor: accent }} />
+            {(profile as any).profile_decoration_url && (() => {
+              const pos = (profile as any)?.profile_decoration_position || {};
+              const x = pos.x ?? 18;
+              const y = pos.y ?? 18;
+              const scale = pos.scale ?? 0.8;
+              return (
+                <img
+                  src={(profile as any).profile_decoration_url}
+                  alt=""
+                  aria-hidden
+                  className="absolute pointer-events-none z-20"
+                  style={{
+                    width: '60%', height: '60%', left: '50%', top: '50%',
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`,
+                  }}
+                />
+              );
+            })()}
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
