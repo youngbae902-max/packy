@@ -246,10 +246,10 @@ const Conta = () => {
           {/* Profile Card */}
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
-            <div className="relative mb-4">
+            <div className="relative mb-4 w-24 h-24">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="w-24 h-24 rounded-full bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                className="w-24 h-24 rounded-full bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity block"
               >
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
@@ -259,18 +259,26 @@ const Conta = () => {
                   </div>
                 )}
               </button>
-              {(profile as any)?.profile_decoration_url && (
-                <img
-                  src={(profile as any).profile_decoration_url}
-                  alt=""
-                  aria-hidden
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  style={{
-                    transform: `translate(${(profile as any)?.profile_decoration_position?.x || 0}px, ${(profile as any)?.profile_decoration_position?.y || 0}px) scale(${(profile as any)?.profile_decoration_position?.scale || 1.35})`,
-                  }}
-                />
-              )}
               <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
+              {(profile as any)?.profile_decoration_url && (() => {
+                const pos = (profile as any)?.profile_decoration_position || {};
+                const x = pos.x ?? 18;
+                const y = pos.y ?? 18;
+                const scale = pos.scale ?? 0.8;
+                return (
+                  <img
+                    src={(profile as any).profile_decoration_url}
+                    alt=""
+                    aria-hidden
+                    className="absolute pointer-events-none z-20"
+                    style={{
+                      width: '60%', height: '60%',
+                      left: '50%', top: '50%',
+                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`,
+                    }}
+                  />
+                );
+              })()}
               <input ref={fileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
             </div>
 
