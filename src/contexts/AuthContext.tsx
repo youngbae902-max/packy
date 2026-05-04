@@ -54,9 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from('profiles')
-      .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, verified_badge_bg_color, verified_badge_text_color, admin_badge_color, admin_badge_bg_color, admin_badge_border_color, admin_badge_text_color, theme_mode, recovery_keyword')
+      .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
     
     const loadedProfile = data as Profile | null;
     setProfile(loadedProfile);
@@ -115,6 +115,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Realtime: refresh profile (and wallet_balance) whenever it changes server-side
+  useEffect(() => {
+    if (!user?.id) return;
+    const channel = supabase
+      .channel(`profile-live-${user.id}`)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `user_id=eq.${user.id}` }, () => {
+        fetchProfile(user.id);
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wallet_transactions', filter: `user_id=eq.${user.id}` }, () => {
+        fetchProfile(user.id);
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user?.id]);
 
   const signUp = async (email: string, password: string) => {
     const { error } = await supabase.auth.signUp({
