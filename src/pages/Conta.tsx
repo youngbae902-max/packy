@@ -655,15 +655,25 @@ const Conta = () => {
           </DialogHeader>
           {decorEditing && (
             <div className="space-y-4">
-              <div className="relative w-44 h-44 mx-auto rounded-full bg-secondary border border-border overflow-hidden">
-                {profile?.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><User className="w-16 h-16 text-muted-foreground" /></div>}
-                <img src={decorEditing.url} alt="" className="absolute inset-0 w-full h-full pointer-events-none" style={{ transform: `translate(${decorEditing.x}px, ${decorEditing.y}px) scale(${decorEditing.scale})` }} />
-                <span className="absolute bottom-2 right-2 w-4 h-4 rounded-full border-2 border-background" style={{ backgroundColor: themeColor }} />
+              <div className="relative w-44 h-44 mx-auto">
+                <div className="w-44 h-44 rounded-full bg-secondary border border-border overflow-hidden">
+                  {profile?.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><User className="w-16 h-16 text-muted-foreground" /></div>}
+                </div>
+                <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
+                <img
+                  src={decorEditing.url}
+                  alt=""
+                  className="absolute pointer-events-none z-20"
+                  style={{
+                    width: '60%', height: '60%', left: '50%', top: '50%',
+                    transform: `translate(calc(-50% + ${decorEditing.x}px), calc(-50% + ${decorEditing.y}px)) scale(${decorEditing.scale})`,
+                  }}
+                />
               </div>
               <div className="space-y-2">
-                <div><label className="label-field">Horizontal: {decorEditing.x}px</label><input type="range" min="-40" max="40" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
-                <div><label className="label-field">Vertical: {decorEditing.y}px</label><input type="range" min="-40" max="40" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
-                <div><label className="label-field">Tamanho: {decorEditing.scale.toFixed(2)}x</label><input type="range" min="0.8" max="2" step="0.05" value={decorEditing.scale} onChange={e => setDecorEditing({ ...decorEditing, scale: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Horizontal: {decorEditing.x}px</label><input type="range" min="-80" max="80" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Vertical: {decorEditing.y}px</label><input type="range" min="-80" max="80" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Tamanho: {decorEditing.scale.toFixed(2)}x</label><input type="range" min="0.3" max="2" step="0.05" value={decorEditing.scale} onChange={e => setDecorEditing({ ...decorEditing, scale: Number(e.target.value) })} className="w-full" /></div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <Button variant="outline" className="rounded-2xl" onClick={() => setDecorEditing(null)}>Cancelar</Button>
