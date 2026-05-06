@@ -569,6 +569,7 @@ export type Database = {
           verified_badge_bg_color: string | null
           verified_badge_color: string | null
           verified_badge_text_color: string | null
+          verified_rgb: boolean
           wallet_balance: number
           youtube_url: string | null
         }
@@ -611,6 +612,7 @@ export type Database = {
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
           verified_badge_text_color?: string | null
+          verified_rgb?: boolean
           wallet_balance?: number
           youtube_url?: string | null
         }
@@ -653,6 +655,7 @@ export type Database = {
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
           verified_badge_text_color?: string | null
+          verified_rgb?: boolean
           wallet_balance?: number
           youtube_url?: string | null
         }
