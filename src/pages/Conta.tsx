@@ -261,8 +261,8 @@ const Conta = () => {
               <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
               {(profile as any)?.profile_decoration_url && (() => {
                 const pos = (profile as any)?.profile_decoration_position || {};
-                const x = pos.x ?? 18;
-                const y = pos.y ?? 18;
+                const x = pos.x ?? 25;
+                const y = pos.y ?? 25;
                 const scale = pos.scale ?? 0.8;
                 return (
                   <img
@@ -273,7 +273,7 @@ const Conta = () => {
                     style={{
                       width: '60%', height: '60%',
                       left: '50%', top: '50%',
-                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`,
+                      transform: `translate(calc(-50% + ${x}%), calc(-50% + ${y}%)) scale(${scale})`,
                     }}
                   />
                 );
