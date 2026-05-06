@@ -91,7 +91,7 @@ const Conta = () => {
     if (!file) return;
     e.target.value = '';
     const detectedColor = await getDominantColor(file).catch(() => null);
-    if (detectedColor) setThemeColor(detectedColor);
+    // Note: não alteramos a cor do indicador online aqui — fica fixa até o usuário mudar manualmente.
 
     // GIFs são enviados direto para preservar a animação (sem crop)
     const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
