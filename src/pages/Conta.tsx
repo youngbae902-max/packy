@@ -467,8 +467,8 @@ const Conta = () => {
                       key={d.id}
                       onClick={() => setDecorEditing({
                         url: d.image_url,
-                        x: (profile as any)?.profile_decoration_position?.x ?? 18,
-                        y: (profile as any)?.profile_decoration_position?.y ?? 18,
+                        x: (profile as any)?.profile_decoration_position?.x ?? 25,
+                        y: (profile as any)?.profile_decoration_position?.y ?? 25,
                         scale: (profile as any)?.profile_decoration_position?.scale ?? 0.8,
                       })}
                       className={`relative aspect-square rounded-2xl border overflow-hidden ${(profile as any)?.profile_decoration_url === d.image_url ? 'border-primary' : 'border-border/40'} bg-secondary`}
