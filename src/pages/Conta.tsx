@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
@@ -91,14 +92,14 @@ const Conta = () => {
     if (!file) return;
     e.target.value = '';
     const detectedColor = await getDominantColor(file).catch(() => null);
-    if (detectedColor) setThemeColor(detectedColor);
+    // Note: não alteramos a cor do indicador online aqui — fica fixa até o usuário mudar manualmente.
 
     // GIFs são enviados direto para preservar a animação (sem crop)
     const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
     if (isGif) {
       try {
         const url = await uploadAvatar(file);
-        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
+        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
         toast.success('Foto de perfil atualizada');
         refreshProfile();
       } catch {
@@ -120,8 +121,7 @@ const Conta = () => {
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
       const detectedColor = await getDominantColor(file).catch(() => null);
       const url = await uploadAvatar(file);
-      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
-      if (detectedColor) setThemeColor(detectedColor);
+      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
       toast.success('Foto de perfil atualizada');
       refreshProfile();
     } catch {
@@ -262,8 +262,8 @@ const Conta = () => {
               <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
               {(profile as any)?.profile_decoration_url && (() => {
                 const pos = (profile as any)?.profile_decoration_position || {};
-                const x = pos.x ?? 18;
-                const y = pos.y ?? 18;
+                const x = pos.x ?? 25;
+                const y = pos.y ?? 25;
                 const scale = pos.scale ?? 0.8;
                 return (
                   <img
@@ -274,7 +274,7 @@ const Conta = () => {
                     style={{
                       width: '60%', height: '60%',
                       left: '50%', top: '50%',
-                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`,
+                      transform: `translate(calc(-50% + ${x}%), calc(-50% + ${y}%)) scale(${scale})`,
                     }}
                   />
                 );
@@ -286,7 +286,10 @@ const Conta = () => {
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
               {profile?.has_spotify_badge && (
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}>
+                <div
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
+                  style={(profile as any)?.verified_rgb ? undefined : { color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}
+                >
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                   </svg>
@@ -409,6 +412,16 @@ const Conta = () => {
                   <div><label className="label-field">Bolinha online</label><Input value={themeColor} onChange={(e) => setThemeColor(e.target.value)} placeholder="#16A249" /></div>
                   <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: themeColor }} />
                 </div>
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
+                  <div>
+                    <p className="text-xs font-bold">Verificado em RGB</p>
+                    <p className="text-[10px] text-muted-foreground">Anima as cores do selo verificado</p>
+                  </div>
+                  <Switch
+                    checked={(profile as any)?.verified_rgb === true}
+                    onCheckedChange={async (v) => { await updateProfile({ verified_rgb: v } as any); refreshProfile(); }}
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   <Button variant="outline" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}><RotateCcw className="w-4 h-4 mr-2" />Padrão</Button>
                   <Button onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>Salvar cores</Button>
@@ -438,16 +451,18 @@ const Conta = () => {
                 )}
                 <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
                   <span className="text-xs text-muted-foreground">Exibir selos na bio</span>
-                  <Button size="sm" variant={(profile as any)?.show_badges_in_bio !== false ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_badges_in_bio: !((profile as any)?.show_badges_in_bio !== false) } as any); refreshProfile(); }}>
-                    {(profile as any)?.show_badges_in_bio !== false ? 'Sim' : 'Não'}
-                  </Button>
+                  <Switch
+                    checked={(profile as any)?.show_badges_in_bio !== false}
+                    onCheckedChange={async (v) => { await updateProfile({ show_badges_in_bio: v } as any); refreshProfile(); }}
+                  />
                 </div>
                 {isAdmin && (
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-muted-foreground">Exibir selo de ADM no perfil</span>
-                    <Button size="sm" variant={(profile as any)?.show_admin_badge !== false ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_admin_badge: !((profile as any)?.show_admin_badge !== false) } as any); refreshProfile(); }}>
-                      {(profile as any)?.show_admin_badge !== false ? 'Sim' : 'Não'}
-                    </Button>
+                    <Switch
+                      checked={(profile as any)?.show_admin_badge !== false}
+                      onCheckedChange={async (v) => { await updateProfile({ show_admin_badge: v } as any); refreshProfile(); }}
+                    />
                   </div>
                 )}
               </div>
@@ -468,8 +483,8 @@ const Conta = () => {
                       key={d.id}
                       onClick={() => setDecorEditing({
                         url: d.image_url,
-                        x: (profile as any)?.profile_decoration_position?.x ?? 18,
-                        y: (profile as any)?.profile_decoration_position?.y ?? 18,
+                        x: (profile as any)?.profile_decoration_position?.x ?? 25,
+                        y: (profile as any)?.profile_decoration_position?.y ?? 25,
                         scale: (profile as any)?.profile_decoration_position?.scale ?? 0.8,
                       })}
                       className={`relative aspect-square rounded-2xl border overflow-hidden ${(profile as any)?.profile_decoration_url === d.image_url ? 'border-primary' : 'border-border/40'} bg-secondary`}
@@ -666,13 +681,13 @@ const Conta = () => {
                   className="absolute pointer-events-none z-20"
                   style={{
                     width: '60%', height: '60%', left: '50%', top: '50%',
-                    transform: `translate(calc(-50% + ${decorEditing.x}px), calc(-50% + ${decorEditing.y}px)) scale(${decorEditing.scale})`,
+                    transform: `translate(calc(-50% + ${decorEditing.x}%), calc(-50% + ${decorEditing.y}%)) scale(${decorEditing.scale})`,
                   }}
                 />
               </div>
               <div className="space-y-2">
-                <div><label className="label-field">Horizontal: {decorEditing.x}px</label><input type="range" min="-80" max="80" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
-                <div><label className="label-field">Vertical: {decorEditing.y}px</label><input type="range" min="-80" max="80" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Horizontal: {decorEditing.x}%</label><input type="range" min="-60" max="60" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Vertical: {decorEditing.y}%</label><input type="range" min="-60" max="60" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
                 <div><label className="label-field">Tamanho: {decorEditing.scale.toFixed(2)}x</label><input type="range" min="0.3" max="2" step="0.05" value={decorEditing.scale} onChange={e => setDecorEditing({ ...decorEditing, scale: Number(e.target.value) })} className="w-full" /></div>
               </div>
               <div className="grid grid-cols-2 gap-2">

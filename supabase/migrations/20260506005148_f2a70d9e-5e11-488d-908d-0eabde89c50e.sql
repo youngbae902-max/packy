@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS verified_rgb boolean NOT NULL DEFAULT false;

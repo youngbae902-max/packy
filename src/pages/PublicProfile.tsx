@@ -99,8 +99,8 @@ export default function PublicProfile() {
             <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-background z-10" style={{ backgroundColor: accent }} />
             {(profile as any).profile_decoration_url && (() => {
               const pos = (profile as any)?.profile_decoration_position || {};
-              const x = pos.x ?? 18;
-              const y = pos.y ?? 18;
+              const x = pos.x ?? 25;
+              const y = pos.y ?? 25;
               const scale = pos.scale ?? 0.8;
               return (
                 <img
@@ -110,7 +110,7 @@ export default function PublicProfile() {
                   className="absolute pointer-events-none z-20"
                   style={{
                     width: '60%', height: '60%', left: '50%', top: '50%',
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`,
+                    transform: `translate(calc(-50% + ${x}%), calc(-50% + ${y}%)) scale(${scale})`,
                   }}
                 />
               );
@@ -119,7 +119,14 @@ export default function PublicProfile() {
 
           <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
             <h1 className="text-2xl font-black text-foreground leading-none">{displayName}</h1>
-            {profile.has_spotify_badge && <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-black" style={{ color: verifiedText, backgroundColor: verifiedBg }}><BadgeCheck className="w-3.5 h-3.5" /> Verificado</span>}
+            {profile.has_spotify_badge && (
+              <span
+                className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-black ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
+                style={(profile as any)?.verified_rgb ? undefined : { color: verifiedText, backgroundColor: verifiedBg }}
+              >
+                <BadgeCheck className="w-3.5 h-3.5" /> Verificado
+              </span>
+            )}
             {isOwner && ((profile as any)?.show_admin_badge !== false) && <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-black" style={{ color: adminText, backgroundColor: adminBg, borderColor: adminBorder }}><BadgeCheck className="w-3.5 h-3.5" /> ADM</span>}
           </div>
           {profile.username && <p className="text-lg text-muted-foreground mb-3">@{profile.username}</p>}

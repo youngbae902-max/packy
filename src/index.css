@@ -137,3 +137,14 @@
   }
 }
 #lovable-badge { display: none !important; }
+
+@keyframes rgb-cycle {
+  0%   { color: #ff0040; background-color: rgba(255,0,64,0.12); }
+  16%  { color: #ff8a00; background-color: rgba(255,138,0,0.12); }
+  33%  { color: #ffd400; background-color: rgba(255,212,0,0.12); }
+  50%  { color: #00d26a; background-color: rgba(0,210,106,0.12); }
+  66%  { color: #00b3ff; background-color: rgba(0,179,255,0.12); }
+  83%  { color: #7a5cff; background-color: rgba(122,92,255,0.12); }
+  100% { color: #ff00b8; background-color: rgba(255,0,184,0.12); }
+}
+.badge-rgb { animation: rgb-cycle 4s linear infinite; }
