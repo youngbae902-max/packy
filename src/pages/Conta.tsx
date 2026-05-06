@@ -665,13 +665,13 @@ const Conta = () => {
                   className="absolute pointer-events-none z-20"
                   style={{
                     width: '60%', height: '60%', left: '50%', top: '50%',
-                    transform: `translate(calc(-50% + ${decorEditing.x}px), calc(-50% + ${decorEditing.y}px)) scale(${decorEditing.scale})`,
+                    transform: `translate(calc(-50% + ${decorEditing.x}%), calc(-50% + ${decorEditing.y}%)) scale(${decorEditing.scale})`,
                   }}
                 />
               </div>
               <div className="space-y-2">
-                <div><label className="label-field">Horizontal: {decorEditing.x}px</label><input type="range" min="-80" max="80" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
-                <div><label className="label-field">Vertical: {decorEditing.y}px</label><input type="range" min="-80" max="80" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Horizontal: {decorEditing.x}%</label><input type="range" min="-60" max="60" value={decorEditing.x} onChange={e => setDecorEditing({ ...decorEditing, x: Number(e.target.value) })} className="w-full" /></div>
+                <div><label className="label-field">Vertical: {decorEditing.y}%</label><input type="range" min="-60" max="60" value={decorEditing.y} onChange={e => setDecorEditing({ ...decorEditing, y: Number(e.target.value) })} className="w-full" /></div>
                 <div><label className="label-field">Tamanho: {decorEditing.scale.toFixed(2)}x</label><input type="range" min="0.3" max="2" step="0.05" value={decorEditing.scale} onChange={e => setDecorEditing({ ...decorEditing, scale: Number(e.target.value) })} className="w-full" /></div>
               </div>
               <div className="grid grid-cols-2 gap-2">
