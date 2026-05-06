@@ -98,7 +98,7 @@ const Conta = () => {
     if (isGif) {
       try {
         const url = await uploadAvatar(file);
-        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
+        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
         toast.success('Foto de perfil atualizada');
         refreshProfile();
       } catch {
@@ -120,8 +120,7 @@ const Conta = () => {
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
       const detectedColor = await getDominantColor(file).catch(() => null);
       const url = await uploadAvatar(file);
-      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor, online_accent_color: detectedColor || themeColor });
-      if (detectedColor) setThemeColor(detectedColor);
+      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
       toast.success('Foto de perfil atualizada');
       refreshProfile();
     } catch {
