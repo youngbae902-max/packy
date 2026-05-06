@@ -412,6 +412,16 @@ const Conta = () => {
                   <div><label className="label-field">Bolinha online</label><Input value={themeColor} onChange={(e) => setThemeColor(e.target.value)} placeholder="#16A249" /></div>
                   <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: themeColor }} />
                 </div>
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
+                  <div>
+                    <p className="text-xs font-bold">Verificado em RGB</p>
+                    <p className="text-[10px] text-muted-foreground">Anima as cores do selo verificado</p>
+                  </div>
+                  <Switch
+                    checked={(profile as any)?.verified_rgb === true}
+                    onCheckedChange={async (v) => { await updateProfile({ verified_rgb: v } as any); refreshProfile(); }}
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   <Button variant="outline" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}><RotateCcw className="w-4 h-4 mr-2" />Padrão</Button>
                   <Button onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>Salvar cores</Button>
