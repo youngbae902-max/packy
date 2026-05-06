@@ -441,16 +441,18 @@ const Conta = () => {
                 )}
                 <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
                   <span className="text-xs text-muted-foreground">Exibir selos na bio</span>
-                  <Button size="sm" variant={(profile as any)?.show_badges_in_bio !== false ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_badges_in_bio: !((profile as any)?.show_badges_in_bio !== false) } as any); refreshProfile(); }}>
-                    {(profile as any)?.show_badges_in_bio !== false ? 'Sim' : 'Não'}
-                  </Button>
+                  <Switch
+                    checked={(profile as any)?.show_badges_in_bio !== false}
+                    onCheckedChange={async (v) => { await updateProfile({ show_badges_in_bio: v } as any); refreshProfile(); }}
+                  />
                 </div>
                 {isAdmin && (
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-muted-foreground">Exibir selo de ADM no perfil</span>
-                    <Button size="sm" variant={(profile as any)?.show_admin_badge !== false ? 'default' : 'outline'} className="rounded-full" onClick={async () => { await updateProfile({ show_admin_badge: !((profile as any)?.show_admin_badge !== false) } as any); refreshProfile(); }}>
-                      {(profile as any)?.show_admin_badge !== false ? 'Sim' : 'Não'}
-                    </Button>
+                    <Switch
+                      checked={(profile as any)?.show_admin_badge !== false}
+                      onCheckedChange={async (v) => { await updateProfile({ show_admin_badge: v } as any); refreshProfile(); }}
+                    />
                   </div>
                 )}
               </div>
