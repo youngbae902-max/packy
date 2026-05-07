@@ -624,27 +624,6 @@ const Conta = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Wallet history modal */}
-      <Dialog open={showHistory} onOpenChange={setShowHistory}>
-        <DialogContent className="bg-card border-border rounded-[2rem] max-w-md max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-foreground flex items-center gap-2"><History className="w-4 h-4" /> Histórico da carteira</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2 mt-2">
-            {walletTx.length === 0 && <p className="text-sm text-muted-foreground text-center py-6">Sem transações ainda</p>}
-            {walletTx.map(tx => (
-              <div key={tx.id} className="flex items-center justify-between text-sm border-b border-border/30 py-2">
-                <div className="min-w-0 mr-2">
-                  <p className="truncate text-foreground">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</p>
-                  <p className="text-[10px] text-muted-foreground">{new Date(tx.created_at).toLocaleString('pt-BR')}</p>
-                </div>
-                <span className={tx.type === 'credit' ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
-              </div>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {/* Decoration positioning modal */}
       <Dialog open={!!decorEditing} onOpenChange={(o) => !o && setDecorEditing(null)}>
         <DialogContent className="bg-card border-border rounded-[2rem] max-w-md">
