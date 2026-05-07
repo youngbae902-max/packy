@@ -999,36 +999,59 @@ export default function Admin() {
 
         {mainTab === 'carteira' && (
           <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><Wallet className="w-4 h-4" /> Ajustar saldo de usuário</h3>
-              <Input value={walletUsername} onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))} placeholder="Username (sem @)" />
-              <Input type="number" step="0.01" value={walletAmount} onChange={(e) => setWalletAmount(e.target.value)} placeholder="Valor (use negativo para debitar)" />
-              <Input value={walletReason} onChange={(e) => setWalletReason(e.target.value)} placeholder="Motivo (opcional)" />
-              <Button className="w-full" disabled={!walletUsername.trim() || !walletAmount} onClick={async () => {
-                const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
-                if (!target) { toast.error('Usuário não encontrado'); return; }
-                const amt = parseFloat(walletAmount);
-                if (!amt) { toast.error('Valor inválido'); return; }
-                try {
-                  const newBal = await adjustBalance({ targetUserId: target.user_id, amount: amt, reason: walletReason });
-                  toast.success(`Novo saldo: R$ ${Number(newBal).toFixed(2)}`);
-                  setWalletUsername(''); setWalletAmount(''); setWalletReason('');
-                } catch (e: any) { toast.error(e.message || 'Erro'); }
-              }}>Aplicar ajuste</Button>
-              <p className="text-xs text-muted-foreground">Use valores positivos para creditar e negativos para debitar.</p>
+            <Card className="p-5 rounded-3xl border-border/50 bg-card space-y-4">
+              <div>
+                <h3 className="font-bold flex items-center gap-2 text-base"><Wallet className="w-4 h-4" /> Ajustar saldo</h3>
+                <p className="text-xs text-muted-foreground mt-1">Selecione um usuário e abra o teclado.</p>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={walletUsername}
+                  onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))}
+                  placeholder="@username"
+                  className="rounded-2xl"
+                />
+                <Button
+                  className="rounded-2xl px-5"
+                  disabled={!walletUsername.trim()}
+                  onClick={() => {
+                    const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
+                    if (!target) { toast.error('Usuário não encontrado'); return; }
+                    setKeypadOpen(true);
+                  }}
+                >Abrir teclado</Button>
+              </div>
             </Card>
 
             <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-2">
               <h3 className="font-bold text-sm">Saldos atuais</h3>
               <div className="max-h-96 overflow-y-auto space-y-1">
                 {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
-                  <div key={u.user_id} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-secondary/40">
+                  <button
+                    key={u.user_id}
+                    onClick={() => { setWalletUsername(u.username || ''); setKeypadOpen(true); }}
+                    className="w-full flex items-center justify-between py-2 px-2 rounded-lg hover:bg-secondary/40 text-left"
+                  >
                     <span className="text-xs truncate mr-2">@{u.username || '—'}</span>
                     <span className="text-xs font-bold tabular-nums">R$ {Number(u.wallet_balance || 0).toFixed(2)}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </Card>
+
+            <NumericKeypad
+              open={keypadOpen}
+              onClose={() => setKeypadOpen(false)}
+              recipient={walletUsername}
+              onConfirm={async (amount, reason) => {
+                const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
+                if (!target) { toast.error('Usuário não encontrado'); return; }
+                try {
+                  const newBal = await adjustBalance({ targetUserId: target.user_id, amount, reason });
+                  toast.success(`Novo saldo: R$ ${Number(newBal).toFixed(2)}`);
+                } catch (e: any) { toast.error(e.message || 'Erro'); }
+              }}
+            />
           </div>
         )}
 
