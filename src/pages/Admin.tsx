@@ -115,8 +115,7 @@ export default function Admin() {
   const [decoName, setDecoName] = useState('');
   const [decoFile, setDecoFile] = useState<File | null>(null);
   const [walletUsername, setWalletUsername] = useState('');
-  const [walletAmount, setWalletAmount] = useState('');
-  const [walletReason, setWalletReason] = useState('');
+  const [keypadOpen, setKeypadOpen] = useState(false);
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
