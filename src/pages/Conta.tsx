@@ -13,6 +13,7 @@ import { usePublicProfile } from '@/hooks/useSocial';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { FavoritesSection } from '@/components/FavoritesSection';
+import { WalletCard } from '@/components/WalletCard';
 import { EmojiText } from '@/components/EmojiText';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -350,27 +351,6 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs text-muted-foreground">Seguidores</p></div>
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
-
-        {/* Carteira */}
-        <button
-          onClick={() => setShowHistory(true)}
-          className="w-full rounded-3xl border border-border/50 bg-card p-4 mb-4 flex items-center justify-between text-left hover:bg-foreground/[0.03] transition-colors"
-        >
-          <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-black tabular-nums">
-              {showBalance ? `R$ ${Number((profile as any)?.wallet_balance || 0).toFixed(2)}` : '****'}
-            </span>
-            <span
-              role="button"
-              onClick={(e) => { e.stopPropagation(); setShowBalance(s => !s); }}
-              className="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground"
-              aria-label="Mostrar saldo"
-            >
-              {showBalance ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </span>
-          </div>
-        </button>
 
         <FavoritesSection />
 
