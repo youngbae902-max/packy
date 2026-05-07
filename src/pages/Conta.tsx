@@ -368,6 +368,10 @@ const Conta = () => {
               <div className="w-11" />
             </div>
 
+            <div className="mb-6">
+              <WalletCard />
+            </div>
+
             <div className="space-y-4">
               <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
                 <div className="flex items-center gap-2 text-sm font-bold"><Moon className="w-4 h-4" /> Trocar tema</div>
