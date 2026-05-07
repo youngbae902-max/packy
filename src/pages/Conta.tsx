@@ -92,19 +92,17 @@ const Conta = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
-    const detectedColor = await getDominantColor(file).catch(() => null);
-    // Note: não alteramos a cor do indicador online aqui — fica fixa até o usuário mudar manualmente.
 
     // GIFs são enviados direto para preservar a animação (sem crop)
     const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
     if (isGif) {
       try {
         const url = await uploadAvatar(file);
-        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
+        await updateProfile({ avatar_url: url });
         toast.success('Foto de perfil atualizada');
         refreshProfile();
-      } catch {
-        toast.error('Erro ao atualizar GIF');
+      } catch (err: any) {
+        toast.error(err?.message || 'Erro ao atualizar GIF');
       }
       return;
     }
@@ -120,13 +118,12 @@ const Conta = () => {
   const handleCroppedAvatar = async (blob: Blob) => {
     try {
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
-      const detectedColor = await getDominantColor(file).catch(() => null);
       const url = await uploadAvatar(file);
-      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
+      await updateProfile({ avatar_url: url });
       toast.success('Foto de perfil atualizada');
       refreshProfile();
-    } catch {
-      toast.error('Erro ao atualizar foto');
+    } catch (err: any) {
+      toast.error(err?.message || 'Erro ao atualizar foto');
     }
   };
 
