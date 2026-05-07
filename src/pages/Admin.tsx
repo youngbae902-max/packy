@@ -339,16 +339,16 @@ export default function Admin() {
           <div className="w-16" />
         </div>
 
-        {/* Main Tabs - Scrollable, deep-black pill nav */}
-        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+        {/* Main Tabs */}
+        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide snap-x">
           {mainTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors flex-shrink-0 border ${
+              className={`snap-start flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap transition-all flex-shrink-0 border ${
                 mainTab === tab.id
-                  ? 'bg-foreground text-background border-foreground'
-                  : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground hover:bg-[hsl(0,0%,7%)]'
+                  ? 'bg-white text-black border-white shadow-[0_0_0_3px_rgba(255,255,255,0.08)]'
+                  : 'bg-white/[0.03] text-white/50 border-white/5 hover:text-white hover:bg-white/[0.07]'
               }`}
             >
               <tab.icon className="w-3.5 h-3.5" />{tab.label}
