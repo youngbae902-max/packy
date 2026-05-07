@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
+import { NumericKeypad } from '@/components/NumericKeypad';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
 import { useAcapellas, Acapella } from '@/hooks/useAcapellas';
@@ -115,8 +116,7 @@ export default function Admin() {
   const [decoName, setDecoName] = useState('');
   const [decoFile, setDecoFile] = useState<File | null>(null);
   const [walletUsername, setWalletUsername] = useState('');
-  const [walletAmount, setWalletAmount] = useState('');
-  const [walletReason, setWalletReason] = useState('');
+  const [keypadOpen, setKeypadOpen] = useState(false);
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
@@ -339,16 +339,16 @@ export default function Admin() {
           <div className="w-16" />
         </div>
 
-        {/* Main Tabs - Scrollable, deep-black pill nav */}
-        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+        {/* Main Tabs */}
+        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide snap-x">
           {mainTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors flex-shrink-0 border ${
+              className={`snap-start flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap transition-all flex-shrink-0 border ${
                 mainTab === tab.id
-                  ? 'bg-foreground text-background border-foreground'
-                  : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground hover:bg-[hsl(0,0%,7%)]'
+                  ? 'bg-white text-black border-white shadow-[0_0_0_3px_rgba(255,255,255,0.08)]'
+                  : 'bg-white/[0.03] text-white/50 border-white/5 hover:text-white hover:bg-white/[0.07]'
               }`}
             >
               <tab.icon className="w-3.5 h-3.5" />{tab.label}
@@ -999,36 +999,59 @@ export default function Admin() {
 
         {mainTab === 'carteira' && (
           <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><Wallet className="w-4 h-4" /> Ajustar saldo de usuário</h3>
-              <Input value={walletUsername} onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))} placeholder="Username (sem @)" />
-              <Input type="number" step="0.01" value={walletAmount} onChange={(e) => setWalletAmount(e.target.value)} placeholder="Valor (use negativo para debitar)" />
-              <Input value={walletReason} onChange={(e) => setWalletReason(e.target.value)} placeholder="Motivo (opcional)" />
-              <Button className="w-full" disabled={!walletUsername.trim() || !walletAmount} onClick={async () => {
-                const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
-                if (!target) { toast.error('Usuário não encontrado'); return; }
-                const amt = parseFloat(walletAmount);
-                if (!amt) { toast.error('Valor inválido'); return; }
-                try {
-                  const newBal = await adjustBalance({ targetUserId: target.user_id, amount: amt, reason: walletReason });
-                  toast.success(`Novo saldo: R$ ${Number(newBal).toFixed(2)}`);
-                  setWalletUsername(''); setWalletAmount(''); setWalletReason('');
-                } catch (e: any) { toast.error(e.message || 'Erro'); }
-              }}>Aplicar ajuste</Button>
-              <p className="text-xs text-muted-foreground">Use valores positivos para creditar e negativos para debitar.</p>
+            <Card className="p-5 rounded-3xl border-border/50 bg-card space-y-4">
+              <div>
+                <h3 className="font-bold flex items-center gap-2 text-base"><Wallet className="w-4 h-4" /> Ajustar saldo</h3>
+                <p className="text-xs text-muted-foreground mt-1">Selecione um usuário e abra o teclado.</p>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={walletUsername}
+                  onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))}
+                  placeholder="@username"
+                  className="rounded-2xl"
+                />
+                <Button
+                  className="rounded-2xl px-5"
+                  disabled={!walletUsername.trim()}
+                  onClick={() => {
+                    const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
+                    if (!target) { toast.error('Usuário não encontrado'); return; }
+                    setKeypadOpen(true);
+                  }}
+                >Abrir teclado</Button>
+              </div>
             </Card>
 
             <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-2">
               <h3 className="font-bold text-sm">Saldos atuais</h3>
               <div className="max-h-96 overflow-y-auto space-y-1">
                 {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
-                  <div key={u.user_id} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-secondary/40">
+                  <button
+                    key={u.user_id}
+                    onClick={() => { setWalletUsername(u.username || ''); setKeypadOpen(true); }}
+                    className="w-full flex items-center justify-between py-2 px-2 rounded-lg hover:bg-secondary/40 text-left"
+                  >
                     <span className="text-xs truncate mr-2">@{u.username || '—'}</span>
                     <span className="text-xs font-bold tabular-nums">R$ {Number(u.wallet_balance || 0).toFixed(2)}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </Card>
+
+            <NumericKeypad
+              open={keypadOpen}
+              onClose={() => setKeypadOpen(false)}
+              recipient={walletUsername}
+              onConfirm={async (amount, reason) => {
+                const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
+                if (!target) { toast.error('Usuário não encontrado'); return; }
+                try {
+                  const newBal = await adjustBalance({ targetUserId: target.user_id, amount, reason });
+                  toast.success(`Novo saldo: R$ ${Number(newBal).toFixed(2)}`);
+                } catch (e: any) { toast.error(e.message || 'Erro'); }
+              }}
+            />
           </div>
         )}
 

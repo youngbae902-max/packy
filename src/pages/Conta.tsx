@@ -13,6 +13,7 @@ import { usePublicProfile } from '@/hooks/useSocial';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { FavoritesSection } from '@/components/FavoritesSection';
+import { WalletCard } from '@/components/WalletCard';
 import { EmojiText } from '@/components/EmojiText';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -91,19 +92,17 @@ const Conta = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
-    const detectedColor = await getDominantColor(file).catch(() => null);
-    // Note: não alteramos a cor do indicador online aqui — fica fixa até o usuário mudar manualmente.
 
     // GIFs são enviados direto para preservar a animação (sem crop)
     const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
     if (isGif) {
       try {
         const url = await uploadAvatar(file);
-        await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
+        await updateProfile({ avatar_url: url });
         toast.success('Foto de perfil atualizada');
         refreshProfile();
-      } catch {
-        toast.error('Erro ao atualizar GIF');
+      } catch (err: any) {
+        toast.error(err?.message || 'Erro ao atualizar GIF');
       }
       return;
     }
@@ -119,13 +118,12 @@ const Conta = () => {
   const handleCroppedAvatar = async (blob: Blob) => {
     try {
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
-      const detectedColor = await getDominantColor(file).catch(() => null);
       const url = await uploadAvatar(file);
-      await updateProfile({ avatar_url: url, theme_accent_color: detectedColor || themeColor });
+      await updateProfile({ avatar_url: url });
       toast.success('Foto de perfil atualizada');
       refreshProfile();
-    } catch {
-      toast.error('Erro ao atualizar foto');
+    } catch (err: any) {
+      toast.error(err?.message || 'Erro ao atualizar foto');
     }
   };
 
@@ -351,27 +349,6 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        {/* Carteira */}
-        <button
-          onClick={() => setShowHistory(true)}
-          className="w-full rounded-3xl border border-border/50 bg-card p-4 mb-4 flex items-center justify-between text-left hover:bg-foreground/[0.03] transition-colors"
-        >
-          <div className="flex items-center gap-2 text-sm font-bold"><Wallet className="w-4 h-4" /> Saldo</div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-black tabular-nums">
-              {showBalance ? `R$ ${Number((profile as any)?.wallet_balance || 0).toFixed(2)}` : '****'}
-            </span>
-            <span
-              role="button"
-              onClick={(e) => { e.stopPropagation(); setShowBalance(s => !s); }}
-              className="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground"
-              aria-label="Mostrar saldo"
-            >
-              {showBalance ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </span>
-          </div>
-        </button>
-
         <FavoritesSection />
 
         <div className="h-4" />
@@ -386,6 +363,10 @@ const Conta = () => {
               </button>
               <h1 className="text-base font-black">Configurações</h1>
               <div className="w-11" />
+            </div>
+
+            <div className="mb-6">
+              <WalletCard />
             </div>
 
             <div className="space-y-4">
@@ -637,27 +618,6 @@ const Conta = () => {
               Excluir permanentemente
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Wallet history modal */}
-      <Dialog open={showHistory} onOpenChange={setShowHistory}>
-        <DialogContent className="bg-card border-border rounded-[2rem] max-w-md max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-foreground flex items-center gap-2"><History className="w-4 h-4" /> Histórico da carteira</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2 mt-2">
-            {walletTx.length === 0 && <p className="text-sm text-muted-foreground text-center py-6">Sem transações ainda</p>}
-            {walletTx.map(tx => (
-              <div key={tx.id} className="flex items-center justify-between text-sm border-b border-border/30 py-2">
-                <div className="min-w-0 mr-2">
-                  <p className="truncate text-foreground">{tx.description || (tx.type === 'credit' ? 'Crédito' : 'Débito')}</p>
-                  <p className="text-[10px] text-muted-foreground">{new Date(tx.created_at).toLocaleString('pt-BR')}</p>
-                </div>
-                <span className={tx.type === 'credit' ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>{tx.type === 'credit' ? '+' : '-'}R$ {Number(tx.amount).toFixed(2)}</span>
-              </div>
-            ))}
-          </div>
         </DialogContent>
       </Dialog>
 
