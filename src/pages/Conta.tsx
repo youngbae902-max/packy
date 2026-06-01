@@ -215,20 +215,13 @@ const Conta = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background pb-20 flex items-center justify-center">
-        <div className="text-center p-6">
-          <User className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-xl font-bold mb-2">Faça login</h2>
-          <p className="text-muted-foreground mb-4">Acesse sua conta para ver seu perfil</p>
-          <button onClick={() => setShowAuthModal(true)} className="btn-primary">
-            Entrar / Criar Conta
-          </button>
-        </div>
-        <BottomNav />
-        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
-      </div>
+      <>
+        <WelcomeScreen onStart={() => setShowAuthModal(true)} />
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} initialMode="signup" />
+      </>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-background pb-20">
