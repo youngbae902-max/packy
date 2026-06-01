@@ -37,14 +37,30 @@ export function useProfile() {
   const updateProfileMutation = useMutation({
     mutationFn: async (updates: ProfileUpdates) => {
       if (!user) throw new Error('Not authenticated');
-      
+
+      // Ensure profile row exists (handles edge cases where the auth trigger
+      // didn't create one — legacy users, interrupted signups, OAuth races).
+      const { data: existing } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (!existing) {
+        const { error: insertErr } = await supabase
+          .from('profiles')
+          .insert({ user_id: user.id, ...(updates as any) });
+        if (insertErr) throw insertErr;
+        return { user_id: user.id, ...updates };
+      }
+
       const { data, error } = await supabase
         .from('profiles')
         .update(updates as any)
         .eq('user_id', user.id)
         .select()
-        .single();
-      
+        .maybeSingle();
+
       if (error) throw error;
       return data;
     },
