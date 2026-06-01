@@ -15,6 +15,10 @@ import { useWallet } from '@/hooks/useWallet';
 import { FavoritesSection } from '@/components/FavoritesSection';
 import { WalletCard } from '@/components/WalletCard';
 import { EmojiText } from '@/components/EmojiText';
+import { WelcomeScreen } from '@/components/WelcomeScreen';
+import { SettingsRow, SettingsGroup } from '@/components/SettingsRow';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { ChevronRight, Palette, Lock, Smile, Sticker, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,6 +47,7 @@ const Conta = () => {
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
+  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
@@ -215,20 +220,13 @@ const Conta = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background pb-20 flex items-center justify-center">
-        <div className="text-center p-6">
-          <User className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-xl font-bold mb-2">Faça login</h2>
-          <p className="text-muted-foreground mb-4">Acesse sua conta para ver seu perfil</p>
-          <button onClick={() => setShowAuthModal(true)} className="btn-primary">
-            Entrar / Criar Conta
-          </button>
-        </div>
-        <BottomNav />
-        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
-      </div>
+      <>
+        <WelcomeScreen onStart={() => setShowAuthModal(true)} />
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} initialMode="signup" />
+      </>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -357,142 +355,252 @@ const Conta = () => {
       {settingsMode && (
         <div className="fixed inset-0 z-[55] bg-background overflow-y-auto pb-24">
           <div className="max-w-lg mx-auto px-4 py-6">
+            {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <button onClick={() => setSearchParams({})} className="w-11 h-11 flex items-center justify-center" aria-label="Voltar">
+              <button
+                onClick={() => { if (settingsSub) setSettingsSub(null); else setSearchParams({}); }}
+                className="w-11 h-11 flex items-center justify-center"
+                aria-label="Voltar"
+              >
                 <ArrowLeft className="w-6 h-6" />
               </button>
-              <h1 className="text-base font-black">Configurações</h1>
+              <h1 className="text-[17px] font-bold tracking-tight">
+                {settingsSub === 'tema' ? 'Trocar Tema'
+                  : settingsSub === 'cores' ? 'Cores dos Selos'
+                  : settingsSub === 'senha' ? 'Senha e Segurança'
+                  : settingsSub === 'selos' ? 'Meus Selos'
+                  : 'Configurações'}
+              </h1>
               <div className="w-11" />
             </div>
 
-            <div className="mb-6">
-              <WalletCard />
-            </div>
-
-            <div className="space-y-4">
-              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
-                <div className="flex items-center gap-2 text-sm font-bold"><Moon className="w-4 h-4" /> Trocar tema</div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button variant={themeMode === 'dark' ? 'default' : 'outline'} onClick={() => handleThemeChange('dark')} className="rounded-2xl"><Moon className="w-4 h-4 mr-2" />Preto</Button>
-                  <Button variant={themeMode === 'light' ? 'default' : 'outline'} onClick={() => handleThemeChange('light')} className="rounded-2xl"><Sun className="w-4 h-4 mr-2" />Branco</Button>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
-                <div className="flex items-center gap-2 text-sm font-bold"><BadgeCheck className="w-4 h-4" /> Cores dos selos</div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div><label className="label-field">Fundo verificado</label><Input value={verifiedBadgeBgColor} onChange={(e) => setVerifiedBadgeBgColor(e.target.value)} placeholder="#0F2B1A" /></div>
-                  <div><label className="label-field">Texto verificado</label><Input value={verifiedBadgeTextColor} onChange={(e) => setVerifiedBadgeTextColor(e.target.value)} placeholder="#16A249" /></div>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  <div><label className="label-field">Fundo ADM</label><Input value={adminBadgeBgColor} onChange={(e) => setAdminBadgeBgColor(e.target.value)} placeholder="#082D0F" /></div>
-                  <div><label className="label-field">Borda ADM</label><Input value={adminBadgeBorderColor} onChange={(e) => setAdminBadgeBorderColor(e.target.value)} placeholder="#085A18" /></div>
-                  <div><label className="label-field">Texto ADM</label><Input value={adminBadgeTextColor} onChange={(e) => setAdminBadgeTextColor(e.target.value)} placeholder="#05BD2A" /></div>
-                </div>
-                <div className="grid grid-cols-[1fr_52px] gap-2 items-end">
-                  <div><label className="label-field">Bolinha online</label><Input value={themeColor} onChange={(e) => setThemeColor(e.target.value)} placeholder="#16A249" /></div>
-                  <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: themeColor }} />
-                </div>
-                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
-                  <div>
-                    <p className="text-xs font-bold">Verificado em RGB</p>
-                    <p className="text-[10px] text-muted-foreground">Anima as cores do selo verificado</p>
+            {/* Settings home */}
+            {!settingsSub && (
+              <>
+                {/* Small profile card */}
+                <div className="rounded-2xl border border-border/40 bg-card p-3.5 flex items-center gap-3 mb-6">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-12 h-12 rounded-full bg-secondary overflow-hidden flex-shrink-0"
+                  >
+                    {profile?.avatar_url ? (
+                      <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center"><User className="w-5 h-5 text-muted-foreground" /></div>
+                    )}
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[15px] font-bold tracking-tight truncate">{profile?.artist_name || 'Sem nome'}</p>
+                    {profile?.username && <p className="text-[13px] text-muted-foreground truncate">@{profile.username}</p>}
                   </div>
-                  <Switch
-                    checked={(profile as any)?.verified_rgb === true}
-                    onCheckedChange={async (v) => { await updateProfile({ verified_rgb: v } as any); refreshProfile(); }}
-                  />
+                  <button onClick={() => setIsEditingProfile(true)} className="p-2 text-muted-foreground hover:text-foreground">
+                    <Edit className="w-4 h-4" />
+                  </button>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}><RotateCcw className="w-4 h-4 mr-2" />Padrão</Button>
-                  <Button onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>Salvar cores</Button>
-                </div>
-              </div>
 
-              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
-                <div className="flex items-center gap-2 text-sm font-bold"><KeyRound className="w-4 h-4" /> Senha e palavra-chave</div>
-                <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Nova senha principal" />
-                <Button onClick={handleChangePassword} className="w-full">Alterar senha principal</Button>
-                <Input value={recoveryKeyword} onChange={(e) => setRecoveryKeyword(e.target.value)} placeholder="Palavra-chave se esquecer a senha" />
-                <Button variant="outline" onClick={async () => { await updateProfile({ recovery_keyword: recoveryKeyword.trim() || null }); toast.success('Palavra-chave salva'); }} className="w-full">Salvar palavra-chave</Button>
-              </div>
+                <div className="mb-6"><WalletCard /></div>
 
-              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
-                <div className="flex items-center gap-2 text-sm font-bold"><Award className="w-4 h-4" /> Meus selos</div>
-                {myBadges.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">Você ainda não recebeu selos. Selos são enviados pelo ADM.</p>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {myBadges.map(b => b.badge && (
-                      <span key={b.id} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary border border-border/40 text-[11px] font-semibold">
-                        <img src={b.badge.image_url} alt={b.badge.name} className="w-4 h-4" /> {b.badge.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
-                  <span className="text-xs text-muted-foreground">Exibir selos na bio</span>
-                  <Switch
-                    checked={(profile as any)?.show_badges_in_bio !== false}
-                    onCheckedChange={async (v) => { await updateProfile({ show_badges_in_bio: v } as any); refreshProfile(); }}
-                  />
-                </div>
+                <SettingsGroup title="Personalização">
+                  <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
+                  <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
+                  <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
+                </SettingsGroup>
+
+                <SettingsGroup title="Conta">
+                  <SettingsRow icon={Lock} label="Senha e Segurança" onClick={() => setSettingsSub('senha')} />
+                  <SettingsRow icon={Award} label="Meus Selos" onClick={() => setSettingsSub('selos')} />
+                </SettingsGroup>
+
                 {isAdmin && (
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs text-muted-foreground">Exibir selo de ADM no perfil</span>
+                  <SettingsGroup>
+                    <Link to="/admin" className="w-full flex items-center gap-3 px-4 py-3.5 bg-card hover:bg-secondary/60 transition-colors">
+                      <Shield className="w-[18px] h-[18px] text-foreground/70" />
+                      <span className="flex-1 text-[15px] font-medium tracking-tight">Painel de Administração</span>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground/70" />
+                    </Link>
+                  </SettingsGroup>
+                )}
+
+                <SettingsGroup>
+                  <SettingsRow icon={LogOut} label="Sair da minha conta" onClick={signOut} rightSlot={<span />} />
+                  <SettingsRow icon={Trash2} label="Excluir a conta" destructive onClick={() => setShowDeleteConfirm(true)} rightSlot={<span />} />
+                </SettingsGroup>
+              </>
+            )}
+
+            {/* Theme subscreen */}
+            {settingsSub === 'tema' && (
+              <div className="space-y-3">
+                <p className="text-[13px] text-muted-foreground px-1 mb-2">Escolha como o PACKY aparece para você.</p>
+                {[
+                  { id: 'dark' as const, label: 'Escuro', desc: 'Padrão PACKY — preto absoluto', bg: '#000', fg: '#fff' },
+                  { id: 'light' as const, label: 'Claro', desc: 'Em breve — prévia decorativa', bg: '#f5f5f5', fg: '#0a0a0a' },
+                ].map(opt => (
+                  <button
+                    key={opt.id}
+                    onClick={() => opt.id === 'dark' ? handleThemeChange('dark') : toast.info('Tema claro em breve')}
+                    className={`w-full flex items-center gap-3 p-3 rounded-2xl border ${themeMode === opt.id ? 'border-foreground' : 'border-border/40'} bg-card`}
+                  >
+                    <div className="w-16 h-16 rounded-xl flex flex-col items-center justify-center border border-border/40" style={{ background: opt.bg, color: opt.fg }}>
+                      <div className="w-8 h-1 rounded-full mb-1" style={{ background: opt.fg, opacity: 0.7 }} />
+                      <div className="w-6 h-1 rounded-full" style={{ background: opt.fg, opacity: 0.4 }} />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <p className="text-[15px] font-bold">{opt.label}</p>
+                      <p className="text-[12px] text-muted-foreground">{opt.desc}</p>
+                    </div>
+                    {themeMode === opt.id && <BadgeCheck className="w-5 h-5 text-foreground" />}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Cores dos selos subscreen */}
+            {settingsSub === 'cores' && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+                  <p className="text-[13px] font-bold">Selo Verificado</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div><label className="label-field">Fundo</label><Input value={verifiedBadgeBgColor} onChange={(e) => setVerifiedBadgeBgColor(e.target.value)} placeholder="#0F2B1A" /></div>
+                    <div><label className="label-field">Texto</label><Input value={verifiedBadgeTextColor} onChange={(e) => setVerifiedBadgeTextColor(e.target.value)} placeholder="#16A249" /></div>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
+                    <div>
+                      <p className="text-[13px] font-bold">Verificado em RGB</p>
+                      <p className="text-[11px] text-muted-foreground">Anima cores do selo</p>
+                    </div>
                     <Switch
-                      checked={(profile as any)?.show_admin_badge !== false}
-                      onCheckedChange={async (v) => { await updateProfile({ show_admin_badge: v } as any); refreshProfile(); }}
+                      checked={(profile as any)?.verified_rgb === true}
+                      onCheckedChange={async (v) => { await updateProfile({ verified_rgb: v } as any); refreshProfile(); }}
                     />
                   </div>
-                )}
-              </div>
-
-              {/* Decorações */}
-              <div className="rounded-3xl border border-border/50 bg-card p-4 space-y-3">
-                <div className="flex items-center gap-2 text-sm font-bold"><Sparkles className="w-4 h-4" /> Decoração do perfil</div>
-                <p className="text-[11px] text-muted-foreground">Escolha um PNG para enquadrar sua foto.</p>
-                <div className="grid grid-cols-4 gap-2">
-                  <button
-                    onClick={async () => { await updateProfile({ profile_decoration_url: null }); toast.success('Decoração removida'); refreshProfile(); }}
-                    className={`aspect-square rounded-2xl border ${!(profile as any)?.profile_decoration_url ? 'border-primary' : 'border-border/40'} bg-secondary flex items-center justify-center text-[10px] text-muted-foreground`}
-                  >
-                    Nenhuma
-                  </button>
-                  {decorations.map(d => (
-                    <button
-                      key={d.id}
-                      onClick={() => setDecorEditing({
-                        url: d.image_url,
-                        x: (profile as any)?.profile_decoration_position?.x ?? 25,
-                        y: (profile as any)?.profile_decoration_position?.y ?? 25,
-                        scale: (profile as any)?.profile_decoration_position?.scale ?? 0.8,
-                      })}
-                      className={`relative aspect-square rounded-2xl border overflow-hidden ${(profile as any)?.profile_decoration_url === d.image_url ? 'border-primary' : 'border-border/40'} bg-secondary`}
-                      title={d.name}
-                    >
-                      <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
-                    </button>
-                  ))}
                 </div>
-                {decorations.length === 0 && <p className="text-[11px] text-muted-foreground">Nenhuma decoração disponível ainda.</p>}
-              </div>
 
-              {isAdmin && (
-                <Link to="/admin" className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm bg-secondary text-foreground border border-border/60">
-                  <Shield className="w-5 h-5" /> Painel de Administração
-                </Link>
-              )}
-              <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl h-12" onClick={signOut}>
-                <LogOut className="w-5 h-5 mr-3" /> Sair da minha conta
-              </Button>
-              <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-12" onClick={() => setShowDeleteConfirm(true)}>
-                <Trash2 className="w-5 h-5 mr-3" /> Excluir a conta
-              </Button>
-            </div>
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+                  <p className="text-[13px] font-bold">Selo ADM</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div><label className="label-field">Fundo</label><Input value={adminBadgeBgColor} onChange={(e) => setAdminBadgeBgColor(e.target.value)} placeholder="#082D0F" /></div>
+                    <div><label className="label-field">Borda</label><Input value={adminBadgeBorderColor} onChange={(e) => setAdminBadgeBorderColor(e.target.value)} placeholder="#085A18" /></div>
+                    <div><label className="label-field">Texto</label><Input value={adminBadgeTextColor} onChange={(e) => setAdminBadgeTextColor(e.target.value)} placeholder="#05BD2A" /></div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+                  <p className="text-[13px] font-bold">Indicador online</p>
+                  <div className="grid grid-cols-[1fr_52px] gap-2 items-end">
+                    <div><label className="label-field">Cor da bolinha</label><Input value={themeColor} onChange={(e) => setThemeColor(e.target.value)} placeholder="#16A249" /></div>
+                    <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: themeColor }} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 sticky bottom-4">
+                  <Button variant="outline" className="rounded-2xl" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}>
+                    <RotateCcw className="w-4 h-4 mr-2" />Padrão
+                  </Button>
+                  <Button className="rounded-2xl" onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>
+                    Salvar cores
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Senha e Segurança subscreen */}
+            {settingsSub === 'senha' && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+                  <p className="text-[13px] font-bold">Alterar senha</p>
+                  <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Nova senha (mín. 6 caracteres)" />
+                  <Button onClick={handleChangePassword} className="w-full rounded-2xl">Salvar nova senha</Button>
+                </div>
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+                  <p className="text-[13px] font-bold">Palavra-chave de recuperação</p>
+                  <p className="text-[11px] text-muted-foreground">Usada para recuperar a conta sem e-mail.</p>
+                  <Input value={recoveryKeyword} onChange={(e) => setRecoveryKeyword(e.target.value)} placeholder="Sua palavra-chave secreta" />
+                  <Button variant="outline" className="w-full rounded-2xl" onClick={async () => { await updateProfile({ recovery_keyword: recoveryKeyword.trim() || null }); toast.success('Palavra-chave salva'); }}>Salvar palavra-chave</Button>
+                </div>
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-2">
+                  <p className="text-[13px] font-bold">Segurança da conta</p>
+                  <p className="text-[11px] text-muted-foreground">Email: {user.email || '—'}</p>
+                  <p className="text-[11px] text-muted-foreground">Conta criada em {new Date(user.created_at).toLocaleDateString('pt-BR')}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Selos subscreen */}
+            {settingsSub === 'selos' && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+                  <p className="text-[13px] font-bold">Seus selos</p>
+                  {myBadges.length === 0 ? (
+                    <p className="text-[12px] text-muted-foreground">Você ainda não recebeu selos. Selos são enviados pelo ADM.</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {myBadges.map(b => b.badge && (
+                        <span key={b.id} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary border border-border/40 text-[11px] font-semibold">
+                          <img src={b.badge.image_url} alt={b.badge.name} className="w-4 h-4" /> {b.badge.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[13px] font-medium">Exibir selos na bio</span>
+                    <Switch
+                      checked={(profile as any)?.show_badges_in_bio !== false}
+                      onCheckedChange={async (v) => { await updateProfile({ show_badges_in_bio: v } as any); refreshProfile(); }}
+                    />
+                  </div>
+                  {isAdmin && (
+                    <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
+                      <span className="text-[13px] font-medium">Exibir selo de ADM no perfil</span>
+                      <Switch
+                        checked={(profile as any)?.show_admin_badge !== false}
+                        onCheckedChange={async (v) => { await updateProfile({ show_admin_badge: v } as any); refreshProfile(); }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
+
+      {/* Decoração — Bottom Sheet */}
+      <Sheet open={decorPickerOpen} onOpenChange={setDecorPickerOpen}>
+        <SheetContent side="bottom" className="rounded-t-[2rem] max-h-[80vh] overflow-y-auto bg-background border-border/40">
+          <SheetHeader>
+            <SheetTitle className="text-center">Decoração do Perfil</SheetTitle>
+          </SheetHeader>
+          <p className="text-[12px] text-muted-foreground text-center mt-1 mb-5">Escolha uma decoração para enquadrar sua foto.</p>
+          <div className="grid grid-cols-3 gap-3 pb-6">
+            <button
+              onClick={async () => { await updateProfile({ profile_decoration_url: null }); toast.success('Decoração removida'); refreshProfile(); setDecorPickerOpen(false); }}
+              className={`aspect-square rounded-2xl border ${!(profile as any)?.profile_decoration_url ? 'border-foreground' : 'border-border/40'} bg-secondary flex items-center justify-center text-[11px] text-muted-foreground`}
+            >
+              Nenhuma
+            </button>
+            {decorations.map(d => (
+              <button
+                key={d.id}
+                onClick={() => { setDecorEditing({
+                  url: d.image_url,
+                  x: (profile as any)?.profile_decoration_position?.x ?? 25,
+                  y: (profile as any)?.profile_decoration_position?.y ?? 25,
+                  scale: (profile as any)?.profile_decoration_position?.scale ?? 0.8,
+                }); setDecorPickerOpen(false); }}
+                className={`relative aspect-square rounded-2xl border overflow-hidden ${(profile as any)?.profile_decoration_url === d.image_url ? 'border-foreground' : 'border-border/40'} bg-secondary`}
+                title={d.name}
+              >
+                <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
+              </button>
+            ))}
+          </div>
+          {decorations.length === 0 && <p className="text-[12px] text-muted-foreground text-center pb-4">Nenhuma decoração disponível ainda.</p>}
+        </SheetContent>
+      </Sheet>
+
 
       {/* Edit Profile Modal */}
       <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
