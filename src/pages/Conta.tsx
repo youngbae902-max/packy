@@ -65,6 +65,9 @@ const Conta = () => {
   const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const settingsFileInputRef = useRef<HTMLInputElement>(null);
+  const [walletOpen, setWalletOpen] = useState(false);
+
   const [cropImage, setCropImage] = useState<string | null>(null);
   const [showCropModal, setShowCropModal] = useState(false);
 
