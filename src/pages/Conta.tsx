@@ -786,8 +786,16 @@ const Conta = () => {
         />
       )}
 
+      <Dialog open={walletOpen} onOpenChange={setWalletOpen}>
+        <DialogContent className="bg-transparent border-0 shadow-none p-0 max-w-md">
+          <DialogHeader className="sr-only"><DialogTitle>Carteira</DialogTitle></DialogHeader>
+          <WalletCard />
+        </DialogContent>
+      </Dialog>
+
       <BottomNav />
     </div>
+
   );
 };
 
