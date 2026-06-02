@@ -117,6 +117,7 @@ export default function Admin() {
   const [decoFile, setDecoFile] = useState<File | null>(null);
   const [walletUsername, setWalletUsername] = useState('');
   const [keypadOpen, setKeypadOpen] = useState(false);
+  const [packSearch, setPackSearch] = useState('');
   const { stats } = useStats();
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
@@ -1105,9 +1106,24 @@ export default function Admin() {
         )}
 
         {/* Packs/Projects content */}
-        {(mainTab === 'packs' || mainTab === 'projetos') && (
+        {(mainTab === 'packs' || mainTab === 'projetos') && (() => {
+          const q = packSearch.trim().toLowerCase();
+          const filtered = q
+            ? getPacksContent().filter((p) =>
+                [p.id, p.title, p.author_name, p.pack_type]
+                  .filter(Boolean)
+                  .some((v) => String(v).toLowerCase().includes(q))
+              )
+            : getPacksContent();
+          return (
           <div className="space-y-3 mt-4">
-            {getPacksContent().map((pack) => (
+            <Input
+              value={packSearch}
+              onChange={(e) => setPackSearch(e.target.value)}
+              placeholder="Buscar por nome, ID, criador ou categoria…"
+              className="bg-card border-border/60"
+            />
+            {filtered.map((pack) => (
               <div key={pack.id} className="pack-card flex gap-3">
                 <img src={pack.cover_url || '/placeholder.svg'} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -1142,11 +1158,12 @@ export default function Admin() {
                 </div>
               </div>
             ))}
-            {getPacksContent().length === 0 && (
+            {filtered.length === 0 && (
               <p className="text-center py-8 text-muted-foreground">Nenhum item encontrado</p>
             )}
           </div>
-        )}
+          );
+        })()}
 
         {/* Acapellas content */}
         {mainTab === 'acapellas' && (
