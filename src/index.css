@@ -99,6 +99,15 @@
   }
 }
 
+img.apple-emoji {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  vertical-align: -0.15em;
+  margin: 0 0.05em;
+  user-select: none;
+}
+
 @layer components {
   .pack-card {
     @apply bg-card rounded-xl border border-border p-5 shadow-lg hover:shadow-xl transition-all duration-300;
