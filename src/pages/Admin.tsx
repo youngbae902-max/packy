@@ -1158,11 +1158,12 @@ export default function Admin() {
                 </div>
               </div>
             ))}
-            {getPacksContent().length === 0 && (
+            {filtered.length === 0 && (
               <p className="text-center py-8 text-muted-foreground">Nenhum item encontrado</p>
             )}
           </div>
-        )}
+          );
+        })()}
 
         {/* Acapellas content */}
         {mainTab === 'acapellas' && (
