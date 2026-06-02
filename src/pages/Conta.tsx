@@ -377,11 +377,11 @@ const Conta = () => {
             {/* Settings home */}
             {!settingsSub && (
               <>
-                {/* Small profile card */}
-                <div className="rounded-2xl border border-border/40 bg-card p-3.5 flex items-center gap-3 mb-6">
+                {/* Small profile card with balance beside */}
+                <div className="rounded-2xl border border-border/40 bg-card p-3 flex items-center gap-3 mb-6">
                   <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-12 h-12 rounded-full bg-secondary overflow-hidden flex-shrink-0"
+                    onClick={() => settingsFileInputRef.current?.click()}
+                    className="w-11 h-11 rounded-full bg-secondary overflow-hidden flex-shrink-0 border border-border/40"
                   >
                     {profile?.avatar_url ? (
                       <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -389,16 +389,20 @@ const Conta = () => {
                       <div className="w-full h-full flex items-center justify-center"><User className="w-5 h-5 text-muted-foreground" /></div>
                     )}
                   </button>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[15px] font-bold tracking-tight truncate">{profile?.artist_name || 'Sem nome'}</p>
-                    {profile?.username && <p className="text-[13px] text-muted-foreground truncate">@{profile.username}</p>}
-                  </div>
-                  <button onClick={() => setIsEditingProfile(true)} className="p-2 text-muted-foreground hover:text-foreground">
-                    <Edit className="w-4 h-4" />
+                  <input ref={settingsFileInputRef} type="file" accept="image/*,image/gif" onChange={handleAvatarSelect} className="hidden" />
+                  <button onClick={() => setIsEditingProfile(true)} className="min-w-0 flex-1 text-left">
+                    <p className="text-[14px] font-bold tracking-tight truncate leading-tight">{profile?.artist_name || 'Sem nome'}</p>
+                    {profile?.username && <p className="text-[12px] text-muted-foreground truncate leading-tight">@{profile.username}</p>}
+                  </button>
+                  <button
+                    onClick={() => setWalletOpen(true)}
+                    className="flex items-center gap-1.5 px-3 h-9 rounded-full bg-foreground text-background text-[13px] font-bold tabular-nums shrink-0"
+                    aria-label="Carteira"
+                  >
+                    R$ {Number((profile as any)?.wallet_balance || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </button>
                 </div>
 
-                <div className="mb-6"><WalletCard /></div>
 
                 <SettingsGroup title="Personalização">
                   <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
