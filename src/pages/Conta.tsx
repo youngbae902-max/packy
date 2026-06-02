@@ -356,7 +356,7 @@ const Conta = () => {
       </div>
 
       {settingsMode && (
-        <div className="fixed inset-0 z-[55] bg-background overflow-y-auto pb-24">
+        <div className="fixed inset-0 z-40 bg-background overflow-y-auto pb-24">
           <div className="max-w-lg mx-auto px-4 py-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
