@@ -6,14 +6,15 @@ import { WalletCard } from '@/components/WalletCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/hooks/useWallet';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
-import { useState as useStateAuth } from 'react';
 import { AuthModal } from '@/components/AuthModal';
+
 
 export default function Wallet() {
   const { user, profile } = useAuth();
   const { transactions } = useWallet(user?.id);
   const [show, setShow] = useState(true);
-  const [showAuth, setShowAuth] = useStateAuth(false);
+  const [showAuth, setShowAuth] = useState(false);
+
 
   const stats = useMemo(() => {
     let credit = 0, debit = 0;
