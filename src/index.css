@@ -93,10 +93,17 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-family: 'Figtree', 'Outfit', -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
     -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    font-weight: 500;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+  }
+
 }
 
 img.apple-emoji {
@@ -145,7 +152,26 @@ img.apple-emoji {
     @apply text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2 block;
   }
 }
+
+/* Pill-shaped online/active indicator (replaces old green dot) */
+.online-pill {
+  display: inline-block;
+  width: 1.1rem;
+  height: 0.4rem;
+  border-radius: 9999px;
+  background-color: #22c55e;
+  box-shadow: 0 0 0 2px hsl(var(--background));
+}
+.online-pill-sm {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.32rem;
+  border-radius: 9999px;
+  background-color: #22c55e;
+}
+
 #lovable-badge { display: none !important; }
+
 
 @keyframes rgb-cycle {
   0%   { color: #ff0040; background-color: rgba(255,0,64,0.12); }

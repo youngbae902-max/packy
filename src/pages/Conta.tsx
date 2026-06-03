@@ -258,7 +258,7 @@ const Conta = () => {
                   </div>
                 )}
               </button>
-              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-background z-10" style={{ backgroundColor: themeColor }} />
+              <span className="absolute -bottom-0.5 right-0 rounded-full border-2 border-background" style={{ backgroundColor: themeColor, width: '1.25rem', height: '0.55rem' }} />
               {(profile as any)?.profile_decoration_url && (() => {
                 const pos = (profile as any)?.profile_decoration_position || {};
                 const x = pos.x ?? 25;
@@ -380,7 +380,7 @@ const Conta = () => {
             {/* Settings home */}
             {!settingsSub && (
               <>
-                {/* Small profile card with balance beside */}
+                {/* Small profile card */}
                 <div className="rounded-2xl border border-border/40 bg-card p-3 flex items-center gap-3 mb-6">
                   <button
                     onClick={() => settingsFileInputRef.current?.click()}
@@ -397,14 +397,18 @@ const Conta = () => {
                     <p className="text-[14px] font-bold tracking-tight truncate leading-tight">{profile?.artist_name || 'Sem nome'}</p>
                     {profile?.username && <p className="text-[12px] text-muted-foreground truncate leading-tight">@{profile.username}</p>}
                   </button>
-                  <button
-                    onClick={() => setWalletOpen(true)}
-                    className="flex items-center gap-1.5 px-3 h-9 rounded-full bg-foreground text-background text-[13px] font-bold tabular-nums shrink-0"
-                    aria-label="Carteira"
-                  >
-                    R$ {Number((profile as any)?.wallet_balance || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </button>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground/70 shrink-0" />
                 </div>
+
+                <SettingsGroup>
+                  <Link to="/carteira" className="w-full flex items-center gap-3 px-4 py-3.5 bg-card hover:bg-secondary/60 transition-colors">
+                    <Wallet className="w-[18px] h-[18px] text-foreground/70" />
+                    <span className="flex-1 text-[15px] font-medium tracking-tight">Carteira</span>
+                    <span className="text-[13px] font-bold tabular-nums text-foreground/80">R$ {Number((profile as any)?.wallet_balance || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground/70" />
+                  </Link>
+                </SettingsGroup>
+
 
 
                 <SettingsGroup title="Personalização">

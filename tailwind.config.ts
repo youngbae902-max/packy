@@ -79,7 +79,8 @@ export default {
   		},
   		fontFamily: {
   			sans: [
-  				'Inter',
+  				'Figtree',
+  				'Outfit',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif',
@@ -88,6 +89,14 @@ export default {
   				'Segoe UI Symbol',
   				'Noto Color Emoji'
   			],
+  			display: [
+  				'Outfit',
+  				'Figtree',
+  				'ui-sans-serif',
+  				'system-ui',
+  				'sans-serif'
+  			],
+
   			serif: [
   				'ui-serif',
   				'Georgia',

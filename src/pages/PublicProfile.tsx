@@ -96,7 +96,7 @@ export default function PublicProfile() {
               <AvatarImage src={profile.avatar_url || undefined} />
               <AvatarFallback><User className="w-14 h-14" /></AvatarFallback>
             </Avatar>
-            <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-background z-10" style={{ backgroundColor: accent }} />
+            <span className="absolute -bottom-0.5 right-2 rounded-full border-[3px] border-background z-10" style={{ backgroundColor: accent, width: '1.5rem', height: '0.65rem' }} />
             {(profile as any).profile_decoration_url && (() => {
               const pos = (profile as any)?.profile_decoration_position || {};
               const x = pos.x ?? 25;

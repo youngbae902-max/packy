@@ -17,6 +17,8 @@ import NotFound from "./pages/NotFound";
 import ResetPassword from "./pages/ResetPassword";
 import PublicProfile from "./pages/PublicProfile";
 import CustomPage from "./pages/CustomPage";
+import Wallet from "./pages/Wallet";
+
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/perfil/:userId" element={<PublicProfile />} />
             <Route path="/pagina/:slug" element={<CustomPage />} />
             <Route path="/conta" element={<Conta />} />
+            <Route path="/carteira" element={<Wallet />} />
+
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
