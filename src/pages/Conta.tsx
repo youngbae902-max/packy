@@ -154,10 +154,6 @@ const Conta = () => {
       await updateProfile({ 
         artist_name: artistName,
         bio,
-        instagram_url: instagramUrl || null,
-        spotify_url: spotifyUrl || null,
-        soundcloud_url: soundcloudUrl || null,
-        youtube_url: youtubeUrl || null,
         theme_accent_color: themeColor,
         online_accent_color: themeColor,
         recovery_keyword: recoveryKeyword.trim() || null,
@@ -168,7 +164,10 @@ const Conta = () => {
         admin_badge_bg_color: adminBadgeBgColor || '#082D0F',
         admin_badge_border_color: adminBadgeBorderColor || '#085A18',
         admin_badge_text_color: adminBadgeTextColor || '#05BD2A',
-      });
+        avatar_shape: avatarShape,
+        pack_name_prefix: packPrefix.trim() || null,
+        pack_name_emoji: packEmoji.trim() || null,
+      } as any);
       
       if (username.trim() && username !== profile?.username) {
         await updateUsername(username.trim());
