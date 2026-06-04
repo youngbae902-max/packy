@@ -9,6 +9,7 @@ import { AuthModal } from '@/components/AuthModal';
 import { useMemo, useState } from 'react';
 import { EmojiText } from '@/components/EmojiText';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
+import { avatarShapeClasses } from '@/lib/avatarShape';
 
 const BIO_LIMIT = 115;
 
