@@ -28,6 +28,9 @@ interface ProfileUpdates {
   profile_decoration_url?: string | null;
   profile_decoration_position?: any;
   show_admin_badge?: boolean;
+  avatar_shape?: string | null;
+  pack_name_prefix?: string | null;
+  pack_name_emoji?: string | null;
 }
 
 export function useProfile() {
