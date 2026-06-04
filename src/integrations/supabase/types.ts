@@ -536,6 +536,7 @@ export type Database = {
           admin_badge_color: string | null
           admin_badge_text_color: string | null
           artist_name: string | null
+          avatar_shape: string
           avatar_url: string | null
           banner_url: string | null
           bio: string | null
@@ -548,6 +549,8 @@ export type Database = {
           last_seen: string | null
           last_username_change_date: string | null
           online_accent_color: string | null
+          pack_name_emoji: string | null
+          pack_name_prefix: string | null
           profile_decoration_position: Json | null
           profile_decoration_url: string | null
           recovery_keyword: string | null
@@ -579,6 +582,7 @@ export type Database = {
           admin_badge_color?: string | null
           admin_badge_text_color?: string | null
           artist_name?: string | null
+          avatar_shape?: string
           avatar_url?: string | null
           banner_url?: string | null
           bio?: string | null
@@ -591,6 +595,8 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
+          pack_name_emoji?: string | null
+          pack_name_prefix?: string | null
           profile_decoration_position?: Json | null
           profile_decoration_url?: string | null
           recovery_keyword?: string | null
@@ -622,6 +628,7 @@ export type Database = {
           admin_badge_color?: string | null
           admin_badge_text_color?: string | null
           artist_name?: string | null
+          avatar_shape?: string
           avatar_url?: string | null
           banner_url?: string | null
           bio?: string | null
@@ -634,6 +641,8 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
+          pack_name_emoji?: string | null
+          pack_name_prefix?: string | null
           profile_decoration_position?: Json | null
           profile_decoration_url?: string | null
           recovery_keyword?: string | null
