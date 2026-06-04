@@ -27,6 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { avatarShapeClasses, AVATAR_SHAPES } from '@/lib/avatarShape';
+import { ColorPickerCard } from '@/components/ColorPickerCard';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
