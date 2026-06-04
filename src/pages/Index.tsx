@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Settings, Crown, Instagram, Search, Filter, ShoppingBag } from 'lucide-react';
+import { Plus, Settings, Crown, Instagram, Search, Filter, ShoppingBag, MoreVertical, Music2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { PackCardV2 } from '@/components/PackCardV2';
@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,35 +55,47 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-4xl mx-auto px-4 pb-12">
-        {/* Top Bar */}
+        {/* Top Bar — icon-only */}
         <div className="flex items-center justify-between pt-4 mb-2">
-          <Button 
-            variant="outline" 
-            size="sm"
+          <button
             onClick={() => setShowOrderDialog(true)}
-            className="text-xs"
+            aria-label="Encomendar packs"
+            className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
           >
-            <ShoppingBag className="w-3 h-3 mr-1" />
-            Encomendar packs
-          </Button>
-          
-          <div className="flex gap-2">
+            <ShoppingBag className="w-5 h-5" />
+          </button>
+
+          <div className="flex gap-1 items-center">
             <a
               href="https://www.instagram.com/mathewdcarmo?igsh=N2p5dXZlOHlhYThl"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Instagram"
               className="p-2 rounded-full hover:bg-muted transition-colors text-pink-500"
             >
               <Instagram className="w-5 h-5" />
             </a>
             {isAdmin && (
-              <Link 
+              <Link
                 to="/admin"
+                aria-label="Admin"
                 className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <Settings className="w-5 h-5" />
               </Link>
             )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button aria-label="Mais" className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-[hsl(0,0%,4%)] border-border/60">
+                <DropdownMenuItem onClick={() => setIsModalOpen(true)} className="gap-2">
+                  <Plus className="w-4 h-4" /> Novo pack
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -96,16 +109,6 @@ const Index = () => {
             ))}
           </div>
         )}
-
-        <div className="mb-6">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="btn-primary w-full text-sm uppercase tracking-wide"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Pack
-          </button>
-        </div>
 
         {/* Search and Filter */}
         <div className="flex gap-2 mb-4">
@@ -146,28 +149,29 @@ const Index = () => {
           </div>
         )}
 
-        {/* Section Tabs */}
+        {/* Section Tabs — icon-only */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveSection('free')}
-            className={`flex-1 py-3 rounded-xl font-bold text-sm uppercase tracking-wide transition-all ${
+            aria-label="Packs grátis"
+            className={`flex-1 flex items-center justify-center py-3 rounded-xl transition-all ${
               activeSection === 'free'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ? 'bg-[hsl(0,0%,8%)] text-foreground border border-border'
+                : 'bg-[hsl(0,0%,4%)] text-muted-foreground hover:text-foreground'
             }`}
           >
-            Packs Grátis
+            <Music2 className="w-5 h-5" />
           </button>
           <button
             onClick={() => setActiveSection('premium')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm uppercase tracking-wide transition-all ${
+            aria-label="Premium"
+            className={`flex-1 flex items-center justify-center py-3 rounded-xl transition-all ${
               activeSection === 'premium'
-                ? 'bg-premium text-premium-foreground'
-                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ? 'bg-[hsl(0,0%,8%)] text-foreground border border-border'
+                : 'bg-[hsl(0,0%,4%)] text-muted-foreground hover:text-foreground'
             }`}
           >
-            <Crown className="w-4 h-4" />
-            Premium
+            <Crown className="w-5 h-5" />
           </button>
         </div>
 

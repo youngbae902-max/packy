@@ -12,6 +12,7 @@ import { usePackComments, useRepost } from '@/hooks/useSocial';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { EmojiText } from '@/components/EmojiText';
+import { PackImagePlaceholder } from './PackImagePlaceholder';
 
 const packTypeLabels: Record<string, string> = {
   samples: 'Samples',
@@ -107,7 +108,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   return (
     <>
       <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] border border-border/40 transition-all">
-        {/* Banner image */}
+        {/* Banner image - no gradients */}
         <div className="relative w-full aspect-[16/9]">
           {pack.cover_url ? (
             <img 
@@ -116,15 +117,10 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-[hsl(0,0%,8%)] flex items-center justify-center">
-              <ImageIcon className="w-10 h-10 text-muted-foreground/20" />
-            </div>
+            <PackImagePlaceholder />
           )}
 
-          {/* Gradient fade on right edge for favorite button */}
-          <div className="absolute top-0 right-0 h-full w-20 bg-gradient-to-l from-[hsl(0,0%,0%)/0.7] to-transparent pointer-events-none" />
-
-          {/* Favorite button - white icon with blur at top right */}
+          {/* Favorite button */}
           <button
             onClick={handleFavoriteClick}
             className="absolute top-3 right-3 z-10 flex items-center justify-center transition-all"
@@ -134,14 +130,12 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             }`} />
           </button>
           
-          {/* Pin icon overlay */}
           {pack.is_pinned && (
             <div className="absolute top-3 left-3 z-10">
               <Pin className="w-4 h-4 text-foreground drop-shadow-lg" />
             </div>
           )}
 
-          {/* Premium badge */}
           {pack.is_premium && (
             <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-premium/90 text-premium-foreground px-2 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
               <Crown className="w-3 h-3" />
@@ -153,9 +147,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               <LinkIcon className="w-3 h-3" /> Passar pelo encurtador
             </div>
           )}
-
-          {/* Bottom gradient for text readability */}
-          <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[hsl(0,0%,4%)] to-transparent pointer-events-none" />
         </div>
 
         {/* Info below banner */}
@@ -215,9 +206,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 {pack.cover_url ? (
                   <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-6 h-6 text-muted-foreground/40" />
-                  </div>
+                  <PackImagePlaceholder />
                 )}
               </div>
               <div className="min-w-0">
