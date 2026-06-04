@@ -377,6 +377,7 @@ const Conta = () => {
                   : settingsSub === 'cores' ? 'Cores dos Selos'
                   : settingsSub === 'senha' ? 'Senha e Segurança'
                   : settingsSub === 'selos' ? 'Meus Selos'
+                  : settingsSub === 'mais' ? 'Mais opções'
                   : 'Configurações'}
               </h1>
               <div className="w-11" />
@@ -470,14 +471,12 @@ const Conta = () => {
 
             {/* Cores dos selos subscreen */}
             {settingsSub === 'cores' && (
-              <div className="space-y-4">
-                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
-                  <p className="text-[13px] font-bold">Selo Verificado</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div><label className="label-field">Fundo</label><Input value={verifiedBadgeBgColor} onChange={(e) => setVerifiedBadgeBgColor(e.target.value)} placeholder="#0F2B1A" /></div>
-                    <div><label className="label-field">Texto</label><Input value={verifiedBadgeTextColor} onChange={(e) => setVerifiedBadgeTextColor(e.target.value)} placeholder="#16A249" /></div>
-                  </div>
-                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
+              <div className="space-y-4 pb-24">
+                <ColorPickerCard label="Selo Verificado — Fundo" value={verifiedBadgeBgColor} onChange={setVerifiedBadgeBgColor} />
+                <ColorPickerCard label="Selo Verificado — Texto" value={verifiedBadgeTextColor} onChange={setVerifiedBadgeTextColor} />
+
+                <div className="rounded-2xl border border-border/40 bg-card p-4">
+                  <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="text-[13px] font-bold">Verificado em RGB</p>
                       <p className="text-[11px] text-muted-foreground">Anima cores do selo</p>
@@ -489,24 +488,18 @@ const Conta = () => {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
-                  <p className="text-[13px] font-bold">Selo ADM</p>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div><label className="label-field">Fundo</label><Input value={adminBadgeBgColor} onChange={(e) => setAdminBadgeBgColor(e.target.value)} placeholder="#082D0F" /></div>
-                    <div><label className="label-field">Borda</label><Input value={adminBadgeBorderColor} onChange={(e) => setAdminBadgeBorderColor(e.target.value)} placeholder="#085A18" /></div>
-                    <div><label className="label-field">Texto</label><Input value={adminBadgeTextColor} onChange={(e) => setAdminBadgeTextColor(e.target.value)} placeholder="#05BD2A" /></div>
-                  </div>
-                </div>
+                <ColorPickerCard label="Selo ADM — Fundo" value={adminBadgeBgColor} onChange={setAdminBadgeBgColor} />
+                <ColorPickerCard label="Selo ADM — Borda" value={adminBadgeBorderColor} onChange={setAdminBadgeBorderColor} />
+                <ColorPickerCard label="Selo ADM — Texto" value={adminBadgeTextColor} onChange={setAdminBadgeTextColor} />
 
-                <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
-                  <p className="text-[13px] font-bold">Indicador online</p>
-                  <div className="grid grid-cols-[1fr_52px] gap-2 items-end">
-                    <div><label className="label-field">Cor da bolinha</label><Input value={themeColor} onChange={(e) => setThemeColor(e.target.value)} placeholder="#16A249" /></div>
-                    <div className="h-10 rounded-2xl border border-border" style={{ backgroundColor: themeColor }} />
-                  </div>
-                </div>
+                <ColorPickerCard label="Indicador online" value={themeColor} onChange={setThemeColor} />
+              </div>
+            )}
 
-                <div className="grid grid-cols-2 gap-2 sticky bottom-4">
+            {/* Sticky save bar for Cores */}
+            {settingsSub === 'cores' && (
+              <div className="fixed left-0 right-0 bottom-0 z-30 bg-background/95 backdrop-blur border-t border-border/40 px-4 py-3">
+                <div className="max-w-lg mx-auto grid grid-cols-2 gap-2">
                   <Button variant="outline" className="rounded-2xl" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}>
                     <RotateCcw className="w-4 h-4 mr-2" />Padrão
                   </Button>
@@ -514,6 +507,20 @@ const Conta = () => {
                     Salvar cores
                   </Button>
                 </div>
+              </div>
+            )}
+
+            {/* "Mais opções" subscreen */}
+            {settingsSub === 'mais' && (
+              <div className="space-y-3">
+                <p className="text-[13px] text-muted-foreground px-1 mb-1">Encerrar sessão ou apagar sua conta permanentemente.</p>
+                <SettingsGroup>
+                  <SettingsRow icon={LogOut} label="Sair da minha conta" onClick={signOut} rightSlot={<span />} />
+                </SettingsGroup>
+                <SettingsGroup>
+                  <SettingsRow icon={Trash2} label="Excluir a conta" destructive onClick={() => setShowDeleteConfirm(true)} rightSlot={<span />} />
+                </SettingsGroup>
+                <p className="text-[11px] text-muted-foreground text-center pt-4">A exclusão é permanente e não pode ser desfeita.</p>
               </div>
             )}
 
@@ -663,50 +670,34 @@ const Conta = () => {
               <p className="text-xs text-muted-foreground mt-1 text-right">{bio.length}/160</p>
             </div>
 
-            <div className="border-t border-border pt-4">
-              <p className="text-sm font-bold text-foreground mb-3">Links Sociais</p>
-              
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Instagram className="w-5 h-5 text-premium flex-shrink-0" />
-                  <Input 
-                    value={instagramUrl} 
-                    onChange={e => setInstagramUrl(e.target.value)} 
-                    placeholder="https://instagram.com/..."
-                    className="bg-secondary border-border text-foreground"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-success flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-                  </svg>
-                  <Input 
-                    value={spotifyUrl} 
-                    onChange={e => setSpotifyUrl(e.target.value)} 
-                    placeholder="https://open.spotify.com/..."
-                    className="bg-secondary border-border text-foreground"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-warning flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.052-.1-.084-.1zm-.899 1.075c-.05 0-.09.039-.099.096l-.164 1.08.164 1.063c.009.053.049.09.099.09.05 0 .09-.037.099-.09l.2-1.063-.185-1.08c-.009-.057-.049-.096-.114-.096zm1.956-1.574c-.061 0-.107.048-.117.109l-.205 2.453.205 2.365c.01.061.056.109.117.109.06 0 .107-.048.117-.109l.235-2.365-.235-2.453c-.01-.061-.057-.109-.117-.109zm.943-.109c-.073 0-.126.059-.133.125l-.178 2.562.178 2.453c.007.066.06.125.133.125.073 0 .126-.059.133-.125l.205-2.453-.205-2.562c-.007-.066-.06-.125-.133-.125zm.937-.287c-.08 0-.14.063-.15.143l-.163 2.85.163 2.453c.01.08.07.143.15.143.08 0 .14-.063.15-.143l.19-2.453-.19-2.85c-.01-.08-.07-.143-.15-.143zm.943-.252c-.092 0-.159.07-.168.158l-.14 3.102.14 2.453c.009.088.076.158.168.158.092 0 .159-.07.168-.158l.163-2.453-.163-3.102c-.009-.088-.076-.158-.168-.158zm.949-.252c-.102 0-.176.076-.185.176l-.117 3.354.117 2.416c.009.1.083.176.185.176.102 0 .176-.076.185-.176l.14-2.416-.14-3.354c-.009-.1-.083-.176-.185-.176zm.956-.144c-.11 0-.19.08-.199.19l-.09 3.498.09 2.378c.009.11.089.19.199.19.11 0 .19-.08.199-.19l.107-2.378-.107-3.498c-.009-.11-.089-.19-.199-.19zm.95-.144c-.122 0-.21.088-.22.208l-.068 3.642.068 2.341c.01.12.098.208.22.208.122 0 .21-.088.22-.208l.08-2.341-.08-3.642c-.01-.12-.098-.208-.22-.208zm1.896.496c-.182 0-.326.144-.326.326v7.412c0 .182.144.326.326.326h7.412c1.8 0 3.262-1.462 3.262-3.262s-1.462-3.262-3.262-3.262c-.512 0-.994.118-1.424.326-.26-2.006-1.968-3.56-4.048-3.56-.598 0-1.168.13-1.678.364-.154.07-.194.144-.194.28v5.55z"/>
-                  </svg>
-                  <Input 
-                    value={soundcloudUrl} 
-                    onChange={e => setSoundcloudUrl(e.target.value)} 
-                    placeholder="https://soundcloud.com/..."
-                    className="bg-secondary border-border text-foreground"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Youtube className="w-5 h-5 text-destructive flex-shrink-0" />
-                  <Input 
-                    value={youtubeUrl} 
-                    onChange={e => setYoutubeUrl(e.target.value)} 
-                    placeholder="https://youtube.com/..."
-                    className="bg-secondary border-border text-foreground"
-                  />
-                </div>
+            {/* Formato da foto de perfil */}
+            <div className="border-t border-border/40 pt-4">
+              <p className="text-sm font-bold text-foreground mb-3">Formato da foto</p>
+              <div className="grid grid-cols-5 gap-2">
+                {AVATAR_SHAPES.map(s => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setAvatarShape(s.id)}
+                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+                    title={s.label}
+                  >
+                    <div className={`w-10 h-10 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
+                    <span className="text-[9px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Template do nome dos packs */}
+            <div className="border-t border-border/40 pt-4">
+              <p className="text-sm font-bold text-foreground mb-1">Template de nome dos packs</p>
+              <p className="text-[11px] text-muted-foreground mb-3">
+                Será montado como <span className="font-mono">PREFIXO | NOME EMOJI</span> ao postar.
+              </p>
+              <div className="grid grid-cols-[1fr_72px] gap-2">
+                <Input value={packPrefix} onChange={e => setPackPrefix(e.target.value.slice(0, 24))} placeholder="DRUM KIT" className="bg-secondary border-border text-foreground" />
+                <Input value={packEmoji} onChange={e => setPackEmoji(e.target.value.slice(0, 4))} placeholder="🔥" className="bg-secondary border-border text-foreground text-center" />
               </div>
             </div>
 
