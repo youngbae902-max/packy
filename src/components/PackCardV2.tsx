@@ -206,9 +206,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                 {pack.cover_url ? (
                   <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-6 h-6 text-muted-foreground/40" />
-                  </div>
+                  <PackImagePlaceholder />
                 )}
               </div>
               <div className="min-w-0">
