@@ -92,8 +92,8 @@ export default function PublicProfile() {
 
         <section className="mb-8 flex flex-col items-center text-center">
           <div className="relative w-28 h-28 mb-5">
-            <div className="absolute inset-[-5px] rounded-full border-4" style={{ borderColor: accent, opacity: 0.45 }} />
-            <Avatar className="w-28 h-28 border border-border/50">
+            <div className={`absolute inset-[-5px] border-4 ${avatarShapeClasses((profile as any)?.avatar_shape)}`} style={{ borderColor: accent, opacity: 0.45 }} />
+            <Avatar className={`w-28 h-28 border border-border/50 ${avatarShapeClasses((profile as any)?.avatar_shape)}`}>
               <AvatarImage src={profile.avatar_url || undefined} />
               <AvatarFallback><User className="w-14 h-14" /></AvatarFallback>
             </Avatar>
