@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
+import logoG from '@/assets/packy-logo-g.png';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -104,13 +105,16 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex flex-col items-center gap-2 mb-8">
-          <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
-            <User className="w-7 h-7 text-primary-foreground" />
+        <div className="flex flex-col items-center gap-3 mb-7">
+          <img src={logoG} alt="PACKY" className="w-16 h-16 object-contain opacity-90" draggable={false} />
+          <div className="text-center">
+            <h2 className="text-2xl font-black tracking-tight leading-none">
+              {mode === 'login' ? 'Entrar no PACKY' : 'Criar sua conta'}
+            </h2>
+            <p className="text-[12px] text-muted-foreground mt-1.5">
+              {mode === 'login' ? 'Bem-vindo de volta' : 'Junte-se à comunidade de editores'}
+            </p>
           </div>
-          <h2 className="text-2xl font-black uppercase tracking-tight">
-            {mode === 'login' ? 'Entrar' : 'Criar Conta'}
-          </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -1,20 +1,17 @@
 import { useMemo, useState } from 'react';
-import { ArrowLeft, Eye, EyeOff, TrendingUp, TrendingDown, History } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, TrendingUp, TrendingDown, History, Wallet as WalletIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
-import { WalletCard } from '@/components/WalletCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/hooks/useWallet';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { AuthModal } from '@/components/AuthModal';
-
 
 export default function Wallet() {
   const { user, profile } = useAuth();
   const { transactions } = useWallet(user?.id);
   const [show, setShow] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
-
 
   const stats = useMemo(() => {
     let credit = 0, debit = 0;
@@ -50,12 +47,20 @@ export default function Wallet() {
           </button>
         </header>
 
-        <div className="mb-6">
-          <WalletCard />
+        {/* Small wallet — just balance */}
+        <div className="rounded-3xl border border-border/40 bg-card p-5 mb-5 flex items-center gap-4">
+          <div className="w-11 h-11 rounded-2xl bg-foreground/5 border border-border/40 flex items-center justify-center">
+            <WalletIcon className="w-5 h-5 text-foreground/70" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Saldo disponível</p>
+            <p className="text-[26px] font-black tabular-nums leading-none mt-0.5">
+              {show ? `R$ ${formatted}` : '••••••'}
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 mb-6">
-          <StatBox label="Saldo" value={show ? `R$ ${formatted}` : '••••'} accent="text-foreground" />
+        <div className="grid grid-cols-2 gap-2 mb-6">
           <StatBox label="Entradas" value={show ? `+R$ ${stats.credit.toFixed(2)}` : '••••'} icon={<TrendingUp className="w-3 h-3" />} accent="text-emerald-400" />
           <StatBox label="Saídas" value={show ? `-R$ ${stats.debit.toFixed(2)}` : '••••'} icon={<TrendingDown className="w-3 h-3" />} accent="text-rose-400" />
         </div>
@@ -104,3 +109,4 @@ function StatBox({ label, value, icon, accent }: { label: string; value: string;
     </div>
   );
 }
+

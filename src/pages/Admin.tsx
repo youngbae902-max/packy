@@ -384,6 +384,30 @@ export default function Admin() {
                   { icon: Crown, label: 'Premium', onClick: () => setShowPremiumPackModal(true) },
                   { icon: Mic, label: 'Acapella', onClick: () => setShowAcapellaModal(true) },
                   { icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
+                  {
+                    icon: Edit2,
+                    label: 'Renomear packs',
+                    onClick: async () => {
+                      const prefix = window.prompt('Prefixo (ex: DRUM KIT). Deixe vazio para remover.');
+                      if (prefix === null) return;
+                      const emoji = window.prompt('Emoji do final (ex: 🔥). Deixe vazio para nenhum.') || '';
+                      const all = [...allApprovedPacks, ...pendingPacks];
+                      let ok = 0;
+                      for (const p of all) {
+                        // Strip any existing "PREFIX | " and trailing emoji
+                        let base = (p.title || '').trim();
+                        base = base.replace(/^[^|]+\|\s*/, '');
+                        base = base.replace(/\s+[\p{Emoji_Presentation}\p{Extended_Pictographic}]+\s*$/u, '').trim();
+                        const composed = [
+                          prefix.trim() ? `${prefix.trim()} | ${base}` : base,
+                          emoji.trim(),
+                        ].filter(Boolean).join(' ');
+                        const { error } = await supabase.from('packs').update({ title: composed }).eq('id', p.id);
+                        if (!error) ok++;
+                      }
+                      toast.success(`${ok} pack(s) renomeado(s)`);
+                    },
+                  },
                 ].map(a => (
                   <button
                     key={a.label}
