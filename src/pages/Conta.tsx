@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History, Pipette } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -18,7 +18,7 @@ import { EmojiText } from '@/components/EmojiText';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { SettingsRow, SettingsGroup } from '@/components/SettingsRow';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { ChevronRight, Palette, Lock, Smile, Sticker, Image as ImageIcon } from 'lucide-react';
+import { ChevronRight, Palette, Lock, Smile, Sticker, Image as ImageIcon, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import { avatarShapeClasses, AVATAR_SHAPES } from '@/lib/avatarShape';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
@@ -47,7 +48,7 @@ const Conta = () => {
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
-  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos'>(null);
+  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
@@ -63,6 +64,9 @@ const Conta = () => {
   const [adminBadgeBgColor, setAdminBadgeBgColor] = useState('#082D0F');
   const [adminBadgeBorderColor, setAdminBadgeBorderColor] = useState('#085A18');
   const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
+  const [avatarShape, setAvatarShape] = useState<string>('circle');
+  const [packPrefix, setPackPrefix] = useState('');
+  const [packEmoji, setPackEmoji] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const settingsFileInputRef = useRef<HTMLInputElement>(null);
@@ -88,7 +92,9 @@ const Conta = () => {
       setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
-      
+      setAvatarShape((profile as any).avatar_shape || 'circle');
+      setPackPrefix((profile as any).pack_name_prefix || '');
+      setPackEmoji((profile as any).pack_name_emoji || '');
     }
   }, [profile]);
 
