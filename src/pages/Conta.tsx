@@ -253,7 +253,7 @@ const Conta = () => {
             <div className="relative mb-4 w-24 h-24">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="w-24 h-24 rounded-full bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity block"
+                className={`w-24 h-24 bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity block ${avatarShapeClasses(avatarShape)}`}
               >
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
@@ -389,7 +389,7 @@ const Conta = () => {
                 <div className="rounded-2xl border border-border/40 bg-card p-3 flex items-center gap-3 mb-6">
                   <button
                     onClick={() => settingsFileInputRef.current?.click()}
-                    className="w-11 h-11 rounded-full bg-secondary overflow-hidden flex-shrink-0 border border-border/40"
+                    className={`w-11 h-11 bg-secondary overflow-hidden flex-shrink-0 border border-border/40 ${avatarShapeClasses(avatarShape)}`}
                   >
                     {profile?.avatar_url ? (
                       <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -414,8 +414,6 @@ const Conta = () => {
                   </Link>
                 </SettingsGroup>
 
-
-
                 <SettingsGroup title="Personalização">
                   <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
                   <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
@@ -438,8 +436,7 @@ const Conta = () => {
                 )}
 
                 <SettingsGroup>
-                  <SettingsRow icon={LogOut} label="Sair da minha conta" onClick={signOut} rightSlot={<span />} />
-                  <SettingsRow icon={Trash2} label="Excluir a conta" destructive onClick={() => setShowDeleteConfirm(true)} rightSlot={<span />} />
+                  <SettingsRow icon={MoreHorizontal} label="Mais opções" onClick={() => setSettingsSub('mais')} />
                 </SettingsGroup>
               </>
             )}
