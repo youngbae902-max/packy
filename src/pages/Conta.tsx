@@ -49,7 +49,7 @@ const Conta = () => {
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
-  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais'>(null);
+  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
