@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { X, Globe, Disc, Mail, Star, Monitor, Home } from 'lucide-react';
+import { X, Globe, Mail, Star, Monitor, Compass, ShoppingCart } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
 
@@ -13,9 +13,9 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const { logoUrl } = useAppLogo();
 
   const items = [
-    { to: '/', icon: Home, label: 'Início' },
+    { to: '/', icon: Compass, label: 'Explorar' },
+    { to: '/carrinho', icon: ShoppingCart, label: 'Carrinho' },
     { to: '/sites', icon: Globe, label: 'Sites' },
-    { to: '/albuns', icon: Disc, label: 'Álbuns' },
     { to: '/inbox', icon: Mail, label: 'Caixa de entrada' },
     { to: '/desejos', icon: Star, label: 'Lista de desejos' },
   ];

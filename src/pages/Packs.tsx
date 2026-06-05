@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Upload, Search, Crown, Mic, Folder, Inbox, Menu, Gift, X } from 'lucide-react';
+import { Upload, Search, Crown, Mic, Folder, Inbox, Menu, Gift, X, LayoutGrid, List, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -16,6 +16,7 @@ import { useInbox } from '@/hooks/useInbox';
 import { useAppLogo } from '@/hooks/useAppLogo';
 import { useProfileSearch } from '@/hooks/useSocial';
 import { useCustomPages } from '@/hooks/useCustomPages';
+import { useCart } from '@/hooks/useCart';
 
 type FilterType = 'free' | 'premium' | 'acapellas' | 'projetos';
 
@@ -34,6 +35,7 @@ const Packs = () => {
   const [filter, setFilter] = useState<FilterType>('free');
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
@@ -43,6 +45,7 @@ const Packs = () => {
   const { logoUrl } = useAppLogo();
   const { data: searchedProfiles = [] } = useProfileSearch(searchQuery);
   const { pages } = useCustomPages();
+  const { cartCount } = useCart();
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -102,15 +105,27 @@ const Packs = () => {
             <Menu className="w-6 h-6" />
           </button>
           <div className="relative z-10 pointer-events-none">
-            {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
+            {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <span className="text-2xl font-black tracking-tighter">PACKY</span>}
           </div>
-          <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
-            <Inbox className="w-6 h-6" />
-            {hasUnread && (
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
-            )}
-          </Link>
+          <div className="flex items-center">
+            <Link to="/carrinho" className="relative p-2" aria-label="Carrinho">
+              <ShoppingCart className="w-6 h-6" />
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 min-w-[16px] h-4 px-1 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center">{cartCount}</span>
+              )}
+            </Link>
+            <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
+              <Inbox className="w-6 h-6" />
+              {hasUnread && (
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
+              )}
+            </Link>
+          </div>
         </header>
+
+        {/* Page title */}
+        <h1 className="text-3xl font-black tracking-tight mt-3 mb-1">Explorar</h1>
+
 
         {/* Active Events */}
         {activeEvents.length > 0 && (
@@ -231,30 +246,44 @@ const Packs = () => {
           )}
         </div>
 
-        {/* Content */}
-        {filter === 'free' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredFree.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum pack encontrado</p>
-            ) : (
-              filteredFree.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
-            )}
+        {/* View mode toggle (only for pack lists) */}
+        {filter !== 'acapellas' && (
+          <div className="flex items-center justify-end gap-1 mb-3">
+            <button
+              onClick={() => setViewMode('grid')}
+              aria-label="Visualização em grade"
+              className={`p-1.5 rounded-lg border transition ${viewMode === 'grid' ? 'bg-foreground text-background border-foreground' : 'bg-[hsl(0,0%,5%)] border-border/40 text-muted-foreground'}`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              aria-label="Visualização em lista"
+              className={`p-1.5 rounded-lg border transition ${viewMode === 'list' ? 'bg-foreground text-background border-foreground' : 'bg-[hsl(0,0%,5%)] border-border/40 text-muted-foreground'}`}
+            >
+              <List className="w-3.5 h-3.5" />
+            </button>
           </div>
         )}
 
-        {filter === 'premium' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredPremium.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum pack premium encontrado</p>
-            ) : (
-              filteredPremium.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
-            )}
-          </div>
-        )}
+        {/* Content */}
+        {(filter === 'free' || filter === 'premium' || filter === 'projetos') && (() => {
+          const list = filter === 'free' ? filteredFree : filter === 'premium' ? filteredPremium : filteredProjects;
+          if (isLoading) return <p className="text-center text-muted-foreground py-8">Carregando...</p>;
+          if (list.length === 0) return <p className="text-center text-muted-foreground py-8">Nenhum pack encontrado</p>;
+          if (viewMode === 'grid') {
+            return (
+              <div className="grid grid-cols-2 gap-3">
+                {list.map(pack => <PackCardV2 key={pack.id} pack={pack} variant="grid" />)}
+              </div>
+            );
+          }
+          return (
+            <div className="space-y-2">
+              {list.map(pack => <PackCardV2 key={pack.id} pack={pack} variant="list" />)}
+            </div>
+          );
+        })()}
 
         {filter === 'acapellas' && (
           <div className="space-y-4">
@@ -272,18 +301,6 @@ const Packs = () => {
                   duration={acapella.duration_seconds || undefined}
                 />
               ))
-            )}
-          </div>
-        )}
-
-        {filter === 'projetos' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredProjects.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum projeto encontrado</p>
-            ) : (
-              filteredProjects.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
             )}
           </div>
         )}
