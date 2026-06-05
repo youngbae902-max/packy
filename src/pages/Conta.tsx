@@ -527,6 +527,35 @@ const Conta = () => {
               </div>
             )}
 
+            {/* Formato da foto subscreen */}
+            {settingsSub === 'formato' && (
+              <div className="space-y-4">
+                <p className="text-[13px] text-muted-foreground px-1">Escolha como sua foto de perfil aparece no app.</p>
+                <div className="grid grid-cols-5 gap-2 p-4 rounded-2xl bg-card border border-border/40">
+                  {AVATAR_SHAPES.map(s => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={async () => {
+                        setAvatarShape(s.id);
+                        try {
+                          await updateProfile({ avatar_shape: s.id } as any);
+                          refreshProfile();
+                          toast.success('Formato atualizado');
+                        } catch { toast.error('Erro ao salvar'); }
+                      }}
+                      className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10 ring-1 ring-foreground/40' : 'hover:bg-foreground/5'}`}
+                      title={s.label}
+                    >
+                      <div className={`w-12 h-12 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
+                      <span className="text-[10px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+
             {/* Senha e Segurança subscreen */}
             {settingsSub === 'senha' && (
               <div className="space-y-4">
