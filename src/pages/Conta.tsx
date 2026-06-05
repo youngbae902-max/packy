@@ -673,36 +673,8 @@ const Conta = () => {
               <p className="text-xs text-muted-foreground mt-1 text-right">{bio.length}/160</p>
             </div>
 
-            {/* Formato da foto de perfil */}
-            <div className="border-t border-border/40 pt-4">
-              <p className="text-sm font-bold text-foreground mb-3">Formato da foto</p>
-              <div className="grid grid-cols-5 gap-2">
-                {AVATAR_SHAPES.map(s => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setAvatarShape(s.id)}
-                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
-                    title={s.label}
-                  >
-                    <div className={`w-10 h-10 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
-                    <span className="text-[9px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Avatar shape and pack name template moved to Configurações */}
 
-            {/* Template do nome dos packs */}
-            <div className="border-t border-border/40 pt-4">
-              <p className="text-sm font-bold text-foreground mb-1">Template de nome dos packs</p>
-              <p className="text-[11px] text-muted-foreground mb-3">
-                Será montado como <span className="font-mono">PREFIXO | NOME EMOJI</span> ao postar.
-              </p>
-              <div className="grid grid-cols-[1fr_72px] gap-2">
-                <Input value={packPrefix} onChange={e => setPackPrefix(e.target.value.slice(0, 24))} placeholder="DRUM KIT" className="bg-secondary border-border text-foreground" />
-                <Input value={packEmoji} onChange={e => setPackEmoji(e.target.value.slice(0, 4))} placeholder="🔥" className="bg-secondary border-border text-foreground text-center" />
-              </div>
-            </div>
 
             <Button 
               onClick={handleSaveProfile} 
