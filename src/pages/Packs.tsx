@@ -246,30 +246,44 @@ const Packs = () => {
           )}
         </div>
 
-        {/* Content */}
-        {filter === 'free' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredFree.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum pack encontrado</p>
-            ) : (
-              filteredFree.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
-            )}
+        {/* View mode toggle (only for pack lists) */}
+        {filter !== 'acapellas' && (
+          <div className="flex items-center justify-end gap-1 mb-3">
+            <button
+              onClick={() => setViewMode('grid')}
+              aria-label="Visualização em grade"
+              className={`p-1.5 rounded-lg border transition ${viewMode === 'grid' ? 'bg-foreground text-background border-foreground' : 'bg-[hsl(0,0%,5%)] border-border/40 text-muted-foreground'}`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              aria-label="Visualização em lista"
+              className={`p-1.5 rounded-lg border transition ${viewMode === 'list' ? 'bg-foreground text-background border-foreground' : 'bg-[hsl(0,0%,5%)] border-border/40 text-muted-foreground'}`}
+            >
+              <List className="w-3.5 h-3.5" />
+            </button>
           </div>
         )}
 
-        {filter === 'premium' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredPremium.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum pack premium encontrado</p>
-            ) : (
-              filteredPremium.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
-            )}
-          </div>
-        )}
+        {/* Content */}
+        {(filter === 'free' || filter === 'premium' || filter === 'projetos') && (() => {
+          const list = filter === 'free' ? filteredFree : filter === 'premium' ? filteredPremium : filteredProjects;
+          if (isLoading) return <p className="text-center text-muted-foreground py-8">Carregando...</p>;
+          if (list.length === 0) return <p className="text-center text-muted-foreground py-8">Nenhum pack encontrado</p>;
+          if (viewMode === 'grid') {
+            return (
+              <div className="grid grid-cols-2 gap-3">
+                {list.map(pack => <PackCardV2 key={pack.id} pack={pack} variant="grid" />)}
+              </div>
+            );
+          }
+          return (
+            <div className="space-y-2">
+              {list.map(pack => <PackCardV2 key={pack.id} pack={pack} variant="list" />)}
+            </div>
+          );
+        })()}
 
         {filter === 'acapellas' && (
           <div className="space-y-4">
@@ -287,18 +301,6 @@ const Packs = () => {
                   duration={acapella.duration_seconds || undefined}
                 />
               ))
-            )}
-          </div>
-        )}
-
-        {filter === 'projetos' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredProjects.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum projeto encontrado</p>
-            ) : (
-              filteredProjects.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
             )}
           </div>
         )}
