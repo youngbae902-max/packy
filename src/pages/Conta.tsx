@@ -379,6 +379,7 @@ const Conta = () => {
                   : settingsSub === 'senha' ? 'Senha e Segurança'
                   : settingsSub === 'selos' ? 'Meus Selos'
                   : settingsSub === 'mais' ? 'Mais opções'
+                  : settingsSub === 'formato' ? 'Formato da foto'
                   : 'Configurações'}
               </h1>
               <div className="w-11" />
@@ -418,6 +419,7 @@ const Conta = () => {
 
                 <SettingsGroup title="Personalização">
                   <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
+                  <SettingsRow icon={ImageIcon} label="Formato da foto" onClick={() => setSettingsSub('formato')} />
                   <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
                   <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
                 </SettingsGroup>
