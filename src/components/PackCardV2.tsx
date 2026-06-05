@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
-import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon } from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon, ShoppingCart, Check } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { EmojiText } from '@/components/EmojiText';
 import { PackImagePlaceholder } from './PackImagePlaceholder';
+import { useCart } from '@/hooks/useCart';
 
 const packTypeLabels: Record<string, string> = {
   samples: 'Samples',
@@ -26,9 +27,10 @@ const packTypeLabels: Record<string, string> = {
 interface PackCardV2Props {
   pack: Pack;
   showAdminBadge?: boolean;
+  variant?: 'grid' | 'list';
 }
 
-export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
+export function PackCardV2({ pack, showAdminBadge = false, variant = 'grid' }: PackCardV2Props) {
   const { user, isAdmin } = useAuth();
   const { hasLiked, hasFavorited, isDownloadUnlocked, toggleLike, toggleFavorite, unlockDownload } = usePackInteractions(pack.id);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -39,6 +41,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   const [editingComment, setEditingComment] = useState<{ id: string; content: string } | null>(null);
   const { hasReposted, toggleRepost } = useRepost(pack.id);
   const { comments, addComment, updateComment, deleteComment, pinComment } = usePackComments(pack.id);
+  const { cartPackIds, purchasedIds, addToCart, removeFromCart } = useCart();
 
   const isOwner = (pack.author_name || '').toLowerCase().replace(/^@/, '') === 'goat';
 
