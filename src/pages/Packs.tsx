@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Upload, Search, Crown, Mic, Folder, Inbox, Menu, Gift, X } from 'lucide-react';
+import { Upload, Search, Crown, Mic, Folder, Inbox, Menu, Gift, X, LayoutGrid, List, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -16,6 +16,7 @@ import { useInbox } from '@/hooks/useInbox';
 import { useAppLogo } from '@/hooks/useAppLogo';
 import { useProfileSearch } from '@/hooks/useSocial';
 import { useCustomPages } from '@/hooks/useCustomPages';
+import { useCart } from '@/hooks/useCart';
 
 type FilterType = 'free' | 'premium' | 'acapellas' | 'projetos';
 
