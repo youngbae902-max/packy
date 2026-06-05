@@ -217,35 +217,6 @@ export type Database = {
         }
         Relationships: []
       }
-      cart_items: {
-        Row: {
-          added_at: string
-          id: string
-          pack_id: string
-          user_id: string
-        }
-        Insert: {
-          added_at?: string
-          id?: string
-          pack_id: string
-          user_id: string
-        }
-        Update: {
-          added_at?: string
-          id?: string
-          pack_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cart_items_pack_id_fkey"
-            columns: ["pack_id"]
-            isOneToOne: false
-            referencedRelation: "packs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       custom_emojis: {
         Row: {
           created_at: string
@@ -434,38 +405,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "pack_likes_pack_id_fkey"
-            columns: ["pack_id"]
-            isOneToOne: false
-            referencedRelation: "packs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pack_purchases: {
-        Row: {
-          id: string
-          pack_id: string
-          price_paid: number
-          purchased_at: string
-          user_id: string
-        }
-        Insert: {
-          id?: string
-          pack_id: string
-          price_paid?: number
-          purchased_at?: string
-          user_id: string
-        }
-        Update: {
-          id?: string
-          pack_id?: string
-          price_paid?: number
-          purchased_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pack_purchases_pack_id_fkey"
             columns: ["pack_id"]
             isOneToOne: false
             referencedRelation: "packs"
@@ -1051,7 +990,6 @@ export type Database = {
         Args: { admin_password: string; user_email: string }
         Returns: boolean
       }
-      purchase_cart: { Args: never; Returns: Json }
       reset_password_with_keyword: {
         Args: { account_email: string; keyword: string; new_password: string }
         Returns: boolean

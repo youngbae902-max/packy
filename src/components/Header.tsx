@@ -1,7 +1,17 @@
+import { Zap } from 'lucide-react';
+
 export function Header() {
   return (
-    <header className="px-1 pt-4 pb-2">
-      <h1 className="text-3xl font-black tracking-tight text-foreground">Explorar</h1>
+    <header className="text-center py-8 px-4">
+      <div className="flex items-center justify-center gap-1 mb-4">
+        <span className="text-3xl md:text-4xl font-black tracking-tighter">
+          PACKY
+        </span>
+        <Zap className="w-6 h-6 text-warning fill-warning" />
+      </div>
+      <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+        Seu upload passará por revisão. Caso seja aceito, aparecerá aqui na galeria principal.
+      </p>
     </header>
   );
 }

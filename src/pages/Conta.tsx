@@ -49,7 +49,7 @@ const Conta = () => {
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
-  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato'>(null);
+  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
@@ -379,7 +379,6 @@ const Conta = () => {
                   : settingsSub === 'senha' ? 'Senha e Segurança'
                   : settingsSub === 'selos' ? 'Meus Selos'
                   : settingsSub === 'mais' ? 'Mais opções'
-                  : settingsSub === 'formato' ? 'Formato da foto'
                   : 'Configurações'}
               </h1>
               <div className="w-11" />
@@ -419,7 +418,6 @@ const Conta = () => {
 
                 <SettingsGroup title="Personalização">
                   <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
-                  <SettingsRow icon={ImageIcon} label="Formato da foto" onClick={() => setSettingsSub('formato')} />
                   <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
                   <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
                 </SettingsGroup>
@@ -526,35 +524,6 @@ const Conta = () => {
                 <p className="text-[11px] text-muted-foreground text-center pt-4">A exclusão é permanente e não pode ser desfeita.</p>
               </div>
             )}
-
-            {/* Formato da foto subscreen */}
-            {settingsSub === 'formato' && (
-              <div className="space-y-4">
-                <p className="text-[13px] text-muted-foreground px-1">Escolha como sua foto de perfil aparece no app.</p>
-                <div className="grid grid-cols-5 gap-2 p-4 rounded-2xl bg-card border border-border/40">
-                  {AVATAR_SHAPES.map(s => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={async () => {
-                        setAvatarShape(s.id);
-                        try {
-                          await updateProfile({ avatar_shape: s.id } as any);
-                          refreshProfile();
-                          toast.success('Formato atualizado');
-                        } catch { toast.error('Erro ao salvar'); }
-                      }}
-                      className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10 ring-1 ring-foreground/40' : 'hover:bg-foreground/5'}`}
-                      title={s.label}
-                    >
-                      <div className={`w-12 h-12 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
-                      <span className="text-[10px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
 
             {/* Senha e Segurança subscreen */}
             {settingsSub === 'senha' && (
@@ -702,8 +671,36 @@ const Conta = () => {
               <p className="text-xs text-muted-foreground mt-1 text-right">{bio.length}/160</p>
             </div>
 
-            {/* Avatar shape and pack name template moved to Configurações */}
+            {/* Formato da foto de perfil */}
+            <div className="border-t border-border/40 pt-4">
+              <p className="text-sm font-bold text-foreground mb-3">Formato da foto</p>
+              <div className="grid grid-cols-5 gap-2">
+                {AVATAR_SHAPES.map(s => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setAvatarShape(s.id)}
+                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+                    title={s.label}
+                  >
+                    <div className={`w-10 h-10 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
+                    <span className="text-[9px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
+            {/* Template do nome dos packs */}
+            <div className="border-t border-border/40 pt-4">
+              <p className="text-sm font-bold text-foreground mb-1">Template de nome dos packs</p>
+              <p className="text-[11px] text-muted-foreground mb-3">
+                Será montado como <span className="font-mono">PREFIXO | NOME EMOJI</span> ao postar.
+              </p>
+              <div className="grid grid-cols-[1fr_72px] gap-2">
+                <Input value={packPrefix} onChange={e => setPackPrefix(e.target.value.slice(0, 24))} placeholder="DRUM KIT" className="bg-secondary border-border text-foreground" />
+                <Input value={packEmoji} onChange={e => setPackEmoji(e.target.value.slice(0, 4))} placeholder="🔥" className="bg-secondary border-border text-foreground text-center" />
+              </div>
+            </div>
 
             <Button 
               onClick={handleSaveProfile} 
