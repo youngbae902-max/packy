@@ -35,6 +35,7 @@ const Packs = () => {
   const [filter, setFilter] = useState<FilterType>('free');
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
@@ -44,6 +45,7 @@ const Packs = () => {
   const { logoUrl } = useAppLogo();
   const { data: searchedProfiles = [] } = useProfileSearch(searchQuery);
   const { pages } = useCustomPages();
+  const { cartCount } = useCart();
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -103,15 +105,27 @@ const Packs = () => {
             <Menu className="w-6 h-6" />
           </button>
           <div className="relative z-10 pointer-events-none">
-            {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
+            {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <span className="text-2xl font-black tracking-tighter">PACKY</span>}
           </div>
-          <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
-            <Inbox className="w-6 h-6" />
-            {hasUnread && (
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
-            )}
-          </Link>
+          <div className="flex items-center">
+            <Link to="/carrinho" className="relative p-2" aria-label="Carrinho">
+              <ShoppingCart className="w-6 h-6" />
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 min-w-[16px] h-4 px-1 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center">{cartCount}</span>
+              )}
+            </Link>
+            <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
+              <Inbox className="w-6 h-6" />
+              {hasUnread && (
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
+              )}
+            </Link>
+          </div>
         </header>
+
+        {/* Page title */}
+        <h1 className="text-3xl font-black tracking-tight mt-3 mb-1">Explorar</h1>
+
 
         {/* Active Events */}
         {activeEvents.length > 0 && (
