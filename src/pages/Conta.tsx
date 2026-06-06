@@ -93,8 +93,7 @@ const Conta = () => {
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
       setAvatarShape((profile as any).avatar_shape || 'circle');
-      setPackPrefix((profile as any).pack_name_prefix || '');
-      setPackEmoji((profile as any).pack_name_emoji || '');
+      setOnlineShape((profile as any).online_indicator_shape || 'pill');
     }
   }, [profile]);
 
@@ -165,8 +164,7 @@ const Conta = () => {
         admin_badge_border_color: adminBadgeBorderColor || '#085A18',
         admin_badge_text_color: adminBadgeTextColor || '#05BD2A',
         avatar_shape: avatarShape,
-        pack_name_prefix: packPrefix.trim() || null,
-        pack_name_emoji: packEmoji.trim() || null,
+        online_indicator_shape: onlineShape,
       } as any);
       
       if (username.trim() && username !== profile?.username) {
@@ -689,15 +687,43 @@ const Conta = () => {
               </div>
             </div>
 
-            {/* Template do nome dos packs */}
+            {/* Online indicator shape — also lives in Editar Perfil for now */}
             <div className="border-t border-border/40 pt-4">
-              <p className="text-sm font-bold text-foreground mb-1">Template de nome dos packs</p>
-              <p className="text-[11px] text-muted-foreground mb-3">
-                Será montado como <span className="font-mono">PREFIXO | NOME EMOJI</span> ao postar.
-              </p>
-              <div className="grid grid-cols-[1fr_72px] gap-2">
-                <Input value={packPrefix} onChange={e => setPackPrefix(e.target.value.slice(0, 24))} placeholder="DRUM KIT" className="bg-secondary border-border text-foreground" />
-                <Input value={packEmoji} onChange={e => setPackEmoji(e.target.value.slice(0, 4))} placeholder="🔥" className="bg-secondary border-border text-foreground text-center" />
+              <p className="text-sm font-bold text-foreground mb-3">Indicador online</p>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { id: 'pill', label: 'Pill' },
+                  { id: 'dot', label: 'Bolinha' },
+                  { id: 'star', label: 'Estrela' },
+                  { id: 'square', label: 'Quadrado' },
+                  { id: 'rounded-square', label: 'Quad. arred.' },
+                  { id: 'rectangle', label: 'Retângulo' },
+                  { id: 'rounded-rectangle', label: 'Ret. arred.' },
+                ].map(s => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setOnlineShape(s.id)}
+                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${onlineShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+                    title={s.label}
+                  >
+                    {s.id === 'star' ? (
+                      <span className="text-success text-lg leading-none">★</span>
+                    ) : (
+                      <span
+                        className={`bg-success ${
+                          s.id === 'dot' ? 'w-2 h-2 rounded-full' :
+                          s.id === 'pill' ? 'w-4 h-2 rounded-full' :
+                          s.id === 'square' ? 'w-2 h-2' :
+                          s.id === 'rounded-square' ? 'w-2 h-2 rounded-[2px]' :
+                          s.id === 'rectangle' ? 'w-4 h-2' :
+                          'w-4 h-2 rounded-[3px]'
+                        }`}
+                      />
+                    )}
+                    <span className="text-[9px] text-muted-foreground text-center leading-tight">{s.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
