@@ -509,11 +509,14 @@ export type Database = {
           is_pinned: boolean | null
           is_premium: boolean | null
           likes_count: number | null
+          manual_order: number | null
           pack_type: Database["public"]["Enums"]["pack_type"] | null
           price: number | null
           requires_shortener: boolean
           status: Database["public"]["Enums"]["pack_status"] | null
           title: string
+          trending_score: number
+          trending_score_updated_at: string | null
           updated_at: string | null
           user_id: string | null
         }
@@ -531,11 +534,14 @@ export type Database = {
           is_pinned?: boolean | null
           is_premium?: boolean | null
           likes_count?: number | null
+          manual_order?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null
           price?: number | null
           requires_shortener?: boolean
           status?: Database["public"]["Enums"]["pack_status"] | null
           title: string
+          trending_score?: number
+          trending_score_updated_at?: string | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -553,11 +559,14 @@ export type Database = {
           is_pinned?: boolean | null
           is_premium?: boolean | null
           likes_count?: number | null
+          manual_order?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null
           price?: number | null
           requires_shortener?: boolean
           status?: Database["public"]["Enums"]["pack_status"] | null
           title?: string
+          trending_score?: number
+          trending_score_updated_at?: string | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -610,8 +619,7 @@ export type Database = {
           last_seen: string | null
           last_username_change_date: string | null
           online_accent_color: string | null
-          pack_name_emoji: string | null
-          pack_name_prefix: string | null
+          online_indicator_shape: string
           profile_decoration_position: Json | null
           profile_decoration_url: string | null
           recovery_keyword: string | null
@@ -656,8 +664,7 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
-          pack_name_emoji?: string | null
-          pack_name_prefix?: string | null
+          online_indicator_shape?: string
           profile_decoration_position?: Json | null
           profile_decoration_url?: string | null
           recovery_keyword?: string | null
@@ -702,8 +709,7 @@ export type Database = {
           last_seen?: string | null
           last_username_change_date?: string | null
           online_accent_color?: string | null
-          pack_name_emoji?: string | null
-          pack_name_prefix?: string | null
+          online_indicator_shape?: string
           profile_decoration_position?: Json | null
           profile_decoration_url?: string | null
           recovery_keyword?: string | null
@@ -868,6 +874,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_beats: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          external_url: string | null
+          id: string
+          name: string
+          size_bytes: number | null
+          storage_path: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          external_url?: string | null
+          id?: string
+          name: string
+          size_bytes?: number | null
+          storage_path?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          external_url?: string | null
+          id?: string
+          name?: string
+          size_bytes?: number | null
+          storage_path?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_follows: {
         Row: {
           created_at: string
@@ -1028,6 +1070,10 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: string
       }
+      admin_set_pack_order: {
+        Args: { new_order: number; pack_id_in: string }
+        Returns: boolean
+      }
       admin_set_user_password: {
         Args: { new_password: string; target_user_id: string }
         Returns: boolean
@@ -1052,6 +1098,7 @@ export type Database = {
         Returns: boolean
       }
       purchase_cart: { Args: never; Returns: Json }
+      recompute_trending_scores: { Args: never; Returns: number }
       reset_password_with_keyword: {
         Args: { account_email: string; keyword: string; new_password: string }
         Returns: boolean
