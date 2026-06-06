@@ -66,8 +66,7 @@ const Conta = () => {
   const [adminBadgeBorderColor, setAdminBadgeBorderColor] = useState('#085A18');
   const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
   const [avatarShape, setAvatarShape] = useState<string>('circle');
-  const [packPrefix, setPackPrefix] = useState('');
-  const [packEmoji, setPackEmoji] = useState('');
+  const [onlineShape, setOnlineShape] = useState<string>('pill');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const settingsFileInputRef = useRef<HTMLInputElement>(null);
