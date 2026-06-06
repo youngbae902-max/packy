@@ -77,18 +77,9 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
       return;
     }
 
-    // Apply user's pack-name template: "PREFIXO | NOME EMOJI"
-    const prefix = (profile as any)?.pack_name_prefix?.trim();
-    const emoji = (profile as any)?.pack_name_emoji?.trim();
-    const baseName = title.trim();
-    const composed = [
-      prefix ? `${prefix} | ${baseName}` : baseName,
-      emoji || '',
-    ].filter(Boolean).join(' ');
-
     try {
       await onAdd({
-        title: composed,
+        title: title.trim(),
         author_name: isAnonymous ? null : (authorName.trim() || profile?.artist_name || 'Anônimo'),
         pack_type: packType,
         download_url: downloadUrl.trim(),
@@ -176,16 +167,6 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
               className="input-field"
               required
             />
-            {((profile as any)?.pack_name_prefix || (profile as any)?.pack_name_emoji) && (
-              <p className="text-[11px] text-muted-foreground mt-1.5">
-                Será publicado como:{' '}
-                <span className="font-mono text-foreground/80">
-                  {(profile as any)?.pack_name_prefix ? `${(profile as any).pack_name_prefix} | ` : ''}
-                  {title || 'NOME'}
-                  {(profile as any)?.pack_name_emoji ? ` ${(profile as any).pack_name_emoji}` : ''}
-                </span>
-              </p>
-            )}
           </div>
 
           {!isProject && (
