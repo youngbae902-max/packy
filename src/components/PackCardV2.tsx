@@ -120,15 +120,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             <PackImagePlaceholder />
           )}
 
-          {/* Favorite button */}
-          <button
-            onClick={handleFavoriteClick}
-            className="absolute top-3 right-3 z-10 flex items-center justify-center transition-all"
-          >
-            <Bookmark className={`w-5 h-5 drop-shadow-lg ${
-              hasFavorited ? 'text-foreground fill-current' : 'text-foreground/90'
-            }`} />
-          </button>
+          {/* Favorite agora vive apenas dentro do menu de 3 pontos */}
           
           {pack.is_pinned && (
             <div className="absolute top-3 left-3 z-10">
