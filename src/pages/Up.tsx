@@ -20,7 +20,7 @@ function formatSize(bytes?: number | null) {
 }
 
 export default function Up() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { beats, loading, update, remove, getDownloadUrl } = useUserBeats();
   const [showAdd, setShowAdd] = useState(false);
   const [editing, setEditing] = useState<UserBeat | null>(null);
