@@ -27,8 +27,7 @@ export function BottomNav() {
               }`
             }
           >
-            <Icon className="w-5 h-5" />
-            <span className="text-[10px] font-medium">{label}</span>
+            <Icon className="w-6 h-6" title={label} />
           </NavLink>
         ))}
       </div>
