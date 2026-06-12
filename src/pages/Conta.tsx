@@ -49,7 +49,7 @@ const Conta = () => {
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
-  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais'>(null);
+  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato-foto' | 'indicador-online'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
@@ -376,6 +376,8 @@ const Conta = () => {
                   : settingsSub === 'senha' ? 'Senha e Segurança'
                   : settingsSub === 'selos' ? 'Meus Selos'
                   : settingsSub === 'mais' ? 'Mais opções'
+                  : settingsSub === 'formato-foto' ? 'Formato da Foto'
+                  : settingsSub === 'indicador-online' ? 'Indicador Online'
                   : 'Configurações'}
               </h1>
               <div className="w-11" />
@@ -417,6 +419,8 @@ const Conta = () => {
                   <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
                   <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
                   <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
+                  <SettingsRow icon={ImageIcon} label="Formato da Foto" onClick={() => setSettingsSub('formato-foto')} />
+                  <SettingsRow icon={Smile} label="Indicador Online" onClick={() => setSettingsSub('indicador-online')} />
                 </SettingsGroup>
 
                 <SettingsGroup title="Conta">
@@ -491,6 +495,69 @@ const Conta = () => {
                 <ColorPickerCard label="Selo ADM — Texto" value={adminBadgeTextColor} onChange={setAdminBadgeTextColor} />
 
                 <ColorPickerCard label="Indicador online" value={themeColor} onChange={setThemeColor} />
+              </div>
+            )}
+
+            {settingsSub === 'formato-foto' && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/40 bg-card p-4">
+                  <div className="grid grid-cols-5 gap-2">
+                    {AVATAR_SHAPES.map(s => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => { setAvatarShape(s.id); updateProfile({ avatar_shape: s.id } as any); toast.success('Formato da foto atualizado'); refreshProfile(); }}
+                        className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+                        title={s.label}
+                      >
+                        <div className={`w-10 h-10 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
+                        <span className="text-[9px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {settingsSub === 'indicador-online' && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/40 bg-card p-4">
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { id: 'pill', label: 'Pill' },
+                      { id: 'dot', label: 'Bolinha' },
+                      { id: 'star', label: 'Estrela' },
+                      { id: 'square', label: 'Quadrado' },
+                      { id: 'rounded-square', label: 'Quad. arred.' },
+                      { id: 'rectangle', label: 'Retângulo' },
+                      { id: 'rounded-rectangle', label: 'Ret. arred.' },
+                    ].map(s => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => { setOnlineShape(s.id); updateProfile({ online_indicator_shape: s.id } as any); toast.success('Indicador online atualizado'); refreshProfile(); }}
+                        className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${onlineShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+                        title={s.label}
+                      >
+                        {s.id === 'star' ? (
+                          <span className="text-success text-lg leading-none">★</span>
+                        ) : (
+                          <span
+                            className={`bg-success ${
+                              s.id === 'dot' ? 'w-2 h-2 rounded-full' :
+                              s.id === 'pill' ? 'w-4 h-2 rounded-full' :
+                              s.id === 'square' ? 'w-2 h-2' :
+                              s.id === 'rounded-square' ? 'w-2 h-2 rounded-[2px]' :
+                              s.id === 'rectangle' ? 'w-4 h-2' :
+                              'w-4 h-2 rounded-[3px]'
+                            }`}
+                          />
+                        )}
+                        <span className="text-[9px] text-muted-foreground text-center leading-tight">{s.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -668,64 +735,7 @@ const Conta = () => {
               <p className="text-xs text-muted-foreground mt-1 text-right">{bio.length}/160</p>
             </div>
 
-            {/* Formato da foto de perfil */}
-            <div className="border-t border-border/40 pt-4">
-              <p className="text-sm font-bold text-foreground mb-3">Formato da foto</p>
-              <div className="grid grid-cols-5 gap-2">
-                {AVATAR_SHAPES.map(s => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setAvatarShape(s.id)}
-                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
-                    title={s.label}
-                  >
-                    <div className={`w-10 h-10 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
-                    <span className="text-[9px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
 
-            {/* Online indicator shape — also lives in Editar Perfil for now */}
-            <div className="border-t border-border/40 pt-4">
-              <p className="text-sm font-bold text-foreground mb-3">Indicador online</p>
-              <div className="grid grid-cols-4 gap-2">
-                {[
-                  { id: 'pill', label: 'Pill' },
-                  { id: 'dot', label: 'Bolinha' },
-                  { id: 'star', label: 'Estrela' },
-                  { id: 'square', label: 'Quadrado' },
-                  { id: 'rounded-square', label: 'Quad. arred.' },
-                  { id: 'rectangle', label: 'Retângulo' },
-                  { id: 'rounded-rectangle', label: 'Ret. arred.' },
-                ].map(s => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setOnlineShape(s.id)}
-                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${onlineShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
-                    title={s.label}
-                  >
-                    {s.id === 'star' ? (
-                      <span className="text-success text-lg leading-none">★</span>
-                    ) : (
-                      <span
-                        className={`bg-success ${
-                          s.id === 'dot' ? 'w-2 h-2 rounded-full' :
-                          s.id === 'pill' ? 'w-4 h-2 rounded-full' :
-                          s.id === 'square' ? 'w-2 h-2' :
-                          s.id === 'rounded-square' ? 'w-2 h-2 rounded-[2px]' :
-                          s.id === 'rectangle' ? 'w-4 h-2' :
-                          'w-4 h-2 rounded-[3px]'
-                        }`}
-                      />
-                    )}
-                    <span className="text-[9px] text-muted-foreground text-center leading-tight">{s.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
 
             <Button 
               onClick={handleSaveProfile} 
