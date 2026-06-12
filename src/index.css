@@ -93,13 +93,13 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Figtree', 'Outfit', -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     letter-spacing: -0.015em;
     font-weight: 500;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
     letter-spacing: -0.025em;
     font-weight: 700;
   }
