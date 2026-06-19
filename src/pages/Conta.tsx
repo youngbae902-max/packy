@@ -62,6 +62,7 @@ const Conta = () => {
   const [themeColor, setThemeColor] = useState('#16A249');
   const [verifiedBadgeBgColor, setVerifiedBadgeBgColor] = useState('#0F2B1A');
   const [verifiedBadgeTextColor, setVerifiedBadgeTextColor] = useState('#16A249');
+  const [verifiedBadgeText, setVerifiedBadgeText] = useState('Verificado');
   const [adminBadgeBgColor, setAdminBadgeBgColor] = useState('#082D0F');
   const [adminBadgeBorderColor, setAdminBadgeBorderColor] = useState('#085A18');
   const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
@@ -89,6 +90,7 @@ const Conta = () => {
       setRecoveryKeyword(profile.recovery_keyword || '');
       setVerifiedBadgeBgColor(profile.verified_badge_bg_color || profile.verified_badge_color || '#0F2B1A');
       setVerifiedBadgeTextColor(profile.verified_badge_text_color || '#16A249');
+      setVerifiedBadgeText((profile as any).verified_badge_text || 'Verificado');
       setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
@@ -159,6 +161,7 @@ const Conta = () => {
         verified_badge_color: verifiedBadgeBgColor || '#0F2B1A',
         verified_badge_bg_color: verifiedBadgeBgColor || '#0F2B1A',
         verified_badge_text_color: verifiedBadgeTextColor || '#16A249',
+        verified_badge_text: verifiedBadgeText || 'Verificado',
         admin_badge_color: adminBadgeBgColor || '#082D0F',
         admin_badge_bg_color: adminBadgeBgColor || '#082D0F',
         admin_badge_border_color: adminBadgeBorderColor || '#085A18',
@@ -287,7 +290,6 @@ const Conta = () => {
             {/* Name & Username */}
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
-              {profile?.has_spotify_badge && (
                 <div
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
                   style={(profile as any)?.verified_rgb ? undefined : { color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}
@@ -295,7 +297,7 @@ const Conta = () => {
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                   </svg>
-                  <span className="text-xs font-medium">Verificado</span>
+                  <span className="text-xs font-medium">{verifiedBadgeText || 'Verificado'}</span>
                 </div>
               )}
               <button 
@@ -382,6 +384,42 @@ const Conta = () => {
               </h1>
               <div className="w-11" />
             </div>
+
+            {/* Dynamic Preview for Visual Settings */}
+            {['cores', 'formato-foto', 'indicador-online', 'tema'].includes(settingsSub || '') && (
+              <div className="mb-6 pointer-events-none opacity-90 scale-95 origin-top">
+                <div className="flex flex-col items-center text-center">
+                  <div className="relative mb-4 w-24 h-24">
+                     <div className={`w-24 h-24 bg-secondary border-2 border-border overflow-hidden block ${avatarShapeClasses(avatarShape)}`}>
+                        {profile?.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><User className="w-10 h-10 text-muted-foreground" /></div>}
+                     </div>
+                     <span
+                      className={`absolute -bottom-0.5 right-0 border-2 border-background ${
+                        onlineShape === 'dot' ? 'w-3 h-3 rounded-full' :
+                        onlineShape === 'pill' ? 'w-5 h-2.5 rounded-full' :
+                        onlineShape === 'square' ? 'w-3 h-3' :
+                        onlineShape === 'rounded-square' ? 'w-3 h-3 rounded-[3px]' :
+                        onlineShape === 'rectangle' ? 'w-5 h-2.5' :
+                        'w-5 h-2.5 rounded-[4px]'
+                      }`}
+                      style={{ backgroundColor: themeColor }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h2 className="text-xl font-bold text-foreground">{artistName || 'Sem nome'}</h2>
+                    {profile?.has_spotify_badge && (
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}>
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                        </svg>
+                        <span className="text-xs font-medium">{verifiedBadgeText || 'Verificado'}</span>
+                      </div>
+                    )}
+                  </div>
+                  {username && <p className="text-sm text-muted-foreground mb-3">@{username}</p>}
+                </div>
+              </div>
+            )}
 
             {/* Settings home */}
             {!settingsSub && (
@@ -478,6 +516,12 @@ const Conta = () => {
                 <ColorPickerCard label="Selo Verificado — Texto" value={verifiedBadgeTextColor} onChange={setVerifiedBadgeTextColor} />
 
                 <div className="rounded-2xl border border-border/40 bg-card p-4">
+                  <p className="text-[13px] font-bold mb-1">Texto Customizado do Selo Verificado</p>
+                  <p className="text-[11px] text-muted-foreground mb-3">Troque "Verificado" por um emoji (ex: 👑) ou outra palavra.</p>
+                  <Input value={verifiedBadgeText} onChange={e => setVerifiedBadgeText(e.target.value)} placeholder="Verificado" className="bg-secondary text-foreground" />
+                </div>
+
+                <div className="rounded-2xl border border-border/40 bg-card p-4">
                   <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="text-[13px] font-bold">Verificado em RGB</p>
@@ -568,7 +612,7 @@ const Conta = () => {
                   <Button variant="outline" className="rounded-2xl" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}>
                     <RotateCcw className="w-4 h-4 mr-2" />Padrão
                   </Button>
-                  <Button className="rounded-2xl" onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>
+                  <Button className="rounded-2xl" onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, verified_badge_text: verifiedBadgeText, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>
                     Salvar cores
                   </Button>
                 </div>
