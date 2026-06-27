@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Upload, Search, Crown, Mic, Folder, Inbox, Menu, Gift, X } from 'lucide-react';
+import { Upload, Search, Menu, Inbox, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -8,6 +8,7 @@ import { AudioPlayer } from '@/components/AudioPlayer';
 import { AddPackModalV2 } from '@/components/AddPackModalV2';
 import { AuthModal } from '@/components/AuthModal';
 import { EventCard } from '@/components/EventCard';
+import { HorizontalCarousel } from '@/components/HorizontalCarousel';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useAcapellas } from '@/hooks/useAcapellas';
 import { useSiteEvents } from '@/hooks/useSiteEvents';
@@ -16,22 +17,13 @@ import { useInbox } from '@/hooks/useInbox';
 import { useAppLogo } from '@/hooks/useAppLogo';
 import { useProfileSearch } from '@/hooks/useSocial';
 import { useCustomPages } from '@/hooks/useCustomPages';
-
-type FilterType = 'free' | 'premium' | 'acapellas' | 'projetos';
-
-const FILTERS: { id: FilterType; label: string; icon: typeof Gift; keywords: string[] }[] = [
-  { id: 'free', label: 'Grátis', icon: Gift, keywords: ['gratis', 'grátis', 'free'] },
-  { id: 'premium', label: 'Premium', icon: Crown, keywords: ['premium', 'pago', 'pro'] },
-  { id: 'acapellas', label: 'Acapellas', icon: Mic, keywords: ['acapella', 'acapellas', 'voz', 'vocal'] },
-  { id: 'projetos', label: 'Projetos', icon: Folder, keywords: ['projeto', 'projetos', 'flp', 'project'] },
-];
+import { useCategories } from '@/hooks/useCategories';
 
 const Packs = () => {
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [filter, setFilter] = useState<FilterType>('free');
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -43,16 +35,11 @@ const Packs = () => {
   const { logoUrl } = useAppLogo();
   const { data: searchedProfiles = [] } = useProfileSearch(searchQuery);
   const { pages } = useCustomPages();
+  const { categories } = useCategories();
 
   const q = searchQuery.toLowerCase().trim();
 
-  // Suggested filter from query (matches a keyword)
-  const suggestedFilter = useMemo(() => {
-    if (!q) return null;
-    return FILTERS.find(f => f.keywords.some(k => k.includes(q) || q.includes(k))) ?? null;
-  }, [q]);
-
-  // Open popup whenever the user types and there's something to suggest
+  // Open popup whenever the user types
   useEffect(() => {
     setPopupOpen(q.length > 0);
   }, [q]);
@@ -69,11 +56,6 @@ const Packs = () => {
     return () => document.removeEventListener('mousedown', onClick);
   }, [popupOpen]);
 
-  const filteredFree = approvedPacks.filter(p => p.title.toLowerCase().includes(q) || p.author_name?.toLowerCase().includes(q));
-  const filteredPremium = premiumPacks.filter(p => p.title.toLowerCase().includes(q) || p.author_name?.toLowerCase().includes(q));
-  const filteredProjects = projectPacks.filter(p => p.title.toLowerCase().includes(q) || p.author_name?.toLowerCase().includes(q));
-  const filteredAcapellas = acapellas.filter(a => a.artist_name.toLowerCase().includes(q));
-
   const handleNewPack = () => {
     if (!user) {
       setShowAuthModal(true);
@@ -82,56 +64,117 @@ const Packs = () => {
     setIsModalOpen(true);
   };
 
-  const showAddButton = filter === 'free' || filter === 'premium' || filter === 'projetos';
+  const searchedPacks = useMemo(() => {
+    if (!q) return [];
+    return [...approvedPacks, ...premiumPacks, ...projectPacks].filter(p => 
+      p.title.toLowerCase().includes(q) || p.author_name?.toLowerCase().includes(q)
+    );
+  }, [q, approvedPacks, premiumPacks, projectPacks]);
 
-  const pickFilter = (id: FilterType) => {
-    setFilter(id);
-    setPopupOpen(false);
-  };
+  // Use categories from DB if available, otherwise fallback to standard sections
+  const hasCategories = categories && categories.length > 0;
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="max-w-lg mx-auto px-4 pt-6">
-        {/* Header: only icons */}
-        <header className="flex items-center justify-between py-2">
-          <button
-            onClick={() => setShowMenu(true)}
-            className="p-2 -ml-2 rounded-full text-foreground hover:bg-foreground/10 transition-colors"
-            aria-label="Abrir menu"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="relative z-10 pointer-events-none">
-            {logoUrl ? <img src={logoUrl} alt="Logo do app" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
-          </div>
-          <Link to="/inbox" className="relative p-2 -mr-2" aria-label="Caixa de entrada">
+    <div className="min-h-screen bg-background pb-20 md:pb-8">
+      {/* Search Header for Desktop */}
+      <header className="hidden md:flex sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/40 px-8 py-4 items-center justify-between gap-6">
+        <div className="flex-1 max-w-2xl relative" ref={popupRef}>
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            onFocus={() => q.length > 0 && setPopupOpen(true)}
+            className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-all"
+            placeholder="O que você quer ouvir ou baixar?"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => { setSearchQuery(''); setPopupOpen(false); }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-foreground/10 text-muted-foreground"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+
+          {/* Desktop Search Dropdown */}
+          {popupOpen && (
+            <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-border/60 bg-[hsl(0,0%,3%)]/95 backdrop-blur-xl shadow-2xl p-3 animate-fade-in max-h-96 overflow-y-auto">
+              {searchedProfiles.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Usuários</p>
+                  <div className="space-y-1">
+                    {searchedProfiles.map(profile => (
+                      <Link
+                        key={profile.user_id}
+                        to={`/perfil/${profile.user_id}`}
+                        className="flex items-center gap-3 rounded-xl hover:bg-[hsl(0,0%,10%)] px-3 py-2 transition"
+                      >
+                        {profile.avatar_url ? (
+                          <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-muted" />
+                        )}
+                        <span className="font-semibold text-sm">@{profile.username || profile.artist_name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {searchedPacks.length > 0 ? (
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Packs & Projetos</p>
+                  <div className="space-y-2">
+                    {searchedPacks.slice(0, 5).map(pack => (
+                      <div key={pack.id} className="transform scale-95 origin-left">
+                        <PackCardV2 pack={pack} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : q.length > 0 && searchedProfiles.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">Nenhum resultado encontrado.</p>
+              ) : null}
+            </div>
+          )}
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <Link to="/inbox" className="relative p-2 rounded-full hover:bg-secondary transition-colors" aria-label="Caixa de entrada">
             <Inbox className="w-6 h-6" />
             {hasUnread && (
               <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
             )}
           </Link>
+          <button
+            onClick={handleNewPack}
+            className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full font-bold text-sm hover:opacity-90 transition-opacity"
+          >
+            <Upload className="w-4 h-4" />
+            Publicar
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Header */}
+      <div className="md:hidden max-w-lg mx-auto px-4 pt-6">
+        <header className="flex items-center justify-between py-2">
+          <button
+            onClick={() => setShowMenu(true)}
+            className="p-2 -ml-2 rounded-full text-foreground hover:bg-foreground/10 transition-colors"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+          <div className="relative z-10 pointer-events-none">
+            {logoUrl ? <img src={logoUrl} alt="Logo" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
+          </div>
+          <Link to="/inbox" className="relative p-2 -mr-2">
+            <Inbox className="w-6 h-6" />
+            {hasUnread && <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />}
+          </Link>
         </header>
 
-        {/* Active Events */}
-        {activeEvents.length > 0 && (
-          <div className="space-y-2 my-4">
-            {activeEvents.map(event => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        )}
-
-        {pages.filter(page => page.is_active && page.placement === 'home').length > 0 && (
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide my-4">
-            {pages.filter(page => page.is_active && page.placement === 'home').map(page => (
-              <Link key={page.id} to={`/pagina/${page.slug}`} className="shrink-0 rounded-full border border-border/50 bg-[hsl(0,0%,5%)] px-4 py-2 text-sm font-bold text-foreground">
-                {page.title}
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Search + discreet add button + floating filter popup */}
+        {/* Mobile Search */}
         <div className="flex items-center gap-2 mt-4 mb-5 relative" ref={popupRef}>
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -139,154 +182,97 @@ const Packs = () => {
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              onFocus={() => q.length > 0 && setPopupOpen(true)}
-              className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-11 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all"
+              className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-11 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
               placeholder="Buscar..."
             />
-            {searchQuery && (
-              <button
-                onClick={() => { setSearchQuery(''); setPopupOpen(false); }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-foreground/10 text-muted-foreground"
-                aria-label="Limpar"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
           </div>
-          {showAddButton && (
-            <button
-              onClick={handleNewPack}
-              aria-label="Enviar pack"
-              className="shrink-0 w-10 h-10 rounded-full bg-[hsl(0,0%,6%)] border border-border/60 flex items-center justify-center text-foreground/80 hover:bg-[hsl(0,0%,9%)] hover:text-foreground transition-colors"
-            >
-              <Upload className="w-4 h-4" />
-            </button>
-          )}
-
-          {/* Floating filter popup */}
-          {popupOpen && (
-            <div
-               className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-border/60 bg-[hsl(0,0%,3%)]/95 backdrop-blur-xl shadow-2xl shadow-black/60 p-3 animate-fade-in"
-            >
-              {suggestedFilter && (
-                <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 mb-1.5">Sugestão</p>
-                  <button
-                    onClick={() => pickFilter(suggestedFilter.id)}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                      filter === suggestedFilter.id
-                        ? 'bg-foreground text-background'
-                        : 'bg-[hsl(0,0%,7%)] text-foreground hover:bg-[hsl(0,0%,10%)]'
-                    }`}
-                  >
-                    <suggestedFilter.icon className="w-4 h-4" />
-                    Mostrar {suggestedFilter.label}
-                  </button>
-                </div>
-              )}
-
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 mb-1.5">Filtrar por</p>
-              {searchedProfiles.length > 0 && (
-                <div className="mb-3">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 mb-1.5">Usuários</p>
-                  <div className="space-y-1.5">
-                    {searchedProfiles.map(profile => (
-                      <Link
-                        key={profile.user_id}
-                        to={`/perfil/${profile.user_id}`}
-                        className="flex items-center gap-2 rounded-xl bg-[hsl(0,0%,7%)] px-3 py-2 text-sm font-semibold hover:bg-[hsl(0,0%,10%)] transition"
-                      >
-                        {profile.avatar_url ? (
-                          <img src={profile.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover" />
-                        ) : (
-                          <div className="w-7 h-7 rounded-full bg-muted" />
-                        )}
-                        <span className="truncate">@{profile.username || profile.artist_name || 'usuário'}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className="grid grid-cols-2 gap-1.5">
-                {FILTERS.map(f => {
-                  const Icon = f.icon;
-                  const active = filter === f.id;
-                  return (
-                    <button
-                      key={f.id}
-                      onClick={() => pickFilter(f.id)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold border transition-colors ${
-                        active
-                          ? 'bg-foreground text-background border-foreground'
-                          : 'bg-[hsl(0,0%,5%)] text-muted-foreground border-border/40 hover:text-foreground hover:bg-[hsl(0,0%,8%)]'
-                      }`}
-                    >
-                      <Icon className="w-3.5 h-3.5" />
-                      {f.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          <button
+            onClick={handleNewPack}
+            className="shrink-0 w-10 h-10 rounded-full bg-[hsl(0,0%,6%)] border border-border/60 flex items-center justify-center text-foreground hover:bg-[hsl(0,0%,9%)] transition-colors"
+          >
+            <Upload className="w-4 h-4" />
+          </button>
         </div>
+      </div>
 
-        {/* Content */}
-        {filter === 'free' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredFree.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum pack encontrado</p>
-            ) : (
-              filteredFree.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
-            )}
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
+        
+        {/* Banners / Eventos */}
+        {activeEvents.length > 0 && (
+          <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {activeEvents.map(event => (
+              <EventCard key={event.id} event={event} />
+            ))}
           </div>
         )}
 
-        {filter === 'premium' && (
+        {/* Main Feed Content */}
+        {isLoading ? (
+          <div className="flex justify-center py-20"><p className="text-muted-foreground animate-pulse font-semibold">Carregando conteúdo...</p></div>
+        ) : (
           <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredPremium.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum pack premium encontrado</p>
-            ) : (
-              filteredPremium.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
-            )}
-          </div>
-        )}
+            
+            <HorizontalCarousel title="Lançamentos">
+              {approvedPacks.slice(0, 10).map(pack => (
+                <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                  <PackCardV2 pack={pack} />
+                </div>
+              ))}
+            </HorizontalCarousel>
 
-        {filter === 'acapellas' && (
-          <div className="space-y-4">
-            {acapellasLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredAcapellas.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhuma acapella encontrada</p>
-            ) : (
-              filteredAcapellas.map(acapella => (
-                <AudioPlayer
-                  key={acapella.id}
-                  artistName={acapella.artist_name}
-                  audioUrl={acapella.audio_url}
-                  downloadUrl={acapella.download_url}
-                  duration={acapella.duration_seconds || undefined}
-                />
+            {hasCategories ? (
+              categories.map(category => (
+                <HorizontalCarousel key={category.id} title={category.name}>
+                  {/* For now we just show random packs until we bind pack_categories in the hook */}
+                  {premiumPacks.slice(0, 8).map(pack => (
+                    <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                      <PackCardV2 pack={pack} />
+                    </div>
+                  ))}
+                </HorizontalCarousel>
               ))
+            ) : (
+              /* Fallback sections if no categories are setup yet */
+              <>
+                {premiumPacks.length > 0 && (
+                  <HorizontalCarousel title="Premium & Exclusivos">
+                    {premiumPacks.map(pack => (
+                      <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                        <PackCardV2 pack={pack} />
+                      </div>
+                    ))}
+                  </HorizontalCarousel>
+                )}
+
+                {projectPacks.length > 0 && (
+                  <HorizontalCarousel title="Projetos e FLPs">
+                    {projectPacks.map(pack => (
+                      <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                        <PackCardV2 pack={pack} />
+                      </div>
+                    ))}
+                  </HorizontalCarousel>
+                )}
+
+                {acapellas.length > 0 && (
+                  <HorizontalCarousel title="Acapellas & Vozes">
+                    {acapellas.slice(0, 8).map(acapella => (
+                      <div key={acapella.id} className="min-w-[280px] max-w-[320px] shrink-0 snap-start">
+                        <AudioPlayer
+                          artistName={acapella.artist_name}
+                          audioUrl={acapella.audio_url}
+                          downloadUrl={acapella.download_url}
+                          duration={acapella.duration_seconds || undefined}
+                        />
+                      </div>
+                    ))}
+                  </HorizontalCarousel>
+                )}
+              </>
             )}
           </div>
         )}
 
-        {filter === 'projetos' && (
-          <div className="space-y-4">
-            {isLoading ? (
-              <p className="text-center text-muted-foreground py-8">Carregando...</p>
-            ) : filteredProjects.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">Nenhum projeto encontrado</p>
-            ) : (
-              filteredProjects.map(pack => <PackCardV2 key={pack.id} pack={pack} />)
-            )}
-          </div>
-        )}
       </div>
 
       <BottomNav />
@@ -297,7 +283,6 @@ const Packs = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onAdd={addPack}
-          isProject={filter === 'projetos'}
         />
       )}
 
