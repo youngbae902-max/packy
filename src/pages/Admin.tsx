@@ -39,8 +39,10 @@ import { useCustomEmojis } from '@/hooks/useCustomEmojis';
 import { useAdminBadges } from '@/hooks/useAdminBadges';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
+import { useCategories } from '@/hooks/useCategories';
+import { CategoriasAdmin } from '@/components/CategoriasAdmin';
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'goat';
@@ -113,6 +115,7 @@ export default function Admin() {
   const { badges: adminBadges, createBadge, deleteBadge, grantBadge, isCreating: isCreatingBadge } = useAdminBadges();
   const { decorations, createDecoration, deleteDecoration } = useDecorations();
   const { adjustBalance } = useWallet();
+  const { categories } = useCategories();
   const [decoName, setDecoName] = useState('');
   const [decoFile, setDecoFile] = useState<File | null>(null);
   const [walletUsername, setWalletUsername] = useState('');
@@ -159,6 +162,7 @@ export default function Admin() {
     { id: 'decoracoes' as const, label: 'Decorações', icon: Sparkles },
     { id: 'carteira' as const, label: 'Carteira', icon: Wallet },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
+    { id: 'categorias' as const, label: 'Categorias', icon: Folder },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
 
@@ -475,6 +479,11 @@ export default function Admin() {
             </Card>
 
           </div>
+        )}
+
+        {/* Categories Tab */}
+        {mainTab === 'categorias' && (
+          <CategoriasAdmin />
         )}
 
         {/* Sub Tabs for content moderation */}
