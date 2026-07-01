@@ -355,7 +355,7 @@ export default function Admin() {
                   : 'bg-white/[0.03] text-white/50 border-white/5 hover:text-white hover:bg-white/[0.07]'
               }`}
             >
-              <tab.icon className="w-5 h-5" aria-label={tab.label} />
+              <tab.icon className="w-5 h-5" title={tab.label} />
             </button>
           ))}
         </div>

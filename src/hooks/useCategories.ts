@@ -25,7 +25,7 @@ export function useCategories() {
           console.error("Error fetching categories:", error);
           return [];
         }
-        return (data as unknown) as Category[];
+        return data as Category[];
       } catch (e) {
         console.error("Error fetching categories (maybe table doesnt exist yet):", e);
         return [];

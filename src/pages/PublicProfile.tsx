@@ -41,8 +41,6 @@ export default function PublicProfile() {
   const adminBorder = profile?.admin_badge_border_color || '#085A18';
   const adminText = profile?.admin_badge_text_color || '#05BD2A';
   const bio = profile?.bio || '';
-  const BIO_LIMIT = 220;
-
   const shouldClampBio = bio.length > BIO_LIMIT;
   const shownBio = shouldClampBio && !bioExpanded ? `${bio.slice(0, BIO_LIMIT).trim()}...` : bio;
 

@@ -27,7 +27,7 @@ export function BottomNav() {
               }`
             }
           >
-            <Icon className="w-5 h-5" aria-label={label} />
+            <Icon className="w-5 h-5" title={label} />
           </NavLink>
         ))}
       </div>
