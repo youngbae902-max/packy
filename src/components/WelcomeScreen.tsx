@@ -15,7 +15,7 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
           <img
             src={logoG}
             alt="PACKY"
-            className="relative w-40 h-40 object-contain select-none drop-shadow-sm grayscale contrast-125 dark:brightness-200"
+            className="relative w-40 h-40 object-contain opacity-90 select-none"
             draggable={false}
           />
         </div>

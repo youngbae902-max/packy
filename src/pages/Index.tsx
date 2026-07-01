@@ -115,7 +115,7 @@ const Index = () => {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search packs..."
+              placeholder="Buscar packs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9"
@@ -183,7 +183,7 @@ const Index = () => {
         {isLoading ? (
           <div className="text-center py-12 text-muted-foreground">Carregando...</div>
         ) : (
-          <div className="columns-1 sm:columns-2 md:columns-none md:grid md:grid-cols-3 lg:grid-cols-4 gap-4 [&>*]:mb-4 [&>*]:break-inside-avoid md:[&>*]:mb-0 md:[&>*]:break-inside-auto">
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 [&>*]:mb-4 [&>*]:break-inside-avoid">
             {sortedPacks.map((pack) => (
               <PackCardV2 key={pack.id} pack={pack} />
             ))}
