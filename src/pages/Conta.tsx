@@ -290,6 +290,7 @@ const Conta = () => {
             {/* Name & Username */}
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
+              {profile?.has_spotify_badge && (
                 <div
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
                   style={(profile as any)?.verified_rgb ? undefined : { color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}
