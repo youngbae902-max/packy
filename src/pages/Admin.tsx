@@ -334,7 +334,8 @@ export default function Admin() {
             <ArrowLeft className="w-4 h-4" />Voltar
           </Link>
           <div className="flex flex-col items-center">
-            <h1 className="text-base font-black uppercase tracking-wider">adm</h1>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Painel</span>
+            <h1 className="text-base font-black uppercase tracking-wider">Administração</h1>
           </div>
           <div className="w-16" />
         </div>
@@ -351,7 +352,7 @@ export default function Admin() {
                   : 'bg-white/[0.03] text-white/50 border-white/5 hover:text-white hover:bg-white/[0.07]'
               }`}
             >
-              <tab.icon className="w-5 h-5" title={tab.label} />
+              <tab.icon className="w-3.5 h-3.5" />{tab.label}
             </button>
           ))}
         </div>

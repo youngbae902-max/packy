@@ -106,7 +106,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
         </button>
 
         <div className="flex flex-col items-center gap-3 mb-7">
-          <img src={logoG} alt="PACKY" className="w-16 h-16 object-contain select-none drop-shadow-sm grayscale contrast-125 dark:brightness-200" draggable={false} />
+          <img src={logoG} alt="PACKY" className="w-16 h-16 object-contain opacity-90" draggable={false} />
           <div className="text-center">
             <h2 className="text-2xl font-black tracking-tight leading-none">
               {mode === 'login' ? 'Entrar no PACKY' : 'Criar sua conta'}
