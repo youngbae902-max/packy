@@ -483,7 +483,7 @@ export default function Admin() {
 
         {/* Categories Tab */}
         {mainTab === 'categorias' && (
-          <CategoriasAdmin />
+          <div className="text-muted-foreground text-sm">Categorias em breve.</div>
         )}
 
         {/* Sub Tabs for content moderation */}
