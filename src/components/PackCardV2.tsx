@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
 import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon } from 'lucide-react';
-import { format, formatDistanceToNowStrict } from 'date-fns';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePackInteractions } from '@/hooks/usePackInteractions';
@@ -105,74 +105,75 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
     } catch { toast.error('Erro ao editar comentário'); }
   };
 
-  const timeAgo = formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR })
-    .replace(' segundos', 's').replace(' segundo', 's')
-    .replace(' minutos', 'min').replace(' minuto', 'min')
-    .replace(' horas', 'h').replace(' hora', 'h')
-    .replace(' dias', ' DIAS').replace(' dia', ' DIA')
-    .replace(' meses', ' MESES').replace(' mês', ' MÊS')
-    .replace(' anos', ' ANOS').replace(' ano', ' ANO')
-    .toUpperCase();
-
-  const categoryLabel = (packTypeLabels[pack.pack_type] || pack.pack_type || '').toUpperCase();
-
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] border border-border/40 transition-all p-2.5 flex flex-col"
-      >
-        {/* Square cover */}
-        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[hsl(0,0%,2%)]">
+      <div className="group relative rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] border border-border/40 transition-all">
+        {/* Banner image - no gradients */}
+        <div className="relative w-full aspect-[16/9]">
           {pack.cover_url ? (
-            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
+            <img 
+              src={pack.cover_url} 
+              alt={pack.title} 
+              className="w-full h-full object-cover"
+            />
           ) : (
             <PackImagePlaceholder />
           )}
 
-          {/* time-ago pill (bottom-left over image) */}
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/75 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-bold">
-            <span>{formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR, addSuffix: false })
-              .replace(' segundos','s').replace(' segundo','s')
-              .replace(' minutos','min').replace(' minuto','min')
-              .replace(' horas','h').replace(' hora','h')
-              .replace(' dias','d').replace(' dia','d')
-              .replace(' meses','mes').replace(' mês','mes')
-              .replace(' anos','a').replace(' ano','a')}
-            </span>
-            <BadgeCheck className="w-3 h-3" />
-          </div>
-
+          {/* Favorite agora vive apenas dentro do menu de 3 pontos */}
+          
           {pack.is_pinned && (
-            <div className="absolute top-2 left-2">
-              <Pin className="w-3.5 h-3.5 text-foreground drop-shadow-lg" />
+            <div className="absolute top-3 left-3 z-10">
+              <Pin className="w-4 h-4 text-foreground drop-shadow-lg" />
             </div>
           )}
+
           {pack.is_premium && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
+            <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-premium/90 text-premium-foreground px-2 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
               <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
             </div>
           )}
-        </div>
-
-        {/* Title */}
-        <h3 className="mt-2.5 text-[13px] font-bold text-foreground truncate">{pack.title}</h3>
-
-        {/* Author */}
-        <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1">
-          {displayAuthor === 'Anônimo' ? 'Anônimo' : `${displayAuthor}`}
-          {isOwner && !pack.is_anonymous && (
-            <BadgeCheck className="w-3 h-3 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
+          {pack.requires_shortener && (
+            <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-foreground text-background px-2 py-0.5 rounded-full text-[10px] font-black backdrop-blur-sm">
+              <LinkIcon className="w-3 h-3" /> Passar pelo encurtador
+            </div>
           )}
-        </p>
-
-        {/* Footer meta */}
-        <div className="mt-2 pt-2 border-t border-border/30 text-[10px] font-bold tracking-wider text-muted-foreground">
-          {categoryLabel} <span className="mx-1">·</span> {timeAgo}
         </div>
-      </button>
+
+        {/* Info below banner */}
+        <div className="px-3 pt-2 pb-3 bg-[hsl(0,0%,4%)]">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-bold text-foreground truncate">{pack.title}</h3>
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1.5">
+                @{displayAuthor}
+                {isOwner && !pack.is_anonymous && (
+                  <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
+                )}
+              </p>
+            </div>
+
+            
+            {/* 3 dots menu */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setShowDetails(true); }}
+              className="p-1 rounded-full text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+            >
+              <MoreHorizontal className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Download button (apenas ícone) */}
+          <button
+            onClick={handleDownloadClick}
+            aria-label={pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito' : 'Baixar'}
+            className="w-full mt-2.5 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[hsl(0,0%,1%)] border border-border/60 text-foreground hover:bg-[hsl(0,0%,4%)] transition-colors shadow-inner"
+          >
+            <Download className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
       {/* Details Bottom Sheet */}
       {showDetails && (

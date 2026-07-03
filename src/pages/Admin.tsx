@@ -40,7 +40,7 @@ import { useAdminBadges } from '@/hooks/useAdminBadges';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { useCategories } from '@/hooks/useCategories';
-
+import { CategoriasAdmin } from '@/components/CategoriasAdmin';
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias';
 type SubTab = 'pending' | 'approved' | 'rejected';
@@ -355,7 +355,7 @@ export default function Admin() {
                   : 'bg-white/[0.03] text-white/50 border-white/5 hover:text-white hover:bg-white/[0.07]'
               }`}
             >
-              <tab.icon className="w-5 h-5" aria-label={tab.label} />
+              <tab.icon className="w-5 h-5" title={tab.label} />
             </button>
           ))}
         </div>
@@ -483,7 +483,7 @@ export default function Admin() {
 
         {/* Categories Tab */}
         {mainTab === 'categorias' && (
-          <div className="text-muted-foreground text-sm">Categorias em breve.</div>
+          <CategoriasAdmin />
         )}
 
         {/* Sub Tabs for content moderation */}
