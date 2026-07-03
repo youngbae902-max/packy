@@ -19,6 +19,7 @@ import PublicProfile from "./pages/PublicProfile";
 import CustomPage from "./pages/CustomPage";
 import Wallet from "./pages/Wallet";
 import Up from "./pages/Up";
+import { Sidebar } from "@/components/Sidebar";
 
 
 const queryClient = new QueryClient();
@@ -30,24 +31,28 @@ const App = () => (
         <Toaster />
         <Sonner position="top-center" duration={900} />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Packs />} />
-            <Route path="/projetos" element={<Projetos />} />
-            <Route path="/mcs" element={<MCs />} />
-            <Route path="/albuns" element={<Albums />} />
-            <Route path="/sites" element={<Sites />} />
-            <Route path="/desejos" element={<Wishlist />} />
-            <Route path="/inbox" element={<Inbox />} />
-            <Route path="/perfil/:userId" element={<PublicProfile />} />
-            <Route path="/pagina/:slug" element={<CustomPage />} />
-            <Route path="/conta" element={<Conta />} />
-            <Route path="/carteira" element={<Wallet />} />
-            <Route path="/up" element={<Up />} />
-
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <div className="flex min-h-screen bg-background">
+            <Sidebar />
+            <div className="flex-1 w-full md:pl-64 pb-20 md:pb-0">
+              <Routes>
+                <Route path="/" element={<Packs />} />
+                <Route path="/projetos" element={<Projetos />} />
+                <Route path="/mcs" element={<MCs />} />
+                <Route path="/albuns" element={<Albums />} />
+                <Route path="/sites" element={<Sites />} />
+                <Route path="/desejos" element={<Wishlist />} />
+                <Route path="/inbox" element={<Inbox />} />
+                <Route path="/perfil/:userId" element={<PublicProfile />} />
+                <Route path="/pagina/:slug" element={<CustomPage />} />
+                <Route path="/conta" element={<Conta />} />
+                <Route path="/carteira" element={<Wallet />} />
+                <Route path="/up" element={<Up />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

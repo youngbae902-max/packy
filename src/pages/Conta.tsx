@@ -49,7 +49,7 @@ const Conta = () => {
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
-  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais'>(null);
+  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato-foto' | 'indicador-online'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
@@ -62,6 +62,7 @@ const Conta = () => {
   const [themeColor, setThemeColor] = useState('#16A249');
   const [verifiedBadgeBgColor, setVerifiedBadgeBgColor] = useState('#0F2B1A');
   const [verifiedBadgeTextColor, setVerifiedBadgeTextColor] = useState('#16A249');
+  const [verifiedBadgeText, setVerifiedBadgeText] = useState('Verificado');
   const [adminBadgeBgColor, setAdminBadgeBgColor] = useState('#082D0F');
   const [adminBadgeBorderColor, setAdminBadgeBorderColor] = useState('#085A18');
   const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
@@ -89,6 +90,7 @@ const Conta = () => {
       setRecoveryKeyword(profile.recovery_keyword || '');
       setVerifiedBadgeBgColor(profile.verified_badge_bg_color || profile.verified_badge_color || '#0F2B1A');
       setVerifiedBadgeTextColor(profile.verified_badge_text_color || '#16A249');
+      setVerifiedBadgeText((profile as any).verified_badge_text || 'Verificado');
       setAdminBadgeBgColor(profile.admin_badge_bg_color || profile.admin_badge_color || '#082D0F');
       setAdminBadgeBorderColor(profile.admin_badge_border_color || '#085A18');
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
@@ -159,6 +161,7 @@ const Conta = () => {
         verified_badge_color: verifiedBadgeBgColor || '#0F2B1A',
         verified_badge_bg_color: verifiedBadgeBgColor || '#0F2B1A',
         verified_badge_text_color: verifiedBadgeTextColor || '#16A249',
+        verified_badge_text: verifiedBadgeText || 'Verificado',
         admin_badge_color: adminBadgeBgColor || '#082D0F',
         admin_badge_bg_color: adminBadgeBgColor || '#082D0F',
         admin_badge_border_color: adminBadgeBorderColor || '#085A18',
@@ -287,7 +290,6 @@ const Conta = () => {
             {/* Name & Username */}
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
-              {profile?.has_spotify_badge && (
                 <div
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
                   style={(profile as any)?.verified_rgb ? undefined : { color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}
@@ -295,7 +297,7 @@ const Conta = () => {
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                   </svg>
-                  <span className="text-xs font-medium">Verificado</span>
+                  <span className="text-xs font-medium">{verifiedBadgeText || 'Verificado'}</span>
                 </div>
               )}
               <button 
@@ -376,10 +378,48 @@ const Conta = () => {
                   : settingsSub === 'senha' ? 'Senha e Segurança'
                   : settingsSub === 'selos' ? 'Meus Selos'
                   : settingsSub === 'mais' ? 'Mais opções'
+                  : settingsSub === 'formato-foto' ? 'Formato da Foto'
+                  : settingsSub === 'indicador-online' ? 'Indicador Online'
                   : 'Configurações'}
               </h1>
               <div className="w-11" />
             </div>
+
+            {/* Dynamic Preview for Visual Settings */}
+            {['cores', 'formato-foto', 'indicador-online', 'tema'].includes(settingsSub || '') && (
+              <div className="mb-6 pointer-events-none opacity-90 scale-95 origin-top">
+                <div className="flex flex-col items-center text-center">
+                  <div className="relative mb-4 w-24 h-24">
+                     <div className={`w-24 h-24 bg-secondary border-2 border-border overflow-hidden block ${avatarShapeClasses(avatarShape)}`}>
+                        {profile?.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><User className="w-10 h-10 text-muted-foreground" /></div>}
+                     </div>
+                     <span
+                      className={`absolute -bottom-0.5 right-0 border-2 border-background ${
+                        onlineShape === 'dot' ? 'w-3 h-3 rounded-full' :
+                        onlineShape === 'pill' ? 'w-5 h-2.5 rounded-full' :
+                        onlineShape === 'square' ? 'w-3 h-3' :
+                        onlineShape === 'rounded-square' ? 'w-3 h-3 rounded-[3px]' :
+                        onlineShape === 'rectangle' ? 'w-5 h-2.5' :
+                        'w-5 h-2.5 rounded-[4px]'
+                      }`}
+                      style={{ backgroundColor: themeColor }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h2 className="text-xl font-bold text-foreground">{artistName || 'Sem nome'}</h2>
+                    {profile?.has_spotify_badge && (
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}>
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                        </svg>
+                        <span className="text-xs font-medium">{verifiedBadgeText || 'Verificado'}</span>
+                      </div>
+                    )}
+                  </div>
+                  {username && <p className="text-sm text-muted-foreground mb-3">@{username}</p>}
+                </div>
+              </div>
+            )}
 
             {/* Settings home */}
             {!settingsSub && (
@@ -417,6 +457,8 @@ const Conta = () => {
                   <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
                   <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
                   <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
+                  <SettingsRow icon={ImageIcon} label="Formato da Foto" onClick={() => setSettingsSub('formato-foto')} />
+                  <SettingsRow icon={Smile} label="Indicador Online" onClick={() => setSettingsSub('indicador-online')} />
                 </SettingsGroup>
 
                 <SettingsGroup title="Conta">
@@ -474,6 +516,12 @@ const Conta = () => {
                 <ColorPickerCard label="Selo Verificado — Texto" value={verifiedBadgeTextColor} onChange={setVerifiedBadgeTextColor} />
 
                 <div className="rounded-2xl border border-border/40 bg-card p-4">
+                  <p className="text-[13px] font-bold mb-1">Texto Customizado do Selo Verificado</p>
+                  <p className="text-[11px] text-muted-foreground mb-3">Troque "Verificado" por um emoji (ex: 👑) ou outra palavra.</p>
+                  <Input value={verifiedBadgeText} onChange={e => setVerifiedBadgeText(e.target.value)} placeholder="Verificado" className="bg-secondary text-foreground" />
+                </div>
+
+                <div className="rounded-2xl border border-border/40 bg-card p-4">
                   <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="text-[13px] font-bold">Verificado em RGB</p>
@@ -494,6 +542,69 @@ const Conta = () => {
               </div>
             )}
 
+            {settingsSub === 'formato-foto' && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/40 bg-card p-4">
+                  <div className="grid grid-cols-5 gap-2">
+                    {AVATAR_SHAPES.map(s => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => { setAvatarShape(s.id); updateProfile({ avatar_shape: s.id } as any); toast.success('Formato da foto atualizado'); refreshProfile(); }}
+                        className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+                        title={s.label}
+                      >
+                        <div className={`w-10 h-10 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
+                        <span className="text-[9px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {settingsSub === 'indicador-online' && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/40 bg-card p-4">
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { id: 'pill', label: 'Pill' },
+                      { id: 'dot', label: 'Bolinha' },
+                      { id: 'star', label: 'Estrela' },
+                      { id: 'square', label: 'Quadrado' },
+                      { id: 'rounded-square', label: 'Quad. arred.' },
+                      { id: 'rectangle', label: 'Retângulo' },
+                      { id: 'rounded-rectangle', label: 'Ret. arred.' },
+                    ].map(s => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => { setOnlineShape(s.id); updateProfile({ online_indicator_shape: s.id } as any); toast.success('Indicador online atualizado'); refreshProfile(); }}
+                        className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${onlineShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
+                        title={s.label}
+                      >
+                        {s.id === 'star' ? (
+                          <span className="text-success text-lg leading-none">★</span>
+                        ) : (
+                          <span
+                            className={`bg-success ${
+                              s.id === 'dot' ? 'w-2 h-2 rounded-full' :
+                              s.id === 'pill' ? 'w-4 h-2 rounded-full' :
+                              s.id === 'square' ? 'w-2 h-2' :
+                              s.id === 'rounded-square' ? 'w-2 h-2 rounded-[2px]' :
+                              s.id === 'rectangle' ? 'w-4 h-2' :
+                              'w-4 h-2 rounded-[3px]'
+                            }`}
+                          />
+                        )}
+                        <span className="text-[9px] text-muted-foreground text-center leading-tight">{s.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Sticky save bar for Cores */}
             {settingsSub === 'cores' && (
               <div className="fixed left-0 right-0 bottom-0 z-30 bg-background/95 backdrop-blur border-t border-border/40 px-4 py-3">
@@ -501,7 +612,7 @@ const Conta = () => {
                   <Button variant="outline" className="rounded-2xl" onClick={() => { setVerifiedBadgeBgColor('#0F2B1A'); setVerifiedBadgeTextColor('#16A249'); setAdminBadgeBgColor('#082D0F'); setAdminBadgeBorderColor('#085A18'); setAdminBadgeTextColor('#05BD2A'); setThemeColor('#16A249'); }}>
                     <RotateCcw className="w-4 h-4 mr-2" />Padrão
                   </Button>
-                  <Button className="rounded-2xl" onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>
+                  <Button className="rounded-2xl" onClick={async () => { await updateProfile({ verified_badge_color: verifiedBadgeBgColor, verified_badge_bg_color: verifiedBadgeBgColor, verified_badge_text_color: verifiedBadgeTextColor, verified_badge_text: verifiedBadgeText, admin_badge_color: adminBadgeBgColor, admin_badge_bg_color: adminBadgeBgColor, admin_badge_border_color: adminBadgeBorderColor, admin_badge_text_color: adminBadgeTextColor, theme_accent_color: themeColor, online_accent_color: themeColor }); toast.success('Cores salvas'); }}>
                     Salvar cores
                   </Button>
                 </div>
@@ -668,64 +779,7 @@ const Conta = () => {
               <p className="text-xs text-muted-foreground mt-1 text-right">{bio.length}/160</p>
             </div>
 
-            {/* Formato da foto de perfil */}
-            <div className="border-t border-border/40 pt-4">
-              <p className="text-sm font-bold text-foreground mb-3">Formato da foto</p>
-              <div className="grid grid-cols-5 gap-2">
-                {AVATAR_SHAPES.map(s => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setAvatarShape(s.id)}
-                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${avatarShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
-                    title={s.label}
-                  >
-                    <div className={`w-10 h-10 bg-foreground/80 ${avatarShapeClasses(s.id)}`} />
-                    <span className="text-[9px] text-muted-foreground leading-tight text-center">{s.label.split(' ')[0]}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
 
-            {/* Online indicator shape — also lives in Editar Perfil for now */}
-            <div className="border-t border-border/40 pt-4">
-              <p className="text-sm font-bold text-foreground mb-3">Indicador online</p>
-              <div className="grid grid-cols-4 gap-2">
-                {[
-                  { id: 'pill', label: 'Pill' },
-                  { id: 'dot', label: 'Bolinha' },
-                  { id: 'star', label: 'Estrela' },
-                  { id: 'square', label: 'Quadrado' },
-                  { id: 'rounded-square', label: 'Quad. arred.' },
-                  { id: 'rectangle', label: 'Retângulo' },
-                  { id: 'rounded-rectangle', label: 'Ret. arred.' },
-                ].map(s => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setOnlineShape(s.id)}
-                    className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${onlineShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
-                    title={s.label}
-                  >
-                    {s.id === 'star' ? (
-                      <span className="text-success text-lg leading-none">★</span>
-                    ) : (
-                      <span
-                        className={`bg-success ${
-                          s.id === 'dot' ? 'w-2 h-2 rounded-full' :
-                          s.id === 'pill' ? 'w-4 h-2 rounded-full' :
-                          s.id === 'square' ? 'w-2 h-2' :
-                          s.id === 'rounded-square' ? 'w-2 h-2 rounded-[2px]' :
-                          s.id === 'rectangle' ? 'w-4 h-2' :
-                          'w-4 h-2 rounded-[3px]'
-                        }`}
-                      />
-                    )}
-                    <span className="text-[9px] text-muted-foreground text-center leading-tight">{s.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
 
             <Button 
               onClick={handleSaveProfile} 

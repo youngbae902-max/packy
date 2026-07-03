@@ -21,7 +21,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
 
   // "Up" — só para usuários logados (biblioteca privada)
   const items = user
-    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Up' }]
+    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Projetos' }]
     : baseItems;
 
   if (!isOpen) return null;

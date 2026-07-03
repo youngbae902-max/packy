@@ -147,7 +147,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-bold text-foreground truncate">{pack.title}</h3>
               <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1.5">
-                <span className="online-pill-sm" aria-hidden />
                 @{displayAuthor}
                 {isOwner && !pack.is_anonymous && (
                   <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
