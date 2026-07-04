@@ -40,7 +40,6 @@ import { useAdminBadges } from '@/hooks/useAdminBadges';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { useCategories } from '@/hooks/useCategories';
-import { HomeSectionsAdmin } from '@/components/HomeSectionsAdmin';
 
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias';
@@ -163,7 +162,7 @@ export default function Admin() {
     { id: 'decoracoes' as const, label: 'Decorações', icon: Sparkles },
     { id: 'carteira' as const, label: 'Carteira', icon: Wallet },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
-    { id: 'categorias' as const, label: 'Seções da Home', icon: Folder },
+    { id: 'categorias' as const, label: 'Categorias', icon: Folder },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
 
@@ -482,9 +481,9 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Home Sections */}
+        {/* Categories Tab */}
         {mainTab === 'categorias' && (
-          <HomeSectionsAdmin />
+          <div className="text-muted-foreground text-sm">Categorias em breve.</div>
         )}
 
         {/* Sub Tabs for content moderation */}

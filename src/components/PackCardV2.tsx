@@ -131,21 +131,47 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             <PackImagePlaceholder />
           )}
 
+          {/* time-ago pill (bottom-left over image) */}
+          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/75 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-bold">
+            <span>{formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR, addSuffix: false })
+              .replace(' segundos','s').replace(' segundo','s')
+              .replace(' minutos','min').replace(' minuto','min')
+              .replace(' horas','h').replace(' hora','h')
+              .replace(' dias','d').replace(' dia','d')
+              .replace(' meses','mes').replace(' mês','mes')
+              .replace(' anos','a').replace(' ano','a')}
+            </span>
+            <BadgeCheck className="w-3 h-3" />
+          </div>
+
           {pack.is_pinned && (
             <div className="absolute top-2 left-2">
-              <Pin className="w-4 h-4 text-foreground drop-shadow-lg" />
+              <Pin className="w-3.5 h-3.5 text-foreground drop-shadow-lg" />
             </div>
           )}
           {pack.is_premium && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-2 py-0.5 rounded-full text-[11px] font-bold backdrop-blur-sm">
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
               <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
             </div>
           )}
         </div>
 
-        {/* Title only */}
-        <h3 className="mt-3 text-[15px] font-bold text-foreground truncate">{pack.title}</h3>
+        {/* Title */}
+        <h3 className="mt-2.5 text-[13px] font-bold text-foreground truncate">{pack.title}</h3>
+
+        {/* Author */}
+        <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1">
+          {displayAuthor === 'Anônimo' ? 'Anônimo' : `${displayAuthor}`}
+          {isOwner && !pack.is_anonymous && (
+            <BadgeCheck className="w-3 h-3 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
+          )}
+        </p>
+
+        {/* Footer meta */}
+        <div className="mt-2 pt-2 border-t border-border/30 text-[10px] font-bold tracking-wider text-muted-foreground">
+          {categoryLabel} <span className="mx-1">·</span> {timeAgo}
+        </div>
       </button>
 
       {/* Details Bottom Sheet */}
