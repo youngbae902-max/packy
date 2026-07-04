@@ -481,9 +481,9 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Categories Tab */}
+        {/* Home Sections */}
         {mainTab === 'categorias' && (
-          <div className="text-muted-foreground text-sm">Categorias em breve.</div>
+          <HomeSectionsAdmin />
         )}
 
         {/* Sub Tabs for content moderation */}
