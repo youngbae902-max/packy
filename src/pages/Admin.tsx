@@ -40,6 +40,7 @@ import { useAdminBadges } from '@/hooks/useAdminBadges';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { useCategories } from '@/hooks/useCategories';
+import { HomeSectionsAdmin } from '@/components/HomeSectionsAdmin';
 
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias';
