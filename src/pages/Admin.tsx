@@ -163,7 +163,7 @@ export default function Admin() {
     { id: 'decoracoes' as const, label: 'Decorações', icon: Sparkles },
     { id: 'carteira' as const, label: 'Carteira', icon: Wallet },
     { id: 'giftall' as const, label: 'Gift All', icon: Send },
-    { id: 'categorias' as const, label: 'Categorias', icon: Folder },
+    { id: 'categorias' as const, label: 'Seções da Home', icon: Folder },
     { id: 'lixeira' as const, label: 'Lixeira', icon: Trash2 },
   ];
 
