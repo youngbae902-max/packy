@@ -158,14 +158,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </div>
 
         {/* Title */}
-        <h3 className="mt-2.5 text-[13px] font-bold text-foreground truncate">{pack.title}</h3>
+        <h3 className="mt-2.5 text-[15px] font-bold text-foreground truncate">{pack.title}</h3>
 
-        {/* Author */}
-        <p className="text-[11px] text-muted-foreground truncate mt-0.5 flex items-center gap-1">
-          {displayAuthor === 'Anônimo' ? 'Anônimo' : `${displayAuthor}`}
-          {isOwner && !pack.is_anonymous && (
-            <BadgeCheck className="w-3 h-3 text-sky-400 fill-sky-400/20" aria-label="Dono verificado" />
-          )}
+        {/* Author — kept in DOM for structure but visually invisible per request */}
+        <p aria-hidden className="text-[11px] truncate mt-0.5 select-none opacity-0 pointer-events-none">
+          {displayAuthor}
         </p>
 
         {/* Footer meta */}
@@ -284,14 +281,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               </button>
             </div>
 
-            {authorProfileUrl && (
-              <Link
-                to={authorProfileUrl}
-                className="mb-5 flex items-center justify-center gap-2 rounded-xl bg-[hsl(0,0%,6%)] border border-border/40 py-2.5 text-sm font-semibold text-foreground hover:bg-[hsl(0,0%,9%)] transition"
-              >
-                <User className="w-4 h-4" /> Ver perfil do criador
-              </Link>
-            )}
+{/* "Ver perfil do criador" removido a pedido */}
 
             <div className="mb-5 border-t border-border/40 pt-4">
               <div className="flex items-center gap-2 mb-4 text-base font-black text-foreground">

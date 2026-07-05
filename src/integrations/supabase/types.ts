@@ -324,6 +324,72 @@ export type Database = {
         }
         Relationships: []
       }
+      home_section_packs: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          pack_id: string
+          section_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          pack_id: string
+          section_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          pack_id?: string
+          section_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "home_section_packs_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "home_section_packs_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "home_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      home_sections: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pack_comments: {
         Row: {
           content: string
@@ -640,6 +706,7 @@ export type Database = {
           username_changes_today: number | null
           verified_badge_bg_color: string | null
           verified_badge_color: string | null
+          verified_badge_text: string | null
           verified_badge_text_color: string | null
           verified_rgb: boolean
           wallet_balance: number
@@ -685,6 +752,7 @@ export type Database = {
           username_changes_today?: number | null
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
+          verified_badge_text?: string | null
           verified_badge_text_color?: string | null
           verified_rgb?: boolean
           wallet_balance?: number
@@ -730,6 +798,7 @@ export type Database = {
           username_changes_today?: number | null
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
+          verified_badge_text?: string | null
           verified_badge_text_color?: string | null
           verified_rgb?: boolean
           wallet_balance?: number
