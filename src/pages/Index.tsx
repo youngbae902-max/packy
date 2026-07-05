@@ -285,6 +285,7 @@ const Index = () => {
   const { approvedPacks, premiumPacks, isLoading, addPack } = useSupabasePacks();
   const { activeEvents } = useSiteEvents();
   const { isAdmin } = useAuth();
+  const { data: customSections = [] } = useHomeSectionsWithPacks();
 
   const allPacks = useMemo(() => {
     return [...approvedPacks, ...premiumPacks].filter(p => p.pack_type !== 'project');
