@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { NumericKeypad } from '@/components/NumericKeypad';
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,9 +40,10 @@ import { useAdminBadges } from '@/hooks/useAdminBadges';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { useCategories } from '@/hooks/useCategories';
+import { HomeSectionsManager } from '@/components/HomeSectionsManager';
 
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home';
 type SubTab = 'pending' | 'approved' | 'rejected';
 
 const MAIN_ADMIN_USERNAME = 'goat';
@@ -148,6 +149,7 @@ export default function Admin() {
 
   const mainTabs = [
     { id: 'stats' as const, label: 'Stats', icon: BarChart3 },
+    { id: 'home' as const, label: 'Home', icon: LayoutGrid },
     { id: 'pendentes' as const, label: 'Packs Pendentes', icon: Clock },
     { id: 'packs' as const, label: 'Packs', icon: Package },
     { id: 'projetos' as const, label: 'Projetos', icon: Folder },
@@ -485,6 +487,9 @@ export default function Admin() {
         {mainTab === 'categorias' && (
           <div className="text-muted-foreground text-sm">Categorias em breve.</div>
         )}
+
+        {/* Home Sections Tab */}
+        {mainTab === 'home' && <HomeSectionsManager />}
 
         {/* Sub Tabs for content moderation */}
         {(mainTab === 'packs' || mainTab === 'projetos' || mainTab === 'acapellas') && (
