@@ -12,6 +12,8 @@ import { AddPackModalV2 } from '@/components/AddPackModalV2';
 import { EventCard } from '@/components/EventCard';
 import { BottomNav } from '@/components/BottomNav';
 import { HorizontalCarousel } from '@/components/HorizontalCarousel';
+import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
+import { ListMusic } from 'lucide-react';
 import { PackImagePlaceholder } from '@/components/PackImagePlaceholder';
 import { useSupabasePacks, type Pack } from '@/hooks/useSupabasePacks';
 import { useSiteEvents } from '@/hooks/useSiteEvents';
@@ -30,7 +32,7 @@ const packTypeLabel: Record<string, string> = {
 
 function CardShell({ pack }: { pack: Pack }) {
   return (
-    <div className="snap-start shrink-0 w-[190px] sm:w-[210px] md:w-[230px]">
+    <div className="snap-start shrink-0 w-[260px] sm:w-[280px] md:w-[300px]">
       <PackCardV2 pack={pack} />
     </div>
   );
@@ -260,9 +262,17 @@ function FooterNav() {
           </ul>
         </div>
       </div>
-      <div className="mt-10 pt-6 border-t border-white/5 text-[11px] text-foreground/40 flex flex-wrap gap-4 justify-between">
-        <span>© {new Date().getFullYear()} PACKY — Feito por editores, para editores.</span>
-        <span>Termos · Política de Privacidade</span>
+      <div className="mt-10 pt-6 border-t border-white/5 text-[11px] text-foreground/50 space-y-2">
+        <p className="leading-relaxed">
+          Copyright © {new Date().getFullYear()} PACKY — Todos os direitos reservados.
+          Feito por editores, para editores. Sample packs, presets, drum kits, projetos e acapellas
+          compartilhados por criadores da comunidade. Nenhum arquivo é hospedado diretamente pela plataforma —
+          todos os links são de terceiros e a responsabilidade pelos conteúdos é dos respectivos criadores.
+        </p>
+        <div className="flex flex-wrap gap-3 justify-between pt-2">
+          <span>© {new Date().getFullYear()} PACKY · packy.lovable.app</span>
+          <span>Termos · Política de Privacidade · Direitos Autorais</span>
+        </div>
       </div>
     </footer>
   );
