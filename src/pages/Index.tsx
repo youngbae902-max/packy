@@ -445,6 +445,15 @@ const Index = () => {
               </section>
             )}
 
+            {customSections.map(({ section, packs }) => (
+              packs.length > 0 && (
+                <section key={section.id} className="mb-12">
+                  <SectionTitle icon={ListMusic} title={section.title} />
+                  <Carousel>{packs.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                </section>
+              )
+            ))}
+
             {samples.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Play} title="Sample Packs" />
