@@ -26,6 +26,7 @@ const Packs = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState<'all' | 'samples' | 'drumkit' | 'presets' | 'loops' | 'project' | 'other'>('all');
   const [popupOpen, setPopupOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
