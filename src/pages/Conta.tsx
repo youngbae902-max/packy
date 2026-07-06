@@ -580,7 +580,7 @@ const Conta = () => {
                       <button
                         key={s.id}
                         type="button"
-                        onClick={() => { setOnlineShape(s.id); updateProfile({ online_indicator_shape: s.id } as any); toast.success('Indicador online atualizado'); refreshProfile(); }}
+                        onClick={async () => { setOnlineShape(s.id); try { await updateProfile({ online_indicator_shape: s.id } as any); toast.success('Indicador online atualizado'); await refreshProfile(); } catch { toast.error('Erro ao salvar indicador'); } }}
                         className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition ${onlineShape === s.id ? 'bg-foreground/10' : 'hover:bg-foreground/5'}`}
                         title={s.label}
                       >
