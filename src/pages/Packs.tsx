@@ -37,6 +37,7 @@ const Packs = () => {
   const { data: searchedProfiles = [] } = useProfileSearch(searchQuery);
   const { pages } = useCustomPages();
   const { categories } = useCategories();
+  const { data: customSections = [] } = useHomeSectionsWithPacks();
 
   const q = searchQuery.toLowerCase().trim();
 
