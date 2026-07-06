@@ -157,12 +157,17 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
         </div>
 
-        {/* Title */}
-        <h3 className="mt-2.5 text-[15px] font-bold text-foreground truncate">{pack.title}</h3>
+        {/* Title — up to 2 lines, proportional */}
+        <h3 className="mt-2.5 text-[15px] leading-tight font-bold text-foreground line-clamp-2 min-h-[2.6em]">
+          {pack.title}
+        </h3>
 
-        {/* Author — kept in DOM for structure but visually invisible per request */}
-        <p aria-hidden className="text-[11px] truncate mt-0.5 select-none opacity-0 pointer-events-none">
-          {displayAuthor}
+        {/* Author (visible) */}
+        <p className="text-[12px] truncate mt-1 text-muted-foreground flex items-center gap-1">
+          <span className="truncate">{displayAuthor}</span>
+          {isOwner && !pack.is_anonymous && (
+            <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
+          )}
         </p>
 
         {/* Footer meta */}
