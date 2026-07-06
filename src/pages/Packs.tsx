@@ -91,27 +91,42 @@ const Packs = () => {
       {/* Search Header for Desktop */}
       <header className="hidden md:flex sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/40 px-8 py-4 items-center justify-between gap-6">
         <div className="flex-1 max-w-2xl relative" ref={popupRef}>
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            onFocus={() => q.length > 0 && setPopupOpen(true)}
-            className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-all"
-            placeholder="O que você quer ouvir ou baixar?"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => { setSearchQuery(''); setPopupOpen(false); }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-foreground/10 text-muted-foreground"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
+          {/* Pill search with type selector — matches reference */}
+          <div className="flex items-center h-11 rounded-full bg-[hsl(240,5%,12%)]/80 border border-border/50 focus-within:border-border transition-colors overflow-hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1.5 pl-5 pr-3 h-full text-sm font-medium text-foreground/90 hover:bg-white/5 transition-colors focus:outline-none">
+                {typeLabel[searchType]}
+                <ChevronsUpDown className="w-3.5 h-3.5 text-muted-foreground" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-card border-border/60">
+                {Object.entries(typeLabel).map(([id, label]) => (
+                  <DropdownMenuItem key={id} onClick={() => setSearchType(id as any)}>{label}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="w-px h-5 bg-border/70" />
+            <Search className="w-4 h-4 text-muted-foreground ml-4 shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onFocus={() => q.length > 0 && setPopupOpen(true)}
+              className="flex-1 bg-transparent px-3 h-full text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+              placeholder={searchPlaceholder}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => { setSearchQuery(''); setPopupOpen(false); }}
+                className="mr-3 p-1 rounded-full hover:bg-foreground/10 text-muted-foreground"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
 
           {/* Desktop Search Dropdown */}
           {popupOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-border/60 bg-[hsl(0,0%,3%)]/95 backdrop-blur-xl shadow-2xl p-3 animate-fade-in max-h-96 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-border/60 bg-card/95 backdrop-blur-xl shadow-2xl p-3 animate-fade-in max-h-96 overflow-y-auto">
               {searchedProfiles.length > 0 && (
                 <div className="mb-4">
                   <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Usuários</p>
@@ -120,7 +135,7 @@ const Packs = () => {
                       <Link
                         key={profile.user_id}
                         to={`/perfil/${profile.user_id}`}
-                        className="flex items-center gap-3 rounded-xl hover:bg-[hsl(0,0%,10%)] px-3 py-2 transition"
+                        className="flex items-center gap-3 rounded-xl hover:bg-white/5 px-3 py-2 transition"
                       >
                         {profile.avatar_url ? (
                           <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
@@ -150,17 +165,17 @@ const Packs = () => {
             </div>
           )}
         </div>
-        
-        <div className="flex items-center gap-4">
-          <Link to="/inbox" className="relative p-2 rounded-full hover:bg-secondary transition-colors" aria-label="Caixa de entrada">
-            <Inbox className="w-6 h-6" />
+
+        <div className="flex items-center gap-3">
+          <Link to="/inbox" className="relative p-1.5 rounded-full hover:bg-white/5 transition-colors" aria-label="Caixa de entrada">
+            <Inbox className="w-5 h-5" />
             {hasUnread && (
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
+              <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-green-500 rounded-full" />
             )}
           </Link>
           <button
             onClick={handleNewPack}
-            className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full font-bold text-sm hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 bg-foreground text-background px-4 py-2 rounded-full font-bold text-sm hover:opacity-90 transition-opacity"
           >
             <Upload className="w-4 h-4" />
             Publicar
@@ -173,34 +188,57 @@ const Packs = () => {
         <header className="flex items-center justify-between py-2">
           <button
             onClick={() => setShowMenu(true)}
-            className="p-2 -ml-2 rounded-full text-foreground hover:bg-foreground/10 transition-colors"
+            className="p-1.5 -ml-1.5 rounded-full text-foreground hover:bg-white/5 transition-colors"
+            aria-label="Menu"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5" />
           </button>
           <div className="relative z-10 pointer-events-none">
             {logoUrl ? <img src={logoUrl} alt="Logo" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
           </div>
-          <Link to="/inbox" className="relative p-2 -mr-2">
-            <Inbox className="w-6 h-6" />
-            {hasUnread && <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />}
+          <Link to="/inbox" className="relative p-1.5 -mr-1.5" aria-label="Inbox">
+            <Inbox className="w-5 h-5" />
+            {hasUnread && <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-green-500 rounded-full" />}
           </Link>
         </header>
 
-        {/* Mobile Search */}
+        {/* Mobile Search — pill com seletor de tipo (padrão da referência) */}
         <div className="flex items-center gap-2 mt-4 mb-5 relative" ref={popupRef}>
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <div className="flex-1 flex items-center h-11 rounded-full bg-[hsl(240,5%,12%)]/80 border border-border/50 focus-within:border-border transition-colors overflow-hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 pl-4 pr-2.5 h-full text-[13px] font-medium text-foreground/90 hover:bg-white/5 transition-colors focus:outline-none shrink-0">
+                {typeLabel[searchType]}
+                <ChevronsUpDown className="w-3 h-3 text-muted-foreground" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-card border-border/60">
+                {Object.entries(typeLabel).map(([id, label]) => (
+                  <DropdownMenuItem key={id} onClick={() => setSearchType(id as any)}>{label}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="w-px h-5 bg-border/70 shrink-0" />
+            <Search className="w-4 h-4 text-muted-foreground ml-3 shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-11 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
-              placeholder="Buscar..."
+              className="flex-1 min-w-0 bg-transparent px-2.5 h-full text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none"
+              placeholder={searchPlaceholder}
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="mr-2 p-1 rounded-full hover:bg-foreground/10 text-muted-foreground"
+                aria-label="Limpar"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
           <button
             onClick={handleNewPack}
-            className="shrink-0 w-10 h-10 rounded-full bg-[hsl(0,0%,6%)] border border-border/60 flex items-center justify-center text-foreground hover:bg-[hsl(0,0%,9%)] transition-colors"
+            className="shrink-0 w-10 h-10 rounded-full bg-card border border-border/60 flex items-center justify-center text-foreground hover:bg-white/5 transition-colors"
+            aria-label="Publicar"
           >
             <Upload className="w-4 h-4" />
           </button>
