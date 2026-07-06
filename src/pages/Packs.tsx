@@ -18,6 +18,7 @@ import { useAppLogo } from '@/hooks/useAppLogo';
 import { useProfileSearch } from '@/hooks/useSocial';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { useCategories } from '@/hooks/useCategories';
+import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
 
 const Packs = () => {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ const Packs = () => {
   const { data: searchedProfiles = [] } = useProfileSearch(searchQuery);
   const { pages } = useCustomPages();
   const { categories } = useCategories();
+  const { data: customSections = [] } = useHomeSectionsWithPacks();
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -209,12 +211,25 @@ const Packs = () => {
         {/* Main Feed Content */}
         {isLoading ? (
           <div className="flex justify-center py-20"><p className="text-muted-foreground animate-pulse font-semibold">Carregando conteúdo...</p></div>
+        ) : q.length > 0 ? (
+          <div>
+            <h2 className="text-lg md:text-2xl font-black mb-4 px-1">
+              Resultados para "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
+            </h2>
+            {searchedPacks.length === 0 ? (
+              <p className="text-center py-16 text-muted-foreground">Nenhum pack encontrado.</p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+              </div>
+            )}
+          </div>
         ) : (
           <div className="space-y-4">
             
             <HorizontalCarousel title="Lançamentos">
               {approvedPacks.slice(0, 10).map(pack => (
-                <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                   <PackCardV2 pack={pack} />
                 </div>
               ))}
@@ -223,9 +238,8 @@ const Packs = () => {
             {hasCategories ? (
               categories.map(category => (
                 <HorizontalCarousel key={category.id} title={category.name}>
-                  {/* For now we just show random packs until we bind pack_categories in the hook */}
                   {premiumPacks.slice(0, 8).map(pack => (
-                    <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                       <PackCardV2 pack={pack} />
                     </div>
                   ))}
@@ -237,7 +251,7 @@ const Packs = () => {
                 {premiumPacks.length > 0 && (
                   <HorizontalCarousel title="Premium & Exclusivos">
                     {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -247,12 +261,25 @@ const Packs = () => {
                 {projectPacks.length > 0 && (
                   <HorizontalCarousel title="Projetos e FLPs">
                     {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[140px] max-w-[140px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
                   </HorizontalCarousel>
                 )}
+
+                {/* Seções personalizadas da Home (admin) — aparecem abaixo de Projetos e FLPs, na ordem definida */}
+                {customSections.map(({ section, packs }) => (
+                  packs.length > 0 && (
+                    <HorizontalCarousel key={section.id} title={section.title}>
+                      {packs.map(pack => (
+                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                          <PackCardV2 pack={pack} />
+                        </div>
+                      ))}
+                    </HorizontalCarousel>
+                  )
+                ))}
 
                 {acapellas.length > 0 && (
                   <HorizontalCarousel title="Acapellas & Vozes">
