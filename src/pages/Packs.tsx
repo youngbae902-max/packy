@@ -69,10 +69,18 @@ const Packs = () => {
 
   const searchedPacks = useMemo(() => {
     if (!q) return [];
-    return [...approvedPacks, ...premiumPacks, ...projectPacks].filter(p => 
+    const pool = [...approvedPacks, ...premiumPacks, ...projectPacks];
+    const scoped = searchType === 'all' ? pool : pool.filter(p => p.pack_type === searchType);
+    return scoped.filter(p =>
       p.title.toLowerCase().includes(q) || p.author_name?.toLowerCase().includes(q)
     );
-  }, [q, approvedPacks, premiumPacks, projectPacks]);
+  }, [q, searchType, approvedPacks, premiumPacks, projectPacks]);
+
+  const typeLabel: Record<string, string> = {
+    all: 'Tudo', samples: 'Samples', drumkit: 'Drum Kit', presets: 'Presets',
+    loops: 'Loops', project: 'Projetos', other: 'Outros',
+  };
+  const searchPlaceholder = searchType === 'all' ? 'Buscar em tudo…' : `Buscar em ${typeLabel[searchType].toLowerCase()}…`;
 
   // Use categories from DB if available, otherwise fallback to standard sections
   const hasCategories = categories && categories.length > 0;
