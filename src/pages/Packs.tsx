@@ -18,6 +18,7 @@ import { useAppLogo } from '@/hooks/useAppLogo';
 import { useProfileSearch } from '@/hooks/useSocial';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { useCategories } from '@/hooks/useCategories';
+import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
 
 const Packs = () => {
   const { user } = useAuth();
