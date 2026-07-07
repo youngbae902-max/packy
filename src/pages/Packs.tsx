@@ -177,22 +177,22 @@ const Packs = () => {
         </header>
 
         {/* Mobile Search */}
-        <div className="flex items-center gap-2 mt-4 mb-5 relative" ref={popupRef}>
+        <div className="flex items-center gap-2 mt-7 mb-7 relative" ref={popupRef}>
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#9E9E9E]" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-11 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              className="w-full h-[50px] bg-[#1A1A1A] border border-[#252525] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-white/10"
               placeholder="Buscar..."
             />
           </div>
           <button
             onClick={handleNewPack}
-            className="shrink-0 w-10 h-10 rounded-full bg-[hsl(0,0%,6%)] border border-border/60 flex items-center justify-center text-foreground hover:bg-[hsl(0,0%,9%)] transition-colors"
+            className="shrink-0 w-[50px] h-[50px] rounded-2xl bg-[#1A1A1A] border border-[#252525] flex items-center justify-center text-foreground hover:bg-[#202020] transition-colors"
           >
-            <Upload className="w-4 h-4" />
+            <Upload className="w-[18px] h-[18px]" />
           </button>
         </div>
       </div>
