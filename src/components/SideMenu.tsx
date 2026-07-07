@@ -30,7 +30,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
     <div className="fixed inset-0 z-[60]">
       <div className="absolute inset-0 bg-black/85 backdrop-blur-md animate-fade-in" onClick={onClose} />
 
-      <aside className="absolute top-0 left-0 h-full w-[80%] max-w-[300px] bg-[hsl(0,0%,2%)] border-r border-border/60 flex flex-col animate-slide-in-right shadow-[8px_0_40px_rgba(0,0,0,0.6)]">
+      <aside className="absolute top-0 left-0 h-full w-[80%] max-w-[300px] bg-[#111111] border-r border-[#1E1E1E] flex flex-col animate-slide-in-right shadow-[8px_0_40px_rgba(0,0,0,0.6)]">
         <div className="px-6 pt-8 pb-6 border-b border-border/40">
           <div className="grid grid-cols-[40px_1fr_40px] items-center">
             <div />
