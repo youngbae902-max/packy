@@ -39,7 +39,7 @@ export function SettingsGroup({ title, children }: SettingsGroupProps) {
           {title}
         </p>
       )}
-      <div className="rounded-2xl border border-border/40 overflow-hidden divide-y divide-border/30">
+      <div className="rounded-2xl border border-border/40 overflow-hidden divide-y divide-[#1E1E1E]">
         {children}
       </div>
     </div>
