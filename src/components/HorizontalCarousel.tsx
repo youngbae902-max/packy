@@ -19,9 +19,9 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
   };
 
   return (
-    <section className="mb-10 relative group">
-      <div className="flex items-center justify-between mb-4 px-2">
-        <h2 className="text-xl md:text-2xl font-black tracking-tight">{title}</h2>
+    <section className="mb-8 relative group">
+      <div className="flex items-center justify-between mb-1.5 px-2">
+        <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
         {showArrows && (
           <div className="hidden md:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button 
