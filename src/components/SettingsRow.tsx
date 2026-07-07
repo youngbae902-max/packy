@@ -14,11 +14,11 @@ export function SettingsRow({ icon: Icon, label, value, onClick, destructive, ri
     <button
       onClick={onClick}
       type="button"
-      className={`w-full flex items-center gap-3 px-4 py-3.5 bg-card hover:bg-secondary/60 transition-colors text-left ${
+      className={`w-full flex items-center gap-3.5 px-4 min-h-[56px] py-3 bg-card hover:bg-secondary/60 transition-colors text-left ${
         destructive ? 'text-destructive' : 'text-foreground'
       }`}
     >
-      <Icon className={`w-[18px] h-[18px] flex-shrink-0 ${destructive ? 'text-destructive' : 'text-foreground/70'}`} />
+      <Icon className={`w-[19px] h-[19px] flex-shrink-0 ${destructive ? 'text-destructive' : 'text-foreground/75'}`} />
       <span className="flex-1 text-[15px] font-medium tracking-tight">{label}</span>
       {value && <span className="text-[13px] text-muted-foreground">{value}</span>}
       {rightSlot ?? <ChevronRight className="w-4 h-4 text-muted-foreground/70" />}
@@ -39,7 +39,7 @@ export function SettingsGroup({ title, children }: SettingsGroupProps) {
           {title}
         </p>
       )}
-      <div className="rounded-2xl border border-border/40 overflow-hidden divide-y divide-border/30">
+      <div className="rounded-2xl border border-border/40 overflow-hidden divide-y divide-[#1E1E1E]">
         {children}
       </div>
     </div>

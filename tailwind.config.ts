@@ -79,19 +79,15 @@ export default {
   		},
   		fontFamily: {
   			sans: [
-  				'Figtree',
-  				'Outfit',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif',
   				'Apple Color Emoji',
-  				'Segoe UI Emoji',
-  				'Segoe UI Symbol',
-  				'Noto Color Emoji'
+  				'Segoe UI Emoji'
   			],
   			display: [
-  				'Outfit',
-  				'Figtree',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif'
