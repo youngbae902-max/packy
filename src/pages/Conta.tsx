@@ -251,20 +251,20 @@ const Conta = () => {
           {/* Profile Card */}
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
-            <div className="relative mb-4 w-24 h-24">
+            <div className="relative mb-4 w-32 h-32">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className={`w-24 h-24 bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity block ${avatarShapeClasses(avatarShape)}`}
+                className={`w-32 h-32 bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity block ${avatarShapeClasses(avatarShape)}`}
               >
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <User className="w-10 h-10 text-muted-foreground" />
+                    <User className="w-14 h-14 text-muted-foreground" />
                   </div>
                 )}
               </button>
-              <span className="absolute -bottom-0.5 right-0 rounded-full border-2 border-background" style={{ backgroundColor: themeColor, width: '1.25rem', height: '0.55rem' }} />
+              <span className="absolute -bottom-0.5 right-1 rounded-full border-2 border-background" style={{ backgroundColor: themeColor, width: '1.5rem', height: '0.65rem' }} />
               {(profile as any)?.profile_decoration_url && (() => {
                 const pos = (profile as any)?.profile_decoration_position || {};
                 const x = pos.x ?? 25;
@@ -289,7 +289,7 @@ const Conta = () => {
 
             {/* Name & Username */}
             <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-xl font-bold text-foreground">{profile?.artist_name || 'Sem nome'}</h2>
+              <h2 className="text-3xl font-bold text-foreground tracking-tight">{profile?.artist_name || 'Sem nome'}</h2>
               {(profile as any)?.is_verified && (
                 <div
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}

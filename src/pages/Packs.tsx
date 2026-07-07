@@ -165,13 +165,13 @@ const Packs = () => {
             onClick={() => setShowMenu(true)}
             className="p-2 -ml-2 rounded-full text-foreground hover:bg-foreground/10 transition-colors"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-[18px] h-[18px]" />
           </button>
           <div className="relative z-10 pointer-events-none">
             {logoUrl ? <img src={logoUrl} alt="Logo" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
           </div>
           <Link to="/inbox" className="relative p-2 -mr-2">
-            <Inbox className="w-6 h-6" />
+            <Inbox className="w-[18px] h-[18px]" />
             {hasUnread && <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />}
           </Link>
         </header>

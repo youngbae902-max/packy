@@ -348,11 +348,11 @@ const Index = () => {
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button aria-label="Mais" className="p-2 rounded-full hover:bg-white/5 transition-colors text-foreground/70 hover:text-foreground">
-                  <MoreVertical className="w-5 h-5" />
+                <button aria-label="Mais" className="p-2 rounded-full hover:bg-white/5 transition-colors text-[#7A7A7A] hover:text-white">
+                  <MoreVertical className="w-[18px] h-[18px]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-[#141414] border-white/10">
+              <DropdownMenuContent align="end" className="bg-[#1C1C1C] border-[#1E1E1E]">
                 <DropdownMenuItem onClick={() => setIsModalOpen(true)} className="gap-2">
                   <Plus className="w-4 h-4" /> Novo pack
                 </DropdownMenuItem>
