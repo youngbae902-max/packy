@@ -121,10 +121,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[hsl(0,0%,4%)] border border-border/40 transition-all p-2.5 flex flex-col"
+        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#1C1C1C] border border-[#1E1E1E] transition-all p-2.5 flex flex-col"
+        style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         {/* Square cover */}
-        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[hsl(0,0%,2%)]">
+        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#1C1C1C]">
           {pack.cover_url ? (
             <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
           ) : (
@@ -132,7 +133,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
 
           {/* time-ago pill (bottom-left over image) */}
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/75 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-bold">
+          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1C1C1C]/85 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-medium">
             <span>{formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR, addSuffix: false })
               .replace(' segundos','s').replace(' segundo','s')
               .replace(' minutos','min').replace(' minuto','min')
@@ -150,7 +151,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             </div>
           )}
           {pack.is_premium && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-full text-[10px] font-medium backdrop-blur-sm">
               <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
             </div>
@@ -158,12 +159,12 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </div>
 
         {/* Title — up to 2 lines, proportional */}
-        <h3 className="mt-2.5 text-[15px] leading-tight font-bold text-foreground line-clamp-2 min-h-[2.6em]">
+        <h3 className="mt-2.5 text-[14px] leading-tight font-medium text-foreground line-clamp-2 min-h-[2.6em]" style={{ letterSpacing: '-0.01em' }}>
           {pack.title}
         </h3>
 
         {/* Author (visible) */}
-        <p className="text-[12px] truncate mt-1 text-muted-foreground flex items-center gap-1">
+        <p className="text-[12px] truncate mt-1 text-muted-foreground font-normal flex items-center gap-1">
           <span className="truncate">{displayAuthor}</span>
           {isOwner && !pack.is_anonymous && (
             <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
@@ -171,7 +172,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </p>
 
         {/* Footer meta */}
-        <div className="mt-2 pt-2 border-t border-border/30 text-[10px] font-bold tracking-wider text-muted-foreground">
+        <div className="mt-2 pt-2 border-t border-[#1E1E1E] text-[10px] font-normal tracking-wider text-muted-foreground">
           {categoryLabel} <span className="mx-1">·</span> {timeAgo}
         </div>
       </button>
