@@ -352,7 +352,7 @@ const Index = () => {
                   <MoreVertical className="w-[18px] h-[18px]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-[#1C1C1C] border-[#1E1E1E]">
+              <DropdownMenuContent align="end" className="bg-[#1A1A1A] border-[#1C1C1C]">
                 <DropdownMenuItem onClick={() => setIsModalOpen(true)} className="gap-2">
                   <Plus className="w-4 h-4" /> Novo pack
                 </DropdownMenuItem>

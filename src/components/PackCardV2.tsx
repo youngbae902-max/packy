@@ -121,11 +121,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#1C1C1C] border border-[#1E1E1E] transition-all p-2.5 flex flex-col"
+        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#1A1A1A] border border-[#1C1C1C] transition-all p-2.5 flex flex-col"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         {/* Square cover */}
-        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#1C1C1C]">
+        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#1A1A1A]">
           {pack.cover_url ? (
             <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
           ) : (
@@ -133,7 +133,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
 
           {/* time-ago pill (bottom-left over image) */}
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1C1C1C]/85 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-medium">
+          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1A1A1A]/85 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-medium">
             <span>{formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR, addSuffix: false })
               .replace(' segundos','s').replace(' segundo','s')
               .replace(' minutos','min').replace(' minuto','min')
@@ -172,7 +172,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </p>
 
         {/* Footer meta */}
-        <div className="mt-2 pt-2 border-t border-[#1E1E1E] text-[10px] font-normal tracking-wider text-muted-foreground">
+        <div className="mt-2 pt-2 border-t border-[#1C1C1C] text-[10px] font-normal tracking-wider text-muted-foreground">
           {categoryLabel} <span className="mx-1">·</span> {timeAgo}
         </div>
       </button>
