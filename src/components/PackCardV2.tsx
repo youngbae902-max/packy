@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { Pack } from '@/hooks/useSupabasePacks';
 import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
@@ -41,6 +43,20 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   const { comments, addComment, updateComment, deleteComment, pinComment } = usePackComments(pack.id);
 
   const isOwner = (pack.author_name || '').toLowerCase().replace(/^@/, '') === 'goat';
+
+  const { data: authorProfile } = useQuery({
+    queryKey: ['author-profile-badge', pack.user_id],
+    queryFn: async () => {
+      if (!pack.user_id) return null;
+      const { data } = await supabase
+        .from('profiles')
+        .select('has_spotify_badge, verified_badge_text, verified_badge_bg_color, verified_badge_text_color, verified_rgb')
+        .eq('user_id', pack.user_id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!pack.user_id && !pack.is_anonymous,
+  });
 
   const formattedDate = format(new Date(pack.created_at), "dd/MM/yyyy", { locale: ptBR });
   const displayAuthor = pack.is_anonymous ? 'Anônimo' : pack.author_name || 'Desconhecido';
@@ -121,11 +137,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#101010] border border-[#121212] transition-all p-2.5 flex flex-col"
+        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#121212] border border-[#1C1C1C] transition-all p-2.5 flex flex-col"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         {/* Square cover */}
-        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#101010]">
+        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#121212]">
           {pack.cover_url ? (
             <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
           ) : (
@@ -133,7 +149,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
 
           {/* time-ago pill (bottom-left over image) */}
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#101010]/85 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-medium">
+          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#121212]/85 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-medium">
             <span>{formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR, addSuffix: false })
               .replace(' segundos','s').replace(' segundo','s')
               .replace(' minutos','min').replace(' minuto','min')
@@ -166,13 +182,24 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         {/* Author (visible) */}
         <p className="text-[12px] truncate mt-1 text-muted-foreground font-normal flex items-center gap-1">
           <span className="truncate">{displayAuthor}</span>
-          {isOwner && !pack.is_anonymous && (
-            <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
+          {!pack.is_anonymous && (authorProfile?.has_spotify_badge || isOwner) && (
+            <span 
+              className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${authorProfile?.verified_rgb ? 'badge-rgb' : ''}`}
+              style={authorProfile?.verified_rgb ? undefined : { 
+                color: authorProfile?.verified_badge_text_color || '#16A249', 
+                backgroundColor: authorProfile?.verified_badge_bg_color || '#0F2B1A' 
+              }}
+              title={authorProfile?.verified_badge_text || 'Verificado'}
+            >
+              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+              </svg>
+            </span>
           )}
         </p>
 
         {/* Footer meta */}
-        <div className="mt-2 pt-2 border-t border-[#121212] text-[10px] font-normal tracking-wider text-muted-foreground">
+        <div className="mt-2 pt-2 border-t border-[#1C1C1C] text-[10px] font-normal tracking-wider text-muted-foreground">
           {categoryLabel} <span className="mx-1">·</span> {timeAgo}
         </div>
       </button>

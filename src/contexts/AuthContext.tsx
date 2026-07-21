@@ -25,6 +25,8 @@ interface Profile {
   admin_badge_text_color?: string | null;
   theme_mode?: 'dark' | 'light' | null;
   recovery_keyword?: string | null;
+  online_indicator_shape?: string | null;
+  avatar_shape?: string | null;
 }
 
 interface AuthContextType {

@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { ImageCropModal } from '@/components/ImageCropModal';
 
 const packTypes = [
   { value: 'samples', label: 'Samples' },
@@ -40,29 +41,41 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
   const [requiresShortener, setRequiresShortener] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [cropImage, setCropImage] = useState<string | null>(null);
+  const [showCropModal, setShowCropModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user) return;
+    if (!file) return;
 
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCropImage(reader.result as string);
+      setShowCropModal(true);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const handleCroppedImage = async (blob: Blob) => {
+    if (!user) return;
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-      
+      const fileName = `${user.id}/${Date.now()}.jpg`;
       const { error: uploadError } = await supabase.storage
         .from('covers')
-        .upload(fileName, file);
-      
+        .upload(fileName, blob, { contentType: 'image/jpeg', upsert: true });
+
       if (uploadError) throw uploadError;
-      
+
       const { data: { publicUrl } } = supabase.storage
         .from('covers')
         .getPublicUrl(fileName);
-      
+
       setCoverPreview(publicUrl);
-    } catch (error) {
+      toast.success('Imagem cortada e enviada!');
+    } catch {
       toast.error('Erro ao fazer upload da imagem');
     } finally {
       setIsUploading(false);
@@ -283,6 +296,18 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
             Enviar para Análise
           </button>
         </form>
+
+        {cropImage && (
+          <ImageCropModal
+            isOpen={showCropModal}
+            onClose={() => { setShowCropModal(false); setCropImage(null); }}
+            imageSrc={cropImage}
+            onCropComplete={handleCroppedImage}
+            aspectRatio={1}
+            cropShape="rect"
+            title="Ajustar Capa do Pack (4x4 Quadrada)"
+          />
+        )}
       </div>
     </div>
   );

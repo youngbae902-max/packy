@@ -12,6 +12,7 @@ interface ImageCropModalProps {
   onCropComplete: (croppedBlob: Blob) => void;
   aspectRatio?: number; // 1 for profile (1:1), 2.5 for banner (5:2)
   title?: string;
+  cropShape?: 'rect' | 'round';
 }
 
 function createImage(url: string): Promise<HTMLImageElement> {
@@ -74,11 +75,14 @@ export function ImageCropModal({
   onCropComplete,
   aspectRatio = 1,
   title = 'Ajustar Imagem',
+  cropShape,
 }: ImageCropModalProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+
+  const activeCropShape = cropShape || (aspectRatio === 1 ? 'round' : 'rect');
 
   const onCropCompleteHandler = useCallback((_: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -121,8 +125,8 @@ export function ImageCropModal({
             onZoomChange={setZoom}
             onRotationChange={setRotation}
             onCropComplete={onCropCompleteHandler}
-            cropShape={aspectRatio === 1 ? 'round' : 'rect'}
-            showGrid={aspectRatio !== 1}
+            cropShape={activeCropShape}
+            showGrid={activeCropShape !== 'round'}
           />
         </div>
 
