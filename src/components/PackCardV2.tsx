@@ -132,19 +132,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             <PackImagePlaceholder />
           )}
 
-          {/* time-ago pill (bottom-left over image) */}
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1C1C1C]/85 backdrop-blur-sm text-foreground px-1.5 py-0.5 rounded-md text-[10px] font-medium">
-            <span>{formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR, addSuffix: false })
-              .replace(' segundos','s').replace(' segundo','s')
-              .replace(' minutos','min').replace(' minuto','min')
-              .replace(' horas','h').replace(' hora','h')
-              .replace(' dias','d').replace(' dia','d')
-              .replace(' meses','mes').replace(' mês','mes')
-              .replace(' anos','a').replace(' ano','a')}
-            </span>
-            <BadgeCheck className="w-3 h-3" />
-          </div>
-
           {pack.is_pinned && (
             <div className="absolute top-2 left-2">
               <Pin className="w-3.5 h-3.5 text-foreground drop-shadow-lg" />

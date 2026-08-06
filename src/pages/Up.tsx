@@ -91,9 +91,9 @@ export default function Up() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {beats.map(beat => (
-              <div key={beat.id} className="rounded-2xl bg-[hsl(0,0%,4%)] border border-border/40 overflow-hidden">
+              <div key={beat.id} className="rounded-2xl bg-[#1C1C1C] border border-[#2A2A2A] overflow-hidden">
                 <div className="flex gap-3 p-3">
-                  <div className="w-20 h-20 rounded-lg bg-[hsl(0,0%,2%)] flex-shrink-0 overflow-hidden flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-lg bg-[#232323] flex-shrink-0 overflow-hidden flex items-center justify-center">
                     {beat.cover_url ? (
                       <img src={beat.cover_url} alt="" className="w-full h-full object-cover" />
                     ) : (
@@ -110,7 +110,7 @@ export default function Up() {
                     </p>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 border-t border-border/40 text-xs">
+                <div className="grid grid-cols-3 border-t border-[#2A2A2A] text-xs">
                   <button
                     onClick={() => handleDownload(beat)}
                     disabled={pending === beat.id}
@@ -121,13 +121,13 @@ export default function Up() {
                   </button>
                   <button
                     onClick={() => { setEditing(beat); setEditName(beat.name); }}
-                    className="flex items-center justify-center gap-1 py-2.5 text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition border-l border-border/40"
+                    className="flex items-center justify-center gap-1 py-2.5 text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition border-l border-[#2A2A2A]"
                   >
                     <Edit2 className="w-3.5 h-3.5" /> Editar
                   </button>
                   <button
                     onClick={() => handleDelete(beat)}
-                    className="flex items-center justify-center gap-1 py-2.5 text-muted-foreground hover:text-destructive hover:bg-foreground/5 transition border-l border-border/40"
+                    className="flex items-center justify-center gap-1 py-2.5 text-muted-foreground hover:text-destructive hover:bg-foreground/5 transition border-l border-[#2A2A2A]"
                   >
                     <Trash2 className="w-3.5 h-3.5" /> Excluir
                   </button>

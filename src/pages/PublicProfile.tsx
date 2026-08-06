@@ -130,7 +130,9 @@ export default function PublicProfile() {
                   (profile as any)?.online_indicator_shape === 'square' ? 'w-3 h-3' :
                   (profile as any)?.online_indicator_shape === 'rounded-square' ? 'w-3 h-3 rounded-[3px]' :
                   (profile as any)?.online_indicator_shape === 'rectangle' ? 'w-5 h-2.5' :
-                  'w-5 h-2.5 rounded-[4px]'
+                  (profile as any)?.online_indicator_shape === 'rounded-rectangle' ? 'w-5 h-2.5 rounded-[4px]' :
+                  (profile as any)?.online_indicator_shape === 'star' ? 'w-3 h-3 [clip-path:polygon(50%_0%,61%_35%,98%_35%,68%_57%,79%_91%,50%_70%,21%_91%,32%_57%,2%_35%,39%_35%)]' :
+                  'w-5 h-2.5 rounded-full'
                 }`}
                 style={{ backgroundColor: accent }} 
               />
