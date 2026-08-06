@@ -72,6 +72,9 @@ export function useProfile() {
     },
     onSuccess: () => {
       refreshProfile();
+      queryClient.invalidateQueries({ queryKey: ['public-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['profile-search'] });
+      queryClient.invalidateQueries({ queryKey: ['pack-comments'] });
     },
   });
 
