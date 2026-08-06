@@ -1127,7 +1127,24 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      profiles_private: {
+        Row: {
+          recovery_keyword: string | null
+          user_id: string | null
+          wallet_balance: number | null
+        }
+        Insert: {
+          recovery_keyword?: string | null
+          user_id?: string | null
+          wallet_balance?: number | null
+        }
+        Update: {
+          recovery_keyword?: string | null
+          user_id?: string | null
+          wallet_balance?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       admin_adjust_wallet: {
