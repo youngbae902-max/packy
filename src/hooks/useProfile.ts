@@ -31,6 +31,9 @@ interface ProfileUpdates {
   avatar_shape?: string | null;
   pack_name_prefix?: string | null;
   pack_name_emoji?: string | null;
+  online_indicator_shape?: string | null;
+  verified_rgb?: boolean;
+  verified_badge_text?: string | null;
 }
 
 export function useProfile() {
@@ -69,6 +72,9 @@ export function useProfile() {
     },
     onSuccess: () => {
       refreshProfile();
+      queryClient.invalidateQueries({ queryKey: ['public-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['profile-search'] });
+      queryClient.invalidateQueries({ queryKey: ['pack-comments'] });
     },
   });
 

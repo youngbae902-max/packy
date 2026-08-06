@@ -406,6 +406,15 @@ const Index = () => {
               </section>
             )}
 
+            {customSections.map(({ section, packs }) => (
+              packs.length > 0 && (
+                <section key={section.id} className="mb-12">
+                  <SectionTitle icon={ListMusic} title={section.title} />
+                  <Carousel>{packs.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                </section>
+              )
+            ))}
+
             {trending.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Flame} title="Em Alta" badge="🔥" />
@@ -444,15 +453,6 @@ const Index = () => {
                 <Carousel>{projectsPremium.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
-
-            {customSections.map(({ section, packs }) => (
-              packs.length > 0 && (
-                <section key={section.id} className="mb-12">
-                  <SectionTitle icon={ListMusic} title={section.title} />
-                  <Carousel>{packs.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
-                </section>
-              )
-            ))}
 
             {samples.length > 0 && (
               <section className="mb-12">
