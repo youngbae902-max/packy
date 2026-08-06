@@ -1127,24 +1127,7 @@ export type Database = {
       }
     }
     Views: {
-      profiles_private: {
-        Row: {
-          recovery_keyword: string | null
-          user_id: string | null
-          wallet_balance: number | null
-        }
-        Insert: {
-          recovery_keyword?: string | null
-          user_id?: string | null
-          wallet_balance?: number | null
-        }
-        Update: {
-          recovery_keyword?: string | null
-          user_id?: string | null
-          wallet_balance?: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       admin_adjust_wallet: {
@@ -1155,6 +1138,13 @@ export type Database = {
       admin_get_user_login: {
         Args: { target_user_id: string }
         Returns: string
+      }
+      admin_list_wallets: {
+        Args: never
+        Returns: {
+          user_id: string
+          wallet_balance: number
+        }[]
       }
       admin_set_pack_order: {
         Args: { new_order: number; pack_id_in: string }
@@ -1179,6 +1169,13 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
+      my_private_profile: {
+        Args: never
+        Returns: {
+          recovery_keyword: string
+          wallet_balance: number
+        }[]
+      }
       promote_to_admin: {
         Args: { admin_password: string; user_email: string }
         Returns: boolean
