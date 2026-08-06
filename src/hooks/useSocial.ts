@@ -68,7 +68,7 @@ export function usePublicProfile(userId?: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id,user_id,username,artist_name,avatar_url,created_at,updated_at,username_changes_today,last_username_change_date,is_banned,is_online,last_seen,has_spotify_badge,bio,instagram_url,spotify_url,soundcloud_url,youtube_url,banner_url,status_ring_color,thought_bubble,theme_preference,theme_accent_color,online_accent_color,theme_mode,verified_badge_color,admin_badge_color,verified_badge_bg_color,verified_badge_text_color,admin_badge_bg_color,admin_badge_border_color,admin_badge_text_color,show_badges_in_bio,show_badges_in_thought,profile_decoration_url,profile_decoration_position,saved_themes,show_admin_badge,verified_rgb,avatar_shape,online_indicator_shape,verified_badge_text')
         .eq('user_id', userId!)
         .single();
 
