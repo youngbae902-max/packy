@@ -160,7 +160,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
         {/* Footer meta */}
         <div className="mt-2 pt-2 border-t border-[#1E1E1E] text-[10px] font-normal tracking-wider text-muted-foreground">
-          {categoryLabel} <span className="mx-1">·</span> {timeAgo}
+          {categoryLabel}
         </div>
       </button>
 

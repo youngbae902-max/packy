@@ -235,6 +235,20 @@ const Packs = () => {
               ))}
             </HorizontalCarousel>
 
+
+            {/* Seções personalizadas da Home (admin) */}
+            {customSections.map(({ section, packs }) => (
+              packs.length > 0 && (
+                <HorizontalCarousel key={section.id} title={section.title}>
+                  {packs.map(pack => (
+                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                      <PackCardV2 pack={pack} />
+                    </div>
+                  ))}
+                </HorizontalCarousel>
+              )
+            ))}
+
             {hasCategories ? (
               categories.map(category => (
                 <HorizontalCarousel key={category.id} title={category.name}>
@@ -267,19 +281,6 @@ const Packs = () => {
                     ))}
                   </HorizontalCarousel>
                 )}
-
-                {/* Seções personalizadas da Home (admin) — aparecem abaixo de Projetos e FLPs, na ordem definida */}
-                {customSections.map(({ section, packs }) => (
-                  packs.length > 0 && (
-                    <HorizontalCarousel key={section.id} title={section.title}>
-                      {packs.map(pack => (
-                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                          <PackCardV2 pack={pack} />
-                        </div>
-                      ))}
-                    </HorizontalCarousel>
-                  )
-                ))}
 
                 {acapellas.length > 0 && (
                   <HorizontalCarousel title="Acapellas & Vozes">
