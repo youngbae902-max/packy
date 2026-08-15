@@ -324,6 +324,45 @@ export type Database = {
         }
         Relationships: []
       }
+      home_banners: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          display_order: number
+          id: string
+          image_url: string
+          is_active: boolean
+          link_url: string | null
+          subtitle: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          id?: string
+          image_url: string
+          is_active?: boolean
+          link_url?: string | null
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          link_url?: string | null
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       home_section_packs: {
         Row: {
           created_at: string
@@ -1145,12 +1184,10 @@ export type Database = {
           is_banned: boolean | null
           is_online: boolean | null
           last_seen: string | null
-          last_username_change_date: string | null
           online_accent_color: string | null
           online_indicator_shape: string | null
           profile_decoration_position: Json | null
           profile_decoration_url: string | null
-          saved_themes: Json | null
           show_admin_badge: boolean | null
           show_badges_in_bio: boolean | null
           show_badges_in_thought: boolean | null
@@ -1158,13 +1195,10 @@ export type Database = {
           spotify_url: string | null
           status_ring_color: string | null
           theme_accent_color: string | null
-          theme_mode: string | null
-          theme_preference: string | null
           thought_bubble: string | null
           updated_at: string | null
           user_id: string | null
           username: string | null
-          username_changes_today: number | null
           verified_badge_bg_color: string | null
           verified_badge_color: string | null
           verified_badge_text: string | null
@@ -1189,12 +1223,10 @@ export type Database = {
           is_banned?: boolean | null
           is_online?: boolean | null
           last_seen?: string | null
-          last_username_change_date?: string | null
           online_accent_color?: string | null
           online_indicator_shape?: string | null
           profile_decoration_position?: Json | null
           profile_decoration_url?: string | null
-          saved_themes?: Json | null
           show_admin_badge?: boolean | null
           show_badges_in_bio?: boolean | null
           show_badges_in_thought?: boolean | null
@@ -1202,13 +1234,10 @@ export type Database = {
           spotify_url?: string | null
           status_ring_color?: string | null
           theme_accent_color?: string | null
-          theme_mode?: string | null
-          theme_preference?: string | null
           thought_bubble?: string | null
           updated_at?: string | null
           user_id?: string | null
           username?: string | null
-          username_changes_today?: number | null
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
           verified_badge_text?: string | null
@@ -1233,12 +1262,10 @@ export type Database = {
           is_banned?: boolean | null
           is_online?: boolean | null
           last_seen?: string | null
-          last_username_change_date?: string | null
           online_accent_color?: string | null
           online_indicator_shape?: string | null
           profile_decoration_position?: Json | null
           profile_decoration_url?: string | null
-          saved_themes?: Json | null
           show_admin_badge?: boolean | null
           show_badges_in_bio?: boolean | null
           show_badges_in_thought?: boolean | null
@@ -1246,13 +1273,10 @@ export type Database = {
           spotify_url?: string | null
           status_ring_color?: string | null
           theme_accent_color?: string | null
-          theme_mode?: string | null
-          theme_preference?: string | null
           thought_bubble?: string | null
           updated_at?: string | null
           user_id?: string | null
           username?: string | null
-          username_changes_today?: number | null
           verified_badge_bg_color?: string | null
           verified_badge_color?: string | null
           verified_badge_text?: string | null
