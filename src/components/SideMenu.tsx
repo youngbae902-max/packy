@@ -57,9 +57,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
               onClick={onClose}
               className="group flex items-center gap-4 px-4 py-3 rounded-xl text-foreground/80 hover:bg-foreground/[0.06] hover:text-foreground transition-all"
             >
-              <span className="w-9 h-9 rounded-lg bg-[hsl(0,0%,5%)] border border-border/50 flex items-center justify-center group-hover:bg-[hsl(0,0%,8%)] group-hover:border-border transition-colors">
-                <Icon className="w-4 h-4" />
-              </span>
+              <Icon className="w-[18px] h-[18px] shrink-0" />
               <span className="text-sm font-medium">{label}</span>
             </Link>
           ))}
@@ -73,14 +71,13 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 className="group flex items-center gap-4 px-4 py-3 rounded-xl text-foreground/90 hover:bg-foreground/[0.06] transition-all"
                 aria-label="Painel"
               >
-                <span className="w-9 h-9 rounded-lg bg-[hsl(0,0%,5%)] border border-border/50 flex items-center justify-center">
-                  <Monitor className="w-4 h-4" />
-                </span>
+                <Monitor className="w-[18px] h-[18px] shrink-0" />
                 <span className="text-sm font-semibold">Painel</span>
               </Link>
             </>
           )}
         </nav>
+
 
         <div className="px-6 py-4 border-t border-border/40">
           <p className="text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
