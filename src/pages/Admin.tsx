@@ -41,6 +41,7 @@ import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { useCategories } from '@/hooks/useCategories';
 import { HomeSectionsManager } from '@/components/HomeSectionsManager';
+import { HomeBannersManager } from '@/components/HomeBannersManager';
 
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home';
@@ -489,7 +490,12 @@ export default function Admin() {
         )}
 
         {/* Home Sections Tab */}
-        {mainTab === 'home' && <HomeSectionsManager />}
+        {mainTab === 'home' && (
+          <div className="space-y-8">
+            <HomeBannersManager />
+            <HomeSectionsManager />
+          </div>
+        )}
 
         {/* Sub Tabs for content moderation */}
         {(mainTab === 'packs' || mainTab === 'projetos' || mainTab === 'acapellas') && (

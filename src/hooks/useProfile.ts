@@ -64,7 +64,7 @@ export function useProfile() {
         .from('profiles')
         .update(updates as any)
         .eq('user_id', user.id)
-        .select()
+        .select('id,user_id,online_indicator_shape,avatar_shape')
         .maybeSingle();
 
       if (error) throw error;
