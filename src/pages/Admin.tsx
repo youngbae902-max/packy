@@ -346,16 +346,17 @@ export default function Admin() {
           <div className="w-16" />
         </div>
 
-        {/* Main Tabs */}
-        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide snap-x">
+        {/* Main Tabs — ícones sem fundo, scroll fino */}
+        <div className="flex gap-4 mb-6 overflow-x-auto pb-2 -mx-4 px-4 snap-x admin-thin-scroll">
           {mainTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-              className={`snap-start flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap transition-all flex-shrink-0 border ${
+              title={tab.label}
+              className={`snap-start flex items-center justify-center p-1 bg-transparent transition-all flex-shrink-0 ${
                 mainTab === tab.id
-                  ? 'bg-white text-black border-white shadow-[0_0_0_3px_rgba(255,255,255,0.08)]'
-                  : 'bg-white/[0.03] text-white/50 border-white/5 hover:text-white hover:bg-white/[0.07]'
+                  ? 'text-foreground scale-110'
+                  : 'text-muted-foreground/60 hover:text-foreground'
               }`}
             >
               <tab.icon className="w-5 h-5" aria-label={tab.label} />
