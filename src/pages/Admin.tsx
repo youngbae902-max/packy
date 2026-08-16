@@ -53,6 +53,10 @@ export default function Admin() {
   const { isAdmin, isLoading, user, profile } = useAuth();
   const [mainTab, setMainTab] = useState<MainTab>('stats');
   const [subTab, setSubTab] = useState<SubTab>('pending');
+  const [reorderQuick, setReorderQuick] = useState(false);
+  const [quickOrder, setQuickOrder] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('admin_quick_order') || '[]'); } catch { return []; }
+  });
   const [editingPack, setEditingPack] = useState<Pack | null>(null);
   const [editingAcapella, setEditingAcapella] = useState<Acapella | null>(null);
   const [showAlbumModal, setShowAlbumModal] = useState(false);
