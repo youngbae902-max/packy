@@ -264,7 +264,18 @@ const Conta = () => {
                   </div>
                 )}
               </button>
-              <span className="absolute -bottom-0.5 right-1 rounded-full border-2 border-background" style={{ backgroundColor: themeColor, width: '1.5rem', height: '0.65rem' }} />
+              <span
+                className={`absolute -bottom-0.5 right-1 border-2 border-background ${
+                  onlineShape === 'dot' ? 'w-4 h-4 rounded-full' :
+                  onlineShape === 'square' ? 'w-4 h-4' :
+                  onlineShape === 'rounded-square' ? 'w-4 h-4 rounded-[4px]' :
+                  onlineShape === 'rectangle' ? 'w-6 h-2.5' :
+                  onlineShape === 'rounded-rectangle' ? 'w-6 h-2.5 rounded-[4px]' :
+                  onlineShape === 'star' ? 'w-4 h-4 [clip-path:polygon(50%_0%,61%_35%,98%_35%,68%_57%,79%_91%,50%_70%,21%_91%,32%_57%,2%_35%,39%_35%)]' :
+                  'w-6 h-2.5 rounded-full'
+                }`}
+                style={{ backgroundColor: themeColor }}
+              />
               {(profile as any)?.profile_decoration_url && (() => {
                 const pos = (profile as any)?.profile_decoration_position || {};
                 const x = pos.x ?? 25;
