@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid, ChevronLeft, ChevronRight, ChevronDown, Image as ImageIcon } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { NumericKeypad } from '@/components/NumericKeypad';
 import { useAuth } from '@/contexts/AuthContext';
@@ -53,6 +53,10 @@ export default function Admin() {
   const { isAdmin, isLoading, user, profile } = useAuth();
   const [mainTab, setMainTab] = useState<MainTab>('stats');
   const [subTab, setSubTab] = useState<SubTab>('pending');
+  const [reorderQuick, setReorderQuick] = useState(false);
+  const [quickOrder, setQuickOrder] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('admin_quick_order') || '[]'); } catch { return []; }
+  });
   const [editingPack, setEditingPack] = useState<Pack | null>(null);
   const [editingAcapella, setEditingAcapella] = useState<Acapella | null>(null);
   const [showAlbumModal, setShowAlbumModal] = useState(false);
@@ -346,16 +350,17 @@ export default function Admin() {
           <div className="w-16" />
         </div>
 
-        {/* Main Tabs */}
-        <div className="flex gap-1.5 mb-6 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide snap-x">
+        {/* Main Tabs — ícones sem fundo, scroll fino */}
+        <div className="flex gap-4 mb-6 overflow-x-auto pb-2 -mx-4 px-4 snap-x admin-thin-scroll">
           {mainTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-              className={`snap-start flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap transition-all flex-shrink-0 border ${
+              title={tab.label}
+              className={`snap-start flex items-center justify-center p-1 bg-transparent transition-all flex-shrink-0 ${
                 mainTab === tab.id
-                  ? 'bg-white text-black border-white shadow-[0_0_0_3px_rgba(255,255,255,0.08)]'
-                  : 'bg-white/[0.03] text-white/50 border-white/5 hover:text-white hover:bg-white/[0.07]'
+                  ? 'text-foreground scale-110'
+                  : 'text-muted-foreground/60 hover:text-foreground'
               }`}
             >
               <tab.icon className="w-5 h-5" aria-label={tab.label} />
@@ -364,7 +369,52 @@ export default function Admin() {
         </div>
 
         {/* Stats Tab */}
-        {mainTab === 'stats' && (
+        {mainTab === 'stats' && (() => {
+          const quickActions = [
+            { id: 'pack', icon: Plus, label: 'Pack', onClick: () => setShowPackModal(true) },
+            { id: 'premium', icon: Crown, label: 'Premium', onClick: () => setShowPremiumPackModal(true) },
+            { id: 'acapella', icon: Mic, label: 'Acapella', onClick: () => setShowAcapellaModal(true) },
+            { id: 'giftall', icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
+            {
+              id: 'renomear',
+              icon: Edit2,
+              label: 'Renomear packs',
+              onClick: async () => {
+                const prefix = window.prompt('Prefixo (ex: DRUM KIT). Deixe vazio para remover.');
+                if (prefix === null) return;
+                const emoji = window.prompt('Emoji do final (ex: 🔥). Deixe vazio para nenhum.') || '';
+                const all = [...allApprovedPacks, ...pendingPacks];
+                let ok = 0;
+                for (const p of all) {
+                  let base = (p.title || '').trim();
+                  base = base.replace(/^[^|]+\|\s*/, '');
+                  base = base.replace(/\s+[\p{Emoji_Presentation}\p{Extended_Pictographic}]+\s*$/u, '').trim();
+                  const composed = [
+                    prefix.trim() ? `${prefix.trim()} | ${base}` : base,
+                    emoji.trim(),
+                  ].filter(Boolean).join(' ');
+                  const { error } = await supabase.from('packs').update({ title: composed }).eq('id', p.id);
+                  if (!error) ok++;
+                }
+                toast.success(`${ok} pack(s) renomeado(s)`);
+              },
+            },
+          ];
+          const ordered = [
+            ...quickOrder.map(id => quickActions.find(a => a.id === id)).filter(Boolean),
+            ...quickActions.filter(a => !quickOrder.includes(a.id)),
+          ] as typeof quickActions;
+
+          const move = (index: number, dir: -1 | 1) => {
+            const ids = ordered.map(a => a.id);
+            const target = index + dir;
+            if (target < 0 || target >= ids.length) return;
+            [ids[index], ids[target]] = [ids[target], ids[index]];
+            setQuickOrder(ids);
+            localStorage.setItem('admin_quick_order', JSON.stringify(ids));
+          };
+
+          return (
           <div className="space-y-5">
             <div className="grid grid-cols-2 gap-2.5">
               {[
@@ -375,63 +425,54 @@ export default function Admin() {
                 { label: 'Usuários', value: stats.totalUsers },
                 { label: 'Pendentes', value: stats.pendingPacks + stats.pendingAcapellas },
               ].map(s => (
-                <div key={s.label} className="rounded-2xl bg-[hsl(0,0%,4%)] border border-border/40 p-4">
+                <div key={s.label} className="rounded-2xl bg-[#1C1C1C] border border-[#252525] p-4">
                   <p className="text-2xl font-black text-foreground">{s.value}</p>
                   <p className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">{s.label}</p>
                 </div>
               ))}
             </div>
 
-            <div className="pt-4 border-t border-border/40">
-              <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3">Ações Rápidas</p>
+            <div className="pt-4 border-t border-[#1E1E1E]">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Ações Rápidas</p>
+                <button
+                  onClick={() => setReorderQuick(v => !v)}
+                  className={`text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors ${reorderQuick ? 'bg-foreground text-background border-foreground' : 'bg-[#1C1C1C] text-muted-foreground border-[#252525] hover:text-foreground'}`}
+                >
+                  {reorderQuick ? 'Concluir' : 'Reordenar'}
+                </button>
+              </div>
               <div className="grid grid-cols-2 gap-2">
-                {[
-                  { icon: Plus, label: 'Pack', onClick: () => setShowPackModal(true) },
-                  { icon: Crown, label: 'Premium', onClick: () => setShowPremiumPackModal(true) },
-                  { icon: Mic, label: 'Acapella', onClick: () => setShowAcapellaModal(true) },
-                  { icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
-                  {
-                    icon: Edit2,
-                    label: 'Renomear packs',
-                    onClick: async () => {
-                      const prefix = window.prompt('Prefixo (ex: DRUM KIT). Deixe vazio para remover.');
-                      if (prefix === null) return;
-                      const emoji = window.prompt('Emoji do final (ex: 🔥). Deixe vazio para nenhum.') || '';
-                      const all = [...allApprovedPacks, ...pendingPacks];
-                      let ok = 0;
-                      for (const p of all) {
-                        // Strip any existing "PREFIX | " and trailing emoji
-                        let base = (p.title || '').trim();
-                        base = base.replace(/^[^|]+\|\s*/, '');
-                        base = base.replace(/\s+[\p{Emoji_Presentation}\p{Extended_Pictographic}]+\s*$/u, '').trim();
-                        const composed = [
-                          prefix.trim() ? `${prefix.trim()} | ${base}` : base,
-                          emoji.trim(),
-                        ].filter(Boolean).join(' ');
-                        const { error } = await supabase.from('packs').update({ title: composed }).eq('id', p.id);
-                        if (!error) ok++;
-                      }
-                      toast.success(`${ok} pack(s) renomeado(s)`);
-                    },
-                  },
-                ].map(a => (
-                  <button
-                    key={a.label}
-                    onClick={a.onClick}
-                    className="flex items-center justify-center gap-2 py-3 rounded-xl bg-[hsl(0,0%,4%)] border border-border/40 text-foreground hover:bg-[hsl(0,0%,7%)] transition-colors text-sm font-medium"
-                  >
-                    <a.icon className="w-4 h-4" />{a.label}
-                  </button>
+                {ordered.map((a, i) => (
+                  <div key={a.id} className="flex items-center gap-1 rounded-xl bg-[#1C1C1C] border border-[#252525] hover:bg-[#232323] transition-colors overflow-hidden">
+                    {reorderQuick && (
+                      <button onClick={() => move(i, -1)} className="px-2 py-3 text-muted-foreground hover:text-foreground" aria-label="Mover para trás">
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                    )}
+                    <button
+                      onClick={reorderQuick ? undefined : a.onClick}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 text-foreground text-sm font-medium"
+                    >
+                      <a.icon className="w-4 h-4" />{a.label}
+                    </button>
+                    {reorderQuick && (
+                      <button onClick={() => move(i, 1)} className="px-2 py-3 text-muted-foreground hover:text-foreground" aria-label="Mover para frente">
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
 
-            <div className="pt-4 border-t border-border/40">
+            <div className="pt-4 border-t border-[#1E1E1E]">
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3">Aparência</p>
               <AppLogoSettings />
             </div>
           </div>
-        )}
+          );
+        })()}
 
         {/* Gift All Tab */}
         {mainTab === 'giftall' && (

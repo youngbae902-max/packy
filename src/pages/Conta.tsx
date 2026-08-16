@@ -264,7 +264,18 @@ const Conta = () => {
                   </div>
                 )}
               </button>
-              <span className="absolute -bottom-0.5 right-1 rounded-full border-2 border-background" style={{ backgroundColor: themeColor, width: '1.5rem', height: '0.65rem' }} />
+              <span
+                className={`absolute -bottom-0.5 right-1 border-2 border-background ${
+                  onlineShape === 'dot' ? 'w-4 h-4 rounded-full' :
+                  onlineShape === 'square' ? 'w-4 h-4' :
+                  onlineShape === 'rounded-square' ? 'w-4 h-4 rounded-[4px]' :
+                  onlineShape === 'rectangle' ? 'w-6 h-2.5' :
+                  onlineShape === 'rounded-rectangle' ? 'w-6 h-2.5 rounded-[4px]' :
+                  onlineShape === 'star' ? 'w-4 h-4 [clip-path:polygon(50%_0%,61%_35%,98%_35%,68%_57%,79%_91%,50%_70%,21%_91%,32%_57%,2%_35%,39%_35%)]' :
+                  'w-6 h-2.5 rounded-full'
+                }`}
+                style={{ backgroundColor: themeColor }}
+              />
               {(profile as any)?.profile_decoration_url && (() => {
                 const pos = (profile as any)?.profile_decoration_position || {};
                 const x = pos.x ?? 25;
@@ -290,7 +301,7 @@ const Conta = () => {
             {/* Name & Username */}
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-3xl font-bold text-foreground tracking-tight">{profile?.artist_name || 'Sem nome'}</h2>
-              {(profile as any)?.is_verified && (
+              {(profile as any)?.has_spotify_badge && (
                 <div
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
                   style={(profile as any)?.verified_rgb ? undefined : { color: verifiedBadgeTextColor, backgroundColor: verifiedBadgeBgColor }}
@@ -675,6 +686,16 @@ const Conta = () => {
                 </div>
                 <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
                   <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-medium">Exibir selo do Spotify</p>
+                      <p className="text-[11px] text-muted-foreground">Aparece ao lado do seu nome no perfil.</p>
+                    </div>
+                    <Switch
+                      checked={(profile as any)?.has_spotify_badge === true}
+                      onCheckedChange={async (v) => { await updateProfile({ has_spotify_badge: v } as any); await refreshProfile(); }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
                     <span className="text-[13px] font-medium">Exibir selos na bio</span>
                     <Switch
                       checked={(profile as any)?.show_badges_in_bio !== false}
