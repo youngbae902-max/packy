@@ -686,6 +686,16 @@ const Conta = () => {
                 </div>
                 <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
                   <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-medium">Exibir selo do Spotify</p>
+                      <p className="text-[11px] text-muted-foreground">Aparece ao lado do seu nome no perfil.</p>
+                    </div>
+                    <Switch
+                      checked={(profile as any)?.has_spotify_badge === true}
+                      onCheckedChange={async (v) => { await updateProfile({ has_spotify_badge: v } as any); await refreshProfile(); }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
                     <span className="text-[13px] font-medium">Exibir selos na bio</span>
                     <Switch
                       checked={(profile as any)?.show_badges_in_bio !== false}
