@@ -166,193 +166,220 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
 
       {/* Details Bottom Sheet */}
       {showDetails && (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => setShowDetails(false)}>
+        <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => { setShowDetails(false); setSheetTab('info'); }}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
-            className="relative w-full max-w-lg bg-[hsl(0,0%,3%)] border-t border-border rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
+            className="relative w-full max-w-lg bg-[#1C1C1C] border-t border-[#252525] rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
             onClick={e => e.stopPropagation()}
           >
             <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
-            
+
             <button 
-              onClick={() => setShowDetails(false)} 
+              onClick={() => { setShowDetails(false); setSheetTab('info'); }}
               className="absolute top-4 right-4 p-1 text-muted-foreground hover:text-foreground"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-start gap-4 mb-5">
-              <div className="w-16 h-16 rounded-lg overflow-hidden bg-[hsl(0,0%,2%)] flex-shrink-0">
-                {pack.cover_url ? (
-                  <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
-                ) : (
-                  <PackImagePlaceholder />
+            {sheetTab === 'info' ? (
+              <>
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-[#232323] flex-shrink-0">
+                    {pack.cover_url ? (
+                      <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <PackImagePlaceholder />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-foreground text-lg">{pack.title}</h3>
+                    <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
+                      <User className="w-3 h-3" />
+                      {authorProfileUrl ? (
+                        <Link to={authorProfileUrl} className="hover:text-foreground transition" onClick={(e) => e.stopPropagation()}>@{displayAuthor}</Link>
+                      ) : (
+                        <>@{displayAuthor}</>
+                      )}
+                      {isOwner && !pack.is_anonymous && (
+                        <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 ml-0.5" aria-label="Dono verificado" />
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-5">
+                  <span className="badge-exclusive text-xs">
+                    {packTypeLabels[pack.pack_type] || pack.pack_type}
+                  </span>
+                  {pack.is_exclusive && (
+                    <span className="badge-star text-xs">⭐ Exclusivo</span>
+                  )}
+                  {pack.is_premium && (
+                    <span className="badge-premium text-xs">
+                      <Crown className="w-3 h-3" /> R$ {pack.price?.toFixed(2)}
+                    </span>
+                  )}
+                  {pack.is_pinned && (
+                    <span className="inline-flex items-center gap-1 bg-primary/20 text-primary px-2.5 py-1 rounded-full text-xs font-bold">
+                      <Pin className="w-3 h-3" /> Fixado
+                    </span>
+                  )}
+                  {pack.requires_shortener && (
+                    <span className="inline-flex items-center gap-1 bg-foreground text-background px-2.5 py-1 rounded-full text-xs font-bold">
+                      <LinkIcon className="w-3 h-3" /> Passar pelo encurtador
+                    </span>
+                  )}
+                  {showAdminBadge && pack.is_admin_pack && (
+                    <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-2.5 py-1 rounded-full text-xs font-bold">ADM</span>
+                  )}
+                </div>
+
+                {isOwner && !pack.is_anonymous && (
+                  <div className="flex items-center gap-1.5 mb-3 text-xs text-sky-400">
+                    <BadgeCheck className="w-4 h-4 fill-sky-400/20" />
+                    <span className="font-semibold">Dono do aplicativo</span>
+                  </div>
                 )}
-              </div>
-              <div className="min-w-0">
-                <h3 className="font-bold text-foreground text-lg">{pack.title}</h3>
-                <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
-                  <User className="w-3 h-3" />
-                  {authorProfileUrl ? (
-                    <Link to={authorProfileUrl} className="hover:text-foreground transition" onClick={(e) => e.stopPropagation()}>@{displayAuthor}</Link>
-                  ) : (
-                    <>@{displayAuthor}</>
-                  )}
-                  {isOwner && !pack.is_anonymous && (
-                    <BadgeCheck className="w-4 h-4 text-sky-400 fill-sky-400/20 ml-0.5" aria-label="Dono verificado" />
-                  )}
-                </p>
-              </div>
-            </div>
 
-            <div className="flex flex-wrap gap-2 mb-5">
-              <span className="badge-exclusive text-xs">
-                {packTypeLabels[pack.pack_type] || pack.pack_type}
-              </span>
-              {pack.is_exclusive && (
-                <span className="badge-star text-xs">⭐ Exclusivo</span>
-              )}
-              {pack.is_premium && (
-                <span className="badge-premium text-xs">
-                  <Crown className="w-3 h-3" /> R$ {pack.price?.toFixed(2)}
-                </span>
-              )}
-              {pack.is_pinned && (
-                <span className="inline-flex items-center gap-1 bg-primary/20 text-primary px-2.5 py-1 rounded-full text-xs font-bold">
-                  <Pin className="w-3 h-3" /> Fixado
-                </span>
-              )}
-              {pack.requires_shortener && (
-                <span className="inline-flex items-center gap-1 bg-foreground text-background px-2.5 py-1 rounded-full text-xs font-bold">
-                  <LinkIcon className="w-3 h-3" /> Passar pelo encurtador
-                </span>
-              )}
-              {showAdminBadge && pack.is_admin_pack && (
-                <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive px-2.5 py-1 rounded-full text-xs font-bold">ADM</span>
-              )}
-            </div>
+                <div className="text-sm text-muted-foreground mb-5">
+                  Publicado em {formattedDate}
+                </div>
 
-            {isOwner && !pack.is_anonymous && (
-              <div className="flex items-center gap-1.5 mb-3 text-xs text-sky-400">
-                <BadgeCheck className="w-4 h-4 fill-sky-400/20" />
-                <span className="font-semibold">Dono do aplicativo</span>
-              </div>
-            )}
+                {/* Actions */}
+                <div className="flex items-center gap-3 mb-5">
+                  <button 
+                    onClick={handleLikeClick} 
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                      hasLiked ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
+                    {pack.likes_count || 0}
+                  </button>
+                  <button 
+                    onClick={handleFavoriteClick} 
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                      hasFavorited ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <Bookmark className={`w-4 h-4 ${hasFavorited ? 'fill-current' : ''}`} />
+                    Salvar
+                  </button>
+                  <button 
+                    onClick={handleRepostClick} 
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                      hasReposted ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <Repeat2 className="w-4 h-4" />
+                    Republicar
+                  </button>
+                </div>
 
-            <div className="text-sm text-muted-foreground mb-5">
-              Publicado em {formattedDate}
-            </div>
-
-            {/* Actions */}
-            <div className="flex items-center gap-3 mb-5">
-              <button 
-                onClick={handleLikeClick} 
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  hasLiked ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Heart className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
-                {pack.likes_count || 0}
-              </button>
-              <button 
-                onClick={handleFavoriteClick} 
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  hasFavorited ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Bookmark className={`w-4 h-4 ${hasFavorited ? 'fill-current' : ''}`} />
-                Salvar
-              </button>
-              <button 
-                onClick={handleRepostClick} 
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  hasReposted ? 'bg-foreground/15 text-foreground' : 'bg-[hsl(0,0%,6%)] text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Repeat2 className="w-4 h-4" />
-                Republicar
-              </button>
-            </div>
-
-{/* "Ver perfil do criador" removido a pedido */}
-
-            <div className="mb-5 border-t border-border/40 pt-4">
-              <div className="flex items-center gap-2 mb-4 text-base font-black text-foreground">
-                <MessageCircle className="w-4 h-4" /> Comentários
-              </div>
-              <div className="flex items-start gap-2 mb-3">
-                <Textarea
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Dar feedback..."
-                  className="min-h-[46px] rounded-2xl bg-transparent border-border/40 resize-none"
-                />
-                <button onClick={handleAddComment} className="h-[46px] w-11 rounded-full bg-foreground text-background flex items-center justify-center shrink-0">
-                  <Send className="w-4 h-4" />
+                {/* Download primeiro */}
+                <button
+                  onClick={handleDownloadClick}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-foreground text-background py-3 font-bold hover:opacity-90 transition mb-3"
+                >
+                  <Download className="w-4 h-4" />
+                  {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
                 </button>
-              </div>
-              <div className="space-y-4 max-h-64 overflow-y-auto pr-1">
-                {comments.length === 0 ? (
-                  <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
-                ) : comments.map((comment) => {
-                  const canEdit = user?.id === comment.user_id;
-                  const canDelete = canEdit || isAdmin;
-                  const name = comment.profiles?.username || comment.profiles?.artist_name || 'Usuário';
-                  return (
-                    <div key={comment.id} className="bg-transparent">
-                      <div className="flex items-start gap-2">
-                        <Avatar className="w-9 h-9">
-                          <AvatarImage src={comment.profiles?.avatar_url || undefined} />
-                          <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5">
+
+                {/* Aba de comentários */}
+                <button
+                  onClick={() => setSheetTab('comments')}
+                  className="w-full flex items-center gap-3 rounded-xl bg-[#232323] border border-[#2A2A2A] px-4 py-3 text-left hover:bg-[#282828] transition"
+                >
+                  <MessageCircle className="w-4 h-4 text-foreground/70" />
+                  <span className="flex-1 text-sm font-medium">Comentários</span>
+                  <span className="text-xs text-muted-foreground">{comments.length}</span>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-4">
+                  <button onClick={() => setSheetTab('info')} className="p-1 -ml-1 text-muted-foreground hover:text-foreground" aria-label="Voltar">
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <h3 className="text-base font-bold flex-1 truncate">Comentários</h3>
+                </div>
+
+                <button
+                  onClick={handleDownloadClick}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-foreground text-background py-3 font-bold hover:opacity-90 transition mb-4"
+                >
+                  <Download className="w-4 h-4" />
+                  {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
+                </button>
+
+                <div className="flex items-start gap-2 mb-4">
+                  <Textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Dar feedback..."
+                    className="min-h-[46px] rounded-2xl bg-[#232323] border-[#2A2A2A] resize-none"
+                  />
+                  <button onClick={handleAddComment} className="h-[46px] w-11 rounded-full bg-foreground text-background flex items-center justify-center shrink-0">
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="space-y-4 max-h-[45vh] overflow-y-auto pr-1">
+                  {comments.length === 0 ? (
+                    <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
+                  ) : comments.map((comment) => {
+                    const canEdit = user?.id === comment.user_id;
+                    const canDelete = canEdit || isAdmin;
+                    const name = comment.profiles?.username || comment.profiles?.artist_name || 'Usuário';
+                    return (
+                      <div key={comment.id}>
+                        <div className="flex items-start gap-2">
+                          <Avatar className="w-9 h-9">
+                            <AvatarImage src={comment.profiles?.avatar_url || undefined} />
+                            <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
                               <span className="text-sm font-bold truncate">@{name}</span>
                               {comment.is_pinned && <span className="text-[10px] text-primary font-bold">Fixado</span>}
-                          </div>
-                          {editingComment?.id === comment.id ? (
-                            <div className="mt-2 space-y-2">
-                              <Textarea value={editingComment.content} onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })} className="min-h-[52px] rounded-xl bg-background" />
-                              <div className="flex gap-2">
-                                <button onClick={handleUpdateComment} className="text-xs font-bold text-foreground">Salvar</button>
-                                <button onClick={() => setEditingComment(null)} className="text-xs text-muted-foreground">Cancelar</button>
-                              </div>
                             </div>
-                          ) : (
-                            <p className="text-sm text-foreground/90 mt-0.5 whitespace-pre-wrap leading-snug"><EmojiText text={comment.content} /></p>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          {isAdmin && (
-                            <button onClick={() => pinComment({ id: comment.id, pinned: !comment.is_pinned })} className="p-1 text-muted-foreground hover:text-foreground">
-                              <Pin className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-                          {canEdit && (
-                            <button onClick={() => setEditingComment({ id: comment.id, content: comment.content })} className="p-1 text-muted-foreground hover:text-foreground">
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-                          {canDelete && (
-                            <button onClick={() => deleteComment(comment.id)} className="p-1 text-muted-foreground hover:text-destructive">
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          )}
+                            {editingComment?.id === comment.id ? (
+                              <div className="mt-2 space-y-2">
+                                <Textarea value={editingComment.content} onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })} className="min-h-[52px] rounded-xl bg-[#232323] border-[#2A2A2A]" />
+                                <div className="flex gap-2">
+                                  <button onClick={handleUpdateComment} className="text-xs font-bold text-foreground">Salvar</button>
+                                  <button onClick={() => setEditingComment(null)} className="text-xs text-muted-foreground">Cancelar</button>
+                                </div>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-foreground/90 mt-0.5 whitespace-pre-wrap leading-snug"><EmojiText text={comment.content} /></p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {isAdmin && (
+                              <button onClick={() => pinComment({ id: comment.id, pinned: !comment.is_pinned })} className="p-1 text-muted-foreground hover:text-foreground">
+                                <Pin className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            {canEdit && (
+                              <button onClick={() => setEditingComment({ id: comment.id, content: comment.content })} className="p-1 text-muted-foreground hover:text-foreground">
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button onClick={() => deleteComment(comment.id)} className="p-1 text-muted-foreground hover:text-destructive">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <button
-              onClick={handleDownloadClick}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[hsl(0,0%,2%)] border border-border/60 text-foreground py-3 font-bold hover:bg-[hsl(0,0%,6%)] transition"
-            >
-              <Download className="w-4 h-4" />
-              {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
-            </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
