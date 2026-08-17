@@ -192,7 +192,7 @@ const Packs = () => {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full h-[50px] bg-[#1A1A1A] border border-[#252525] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-white/10"
-              placeholder="Buscar..."
+              placeholder={animatedPlaceholder}
             />
           </div>
           <button
