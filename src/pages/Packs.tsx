@@ -77,6 +77,11 @@ const Packs = () => {
   // Use categories from DB if available, otherwise fallback to standard sections
   const hasCategories = categories && categories.length > 0;
 
+  const animatedPlaceholder = useTypedPlaceholder(
+    ['Buscar...', 'dj arana...', 'blakes...', 'drum kit...'],
+    searchQuery.length === 0
+  );
+
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-8">
       {/* Search Header for Desktop */}
