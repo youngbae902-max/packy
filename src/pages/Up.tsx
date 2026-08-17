@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus, Download, Edit2, Trash2, FileArchive, ImageIcon, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Upload, Download, Edit2, Trash2, FileArchive, ImageIcon, Loader2 } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserBeats, UserBeat } from '@/hooks/useUserBeats';
