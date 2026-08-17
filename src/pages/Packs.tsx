@@ -20,6 +20,7 @@ import { useProfileSearch } from '@/hooks/useSocial';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { useCategories } from '@/hooks/useCategories';
 import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
+import { useTypedPlaceholder } from '@/hooks/useTypedPlaceholder';
 
 const Packs = () => {
   const { user } = useAuth();
