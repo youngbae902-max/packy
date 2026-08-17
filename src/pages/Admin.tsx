@@ -42,6 +42,7 @@ import { useWallet } from '@/hooks/useWallet';
 import { useCategories } from '@/hooks/useCategories';
 import { HomeSectionsManager } from '@/components/HomeSectionsManager';
 import { HomeBannersManager } from '@/components/HomeBannersManager';
+import { AdminSection } from '@/components/AdminSection';
 
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home';
