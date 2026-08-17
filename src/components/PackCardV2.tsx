@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
-import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon } from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon, ChevronRight, ChevronLeft } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
@@ -34,6 +34,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showCreditFlow, setShowCreditFlow] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [sheetTab, setSheetTab] = useState<'info' | 'comments'>('info');
   const [showDownloadConfirm, setShowDownloadConfirm] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [editingComment, setEditingComment] = useState<{ id: string; content: string } | null>(null);
