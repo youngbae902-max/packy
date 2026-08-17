@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus, Download, Edit2, Trash2, FileArchive, ImageIcon, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Upload, Download, Edit2, Trash2, FileArchive, ImageIcon, Loader2 } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserBeats, UserBeat } from '@/hooks/useUserBeats';
@@ -66,16 +66,20 @@ export default function Up() {
             </Link>
             <div className="flex items-center gap-2">
               <FileArchive className="w-5 h-5 text-foreground" />
-              <h1 className="text-2xl font-black tracking-tight">Up</h1>
+              <h1 className="text-2xl font-black tracking-tight">Projetos</h1>
             </div>
           </div>
-          <Button onClick={() => setShowAdd(true)} size="sm" className="rounded-full">
-            <Plus className="w-4 h-4 mr-1" /> Novo
-          </Button>
+          <button
+            onClick={() => setShowAdd(true)}
+            aria-label="Novo projeto"
+            className="shrink-0 w-[44px] h-[44px] rounded-2xl bg-[#1A1A1A] border border-[#252525] flex items-center justify-center text-foreground hover:bg-[#202020] transition-colors"
+          >
+            <Upload className="w-[18px] h-[18px]" />
+          </button>
         </div>
 
         <p className="text-xs text-muted-foreground mb-5 px-1">
-          Sua biblioteca privada de beats. Ninguém além de você consegue ver, listar ou baixar esses arquivos.
+          Sua biblioteca privada de projetos e beats. Ninguém além de você consegue ver, listar ou baixar esses arquivos.
         </p>
 
         {loading ? (

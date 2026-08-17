@@ -191,3 +191,9 @@ img.apple-emoji {
   100% { color: #ff00b8; background-color: rgba(255,0,184,0.12); }
 }
 .badge-rgb { animation: rgb-cycle 4s linear infinite; }
+
+/* Admin: barra de rolagem fina para as abas */
+.admin-thin-scroll::-webkit-scrollbar { height: 3px; }
+.admin-thin-scroll::-webkit-scrollbar-track { background: transparent; }
+.admin-thin-scroll::-webkit-scrollbar-thumb { background: hsl(var(--foreground) / 0.18); border-radius: 999px; }
+.admin-thin-scroll { scrollbar-width: thin; scrollbar-color: hsl(var(--foreground) / 0.18) transparent; }

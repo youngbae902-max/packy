@@ -20,6 +20,7 @@ import { useProfileSearch } from '@/hooks/useSocial';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { useCategories } from '@/hooks/useCategories';
 import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
+import { useTypedPlaceholder } from '@/hooks/useTypedPlaceholder';
 
 const Packs = () => {
   const { user } = useAuth();
@@ -76,6 +77,11 @@ const Packs = () => {
 
   // Use categories from DB if available, otherwise fallback to standard sections
   const hasCategories = categories && categories.length > 0;
+
+  const animatedPlaceholder = useTypedPlaceholder(
+    ['Buscar...', 'dj arana...', 'blakes...', 'drum kit...'],
+    searchQuery.length === 0
+  );
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-8">
@@ -186,7 +192,7 @@ const Packs = () => {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full h-[50px] bg-[#1A1A1A] border border-[#252525] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-white/10"
-              placeholder="Buscar..."
+              placeholder={animatedPlaceholder}
             />
           </div>
           <button

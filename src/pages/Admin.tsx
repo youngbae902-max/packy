@@ -42,6 +42,7 @@ import { useWallet } from '@/hooks/useWallet';
 import { useCategories } from '@/hooks/useCategories';
 import { HomeSectionsManager } from '@/components/HomeSectionsManager';
 import { HomeBannersManager } from '@/components/HomeBannersManager';
+import { AdminSection } from '@/components/AdminSection';
 
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home';
@@ -532,9 +533,13 @@ export default function Admin() {
 
         {/* Home Sections Tab */}
         {mainTab === 'home' && (
-          <div className="space-y-8">
-            <HomeBannersManager />
-            <HomeSectionsManager />
+          <div className="space-y-3">
+            <AdminSection title="Banners da Home" description="Carrossel de imagens no topo" icon={ImageIcon}>
+              <HomeBannersManager />
+            </AdminSection>
+            <AdminSection title="Seções da Home" description="Carrosséis de packs personalizados" icon={LayoutGrid}>
+              <HomeSectionsManager />
+            </AdminSection>
           </div>
         )}
 
