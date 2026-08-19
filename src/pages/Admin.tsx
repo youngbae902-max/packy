@@ -380,6 +380,7 @@ export default function Admin() {
             { id: 'premium', icon: Crown, label: 'Premium', onClick: () => setShowPremiumPackModal(true) },
             { id: 'acapella', icon: Mic, label: 'Acapella', onClick: () => setShowAcapellaModal(true) },
             { id: 'giftall', icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
+            { id: 'capas', icon: ImageIcon, label: 'Capas em massa', onClick: () => setShowBulkCovers(true) },
             {
               id: 'renomear',
               icon: Edit2,
