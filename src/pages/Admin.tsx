@@ -98,6 +98,8 @@ export default function Admin() {
   const [badgeDesc, setBadgeDesc] = useState('');
   const [badgeFile, setBadgeFile] = useState<File | null>(null);
   const [grantBadgeUserId, setGrantBadgeUserId] = useState('');
+  const [showBulkCovers, setShowBulkCovers] = useState(false);
+  const queryClient = useQueryClient();
   
   const { 
     pendingPacks, allApprovedPacks, rejectedPacks, 
