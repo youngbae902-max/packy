@@ -553,9 +553,13 @@ export default function Admin() {
         {/* Home Sections Tab */}
         {mainTab === 'home' && (
           <div className="space-y-3">
+            <AdminSection title="Lançamentos" description="Título, quantidade e packs em destaque" icon={Sparkles}>
+              <ReleasesSectionManager />
+            </AdminSection>
             <AdminSection title="Banners da Home" description="Carrossel de imagens no topo" icon={ImageIcon}>
               <HomeBannersManager />
             </AdminSection>
+
             <AdminSection title="Seções da Home" description="Carrosséis de packs personalizados" icon={LayoutGrid}>
               <HomeSectionsManager />
             </AdminSection>
