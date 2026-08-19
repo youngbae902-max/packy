@@ -344,7 +344,7 @@ export default function Admin() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-8">
+    <div className="admin-scope min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Top bar */}
         <div className="flex items-center justify-between mb-6">
