@@ -43,6 +43,8 @@ import { useCategories } from '@/hooks/useCategories';
 import { HomeSectionsManager } from '@/components/HomeSectionsManager';
 import { HomeBannersManager } from '@/components/HomeBannersManager';
 import { AdminSection } from '@/components/AdminSection';
+import { BulkCoversManager } from '@/components/BulkCoversManager';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home';
@@ -96,6 +98,8 @@ export default function Admin() {
   const [badgeDesc, setBadgeDesc] = useState('');
   const [badgeFile, setBadgeFile] = useState<File | null>(null);
   const [grantBadgeUserId, setGrantBadgeUserId] = useState('');
+  const [showBulkCovers, setShowBulkCovers] = useState(false);
+  const queryClient = useQueryClient();
   
   const { 
     pendingPacks, allApprovedPacks, rejectedPacks, 
@@ -376,6 +380,7 @@ export default function Admin() {
             { id: 'premium', icon: Crown, label: 'Premium', onClick: () => setShowPremiumPackModal(true) },
             { id: 'acapella', icon: Mic, label: 'Acapella', onClick: () => setShowAcapellaModal(true) },
             { id: 'giftall', icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
+            { id: 'capas', icon: ImageIcon, label: 'Capas em massa', onClick: () => setShowBulkCovers(true) },
             {
               id: 'renomear',
               icon: Edit2,
@@ -530,6 +535,20 @@ export default function Admin() {
         {mainTab === 'categorias' && (
           <div className="text-muted-foreground text-sm">Categorias em breve.</div>
         )}
+
+        {/* Bulk Covers Dialog */}
+        <Dialog open={showBulkCovers} onOpenChange={setShowBulkCovers}>
+          <DialogContent className="w-[calc(100%-1rem)] max-w-md max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Capas em massa</DialogTitle>
+              <DialogDescription>Remova todas as capas ou envie várias fotos do dispositivo de uma vez.</DialogDescription>
+            </DialogHeader>
+            <BulkCoversManager
+              packs={[...allApprovedPacks, ...pendingPacks, ...projectPacks, ...pendingProjectPacks]}
+              onDone={() => queryClient.invalidateQueries({ queryKey: ['packs'] })}
+            />
+          </DialogContent>
+        </Dialog>
 
         {/* Home Sections Tab */}
         {mainTab === 'home' && (
