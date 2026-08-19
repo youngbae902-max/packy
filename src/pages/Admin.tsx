@@ -43,6 +43,8 @@ import { useCategories } from '@/hooks/useCategories';
 import { HomeSectionsManager } from '@/components/HomeSectionsManager';
 import { HomeBannersManager } from '@/components/HomeBannersManager';
 import { AdminSection } from '@/components/AdminSection';
+import { ReleasesSectionManager } from '@/components/ReleasesSectionManager';
+
 import { BulkCoversManager } from '@/components/BulkCoversManager';
 import { useQueryClient } from '@tanstack/react-query';
 
