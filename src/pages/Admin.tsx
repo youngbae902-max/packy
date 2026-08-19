@@ -43,6 +43,8 @@ import { useCategories } from '@/hooks/useCategories';
 import { HomeSectionsManager } from '@/components/HomeSectionsManager';
 import { HomeBannersManager } from '@/components/HomeBannersManager';
 import { AdminSection } from '@/components/AdminSection';
+import { ReleasesSectionManager } from '@/components/ReleasesSectionManager';
+
 import { BulkCoversManager } from '@/components/BulkCoversManager';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -342,7 +344,7 @@ export default function Admin() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-8">
+    <div className="admin-scope min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Top bar */}
         <div className="flex items-center justify-between mb-6">
@@ -553,9 +555,13 @@ export default function Admin() {
         {/* Home Sections Tab */}
         {mainTab === 'home' && (
           <div className="space-y-3">
+            <AdminSection title="Lançamentos" description="Título, quantidade e packs em destaque" icon={Sparkles}>
+              <ReleasesSectionManager />
+            </AdminSection>
             <AdminSection title="Banners da Home" description="Carrossel de imagens no topo" icon={ImageIcon}>
               <HomeBannersManager />
             </AdminSection>
+
             <AdminSection title="Seções da Home" description="Carrosséis de packs personalizados" icon={LayoutGrid}>
               <HomeSectionsManager />
             </AdminSection>
