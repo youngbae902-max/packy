@@ -536,6 +536,20 @@ export default function Admin() {
           <div className="text-muted-foreground text-sm">Categorias em breve.</div>
         )}
 
+        {/* Bulk Covers Dialog */}
+        <Dialog open={showBulkCovers} onOpenChange={setShowBulkCovers}>
+          <DialogContent className="w-[calc(100%-1rem)] max-w-md max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Capas em massa</DialogTitle>
+              <DialogDescription>Remova todas as capas ou envie várias fotos do dispositivo de uma vez.</DialogDescription>
+            </DialogHeader>
+            <BulkCoversManager
+              packs={[...allApprovedPacks, ...pendingPacks, ...projectPacks, ...pendingProjectPacks]}
+              onDone={() => queryClient.invalidateQueries({ queryKey: ['packs'] })}
+            />
+          </DialogContent>
+        </Dialog>
+
         {/* Home Sections Tab */}
         {mainTab === 'home' && (
           <div className="space-y-3">
