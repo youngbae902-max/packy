@@ -40,6 +40,16 @@ const Packs = () => {
   const { pages } = useCustomPages();
   const { categories } = useCategories();
   const { data: customSections = [] } = useHomeSectionsWithPacks();
+  const { config: releases } = useReleasesSection();
+
+  const releasePacks = useMemo(() => {
+    if (releases.mode === 'manual') {
+      const byId = new Map(approvedPacks.map(p => [p.id, p]));
+      return releases.pack_ids.map(id => byId.get(id)).filter(Boolean) as typeof approvedPacks;
+    }
+    return approvedPacks.slice(0, releases.limit);
+  }, [approvedPacks, releases]);
+
 
   const q = searchQuery.toLowerCase().trim();
 
