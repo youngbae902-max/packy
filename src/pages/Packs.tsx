@@ -31,6 +31,7 @@ const Packs = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'inicio' | 'geral'>('inicio');
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
