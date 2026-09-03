@@ -21,6 +21,8 @@ import { useCustomPages } from '@/hooks/useCustomPages';
 import { useCategories } from '@/hooks/useCategories';
 import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
 import { useTypedPlaceholder } from '@/hooks/useTypedPlaceholder';
+import { useReleasesSection } from '@/hooks/useReleasesSection';
+
 
 const Packs = () => {
   const { user } = useAuth();
