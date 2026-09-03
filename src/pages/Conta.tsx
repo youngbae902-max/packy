@@ -27,7 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { avatarShapeClasses, AVATAR_SHAPES } from '@/lib/avatarShape';
-import { ColorPickerCard } from '@/components/ColorPickerCard';
+import { ColorRow } from '@/components/ColorRow';
 
 const Conta = () => {
   const { user, profile, isAdmin, signOut, refreshProfile, updatePassword } = useAuth();
@@ -523,36 +523,71 @@ const Conta = () => {
 
             {/* Cores dos selos subscreen */}
             {settingsSub === 'cores' && (
-              <div className="space-y-4 pb-24">
-                <ColorPickerCard label="Selo Verificado — Fundo" value={verifiedBadgeBgColor} onChange={setVerifiedBadgeBgColor} />
-                <ColorPickerCard label="Selo Verificado — Texto" value={verifiedBadgeTextColor} onChange={setVerifiedBadgeTextColor} />
-
-                <div className="rounded-2xl border border-border/40 bg-card p-4">
-                  <p className="text-[13px] font-bold mb-1">Texto Customizado do Selo Verificado</p>
-                  <p className="text-[11px] text-muted-foreground mb-3">Troque "Verificado" por um emoji (ex: 👑) ou outra palavra.</p>
-                  <Input value={verifiedBadgeText} onChange={e => setVerifiedBadgeText(e.target.value)} placeholder="Verificado" className="bg-secondary text-foreground" />
-                </div>
-
-                <div className="rounded-2xl border border-border/40 bg-card p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <p className="text-[13px] font-bold">Verificado em RGB</p>
-                      <p className="text-[11px] text-muted-foreground">Anima cores do selo</p>
-                    </div>
-                    <Switch
-                      checked={(profile as any)?.verified_rgb === true}
-                      onCheckedChange={async (v) => { await updateProfile({ verified_rgb: v } as any); refreshProfile(); }}
-                    />
+              <div className="space-y-5 pb-24">
+                {/* Prévia */}
+                <div className="rounded-2xl border border-border/40 bg-card p-5 flex flex-col items-center gap-3">
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Prévia</p>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[12px] font-bold ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
+                      style={(profile as any)?.verified_rgb ? undefined : { backgroundColor: verifiedBadgeBgColor, color: verifiedBadgeTextColor }}
+                    >
+                      {verifiedBadgeText || 'Verificado'}
+                    </span>
+                    <span
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[12px] font-bold border"
+                      style={{ backgroundColor: adminBadgeBgColor, borderColor: adminBadgeBorderColor, color: adminBadgeTextColor }}
+                    >
+                      ADM
+                    </span>
+                    <span className="inline-block w-[18px] h-[7px] rounded-full" style={{ backgroundColor: themeColor }} />
                   </div>
                 </div>
 
-                <ColorPickerCard label="Selo ADM — Fundo" value={adminBadgeBgColor} onChange={setAdminBadgeBgColor} />
-                <ColorPickerCard label="Selo ADM — Borda" value={adminBadgeBorderColor} onChange={setAdminBadgeBorderColor} />
-                <ColorPickerCard label="Selo ADM — Texto" value={adminBadgeTextColor} onChange={setAdminBadgeTextColor} />
+                {/* Selo verificado */}
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 mb-2">Selo verificado</p>
+                  <div className="rounded-2xl border border-border/40 overflow-hidden divide-y divide-[#1E1E1E]">
+                    <ColorRow label="Fundo" value={verifiedBadgeBgColor} onChange={setVerifiedBadgeBgColor} />
+                    <ColorRow label="Texto" value={verifiedBadgeTextColor} onChange={setVerifiedBadgeTextColor} />
+                    <div className="flex items-center justify-between gap-3 px-4 min-h-[52px] py-2 bg-card">
+                      <div>
+                        <p className="text-[14px] font-medium">Verificado em RGB</p>
+                        <p className="text-[11px] text-muted-foreground">Anima as cores do selo</p>
+                      </div>
+                      <Switch
+                        checked={(profile as any)?.verified_rgb === true}
+                        onCheckedChange={async (v) => { await updateProfile({ verified_rgb: v } as any); refreshProfile(); }}
+                      />
+                    </div>
+                    <div className="px-4 py-3 bg-card space-y-2">
+                      <p className="text-[14px] font-medium">Texto do selo</p>
+                      <Input value={verifiedBadgeText} onChange={e => setVerifiedBadgeText(e.target.value)} placeholder="Verificado" className="bg-secondary text-foreground" />
+                      <p className="text-[11px] text-muted-foreground">Troque "Verificado" por um emoji (ex: 👑) ou outra palavra.</p>
+                    </div>
+                  </div>
+                </div>
 
-                <ColorPickerCard label="Indicador online" value={themeColor} onChange={setThemeColor} />
+                {/* Selo ADM */}
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 mb-2">Selo ADM</p>
+                  <div className="rounded-2xl border border-border/40 overflow-hidden divide-y divide-[#1E1E1E]">
+                    <ColorRow label="Fundo" value={adminBadgeBgColor} onChange={setAdminBadgeBgColor} />
+                    <ColorRow label="Borda" value={adminBadgeBorderColor} onChange={setAdminBadgeBorderColor} />
+                    <ColorRow label="Texto" value={adminBadgeTextColor} onChange={setAdminBadgeTextColor} />
+                  </div>
+                </div>
+
+                {/* Indicador */}
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 mb-2">Indicador online</p>
+                  <div className="rounded-2xl border border-border/40 overflow-hidden">
+                    <ColorRow label="Cor do indicador" value={themeColor} onChange={setThemeColor} />
+                  </div>
+                </div>
               </div>
             )}
+
 
             {settingsSub === 'formato-foto' && (
               <div className="space-y-4">

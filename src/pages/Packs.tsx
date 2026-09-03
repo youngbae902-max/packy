@@ -21,6 +21,8 @@ import { useCustomPages } from '@/hooks/useCustomPages';
 import { useCategories } from '@/hooks/useCategories';
 import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
 import { useTypedPlaceholder } from '@/hooks/useTypedPlaceholder';
+import { useReleasesSection } from '@/hooks/useReleasesSection';
+
 
 const Packs = () => {
   const { user } = useAuth();
@@ -40,6 +42,16 @@ const Packs = () => {
   const { pages } = useCustomPages();
   const { categories } = useCategories();
   const { data: customSections = [] } = useHomeSectionsWithPacks();
+  const { config: releases } = useReleasesSection();
+
+  const releasePacks = useMemo(() => {
+    if (releases.mode === 'manual') {
+      const byId = new Map(approvedPacks.map(p => [p.id, p]));
+      return releases.pack_ids.map(id => byId.get(id)).filter(Boolean) as typeof approvedPacks;
+    }
+    return approvedPacks.slice(0, releases.limit);
+  }, [approvedPacks, releases]);
+
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -236,13 +248,16 @@ const Packs = () => {
         ) : (
           <div className="space-y-4">
             
-            <HorizontalCarousel title="Lançamentos">
-              {approvedPacks.slice(0, 10).map(pack => (
-                <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                  <PackCardV2 pack={pack} />
-                </div>
-              ))}
-            </HorizontalCarousel>
+            {releases.visible && releasePacks.length > 0 && (
+              <HorizontalCarousel title={releases.title}>
+                {releasePacks.map(pack => (
+                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                    <PackCardV2 pack={pack} />
+                  </div>
+                ))}
+              </HorizontalCarousel>
+            )}
+
 
 
             {/* Seções personalizadas da Home (admin) */}
