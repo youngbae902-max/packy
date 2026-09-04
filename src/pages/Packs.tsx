@@ -230,8 +230,34 @@ const Packs = () => {
 
         {q.length === 0 && <HomeBannerCarousel />}
 
+        {/* Tabs: Início / Packs Geral */}
+        {q.length === 0 && (
+          <div className="flex items-center gap-2 mb-8">
+            <button
+              onClick={() => setActiveTab('inicio')}
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+                activeTab === 'inicio'
+                  ? 'bg-foreground text-background'
+                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
+              }`}
+            >
+              Início
+            </button>
+            <button
+              onClick={() => setActiveTab('geral')}
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+                activeTab === 'geral'
+                  ? 'bg-foreground text-background'
+                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
+              }`}
+            >
+              Packs Geral
+            </button>
+          </div>
+        )}
+
         {/* Banners / Eventos */}
-        {activeEvents.length > 0 && (
+        {activeTab === 'inicio' && activeEvents.length > 0 && (
           <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {activeEvents.map(event => (
               <EventCard key={event.id} event={event} />
