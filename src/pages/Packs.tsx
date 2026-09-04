@@ -88,6 +88,15 @@ const Packs = () => {
     );
   }, [q, approvedPacks, premiumPacks, projectPacks]);
 
+  const allPacks = useMemo(() => {
+    const seen = new Set<string>();
+    return [...approvedPacks, ...premiumPacks, ...projectPacks].filter(p => {
+      if (seen.has(p.id)) return false;
+      seen.add(p.id);
+      return true;
+    });
+  }, [approvedPacks, premiumPacks, projectPacks]);
+
   // Use categories from DB if available, otherwise fallback to standard sections
   const hasCategories = categories && categories.length > 0;
 
@@ -221,8 +230,34 @@ const Packs = () => {
 
         {q.length === 0 && <HomeBannerCarousel />}
 
+        {/* Tabs: Início / Packs Geral */}
+        {q.length === 0 && (
+          <div className="flex items-center gap-2 mb-8">
+            <button
+              onClick={() => setActiveTab('inicio')}
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+                activeTab === 'inicio'
+                  ? 'bg-foreground text-background'
+                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
+              }`}
+            >
+              Início
+            </button>
+            <button
+              onClick={() => setActiveTab('geral')}
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+                activeTab === 'geral'
+                  ? 'bg-foreground text-background'
+                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
+              }`}
+            >
+              Packs Geral
+            </button>
+          </div>
+        )}
+
         {/* Banners / Eventos */}
-        {activeEvents.length > 0 && (
+        {activeTab === 'inicio' && activeEvents.length > 0 && (
           <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {activeEvents.map(event => (
               <EventCard key={event.id} event={event} />
@@ -243,6 +278,20 @@ const Packs = () => {
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                 {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+              </div>
+            )}
+          </div>
+        ) : activeTab === 'geral' ? (
+          <div>
+            <div className="flex items-baseline gap-2 mb-4 px-1">
+              <h2 className="text-lg md:text-2xl font-black">Todos os Packs</h2>
+              <span className="text-muted-foreground font-bold text-sm">({allPacks.length})</span>
+            </div>
+            {allPacks.length === 0 ? (
+              <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
           </div>
