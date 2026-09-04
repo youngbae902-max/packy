@@ -281,6 +281,20 @@ const Packs = () => {
               </div>
             )}
           </div>
+        ) : activeTab === 'geral' ? (
+          <div>
+            <div className="flex items-baseline gap-2 mb-4 px-1">
+              <h2 className="text-lg md:text-2xl font-black">Todos os Packs</h2>
+              <span className="text-muted-foreground font-bold text-sm">({allPacks.length})</span>
+            </div>
+            {allPacks.length === 0 ? (
+              <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+              </div>
+            )}
+          </div>
         ) : (
           <div className="space-y-4">
             
