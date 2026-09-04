@@ -88,6 +88,15 @@ const Packs = () => {
     );
   }, [q, approvedPacks, premiumPacks, projectPacks]);
 
+  const allPacks = useMemo(() => {
+    const seen = new Set<string>();
+    return [...approvedPacks, ...premiumPacks, ...projectPacks].filter(p => {
+      if (seen.has(p.id)) return false;
+      seen.add(p.id);
+      return true;
+    });
+  }, [approvedPacks, premiumPacks, projectPacks]);
+
   // Use categories from DB if available, otherwise fallback to standard sections
   const hasCategories = categories && categories.length > 0;
 
