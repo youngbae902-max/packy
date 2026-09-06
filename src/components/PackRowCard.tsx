@@ -150,8 +150,8 @@ export function PackRowCard({ pack, showAdminBadge = false }: PackRowCardProps) 
           </div>
 
           {/* Decorative QR */}
-          <div className="hidden sm:flex flex-col items-center justify-center shrink-0 text-foreground/25 group-hover:text-foreground/40 transition-colors">
-            <QrCodeDecoration className="w-10 h-10 md:w-12 md:h-12" />
+          <div className="flex flex-col items-center justify-center shrink-0 text-foreground/20 group-hover:text-foreground/35 transition-colors ml-1">
+            <QrCodeDecoration className="w-8 h-8 md:w-12 md:h-12" />
           </div>
         </div>
       </button>
