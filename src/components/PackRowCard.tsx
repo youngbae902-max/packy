@@ -114,44 +114,48 @@ export function PackRowCard({ pack, showAdminBadge = false }: PackRowCardProps) 
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative w-full text-left rounded-2xl overflow-hidden bg-black border border-[#1E1E1E] transition-all hover:border-[#333333] active:scale-[0.99]"
+        className="group relative w-full text-left rounded-3xl overflow-hidden bg-black border border-[#262626] p-2.5 transition-all hover:border-[#3A3A3A] active:scale-[0.99]"
       >
-        <div className="flex items-center gap-4 p-3 md:p-4">
-          {/* Square cover */}
-          <div className="relative shrink-0 w-[72px] h-[72px] md:w-[88px] md:h-[88px] rounded-xl overflow-hidden bg-[#0A0A0A]">
-            {pack.cover_url ? (
-              <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
-            ) : (
-              <PackImagePlaceholder />
-            )}
-            {pack.is_premium && (
-              <div className="absolute top-1.5 right-1.5 flex items-center gap-0.5 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-full text-[9px] font-bold backdrop-blur-sm">
-                <Crown className="w-2.5 h-2.5" />
-              </div>
-            )}
-          </div>
+        {/* Cover on top */}
+        <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#0A0A0A]">
+          {pack.cover_url ? (
+            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+          ) : (
+            <PackImagePlaceholder />
+          )}
+          {pack.is_premium && (
+            <div className="absolute top-2 right-2 flex items-center gap-0.5 bg-premium/90 text-premium-foreground px-2 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm">
+              <Crown className="w-3 h-3" />
+            </div>
+          )}
+        </div>
 
-          {/* Text content */}
-          <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
-            <h3 className="font-display text-[15px] md:text-[17px] font-bold text-foreground leading-tight truncate">
+        {/* Text block below, QR on the right */}
+        <div className="flex items-end justify-between gap-3 px-1.5 pt-3 pb-1">
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-[15px] md:text-[16px] font-extrabold text-foreground leading-tight truncate">
               {pack.title}
             </h3>
-
-            <p className="mt-0.5 text-[12px] md:text-[13px] text-muted-foreground flex items-center gap-1 truncate">
-              <span className="truncate">{displayAuthor}</span>
+            <p className="mt-0.5 text-[12px] md:text-[13px] font-semibold text-foreground/80 flex items-center gap-1 truncate">
+              <span className="truncate">- por {displayAuthor}</span>
               {isOwner && !pack.is_anonymous && (
                 <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
               )}
             </p>
-
-            <p className="mt-2 text-[11px] md:text-[12px] font-medium text-foreground/50 uppercase tracking-wider">
-              {categoryLabel}
-            </p>
+            {pack.description ? (
+              <p className="mt-1.5 text-[10px] md:text-[11px] text-foreground/40 leading-snug line-clamp-2">
+                {pack.description}
+              </p>
+            ) : (
+              <p className="mt-1.5 text-[10px] md:text-[11px] font-medium text-foreground/40 uppercase tracking-wider">
+                {categoryLabel}
+              </p>
+            )}
           </div>
 
           {/* Decorative QR */}
-          <div className="flex flex-col items-center justify-center shrink-0 text-foreground/20 group-hover:text-foreground/35 transition-colors ml-1">
-            <QrCodeDecoration className="w-8 h-8 md:w-12 md:h-12" />
+          <div className="shrink-0 text-foreground/25 group-hover:text-foreground/40 transition-colors">
+            <QrCodeDecoration className="w-9 h-9 md:w-11 md:h-11" />
           </div>
         </div>
       </button>
