@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
 import { PackCardV2 } from '@/components/PackCardV2';
+import { PackRowCard } from '@/components/PackRowCard';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { AddPackModalV2 } from '@/components/AddPackModalV2';
 import { AuthModal } from '@/components/AuthModal';
