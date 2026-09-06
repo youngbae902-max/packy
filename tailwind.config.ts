@@ -78,20 +78,20 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		fontFamily: {
-  			sans: [
-  				'Inter',
-  				'ui-sans-serif',
-  				'system-ui',
-  				'sans-serif',
-  				'Apple Color Emoji',
-  				'Segoe UI Emoji'
-  			],
-  			display: [
-  				'Inter',
-  				'ui-sans-serif',
-  				'system-ui',
-  				'sans-serif'
-  			],
+   			sans: [
+   				'Figtree',
+   				'ui-sans-serif',
+   				'system-ui',
+   				'sans-serif',
+   				'Apple Color Emoji',
+   				'Segoe UI Emoji'
+   			],
+   			display: [
+   				'Outfit',
+   				'ui-sans-serif',
+   				'system-ui',
+   				'sans-serif'
+   			],
 
   			serif: [
   				'ui-serif',
