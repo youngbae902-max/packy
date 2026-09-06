@@ -233,23 +233,23 @@ const Packs = () => {
 
         {/* Tabs: Início / Packs Geral */}
         {q.length === 0 && (
-          <div className="flex items-center gap-2 mb-8">
+          <div className="flex items-center gap-2 mb-8 p-1 rounded-2xl bg-[#1A1A1A]/80 border border-[#252525] w-fit">
             <button
               onClick={() => setActiveTab('inicio')}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+              className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${
                 activeTab === 'inicio'
-                  ? 'bg-foreground text-background'
-                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
+                  ? 'bg-foreground text-background shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               Início
             </button>
             <button
               onClick={() => setActiveTab('geral')}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+              className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${
                 activeTab === 'geral'
-                  ? 'bg-foreground text-background'
-                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
+                  ? 'bg-foreground text-background shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               Packs Geral
