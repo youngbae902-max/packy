@@ -613,6 +613,7 @@ export type Database = {
           is_exclusive: boolean | null
           is_pinned: boolean | null
           is_premium: boolean | null
+          is_private: boolean
           likes_count: number | null
           manual_order: number | null
           pack_type: Database["public"]["Enums"]["pack_type"] | null
@@ -638,6 +639,7 @@ export type Database = {
           is_exclusive?: boolean | null
           is_pinned?: boolean | null
           is_premium?: boolean | null
+          is_private?: boolean
           likes_count?: number | null
           manual_order?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null
@@ -663,6 +665,7 @@ export type Database = {
           is_exclusive?: boolean | null
           is_pinned?: boolean | null
           is_premium?: boolean | null
+          is_private?: boolean
           likes_count?: number | null
           manual_order?: number | null
           pack_type?: Database["public"]["Enums"]["pack_type"] | null

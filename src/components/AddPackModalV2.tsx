@@ -40,6 +40,7 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
   const [isExclusive, setIsExclusive] = useState(false);
   const [requiresShortener, setRequiresShortener] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [cropImage, setCropImage] = useState<string | null>(null);
   const [showCropModal, setShowCropModal] = useState(false);
@@ -104,6 +105,7 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
         is_admin_pack: false,
         is_pinned: false,
         requires_shortener: requiresShortener,
+        is_private: isPrivate,
         price: null,
       });
 
@@ -119,6 +121,7 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
       setIsExclusive(false);
       setRequiresShortener(false);
       setIsAnonymous(false);
+      setIsPrivate(false);
       onClose();
     } catch (error) {
       toast.error('Erro ao enviar pack');
@@ -291,6 +294,19 @@ export function AddPackModalV2({ isOpen, onClose, onAdd, isProject = false }: Ad
               Passar pelo encurtador
             </label>
           </div>
+
+          <div className="flex items-start gap-2">
+            <Checkbox
+              id="private"
+              checked={isPrivate}
+              onCheckedChange={(checked) => setIsPrivate(checked === true)}
+            />
+            <label htmlFor="private" className="text-sm text-muted-foreground cursor-pointer">
+              Privado 🔒
+              <span className="block text-xs text-muted-foreground/70">Só você consegue ver este pack</span>
+            </label>
+          </div>
+
 
           <button type="submit" className="btn-primary w-full text-sm uppercase tracking-wide">
             Enviar para Análise

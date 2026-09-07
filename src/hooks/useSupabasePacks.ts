@@ -16,6 +16,7 @@ export interface Pack {
   is_premium: boolean;
   is_admin_pack: boolean;
   is_pinned: boolean;
+  is_private?: boolean;
   requires_shortener?: boolean;
   price: number | null;
   status: 'pending' | 'approved' | 'rejected';
@@ -36,6 +37,7 @@ export function useSupabasePacks() {
         .from('packs')
         .select('*')
         .eq('status', 'approved')
+        .eq('is_private', false)
         .eq('is_premium', false)
         .order('is_pinned', { ascending: false })
         .order('created_at', { ascending: false });
@@ -53,6 +55,7 @@ export function useSupabasePacks() {
         .from('packs')
         .select('*')
         .eq('status', 'approved')
+        .eq('is_private', false)
         .eq('is_premium', true)
         .order('is_pinned', { ascending: false })
         .order('created_at', { ascending: false });
@@ -119,6 +122,7 @@ export function useSupabasePacks() {
         .from('packs')
         .select('*')
         .eq('status', 'approved')
+        .eq('is_private', false)
         .eq('pack_type', 'project')
         .order('is_pinned', { ascending: false })
         .order('created_at', { ascending: false });
