@@ -232,27 +232,23 @@ const Packs = () => {
 
         {/* Tabs: Início / Packs Geral */}
         {q.length === 0 && (
-          <div className="flex items-center gap-2 mb-8">
-            <button
-              onClick={() => setActiveTab('inicio')}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-                activeTab === 'inicio'
-                  ? 'bg-foreground text-background'
-                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
-              }`}
-            >
-              Início
-            </button>
-            <button
-              onClick={() => setActiveTab('geral')}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-                activeTab === 'geral'
-                  ? 'bg-foreground text-background'
-                  : 'bg-[#1A1A1A] border border-[#252525] text-[#9E9E9E] hover:text-foreground'
-              }`}
-            >
-              Packs Geral
-            </button>
+          <div className="mb-7 mt-5 flex p-1 rounded-2xl bg-[#1A1A1A] border border-[#252525]">
+            {([
+              { id: 'inicio', label: 'Início' },
+              { id: 'geral', label: 'Packs Geral' },
+            ] as const).map(t => (
+              <button
+                key={t.id}
+                onClick={() => setActiveTab(t.id)}
+                className={`flex-1 py-2.5 rounded-xl text-[13.5px] font-semibold transition-all ${
+                  activeTab === t.id
+                    ? 'bg-foreground text-background shadow-sm'
+                    : 'text-[#9E9E9E] hover:text-foreground'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
         )}
 
@@ -283,9 +279,11 @@ const Packs = () => {
           </div>
         ) : activeTab === 'geral' ? (
           <div>
-            <div className="flex items-baseline gap-2 mb-4 px-1">
-              <h2 className="text-lg md:text-2xl font-black">Todos os Packs</h2>
-              <span className="text-muted-foreground font-bold text-sm">({allPacks.length})</span>
+            <div className="flex items-center justify-between mb-4 px-1">
+              <h2 className="text-lg md:text-2xl font-black tracking-tight">Todos os Packs</h2>
+              <span className="text-[11px] font-bold text-muted-foreground bg-[#1A1A1A] border border-[#252525] rounded-full px-3 py-1">
+                {allPacks.length}
+              </span>
             </div>
             {allPacks.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>

@@ -384,6 +384,31 @@ export default function Admin() {
             { id: 'giftall', icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
             { id: 'capas', icon: ImageIcon, label: 'Capas em massa', onClick: () => setShowBulkCovers(true) },
             {
+              id: 'links',
+              icon: LinkIcon,
+              label: 'Extrair links',
+              onClick: async () => {
+                const all = [...allApprovedPacks, ...pendingPacks, ...projectPacks, ...pendingProjectPacks];
+                const seen = new Set<string>();
+                const lines = all
+                  .filter(p => p.download_url && !seen.has(p.id) && seen.add(p.id))
+                  .map(p => `${p.title} - ${p.download_url}`);
+                if (lines.length === 0) { toast.error('Nenhum link encontrado'); return; }
+                const text = lines.join('\n');
+                try {
+                  await navigator.clipboard.writeText(text);
+                } catch {
+                  const ta = document.createElement('textarea');
+                  ta.value = text;
+                  document.body.appendChild(ta);
+                  ta.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(ta);
+                }
+                toast.success(`${lines.length} link(s) copiado(s)`);
+              },
+            },
+            {
               id: 'renomear',
               icon: Edit2,
               label: 'Renomear packs',
