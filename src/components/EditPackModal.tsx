@@ -38,6 +38,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
   const [isExclusive, setIsExclusive] = useState(false);
   const [requiresShortener, setRequiresShortener] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [price, setPrice] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -54,6 +55,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
       setCoverPreview(pack.cover_url || null);
       setIsExclusive(pack.is_exclusive);
       setRequiresShortener(!!pack.requires_shortener);
+      setIsPrivate(!!(pack as any).is_private);
       setIsPremium(pack.is_premium);
       setPrice(pack.price?.toString() || '');
     }
@@ -103,6 +105,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
         cover_url: coverUrl || null,
         is_exclusive: isExclusive,
         requires_shortener: requiresShortener,
+        is_private: isPrivate,
         is_premium: isPremium,
         price: price ? parseFloat(price) : null,
       });
@@ -253,6 +256,18 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
                 Marcar como Exclusivo
               </label>
             </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="private-edit"
+                checked={isPrivate}
+                onCheckedChange={(checked) => setIsPrivate(checked === true)}
+              />
+              <label htmlFor="private-edit" className="text-sm text-muted-foreground cursor-pointer">
+                Privado 🔒 (só o dono vê)
+              </label>
+            </div>
+
 
             <div className="flex items-center gap-2">
               <Checkbox
