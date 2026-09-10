@@ -2,14 +2,13 @@ import { useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Search, ChevronLeft, ChevronRight, Crown, Store, Upload, Wallet,
+  Search, ChevronLeft, ChevronRight, Store, Upload, Wallet,
   LayoutGrid, Tag, Disc3, BadgeCheck,
 } from 'lucide-react';
 
 import { supabase } from '@/integrations/supabase/client';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useAlbums } from '@/hooks/useAlbums';
-import { useCategories } from '@/hooks/useCategories';
 import { useAppLogo } from '@/hooks/useAppLogo';
 import { useAuth } from '@/contexts/AuthContext';
 import { PackCardV2 } from '@/components/PackCardV2';
@@ -80,6 +79,15 @@ function SectionHead({
   );
 }
 
+const packTypes = [
+  { id: 'samples', label: 'Samples' },
+  { id: 'drumkit', label: 'Drumkit' },
+  { id: 'loops', label: 'Loops' },
+  { id: 'presets', label: 'Presets' },
+  { id: 'project', label: 'Projetos' },
+  { id: 'other', label: 'Outros' },
+];
+
 const steps = [
   { icon: Wallet, title: 'Crie sua conta', desc: 'Cadastre-se em segundos e personalize seu perfil de produtor.' },
   { icon: LayoutGrid, title: 'Monte sua coleção', desc: 'Organize seus packs, projetos e acapellas em álbuns.' },
@@ -90,9 +98,8 @@ const steps = [
 const Marketplace = () => {
   const { user } = useAuth();
   const { logoUrl } = useAppLogo();
-  const { approvedPacks, premiumPacks, isLoading } = useSupabasePacks();
+  const { approvedPacks, premiumPacks, addPack, isLoading } = useSupabasePacks();
   const { approvedAlbums } = useAlbums();
-  const { categories } = useCategories();
 
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string>('all');
@@ -296,7 +303,7 @@ const Marketplace = () => {
             >
               Todos
             </button>
-            {categories.map((c: { id: string; label: string }) => (
+            {packTypes.map((c) => (
               <button
                 key={c.id}
                 onClick={() => setCategory(c.id)}
@@ -385,7 +392,7 @@ const Marketplace = () => {
             {steps.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="rounded-2xl border border-border bg-card p-4">
                 <div className="w-10 h-10 rounded-xl bg-secondary border border-border flex items-center justify-center">
-                  <Icon className="w-4.5 h-4.5 text-foreground" />
+                  <Icon className="w-[18px] h-[18px] text-foreground" />
                 </div>
                 <h3 className="mt-3 text-[14px] font-bold">{title}</h3>
                 <p className="mt-1.5 text-[12.5px] text-muted-foreground leading-relaxed">{desc}</p>
@@ -412,7 +419,7 @@ const Marketplace = () => {
 
       <BottomNav />
 
-      {showAdd && <AddPackModalV2 isOpen={showAdd} onClose={() => setShowAdd(false)} />}
+      {showAdd && <AddPackModalV2 isOpen={showAdd} onClose={() => setShowAdd(false)} onAdd={addPack} />}
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
     </div>
   );
