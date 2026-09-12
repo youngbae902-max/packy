@@ -36,7 +36,8 @@ const App = () => (
             <Sidebar />
             <div className="flex-1 w-full md:pl-64 pb-20 md:pb-0">
               <Routes>
-                <Route path="/" element={<Packs />} />
+                <Route path="/" element={<Marketplace />} />
+                <Route path="/packs" element={<Packs />} />
                 <Route path="/projetos" element={<Projetos />} />
                 <Route path="/mcs" element={<MCs />} />
                 <Route path="/albuns" element={<Albums />} />
