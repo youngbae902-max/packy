@@ -32,6 +32,7 @@ const Packs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'inicio' | 'geral'>('inicio');
+  const [viewMode, setViewMode] = useState<'grade' | 'horizontal' | 'vertical'>('grade');
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
@@ -245,6 +246,16 @@ const Packs = () => {
       </div>
 
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
+        <div className="flex justify-end mb-4">
+          <div className="inline-flex gap-1 rounded-xl border border-border/60 bg-card p-1" aria-label="Modo de visualização">
+            {([{ id: 'grade', label: 'Grade' }, { id: 'horizontal', label: 'Horizontal' }, { id: 'vertical', label: 'Vertical' }] as const).map(mode => (
+              <button key={mode.id} type="button" onClick={() => setViewMode(mode.id)} aria-pressed={viewMode === mode.id}
+                className={viewMode === mode.id ? 'rounded-lg px-3 py-2 text-xs font-semibold bg-foreground text-background' : 'rounded-lg px-3 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground'}>
+                {mode.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {q.length === 0 && <HomeBannerCarousel />}
 
@@ -303,8 +314,8 @@ const Packs = () => {
             {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack encontrado.</p>
             ) : (
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3">
-                {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+              <div className={viewMode === 'grade' ? 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3' : viewMode === 'vertical' ? 'grid grid-cols-1 gap-3' : 'flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory'}>
+                {searchedPacks.map(pack => <div key={pack.id} className={viewMode === 'horizontal' ? 'min-w-[150px] max-w-[150px] shrink-0 snap-start' : ''}><PackCardV2 pack={pack} /></div>)}
               </div>
             )}
           </div>
@@ -320,7 +331,7 @@ const Packs = () => {
               <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
             ) : (
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3">
-                {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+                {allPacks.map(pack => <div key={pack.id} className={viewMode === 'horizontal' ? 'min-w-[150px] max-w-[150px] shrink-0 snap-start' : ''}><PackCardV2 pack={pack} /></div>)}
               </div>
             )}
           </div>
