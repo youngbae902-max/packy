@@ -125,7 +125,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#1C1C1C] border border-[#1E1E1E] transition-all p-2 flex flex-col"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
-        {/* Square cover */}
         <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#1C1C1C]">
           {pack.cover_url ? (
             <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
@@ -146,26 +145,15 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
         </div>
 
-        {/* Title — up to 2 lines, proportional */}
         <h3 className="mt-2 text-left text-[13px] leading-tight font-medium text-foreground line-clamp-2 min-h-[2.6em]" style={{ letterSpacing: '-0.01em' }}>
           {pack.title}
         </h3>
 
-        {/* Author (visible) */}
-        <p className="text-[11px] truncate mt-1 text-muted-foreground font-normal flex items-center justify-start gap-1">
-          <span className="truncate">{displayAuthor}</span>
-          {isOwner && !pack.is_anonymous && (
-            <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
-          )}
-        </p>
-
-        {/* Footer meta */}
         <div className="mt-1.5 pt-1.5 border-t border-[#1E1E1E] text-left text-[9px] font-normal tracking-wider text-muted-foreground">
           {categoryLabel}
         </div>
       </button>
 
-      {/* Details Bottom Sheet */}
       {showDetails && (
         <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => { setShowDetails(false); setSheetTab('info'); }}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
@@ -246,38 +234,30 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                   Publicado em {formattedDate}
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center gap-3 mb-5">
                   <button 
                     onClick={handleLikeClick} 
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                      hasLiked ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'
-                    }`}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${hasLiked ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'}`}
                   >
                     <Heart className={`w-4 h-4 ${hasLiked ? 'fill-current' : ''}`} />
                     {pack.likes_count || 0}
                   </button>
                   <button 
                     onClick={handleFavoriteClick} 
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                      hasFavorited ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'
-                    }`}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${hasFavorited ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'}`}
                   >
                     <Bookmark className={`w-4 h-4 ${hasFavorited ? 'fill-current' : ''}`} />
                     Salvar
                   </button>
                   <button 
                     onClick={handleRepostClick} 
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                      hasReposted ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'
-                    }`}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${hasReposted ? 'bg-foreground/15 text-foreground' : 'bg-[#232323] text-muted-foreground hover:text-foreground'}`}
                   >
                     <Repeat2 className="w-4 h-4" />
                     Republicar
                   </button>
                 </div>
 
-                {/* Download primeiro */}
                 <button
                   onClick={handleDownloadClick}
                   className="w-full flex items-center justify-center gap-2 rounded-xl bg-foreground text-background py-3 font-bold hover:opacity-90 transition mb-3"
@@ -286,7 +266,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                   {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
                 </button>
 
-                {/* Aba de comentários */}
                 <button
                   onClick={() => setSheetTab('comments')}
                   className="w-full flex items-center gap-3 rounded-xl bg-[#232323] border border-[#2A2A2A] px-4 py-3 text-left hover:bg-[#282828] transition"
@@ -385,7 +364,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </div>
       )}
 
-      {/* Credit Flow Modal */}
       {showCreditFlow && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setShowCreditFlow(false)} />
@@ -405,7 +383,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </div>
       )}
 
-      {/* Download confirm */}
       {showDownloadConfirm && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
           <div
