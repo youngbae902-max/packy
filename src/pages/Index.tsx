@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Plus, Settings, Instagram, MoreVertical, Search,
+  Plus, Settings, Instagram, MoreVertical, Search, Grid3X3, List, Rows3,
   Flame, Sparkles, Download, ChevronRight, Users, Play, Star, TrendingUp
 } from 'lucide-react';
 import { Header } from '@/components/Header';
@@ -30,9 +30,9 @@ const packTypeLabel: Record<string, string> = {
   presets: 'Presets', project: 'Projeto', other: 'Outros',
 };
 
-function CardShell({ pack }: { pack: Pack }) {
+function CardShell({ pack, viewMode }: { pack: Pack; viewMode: string }) {
   return (
-    <div className="snap-start shrink-0 w-[260px] sm:w-[280px] md:w-[300px]">
+    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[260px] sm:w-[280px] md:w-[300px]" : "w-full min-w-0"}>
       <PackCardV2 pack={pack} />
     </div>
   );
@@ -96,10 +96,10 @@ function SectionTitle({ icon: Icon, title, badge }: { icon: any; title: string; 
   );
 }
 
-function Carousel({ children }: { children: React.ReactNode }) {
+function Carousel({ children, viewMode }: { children: React.ReactNode; viewMode: string }) {
   return (
     <div
-      className="flex gap-3 overflow-x-auto scrollbar-hide pb-4 snap-x px-2"
+      className={`${viewMode === "horizontal" ? "flex overflow-x-auto snap-x" : viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" : "flex flex-col"} gap-x-5 gap-y-6 scrollbar-hide pb-4 px-2`
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       {children}
@@ -281,6 +281,7 @@ function FooterNav() {
 const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState<"grid" | "vertical" | "horizontal">("horizontal");
 
   const { approvedPacks, premiumPacks, isLoading, addPack } = useSupabasePacks();
   const { activeEvents } = useSiteEvents();
@@ -370,7 +371,8 @@ const Index = () => {
         )}
 
         {/* Search */}
-        <div className="relative mb-8">
+        <div className="flex items-center gap-3 mb-8">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
           <Input
             placeholder="O que você quer ouvir ou baixar?"
@@ -378,6 +380,14 @@ const Index = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 h-10 rounded-full bg-[#111111] border border-white/[0.04] focus-visible:ring-1 focus-visible:ring-white/15 text-sm placeholder:text-muted-foreground/80 shadow-none"
           />
+        </div>
+        <div className="flex items-center gap-1 rounded-full bg-[#171717] border border-white/5 p-1 shrink-0" aria-label="Modo de visualização">
+          {([{mode:"grid", Icon:Grid3X3, label:"Grade"},{mode:"vertical", Icon:List, label:"Vertical"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"}] as const).map(({mode,Icon,label}) => (
+            <button key={mode} type="button" aria-label={label} title={label} onClick={() => setViewMode(mode)} className={`p-2 rounded-full transition-colors ${viewMode === mode ? "bg-[#303030] text-white" : "text-white/45 hover:text-white"}`}>
+              <Icon className="w-4 h-4" />
+            </button>
+          ))}
+        </div>
         </div>
 
         {isLoading ? (
@@ -388,7 +398,7 @@ const Index = () => {
             {searchResults.length === 0 ? (
               <p className="text-center py-12 text-foreground/50">Nada encontrado para "{searchTerm}".</p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-2">
+              <div className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-5 gap-y-6 px-2" : viewMode === "vertical" ? "flex flex-col gap-6 px-2" : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-2"}>
                 {searchResults.map(p => <PackCardV2 key={p.id} pack={p} />)}
               </div>
             )}
@@ -402,7 +412,7 @@ const Index = () => {
             {releases.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Sparkles} title="Lançamentos" />
-                <Carousel>{releases.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{releases.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
@@ -410,7 +420,7 @@ const Index = () => {
               packs.length > 0 && (
                 <section key={section.id} className="mb-12">
                   <SectionTitle icon={ListMusic} title={section.title} />
-                  <Carousel>{packs.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                  <Carousel viewMode={viewMode}>{packs.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
                 </section>
               )
             ))}
@@ -418,14 +428,14 @@ const Index = () => {
             {trending.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Flame} title="Em Alta" badge="🔥" />
-                <Carousel>{trending.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{trending.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
             {beloved.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Star} title="Queridinhos" />
-                <Carousel>{beloved.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{beloved.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
@@ -434,7 +444,7 @@ const Index = () => {
             {monthHot.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={TrendingUp} title="Bombando no Mês" badge="Trending" />
-                <Carousel>{monthHot.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{monthHot.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
@@ -443,28 +453,28 @@ const Index = () => {
             {presets.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Play} title="Presets Essenciais" />
-                <Carousel>{presets.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{presets.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
             {projectsPremium.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Sparkles} title="Projetos Premium" />
-                <Carousel>{projectsPremium.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{projectsPremium.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
             {samples.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Play} title="Sample Packs" />
-                <Carousel>{samples.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{samples.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
             {drumkits.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Play} title="Drum Kits" />
-                <Carousel>{drumkits.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+                <Carousel viewMode={viewMode}>{drumkits.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
               </section>
             )}
 
