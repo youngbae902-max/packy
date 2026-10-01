@@ -228,7 +228,7 @@ const Packs = () => {
           <div className="mb-7 mt-2 flex items-center gap-6 px-1">
             {([
               { id: 'inicio', label: 'Início' },
-              { id: 'geral', label: 'Packs Geral' },
+              { id: 'geral', label: 'Packs em geral' },
             ] as const).map(t => (
               <button
                 key={t.id}
