@@ -39,7 +39,7 @@ export function AppLogoSettings() {
   const display = preview || logoUrl;
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-[hsl(0,0%,4%)] p-5">
+    <div className="rounded-2xl border border-border/40 bg-card p-5">
       <div className="flex items-center gap-2 mb-1">
         <ImageIcon className="w-4 h-4 text-foreground" />
         <h3 className="text-sm font-bold text-foreground">Logo do aplicativo</h3>
@@ -49,7 +49,7 @@ export function AppLogoSettings() {
       </p>
 
       <div className="flex items-center gap-4">
-        <div className="w-20 h-20 rounded-xl bg-[hsl(0,0%,2%)] border border-border/40 flex items-center justify-center overflow-hidden flex-shrink-0">
+        <div className="w-20 h-20 rounded-xl bg-muted border border-border/40 flex items-center justify-center overflow-hidden flex-shrink-0">
           {display ? (
             <img src={display} alt="Logo" className="w-full h-full object-cover" />
           ) : (
@@ -76,7 +76,7 @@ export function AppLogoSettings() {
           {logoUrl && (
             <button
               onClick={handleClear}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-[hsl(0,0%,7%)] border border-border/40 text-muted-foreground text-xs font-semibold hover:text-foreground transition"
+              className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-muted border border-border/40 text-muted-foreground text-xs font-semibold hover:text-foreground transition"
             >
               <Trash2 className="w-3.5 h-3.5" /> Remover
             </button>
