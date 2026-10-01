@@ -223,7 +223,7 @@ const Packs = () => {
 
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
-        {/* Navegação: Início / Packs Geral — sincronização da prévia */}
+        {/* Navegação: texto simples com indicador da aba ativa */}
         {q.length === 0 && (
           <div className="mb-7 mt-2 flex items-center gap-6 px-1">
             {([
@@ -233,13 +233,16 @@ const Packs = () => {
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`text-[13.5px] font-semibold transition-colors pb-1 border-b ${
+                className={`relative text-[13.5px] font-semibold pb-2 transition-colors ${
                   activeTab === t.id
-                    ? 'text-foreground border-foreground'
-                    : 'text-[#9E9E9E] border-transparent hover:text-foreground'
+                    ? 'text-foreground'
+                    : 'text-[#9E9E9E] hover:text-foreground'
                 }`}
               >
                 {t.label}
+                {activeTab === t.id && (
+                  <span className="absolute left-0 right-0 -bottom-px h-px bg-foreground" />
+                )}
               </button>
             ))}
           </div>
