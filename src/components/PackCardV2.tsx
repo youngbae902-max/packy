@@ -152,6 +152,14 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         <div className="mt-1.5 pt-1.5 border-t border-[#1E1E1E] text-left text-[9px] font-normal tracking-wider text-muted-foreground">
           {categoryLabel}
         </div>
+
+        {/* Author (visible) */}
+        <p className="text-[11px] truncate mt-1 text-muted-foreground font-normal flex items-center justify-start gap-1">
+          <span className="truncate">{displayAuthor}</span>
+          {isOwner && !pack.is_anonymous && (
+            <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
+          )}
+        </p>
       </button>
 
       {showDetails && (
