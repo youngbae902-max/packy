@@ -33,7 +33,7 @@ const MCs = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <div className="mx-auto max-w-lg px-4 pt-6">
+      <div className="mx-auto max-w-lg px-6 pt-6">
         <div className="mb-5 flex items-center gap-2">
           <div className="relative min-w-0 flex-1">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/50" />
@@ -60,10 +60,10 @@ const MCs = () => {
         ) : (
           <div className={
             layout === 'grid'
-              ? 'grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4'
+              ? 'grid grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-4'
               : layout === 'horizontal'
-                ? 'flex gap-5 overflow-x-auto pb-4'
-                : 'flex flex-col gap-5'
+                ? 'flex gap-6 overflow-x-auto px-1 pb-4'
+                : 'flex flex-col gap-6'
           }>
             {filteredAcapellas.map((acapella) => (
               <div key={acapella.id} className={layout === 'vertical' ? 'flex items-center gap-4 rounded-2xl bg-[#141414] p-3' : layout === 'horizontal' ? 'w-24 shrink-0' : ''}>
