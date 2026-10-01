@@ -24,6 +24,7 @@ export type Database = {
           download_url: string
           duration_seconds: number | null
           id: string
+          image_url: string | null
           status: Database["public"]["Enums"]["pack_status"]
         }
         Insert: {
@@ -35,6 +36,7 @@ export type Database = {
           download_url: string
           duration_seconds?: number | null
           id?: string
+          image_url?: string | null
           status?: Database["public"]["Enums"]["pack_status"]
         }
         Update: {
@@ -46,6 +48,7 @@ export type Database = {
           download_url?: string
           duration_seconds?: number | null
           id?: string
+          image_url?: string | null
           status?: Database["public"]["Enums"]["pack_status"]
         }
         Relationships: []

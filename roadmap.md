@@ -1,0 +1,6 @@
+- [ ] Trocar favicon e logo da tela inicial pela imagem enviada
+- [ ] Ajustar fonte de “Todos os Packs” e reduzir a tela inicial
+- [ ] Reconstruir Acapellas como diretório de MCs com foto, nome, link, lista/grade e busca
+- [ ] Restaurar Acapella no menu e remover opções antigas
+- [ ] Corrigir achados obrigatórios de segurança sem quebrar a experiência pública
+- [ ] Validar visual, navegação e build
