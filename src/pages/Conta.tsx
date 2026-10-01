@@ -13,6 +13,7 @@ import { usePublicProfile } from '@/hooks/useSocial';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { FavoritesSection } from '@/components/FavoritesSection';
+import { ProfilePackRow } from '@/components/ProfilePackRow';
 import { WalletCard } from '@/components/WalletCard';
 import { EmojiText } from '@/components/EmojiText';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
@@ -34,7 +35,7 @@ const Conta = () => {
   const { badges: myBadges } = useUserAdminBadges(user?.id);
   const { updateProfile, uploadAvatar, isUpdating } = useProfile();
   const { userPacks } = useSupabasePacks();
-  const { followersCount, followingCount } = usePublicProfile(user?.id);
+  const { followersCount, followingCount, repostedPacks } = usePublicProfile(user?.id);
   const { updateUsername, deleteMyAccount } = useUserManagement();
   const { decorations } = useDecorations();
   const { transactions: walletTx } = useWallet(user?.id);
@@ -368,6 +369,28 @@ const Conta = () => {
         </div>
 
         <FavoritesSection />
+
+        <div className="rounded-3xl border border-border/50 bg-card overflow-hidden mb-4">
+          <div className="w-full flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-2">
+              <RotateCcw className="w-4 h-4 text-foreground/80" />
+              <span className="text-sm font-bold text-foreground">Republicados</span>
+              <span className="text-xs text-muted-foreground">({repostedPacks.length})</span>
+            </div>
+          </div>
+          <div className="px-3 pb-3 pt-1 max-h-[60vh] overflow-y-auto">
+            {repostedPacks.length === 0 ? (
+              <div className="p-6 text-center">
+                <RotateCcw className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" />
+                <p className="text-sm text-muted-foreground">Nenhum pack republicado ainda</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} />)}
+              </div>
+            )}
+          </div>
+        </div>
 
         <div className="h-4" />
       </div>
