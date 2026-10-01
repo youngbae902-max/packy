@@ -17,6 +17,7 @@ export default function PublicProfile() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [bioExpanded, setBioExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'packs' | 'reposts' | 'likes'>('packs');
+  const [showAllReposts, setShowAllReposts] = useState(false);
   const {
     profile,
     packs,
@@ -282,11 +283,49 @@ export default function PublicProfile() {
           </div>
         </div>
 
-        <section className="divide-y divide-border/30">
-          {currentPacks.length > 0 ? currentPacks.map(pack => <ProfilePackRow key={pack.id} pack={pack} />) : (
-            <p className="text-center text-muted-foreground py-10">Nada por aqui ainda</p>
-          )}
-        </section>
+        {activeTab === 'reposts' ? (
+          <section className="pt-2">
+            <div className="grid grid-cols-3 gap-4">
+              {(showAllReposts ? repostedPacks : repostedPacks.slice(0, 3)).map(pack => (
+                <button
+                  key={pack.id}
+                  type="button"
+                  onClick={() => setShowAllReposts(true)}
+                  className="group min-w-0 text-left"
+                >
+                  <div className="aspect-square w-full overflow-hidden rounded-2xl bg-secondary border border-border/40 transition-transform group-hover:scale-[1.02]">
+                    {pack.cover_url ? (
+                      <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Disc3 className="w-7 h-7 text-muted-foreground/40" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-2 text-sm font-bold truncate">{pack.title}</p>
+                </button>
+              ))}
+            </div>
+            {repostedPacks.length === 0 && (
+              <p className="text-center text-muted-foreground py-10">Nenhum pack repostado ainda</p>
+            )}
+            {!showAllReposts && repostedPacks.length > 3 && (
+              <button
+                type="button"
+                onClick={() => setShowAllReposts(true)}
+                className="mt-5 w-full rounded-2xl bg-secondary py-3 text-sm font-bold text-foreground"
+              >
+                Ver todos os {repostedPacks.length} repostados
+              </button>
+            )}
+          </section>
+        ) : (
+          <section className="divide-y divide-border/30">
+            {currentPacks.length > 0 ? currentPacks.map(pack => <ProfilePackRow key={pack.id} pack={pack} />) : (
+              <p className="text-center text-muted-foreground py-10">Nada por aqui ainda</p>
+            )}
+          </section>
+        )}
       </div>
       <BottomNav />
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
