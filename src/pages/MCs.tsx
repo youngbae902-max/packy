@@ -37,6 +37,7 @@ const MCs = () => {
               <AudioPlayer
                 key={acapella.id}
                 artistName={acapella.artist_name}
+                imageUrl={acapella.image_url}
                 audioUrl={acapella.audio_url}
                 downloadUrl={acapella.download_url}
                 duration={acapella.duration_seconds || undefined}
