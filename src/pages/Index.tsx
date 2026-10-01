@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Plus, Settings, Instagram, MoreVertical, Search, LayoutGrid, List, Rows3,
+  Plus, Settings, Instagram, MoreVertical, Search,
   Flame, Sparkles, Download, ChevronRight, Users, Play, Star, TrendingUp
 } from 'lucide-react';
 import { Header } from '@/components/Header';
@@ -11,7 +11,6 @@ import { SupportCard } from '@/components/SupportCard';
 import { AddPackModalV2 } from '@/components/AddPackModalV2';
 import { EventCard } from '@/components/EventCard';
 import { BottomNav } from '@/components/BottomNav';
-import { HorizontalCarousel } from '@/components/HorizontalCarousel';
 import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
 import { ListMusic } from 'lucide-react';
 import { PackImagePlaceholder } from '@/components/PackImagePlaceholder';
@@ -30,9 +29,9 @@ const packTypeLabel: Record<string, string> = {
   presets: 'Presets', project: 'Projeto', other: 'Outros',
 };
 
-function CardShell({ pack, viewMode }: { pack: Pack; viewMode: string }) {
+function CardShell({ pack }: { pack: Pack }) {
   return (
-    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[175px] sm:w-[190px] md:w-[210px]" : "w-full min-w-0"}>
+    <div className="w-full min-w-0">
       <PackCardV2 pack={pack} />
     </div>
   );
@@ -96,12 +95,9 @@ function SectionTitle({ icon: Icon, title, badge }: { icon: any; title: string; 
   );
 }
 
-function Carousel({ children, viewMode }: { children: React.ReactNode; viewMode: string }) {
+function Carousel({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className={`${viewMode === "horizontal" ? "flex overflow-x-auto snap-x gap-x-7" : viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-7" : "flex flex-col gap-y-7"} scrollbar-hide pb-4 px-2`}
-      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-    >
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-x-7 gap-y-8 pb-4 px-2">
       {children}
     </div>
   );
@@ -281,7 +277,6 @@ function FooterNav() {
 const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<"grid" | "vertical" | "horizontal">("grid");
 
   const { approvedPacks, premiumPacks, isLoading, addPack } = useSupabasePacks();
   const { activeEvents } = useSiteEvents();
@@ -382,23 +377,7 @@ const Index = () => {
             />
           </div>
         </div>
-        <div className="mb-8 flex justify-end">
-          <div className="flex shrink-0 items-center gap-0.5 rounded-xl border border-white/10 bg-[#141414] p-1" role="group" aria-label="Modo de visualização">
-            {([{mode:"grid", Icon:LayoutGrid, label:"Grade"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"},{mode:"vertical", Icon:List, label:"Vertical"}] as const).map(({mode,Icon,label}) => (
-              <button
-                key={mode}
-                type="button"
-                onClick={() => setViewMode(mode)}
-                aria-label={label}
-                title={label}
-                aria-pressed={viewMode === mode}
-                className={`rounded-xl p-2 transition-colors ${viewMode === mode ? 'bg-white/15 text-white' : 'text-white/45 hover:bg-white/5 hover:text-white'}`}
-              >
-                <Icon className="h-4 w-4" />
-              </button>
-            ))}
-          </div>
-        </div>
+        <div className="mb-8" />
 
         {isLoading ? (
           <div className="text-center py-20 text-foreground/50">Carregando...</div>
@@ -408,9 +387,9 @@ const Index = () => {
             {searchResults.length === 0 ? (
               <p className="text-center py-12 text-foreground/50">Nada encontrado para "{searchTerm}".</p>
             ) : (
-              <div className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-5 gap-y-6 px-2" : viewMode === "vertical" ? "flex flex-col gap-7 px-2" : "flex overflow-x-auto snap-x snap-mandatory gap-5 px-2 pb-4 scrollbar-hide"}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-x-7 gap-y-8 px-2">
                 {searchResults.map(p => (
-                  <div key={p.id} className={viewMode === "horizontal" ? "snap-start shrink-0 w-[175px] sm:w-[190px] md:w-[210px]" : "w-full min-w-0"}>
+                  <div key={p.id} className="w-full min-w-0">
                     <PackCardV2 pack={p} />
                   </div>
                 ))}
@@ -426,7 +405,7 @@ const Index = () => {
             {releases.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Sparkles} title="Lançamentos" />
-                <Carousel viewMode={viewMode}>{releases.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{releases.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
@@ -434,7 +413,7 @@ const Index = () => {
               packs.length > 0 && (
                 <section key={section.id} className="mb-12">
                   <SectionTitle icon={ListMusic} title={section.title} />
-                  <Carousel viewMode={viewMode}>{packs.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                  <Carousel>{packs.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
                 </section>
               )
             ))}
@@ -442,14 +421,14 @@ const Index = () => {
             {trending.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Flame} title="Em Alta" badge="🔥" />
-                <Carousel viewMode={viewMode}>{trending.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{trending.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
             {beloved.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Star} title="Queridinhos" />
-                <Carousel viewMode={viewMode}>{beloved.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{beloved.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
@@ -458,7 +437,7 @@ const Index = () => {
             {monthHot.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={TrendingUp} title="Bombando no Mês" badge="Trending" />
-                <Carousel viewMode={viewMode}>{monthHot.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{monthHot.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
@@ -467,28 +446,28 @@ const Index = () => {
             {presets.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Play} title="Presets Essenciais" />
-                <Carousel viewMode={viewMode}>{presets.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{presets.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
             {projectsPremium.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Sparkles} title="Projetos Premium" />
-                <Carousel viewMode={viewMode}>{projectsPremium.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{projectsPremium.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
             {samples.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Play} title="Sample Packs" />
-                <Carousel viewMode={viewMode}>{samples.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{samples.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
             {drumkits.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Play} title="Drum Kits" />
-                <Carousel viewMode={viewMode}>{drumkits.map(p => <CardShell key={p.id} pack={p} viewMode={viewMode} />)}</Carousel>
+                <Carousel>{drumkits.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
 
