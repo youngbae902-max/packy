@@ -60,13 +60,13 @@ const MCs = () => {
         ) : (
           <div className={
             layout === 'grid'
-              ? 'grid grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-4'
+              ? 'grid grid-cols-2 gap-x-10 gap-y-10 justify-items-center sm:grid-cols-4 sm:gap-x-8 sm:gap-y-10'
               : layout === 'horizontal'
                 ? 'flex gap-6 overflow-x-auto px-1 pb-4'
-                : 'flex flex-col gap-6'
+                : 'flex flex-col gap-8'
           }>
             {filteredAcapellas.map((acapella) => (
-              <div key={acapella.id} className={layout === 'vertical' ? 'flex items-center gap-4 rounded-2xl bg-[#141414] p-3' : layout === 'horizontal' ? 'w-24 shrink-0' : ''}>
+              <div key={acapella.id} className={layout === 'vertical' ? 'flex items-center gap-4 rounded-2xl bg-[#141414] p-3' : layout === 'horizontal' ? 'w-36 shrink-0' : ''}>
                 <AudioPlayer
                   artistName={acapella.artist_name}
                   imageUrl={acapella.image_url}
