@@ -17,7 +17,7 @@ export type Database = {
       acapellas: {
         Row: {
           artist_name: string
-          audio_url: string
+          audio_url: string | null
           created_at: string | null
           created_by: string | null
           deleted_at: string | null
@@ -29,7 +29,7 @@ export type Database = {
         }
         Insert: {
           artist_name: string
-          audio_url: string
+          audio_url?: string | null
           created_at?: string | null
           created_by?: string | null
           deleted_at?: string | null
@@ -41,7 +41,7 @@ export type Database = {
         }
         Update: {
           artist_name?: string
-          audio_url?: string
+          audio_url?: string | null
           created_at?: string | null
           created_by?: string | null
           deleted_at?: string | null

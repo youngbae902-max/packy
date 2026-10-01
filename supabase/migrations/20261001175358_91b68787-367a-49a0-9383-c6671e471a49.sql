@@ -1,0 +1,1 @@
+ALTER TABLE public.acapellas ALTER COLUMN audio_url DROP NOT NULL;
