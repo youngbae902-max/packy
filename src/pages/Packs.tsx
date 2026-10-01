@@ -223,7 +223,7 @@ const Packs = () => {
 
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
-        {/* Tabs: Início / Packs Geral */}
+        {/* Navegação: Início / Packs Geral — sincronização da prévia */}
         {q.length === 0 && (
           <div className="mb-7 mt-2 flex items-center gap-6 px-1">
             {([
