@@ -14,7 +14,7 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
   const { user, isAdmin } = useAuth();
   const [artistName, setArtistName] = useState('');
   const [downloadUrl, setDownloadUrl] = useState('');
-  const [audioUrl, setAudioUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -24,8 +24,12 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
 
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      if (!file.type.startsWith('image/')) {
+        toast.error('Escolha uma imagem');
+        return;
+      }
+      const fileExt = file.name.split('.').pop() || 'jpg';
+      const fileName = `${user.id}/mc-${Date.now()}.${fileExt}`;
       
       const { error: uploadError } = await supabase.storage
         .from('acapellas')
@@ -37,10 +41,10 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
         .from('acapellas')
         .getPublicUrl(fileName);
       
-      setAudioUrl(publicUrl);
-      toast.success('Áudio enviado!');
+      setImageUrl(publicUrl);
+      toast.success('Foto enviada!');
     } catch (error) {
-      toast.error('Erro ao fazer upload do áudio');
+      toast.error('Erro ao enviar a foto');
     } finally {
       setIsUploading(false);
     }
@@ -49,7 +53,7 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!artistName.trim() || !audioUrl || !downloadUrl.trim()) {
+    if (!artistName.trim() || !imageUrl || !downloadUrl.trim()) {
       toast.error('Preencha todos os campos');
       return;
     }
@@ -57,7 +61,8 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
     try {
       await onAdd({
         artist_name: artistName.trim(),
-        audio_url: audioUrl,
+        audio_url: null,
+        image_url: imageUrl,
         download_url: downloadUrl.trim(),
         duration_seconds: null,
       });
@@ -66,7 +71,7 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
       
       // Reset form
       setArtistName('');
-      setAudioUrl('');
+      setImageUrl('');
       setDownloadUrl('');
       onClose();
     } catch (error) {
@@ -92,7 +97,7 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
         </button>
 
         <h2 className="text-2xl font-black text-center mb-8 uppercase tracking-tight">
-          Adicionar Acapella
+          Adicionar MC
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -109,12 +114,12 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
           </div>
 
           <div>
-            <label className="label-field">Arquivo de Áudio (MP3)</label>
+            <label className="label-field">Foto quadrada (4:4)</label>
             
             <input
               type="file"
               ref={fileInputRef}
-              accept="audio/*"
+              accept="image/*"
               onChange={handleFileChange}
               className="hidden"
             />
@@ -126,17 +131,18 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
               className="w-full flex items-center justify-center gap-2 bg-muted border border-border rounded-xl px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
             >
               <Upload className="w-4 h-4" />
-              {isUploading ? 'Enviando...' : audioUrl ? 'Áudio enviado ✓' : 'Carregar áudio'}
+              {isUploading ? 'Enviando...' : imageUrl ? 'Foto enviada ✓' : 'Escolher foto'}
             </button>
+            {imageUrl && <img src={imageUrl} alt="Prévia" className="mt-3 mx-auto size-20 rounded-full object-cover border border-border" />}
           </div>
 
           <div>
-            <label className="label-field">Link de Download</label>
+            <label className="label-field">Link</label>
             <input
               type="url"
               value={downloadUrl}
               onChange={(e) => setDownloadUrl(e.target.value)}
-              placeholder="Link para download externo"
+              placeholder="https://..."
               className="input-field"
               required
             />
@@ -145,7 +151,7 @@ export function AddAcapellaModal({ isOpen, onClose, onAdd }: AddAcapellaModalPro
           <button 
             type="submit" 
             className="btn-primary w-full text-sm uppercase tracking-wide"
-            disabled={!audioUrl}
+            disabled={!imageUrl}
           >
             Adicionar
           </button>

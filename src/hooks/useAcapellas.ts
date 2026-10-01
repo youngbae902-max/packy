@@ -5,8 +5,9 @@ import { useAuth } from '@/contexts/AuthContext';
 export interface Acapella {
   id: string;
   artist_name: string;
-  audio_url: string;
+  audio_url: string | null;
   download_url: string;
+  image_url: string | null;
   duration_seconds: number | null;
   created_by: string | null;
   created_at: string;

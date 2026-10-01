@@ -12,12 +12,14 @@ interface EditAcapellaModalProps {
 export function EditAcapellaModal({ isOpen, acapella, onClose, onSave }: EditAcapellaModalProps) {
   const [artistName, setArtistName] = useState('');
   const [downloadUrl, setDownloadUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (acapella) {
       setArtistName(acapella.artist_name);
       setDownloadUrl(acapella.download_url);
+      setImageUrl(acapella.image_url || '');
     }
   }, [acapella]);
 
@@ -30,6 +32,7 @@ export function EditAcapellaModal({ isOpen, acapella, onClose, onSave }: EditAca
       await onSave(acapella.id, {
         artist_name: artistName,
         download_url: downloadUrl,
+        image_url: imageUrl,
       });
       onClose();
     } finally {
@@ -48,6 +51,12 @@ export function EditAcapellaModal({ isOpen, acapella, onClose, onSave }: EditAca
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="label-field">Link da foto quadrada (4:4)</label>
+            <input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="input-field" required />
+            {imageUrl && <img src={imageUrl} alt="Prévia" className="mt-3 size-16 rounded-full object-cover border border-border" />}
+          </div>
+
           <div>
             <label className="label-field">Nome do Artista</label>
             <input
