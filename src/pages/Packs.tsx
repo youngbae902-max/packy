@@ -225,7 +225,7 @@ const Packs = () => {
 
         {/* Navegação: texto simples com indicador da aba ativa */}
         {q.length === 0 && (
-          <div className="mb-7 mt-2 flex items-center gap-6 px-1">
+          <div className="mb-7 mt-2 flex items-center gap-[24px] px-1">
             {([
               { id: 'inicio', label: 'Início' },
               { id: 'geral', label: 'Packs em geral' },
