@@ -261,7 +261,7 @@ const Packs = () => {
 
         {/* Tabs: Início / Packs Geral */}
         {q.length === 0 && (
-          <div className="mb-7 mt-5 flex items-center gap-7 border-b border-white/10 px-1">
+          <div className="mb-5 mt-2 flex items-center gap-7 border-b border-white/10 px-1">
             {([
               { id: 'inicio', label: 'Início' },
               { id: 'geral', label: 'Packs Geral' },
