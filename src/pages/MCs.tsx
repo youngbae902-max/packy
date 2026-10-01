@@ -1,30 +1,13 @@
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { AudioPlayer } from '@/components/AudioPlayer';
-import { AddAcapellaModal } from '@/components/AddAcapellaModal';
 import { useAcapellas } from '@/hooks/useAcapellas';
-import { useAuth } from '@/contexts/AuthContext';
 
 const MCs = () => {
-  const { isAdmin } = useAuth();
-  const { acapellas, isLoading, addAcapella } = useAcapellas();
-  const [showModal, setShowModal] = useState(false);
+  const { acapellas, isLoading } = useAcapellas();
 
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <header className="py-6">
-          <h1 className="text-2xl font-black">MCs</h1>
-        </header>
-
-        {isAdmin && (
-          <button onClick={() => setShowModal(true)} className="btn-primary w-full mb-6">
-            <Plus className="w-4 h-4 mr-2" />
-            Adicionar Acapella
-          </button>
-        )}
-
         <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
           {isLoading ? (
             <p className="col-span-full text-center text-muted-foreground py-8">Carregando...</p>
@@ -46,7 +29,6 @@ const MCs = () => {
       </div>
 
       <BottomNav />
-      <AddAcapellaModal isOpen={showModal} onClose={() => setShowModal(false)} onAdd={addAcapella} />
     </div>
   );
 };
