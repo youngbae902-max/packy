@@ -382,21 +382,38 @@ const Index = () => {
             />
           </div>
         </div>
-        <div className="mb-8 flex justify-end">
-          <div className="flex w-full sm:w-auto items-center gap-1 rounded-2xl border border-white/10 bg-[#141414] p-1.5" aria-label="Modo de visualização">
-            {([{mode:"grid", Icon:LayoutGrid, label:"Grade"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"},{mode:"vertical", Icon:List, label:"Vertical"}] as const).map(({mode,Icon,label}) => (
-              <button
-                key={mode}
-                type="button"
-                aria-label={label}
-                aria-pressed={viewMode === mode}
-                onClick={() => setViewMode(mode)}
-                className={`flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold transition-colors ${viewMode === mode ? "bg-white text-black shadow-sm" : "text-white/65 hover:bg-white/10 hover:text-white"}`}
-              >
-                <Icon className="h-4 w-4" />
-                <span>{label}</span>
-              </button>
-            ))}
+        <div className="mb-8 flex flex-col gap-2">
+          <span className="text-xs font-semibold text-white/60 px-1">Visualização dos packs</span>
+          <div className="grid grid-cols-3 gap-2 w-full" role="group" aria-label="Modo de visualização">
+            {([{mode:"grid", Icon:LayoutGrid, label:"Grade"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"},{mode:"vertical", Icon:List, label:"Vertical"}] as const).map(({mode,Icon,label}) => {
+              const active = viewMode === mode;
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setViewMode(mode)}
+                  style={{
+                    minHeight: 48,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    padding: "10px 8px",
+                    borderRadius: 12,
+                    border: active ? "1px solid #ffffff" : "1px solid #383838",
+                    background: active ? "#ffffff" : "#171717",
+                    color: active ? "#111111" : "#f0f0f0",
+                    fontWeight: 700,
+                    fontSize: 13,
+                    cursor: "pointer"
+                  }}
+                >
+                  <Icon size={17} />
+                  <span>{label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
