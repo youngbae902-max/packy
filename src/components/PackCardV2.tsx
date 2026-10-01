@@ -122,7 +122,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#1C1C1C] border border-[#1E1E1E] transition-all p-2.5 flex flex-col"
+        className="group relative text-center w-full rounded-2xl overflow-hidden bg-[#1C1C1C] border border-[#1E1E1E] transition-all p-2.5 flex flex-col"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         {/* Square cover */}
@@ -147,12 +147,12 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </div>
 
         {/* Title — up to 2 lines, proportional */}
-        <h3 className="mt-2.5 text-[14px] leading-tight font-medium text-foreground line-clamp-2 min-h-[2.6em]" style={{ letterSpacing: '-0.01em' }}>
+        <h3 className="mt-2.5 text-center text-[14px] leading-tight font-medium text-foreground line-clamp-2 min-h-[2.6em]" style={{ letterSpacing: '-0.01em' }}>
           {pack.title}
         </h3>
 
         {/* Author (visible) */}
-        <p className="text-[12px] truncate mt-1 text-muted-foreground font-normal flex items-center gap-1">
+        <p className="text-[12px] truncate mt-1 text-muted-foreground font-normal flex items-center justify-center gap-1">
           <span className="truncate">{displayAuthor}</span>
           {isOwner && !pack.is_anonymous && (
             <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
@@ -160,7 +160,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         </p>
 
         {/* Footer meta */}
-        <div className="mt-2 pt-2 border-t border-[#1E1E1E] text-[10px] font-normal tracking-wider text-muted-foreground">
+        <div className="mt-2 pt-2 border-t border-[#1E1E1E] text-center text-[10px] font-normal tracking-wider text-muted-foreground">
           {categoryLabel}
         </div>
       </button>
