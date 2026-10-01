@@ -382,38 +382,21 @@ const Index = () => {
             />
           </div>
         </div>
-        <div className="mb-8 flex flex-col gap-2">
-          <span className="text-xs font-semibold text-white/60 px-1">Visualização dos packs</span>
-          <div className="grid grid-cols-3 gap-2 w-full" role="group" aria-label="Modo de visualização">
-            {([{mode:"grid", Icon:LayoutGrid, label:"Grade"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"},{mode:"vertical", Icon:List, label:"Vertical"}] as const).map(({mode,Icon,label}) => {
-              const active = viewMode === mode;
-              return (
-                <button
-                  key={mode}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => setViewMode(mode)}
-                  style={{
-                    minHeight: 48,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    padding: "10px 8px",
-                    borderRadius: 12,
-                    border: active ? "1px solid #ffffff" : "1px solid #383838",
-                    background: active ? "#ffffff" : "#171717",
-                    color: active ? "#111111" : "#f0f0f0",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    cursor: "pointer"
-                  }}
-                >
-                  <Icon size={17} />
-                  <span>{label}</span>
-                </button>
-              );
-            })}
+        <div className="mb-8 flex justify-end">
+          <div className="flex shrink-0 items-center gap-0.5 rounded-xl border border-white/10 bg-[#141414] p-1" role="group" aria-label="Modo de visualização">
+            {([{mode:"grid", Icon:LayoutGrid, label:"Grade"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"},{mode:"vertical", Icon:List, label:"Vertical"}] as const).map(({mode,Icon,label}) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setViewMode(mode)}
+                aria-label={label}
+                title={label}
+                aria-pressed={viewMode === mode}
+                className={`rounded-xl p-2 transition-colors ${viewMode === mode ? 'bg-white/15 text-white' : 'text-white/45 hover:bg-white/5 hover:text-white'}`}
+              >
+                <Icon className="h-4 w-4" />
+              </button>
+            ))}
           </div>
         </div>
 
