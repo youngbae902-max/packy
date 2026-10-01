@@ -373,10 +373,10 @@ const Index = () => {
         <div className="relative mb-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
           <Input
-            placeholder="Buscar packs, criadores, categorias..."
+            placeholder="O que você quer ouvir ou baixar?"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-11 h-12 rounded-2xl bg-[#141414] border-white/5 focus-visible:ring-1 focus-visible:ring-white/20 text-sm"
+            className="pl-10 h-10 rounded-full bg-[#111111] border border-white/[0.04] focus-visible:ring-1 focus-visible:ring-white/15 text-sm placeholder:text-muted-foreground/80 shadow-none"
           />
         </div>
 
