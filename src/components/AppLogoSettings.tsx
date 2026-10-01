@@ -39,7 +39,7 @@ export function AppLogoSettings() {
   const display = preview || logoUrl;
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-card p-5">
+    <div className="rounded-2xl border border-border/40 bg-muted p-5">
       <div className="flex items-center gap-2 mb-1">
         <ImageIcon className="w-4 h-4 text-foreground" />
         <h3 className="text-sm font-bold text-foreground">Logo do aplicativo</h3>
