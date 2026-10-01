@@ -32,7 +32,7 @@ const packTypeLabel: Record<string, string> = {
 
 function CardShell({ pack, viewMode }: { pack: Pack; viewMode: string }) {
   return (
-    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[210px] sm:w-[230px] md:w-[250px]" : "w-full min-w-0"}>
+    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[175px] sm:w-[190px] md:w-[210px]" : "w-full min-w-0"}>
       <PackCardV2 pack={pack} />
     </div>
   );
