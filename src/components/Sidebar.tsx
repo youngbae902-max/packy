@@ -110,7 +110,7 @@ export function Sidebar() {
         ) : (
           <Link
             to="/conta"
-            className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-primary text-primary-foreground font-bold rounded-full hover:bg-primary/90 transition"
+            className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-foreground text-background font-semibold text-sm rounded-xl border border-white/10 shadow-sm hover:bg-foreground/90 hover:shadow-md active:scale-[0.98] transition-all"
           >
             Entrar
           </Link>
