@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Upload, Search, Menu, Inbox, X, Mic } from 'lucide-react';
+import { Search, Menu, Inbox, X, Mic } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
 import { PackCardV2 } from '@/components/PackCardV2';
 import { AudioPlayer } from '@/components/AudioPlayer';
-import { AddPackModalV2 } from '@/components/AddPackModalV2';
 import { AuthModal } from '@/components/AuthModal';
 import { EventCard } from '@/components/EventCard';
 import { HorizontalCarousel } from '@/components/HorizontalCarousel';
@@ -26,7 +25,6 @@ import { useReleasesSection } from '@/hooks/useReleasesSection';
 
 const Packs = () => {
   const { user } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,7 +32,7 @@ const Packs = () => {
   const [activeTab, setActiveTab] = useState<'inicio' | 'geral'>('inicio');
   const popupRef = useRef<HTMLDivElement>(null);
 
-  const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
+  const { approvedPacks, premiumPacks, projectPacks, isLoading } = useSupabasePacks();
   const { acapellas, isLoading: acapellasLoading } = useAcapellas();
   const { activeEvents } = useSiteEvents();
   const { hasUnread } = useInbox();
@@ -72,14 +70,6 @@ const Packs = () => {
     document.addEventListener('mousedown', onClick);
     return () => document.removeEventListener('mousedown', onClick);
   }, [popupOpen]);
-
-  const handleNewPack = () => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
-    setIsModalOpen(true);
-  };
 
   const searchedPacks = useMemo(() => {
     if (!q) return [];
@@ -195,13 +185,6 @@ const Packs = () => {
               <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
             )}
           </Link>
-          <button
-            onClick={handleNewPack}
-            className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full font-bold text-sm hover:opacity-90 transition-opacity"
-          >
-            <Upload className="w-4 h-4" />
-            Publicar
-          </button>
         </div>
       </header>
 
@@ -235,12 +218,6 @@ const Packs = () => {
               placeholder={animatedPlaceholder}
             />
           </div>
-          <button
-            onClick={handleNewPack}
-            className="shrink-0 w-[50px] h-[50px] rounded-2xl bg-[#1A1A1A] border border-[#252525] flex items-center justify-center text-foreground hover:bg-[#202020] transition-colors"
-          >
-            <Upload className="w-[18px] h-[18px]" />
-          </button>
         </div>
       </div>
 
@@ -394,14 +371,6 @@ const Packs = () => {
 
       <BottomNav />
       <SideMenu isOpen={showMenu} onClose={() => setShowMenu(false)} />
-
-      {user && (
-        <AddPackModalV2
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onAdd={addPack}
-        />
-      )}
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
