@@ -97,7 +97,7 @@ function SectionTitle({ icon: Icon, title, badge }: { icon: any; title: string; 
 
 function Carousel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-x-7 gap-y-8 pb-4 px-2">
+    <div className="grid grid-cols-2 gap-x-10 gap-y-10 pb-4 px-2">
       {children}
     </div>
   );
@@ -387,7 +387,7 @@ const Index = () => {
             {searchResults.length === 0 ? (
               <p className="text-center py-12 text-foreground/50">Nada encontrado para "{searchTerm}".</p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-x-7 gap-y-8 px-2">
+              <div className="grid grid-cols-2 gap-x-10 gap-y-10 px-2">
                 {searchResults.map(p => (
                   <div key={p.id} className="w-full min-w-0">
                     <PackCardV2 pack={p} />
