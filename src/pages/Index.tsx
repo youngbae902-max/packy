@@ -11,6 +11,7 @@ import { SupportCard } from '@/components/SupportCard';
 import { AddPackModalV2 } from '@/components/AddPackModalV2';
 import { EventCard } from '@/components/EventCard';
 import { BottomNav } from '@/components/BottomNav';
+import { HorizontalCarousel } from '@/components/HorizontalCarousel';
 import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
 import { ListMusic } from 'lucide-react';
 import { PackImagePlaceholder } from '@/components/PackImagePlaceholder';
@@ -31,7 +32,7 @@ const packTypeLabel: Record<string, string> = {
 
 function CardShell({ pack }: { pack: Pack }) {
   return (
-    <div className="w-full min-w-0">
+    <div className="snap-start shrink-0 w-[260px] sm:w-[280px] md:w-[300px]">
       <PackCardV2 pack={pack} />
     </div>
   );
@@ -97,7 +98,10 @@ function SectionTitle({ icon: Icon, title, badge }: { icon: any; title: string; 
 
 function Carousel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-2 gap-x-10 gap-y-10 pb-4 px-2">
+    <div
+      className="flex gap-3 overflow-x-auto scrollbar-hide pb-4 snap-x px-2"
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+    >
       {children}
     </div>
   );
@@ -366,18 +370,15 @@ const Index = () => {
         )}
 
         {/* Search */}
-        <div className="mb-2">
-          <div className="relative min-w-0">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
-            <Input
-              placeholder="O que você quer ouvir ou baixar?"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-10 rounded-full bg-[#111111] border border-white/[0.04] focus-visible:ring-1 focus-visible:ring-white/15 text-sm placeholder:text-muted-foreground/80 shadow-none"
-            />
-          </div>
+        <div className="relative mb-8">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
+          <Input
+            placeholder="O que você quer ouvir ou baixar?"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 h-10 rounded-full bg-[#111111] border border-white/[0.04] focus-visible:ring-1 focus-visible:ring-white/15 text-sm placeholder:text-muted-foreground/80 shadow-none"
+          />
         </div>
-        <div className="mb-8" />
 
         {isLoading ? (
           <div className="text-center py-20 text-foreground/50">Carregando...</div>
@@ -387,12 +388,8 @@ const Index = () => {
             {searchResults.length === 0 ? (
               <p className="text-center py-12 text-foreground/50">Nada encontrado para "{searchTerm}".</p>
             ) : (
-              <div className="grid grid-cols-2 gap-x-10 gap-y-10 px-2">
-                {searchResults.map(p => (
-                  <div key={p.id} className="w-full min-w-0">
-                    <PackCardV2 pack={p} />
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-2">
+                {searchResults.map(p => <PackCardV2 key={p.id} pack={p} />)}
               </div>
             )}
           </div>

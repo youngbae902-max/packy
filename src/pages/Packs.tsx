@@ -32,7 +32,6 @@ const Packs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'inicio' | 'geral'>('inicio');
-  const [viewMode, setViewMode] = useState<'grade' | 'horizontal' | 'vertical'>('grade');
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, addPack, isLoading } = useSupabasePacks();
@@ -246,22 +245,12 @@ const Packs = () => {
       </div>
 
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
-        <div className="flex justify-end mb-4">
-          <div className="inline-flex gap-1 rounded-xl border border-border/60 bg-card p-1" aria-label="Modo de visualização">
-            {([{ id: 'grade', label: 'Grade' }, { id: 'horizontal', label: 'Horizontal' }, { id: 'vertical', label: 'Vertical' }] as const).map(mode => (
-              <button key={mode.id} type="button" onClick={() => setViewMode(mode.id)} aria-pressed={viewMode === mode.id}
-                className={viewMode === mode.id ? 'rounded-lg px-3 py-2 text-xs font-semibold bg-foreground text-background' : 'rounded-lg px-3 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground'}>
-                {mode.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {q.length === 0 && <HomeBannerCarousel />}
 
         {/* Tabs: Início / Packs Geral */}
         {q.length === 0 && (
-          <div className="mb-5 mt-2 flex items-center gap-7 border-b border-white/10 px-1">
+          <div className="mb-7 mt-5 flex p-1 rounded-2xl bg-[#1A1A1A] border border-[#252525]">
             {([
               { id: 'inicio', label: 'Início' },
               { id: 'geral', label: 'Packs Geral' },
@@ -269,10 +258,10 @@ const Packs = () => {
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`relative py-3 text-[13.5px] font-semibold transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:rounded-full after:transition-opacity ${
+                className={`flex-1 py-2.5 rounded-xl text-[13.5px] font-semibold transition-all ${
                   activeTab === t.id
-                    ? 'text-foreground after:bg-foreground after:opacity-100'
-                    : 'text-[#777] after:opacity-0 hover:text-foreground'
+                    ? 'bg-foreground text-background shadow-sm'
+                    : 'text-[#9E9E9E] hover:text-foreground'
                 }`}
               >
                 {t.label}
@@ -314,8 +303,8 @@ const Packs = () => {
             {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack encontrado.</p>
             ) : (
-              <div className={viewMode === 'grade' ? 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3' : viewMode === 'vertical' ? 'grid grid-cols-1 gap-3' : 'flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory'}>
-                {searchedPacks.map(pack => <div key={pack.id} className={viewMode === 'horizontal' ? 'min-w-[150px] max-w-[150px] shrink-0 snap-start' : ''}><PackCardV2 pack={pack} /></div>)}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
           </div>
@@ -330,8 +319,8 @@ const Packs = () => {
             {allPacks.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
             ) : (
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3">
-                {allPacks.map(pack => <div key={pack.id} className={viewMode === 'horizontal' ? 'min-w-[150px] max-w-[150px] shrink-0 snap-start' : ''}><PackCardV2 pack={pack} /></div>)}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
           </div>
@@ -341,7 +330,7 @@ const Packs = () => {
             {releases.visible && releasePacks.length > 0 && (
               <HorizontalCarousel title={releases.title}>
                 {releasePacks.map(pack => (
-                  <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
+                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                     <PackCardV2 pack={pack} />
                   </div>
                 ))}
@@ -355,7 +344,7 @@ const Packs = () => {
               packs.length > 0 && (
                 <HorizontalCarousel key={section.id} title={section.title}>
                   {packs.map(pack => (
-                    <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
+                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                       <PackCardV2 pack={pack} />
                     </div>
                   ))}
@@ -367,7 +356,7 @@ const Packs = () => {
               categories.map(category => (
                 <HorizontalCarousel key={category.id} title={category.name}>
                   {premiumPacks.slice(0, 8).map(pack => (
-                    <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
+                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                       <PackCardV2 pack={pack} />
                     </div>
                   ))}
@@ -379,7 +368,7 @@ const Packs = () => {
                 {premiumPacks.length > 0 && (
                   <HorizontalCarousel title="Premium & Exclusivos">
                     {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -389,7 +378,7 @@ const Packs = () => {
                 {projectPacks.length > 0 && (
                   <HorizontalCarousel title="Projetos e FLPs">
                     {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
