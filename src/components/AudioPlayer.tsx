@@ -5,12 +5,13 @@ import { AuthModal } from './AuthModal';
 
 interface AudioPlayerProps {
   artistName: string;
-  audioUrl: string;
+  imageUrl?: string | null;
+  audioUrl: string | null;
   downloadUrl: string;
   duration?: number;
 }
 
-export function AudioPlayer({ artistName, audioUrl, downloadUrl, duration }: AudioPlayerProps) {
+export function AudioPlayer({ artistName, imageUrl, audioUrl, downloadUrl, duration }: AudioPlayerProps) {
   const { user } = useAuth();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -31,24 +32,21 @@ export function AudioPlayer({ artistName, audioUrl, downloadUrl, duration }: Aud
   };
 
   const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      void audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
     }
   };
 
   const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
+    if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
   };
 
   const handleLoadedMetadata = () => {
-    if (audioRef.current && !duration) {
+    if (audioRef.current && !duration && Number.isFinite(audioRef.current.duration)) {
       setTotalDuration(audioRef.current.duration);
     }
   };
@@ -74,36 +72,41 @@ export function AudioPlayer({ artistName, audioUrl, downloadUrl, duration }: Aud
   return (
     <>
       <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border/50 p-4 hover:border-primary/30 transition-all">
-        <audio
-          ref={audioRef}
-          src={audioUrl}
-          onTimeUpdate={handleTimeUpdate}
-          onLoadedMetadata={handleLoadedMetadata}
-          onEnded={() => setIsPlaying(false)}
-          preload="metadata"
-        />
-        
+        {audioUrl && (
+          <audio
+            ref={audioRef}
+            src={audioUrl}
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleLoadedMetadata}
+            onEnded={() => setIsPlaying(false)}
+            preload="metadata"
+          />
+        )}
         <div className="flex items-center gap-4">
-          {/* Play Button */}
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={`Foto de ${artistName}`}
+              className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
+              <Music className="w-6 h-6 text-primary" />
+            </div>
+          )}
           <button
             onClick={togglePlay}
-            className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
+            disabled={!audioUrl}
+            aria-label={isPlaying ? 'Pausar' : 'Reproduzir'}
+            className="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center hover:scale-105 transition-transform shadow-lg disabled:opacity-40"
           >
-            {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
+            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-1" />}
           </button>
-
-          {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
-              <Music className="w-4 h-4 text-primary" />
-              <h3 className="font-bold text-sm uppercase tracking-tight truncate">
-                {artistName}
-              </h3>
-            </div>
-            
-            {/* Progress Bar */}
+            <h3 className="font-bold text-sm uppercase tracking-tight truncate mb-2">{artistName}</h3>
             <div className="relative w-full h-1.5 bg-muted rounded-full overflow-hidden">
-              <div 
+              <div
                 className="absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all"
                 style={{ width: `${progress}%` }}
               />
@@ -113,35 +116,26 @@ export function AudioPlayer({ artistName, audioUrl, downloadUrl, duration }: Aud
                 max={totalDuration || 100}
                 value={currentTime}
                 onChange={handleSeek}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                disabled={!audioUrl}
+                aria-label="Progresso do áudio"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-default"
               />
             </div>
-
-            {/* Time */}
             <div className="flex justify-between mt-1.5">
-              <span className="text-[10px] text-muted-foreground font-medium">
-                {formatTime(currentTime)}
-              </span>
-              <span className="text-[10px] text-muted-foreground font-medium">
-                {formatTime(totalDuration)}
-              </span>
+              <span className="text-[10px] text-muted-foreground font-medium">{formatTime(currentTime)}</span>
+              <span className="text-[10px] text-muted-foreground font-medium">{formatTime(totalDuration)}</span>
             </div>
           </div>
-
-          {/* Download */}
           <button
             onClick={handleDownloadClick}
+            aria-label="Baixar acapella"
             className="w-10 h-10 rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
           >
             <Download className="w-4 h-4" />
           </button>
         </div>
       </div>
-
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-      />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </>
   );
 }
