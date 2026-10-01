@@ -32,7 +32,7 @@ const packTypeLabel: Record<string, string> = {
 
 function CardShell({ pack, viewMode }: { pack: Pack; viewMode: string }) {
   return (
-    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[260px] sm:w-[280px] md:w-[300px]" : "w-full min-w-0"}>
+    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[240px] sm:w-[260px] md:w-[280px]" : "w-full min-w-0"}>
       <PackCardV2 pack={pack} />
     </div>
   );
@@ -99,7 +99,7 @@ function SectionTitle({ icon: Icon, title, badge }: { icon: any; title: string; 
 function Carousel({ children, viewMode }: { children: React.ReactNode; viewMode: string }) {
   return (
     <div
-      className={`${viewMode === "horizontal" ? "flex overflow-x-auto snap-x gap-x-5" : viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8" : "flex flex-col gap-y-8"} scrollbar-hide pb-4 px-2`}
+      className={`${viewMode === "horizontal" ? "flex overflow-x-auto snap-x gap-x-5" : viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5" : "flex flex-col gap-y-5"} scrollbar-hide pb-4 px-2`}
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       {children}
@@ -408,7 +408,7 @@ const Index = () => {
             {searchResults.length === 0 ? (
               <p className="text-center py-12 text-foreground/50">Nada encontrado para "{searchTerm}".</p>
             ) : (
-              <div className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-5 gap-y-6 px-2" : viewMode === "vertical" ? "flex flex-col gap-6 px-2" : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-2"}>
+              <div className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-5 px-2" : viewMode === "vertical" ? "flex flex-col gap-5 px-2" : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 px-2"}>
                 {searchResults.map(p => <PackCardV2 key={p.id} pack={p} />)}
               </div>
             )}
