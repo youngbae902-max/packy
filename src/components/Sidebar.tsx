@@ -19,15 +19,14 @@ export function Sidebar() {
     .map((page) => ({ icon: Disc, label: page.title, to: `/pagina/${page.slug}` }));
 
   return (
-    <aside className="hidden md:flex flex-col w-64 fixed inset-y-0 left-0 bg-[hsl(0,0%,3%)] border-r border-border/40 z-40">
+    <aside className="hidden md:flex flex-col w-64 fixed inset-y-0 left-0 bg-card border-r border-border/40 z-40">
       <div className="p-6">
-        <Link to="/" className="flex items-center gap-3">
+        <Link to="/" className="flex items-center">
           {logoUrl ? (
             <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg object-cover" />
           ) : (
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold">P</div>
           )}
-          <span className="text-xl font-black tracking-tight">PACKY</span>
         </Link>
       </div>
 
