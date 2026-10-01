@@ -225,7 +225,7 @@ const Packs = () => {
 
         {/* Tabs: Início / Packs Geral */}
         {q.length === 0 && (
-          <div className="mb-5 mt-2 flex p-1 rounded-2xl bg-[#1A1A1A] border border-[#252525]">
+          <div className="mb-7 mt-2 flex items-center gap-6 px-1">
             {([
               { id: 'inicio', label: 'Início' },
               { id: 'geral', label: 'Packs Geral' },
@@ -233,10 +233,10 @@ const Packs = () => {
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`flex-1 py-2.5 rounded-xl text-[13.5px] font-semibold transition-all ${
+                className={`text-[13.5px] font-semibold transition-colors pb-1 border-b ${
                   activeTab === t.id
-                    ? 'bg-foreground text-background shadow-sm'
-                    : 'text-[#9E9E9E] hover:text-foreground'
+                    ? 'text-foreground border-foreground'
+                    : 'text-[#9E9E9E] border-transparent hover:text-foreground'
                 }`}
               >
                 {t.label}
