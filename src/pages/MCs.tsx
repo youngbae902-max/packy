@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Mic } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { AddAcapellaModal } from '@/components/AddAcapellaModal';
@@ -14,10 +14,8 @@ const MCs = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <header className="text-center py-6">
-          <Mic className="w-10 h-10 mx-auto mb-2 text-primary" />
+        <header className="py-6">
           <h1 className="text-2xl font-black">MCs</h1>
-          <p className="text-sm text-muted-foreground">Acapellas para produção</p>
         </header>
 
         {isAdmin && (
@@ -27,11 +25,11 @@ const MCs = () => {
           </button>
         )}
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
           {isLoading ? (
-            <p className="text-center text-muted-foreground py-8">Carregando...</p>
+            <p className="col-span-full text-center text-muted-foreground py-8">Carregando...</p>
           ) : acapellas.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">Nenhuma acapella disponível</p>
+            <p className="col-span-full text-center text-muted-foreground py-8">Nenhuma acapella disponível</p>
           ) : (
             acapellas.map((acapella) => (
               <AudioPlayer
