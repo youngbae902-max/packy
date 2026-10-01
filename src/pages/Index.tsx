@@ -383,18 +383,18 @@ const Index = () => {
           </div>
         </div>
         <div className="mb-8 flex justify-end">
-          <div className="flex shrink-0 items-center gap-0.5 rounded-xl border border-white/10 bg-[#141414] p-1" aria-label="Modo de visualização">
+          <div className="flex w-full sm:w-auto items-center gap-1 rounded-2xl border border-white/10 bg-[#141414] p-1.5" aria-label="Modo de visualização">
             {([{mode:"grid", Icon:LayoutGrid, label:"Grade"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"},{mode:"vertical", Icon:List, label:"Vertical"}] as const).map(({mode,Icon,label}) => (
               <button
                 key={mode}
                 type="button"
                 aria-label={label}
-                title={label}
                 aria-pressed={viewMode === mode}
                 onClick={() => setViewMode(mode)}
-                className={`rounded-xl p-2 transition-colors ${viewMode === mode ? "bg-white/15 text-white" : "text-white/45 hover:bg-white/5 hover:text-white"}`}
+                className={`flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold transition-colors ${viewMode === mode ? "bg-white text-black shadow-sm" : "text-white/65 hover:bg-white/10 hover:text-white"}`}
               >
                 <Icon className="h-4 w-4" />
+                <span>{label}</span>
               </button>
             ))}
           </div>
