@@ -153,7 +153,7 @@ const Packs = () => {
                   <div className="space-y-1">
                     {searchedMCs.map(mc => (
                       <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl hover:bg-muted px-3 py-2">
-                        {mc.image_url ? <img src={mc.image_url} alt="" className="size-11 rounded-full object-cover" /> : <span className="size-11 rounded-full bg-muted flex items-center justify-center"><Mic className="size-4" /></span>}
+                        {mc.image_url ? <img src={mc.image_url} alt="" className="w-16 h-16 min-w-16 min-h-16 rounded-full object-cover" /> : <span className="w-16 h-16 min-w-16 min-h-16 rounded-full bg-muted flex items-center justify-center"><Mic className="size-4" /></span>}
                         <span className="font-semibold text-sm">{mc.artist_name}</span>
                       </a>
                     ))}
@@ -270,7 +270,7 @@ const Packs = () => {
                 <div className="space-y-2">
                   {searchedMCs.map(mc => (
                     <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl bg-card border border-border p-3">
-                      {mc.image_url ? <img src={mc.image_url} alt="" className="size-24 rounded-full object-cover" /> : <span className="size-24 rounded-full bg-muted flex items-center justify-center"><Mic className="size-8" /></span>}
+                      {mc.image_url ? <img src={mc.image_url} alt="" className="w-32 h-32 min-w-32 min-h-32 rounded-full object-cover" /> : <span className="w-32 h-32 min-w-32 min-h-32 rounded-full bg-muted flex items-center justify-center"><Mic className="size-10" /></span>}
                       <span className="font-display font-bold">{mc.artist_name}</span>
                     </a>
                   ))}
