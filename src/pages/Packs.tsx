@@ -246,11 +246,9 @@ const Packs = () => {
 
       <div className="w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
-        {q.length === 0 && <HomeBannerCarousel />}
-
         {/* Tabs: Início / Packs Geral */}
         {q.length === 0 && (
-          <div className="mb-7 mt-5 flex p-1 rounded-2xl bg-[#1A1A1A] border border-[#252525]">
+          <div className="mb-5 mt-2 flex p-1 rounded-2xl bg-[#1A1A1A] border border-[#252525]">
             {([
               { id: 'inicio', label: 'Início' },
               { id: 'geral', label: 'Packs Geral' },
@@ -269,6 +267,8 @@ const Packs = () => {
             ))}
           </div>
         )}
+
+        {q.length === 0 && <HomeBannerCarousel />}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
