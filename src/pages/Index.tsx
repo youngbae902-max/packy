@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Plus, Settings, Instagram, MoreVertical, Search, Grid3X3, List, Rows3,
+  Plus, Settings, Instagram, MoreVertical, Search, LayoutGrid, List, Rows3,
   Flame, Sparkles, Download, ChevronRight, Users, Play, Star, TrendingUp
 } from 'lucide-react';
 import { Header } from '@/components/Header';
@@ -281,7 +281,7 @@ function FooterNav() {
 const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<"grid" | "vertical" | "horizontal">("horizontal");
+  const [viewMode, setViewMode] = useState<"grid" | "vertical" | "horizontal">("grid");
 
   const { approvedPacks, premiumPacks, isLoading, addPack } = useSupabasePacks();
   const { activeEvents } = useSiteEvents();
@@ -371,23 +371,33 @@ const Index = () => {
         )}
 
         {/* Search */}
-        <div className="flex items-center gap-3 mb-8">
-        <div className="relative flex-1 min-w-0">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
-          <Input
-            placeholder="O que você quer ouvir ou baixar?"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 h-10 rounded-full bg-[#111111] border border-white/[0.04] focus-visible:ring-1 focus-visible:ring-white/15 text-sm placeholder:text-muted-foreground/80 shadow-none"
-          />
+        <div className="mb-2">
+          <div className="relative min-w-0">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
+            <Input
+              placeholder="O que você quer ouvir ou baixar?"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 h-10 rounded-full bg-[#111111] border border-white/[0.04] focus-visible:ring-1 focus-visible:ring-white/15 text-sm placeholder:text-muted-foreground/80 shadow-none"
+            />
+          </div>
         </div>
-        <div className="flex items-center gap-1 rounded-full bg-[#171717] border border-white/5 p-1 shrink-0" aria-label="Modo de visualização">
-          {([{mode:"grid", Icon:Grid3X3, label:"Grade"},{mode:"vertical", Icon:List, label:"Vertical"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"}] as const).map(({mode,Icon,label}) => (
-            <button key={mode} type="button" aria-label={label} title={label} onClick={() => setViewMode(mode)} className={`p-2 rounded-full transition-colors ${viewMode === mode ? "bg-[#303030] text-white" : "text-white/45 hover:text-white"}`}>
-              <Icon className="w-4 h-4" />
-            </button>
-          ))}
-        </div>
+        <div className="mb-8 flex justify-end">
+          <div className="flex shrink-0 items-center gap-0.5 rounded-xl border border-white/10 bg-[#141414] p-1" aria-label="Modo de visualização">
+            {([{mode:"grid", Icon:LayoutGrid, label:"Grade"},{mode:"horizontal", Icon:Rows3, label:"Horizontal"},{mode:"vertical", Icon:List, label:"Vertical"}] as const).map(({mode,Icon,label}) => (
+              <button
+                key={mode}
+                type="button"
+                aria-label={label}
+                title={label}
+                aria-pressed={viewMode === mode}
+                onClick={() => setViewMode(mode)}
+                className={`rounded-xl p-2 transition-colors ${viewMode === mode ? "bg-white/15 text-white" : "text-white/45 hover:bg-white/5 hover:text-white"}`}
+              >
+                <Icon className="h-4 w-4" />
+              </button>
+            ))}
+          </div>
         </div>
 
         {isLoading ? (
