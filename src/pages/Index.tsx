@@ -408,8 +408,12 @@ const Index = () => {
             {searchResults.length === 0 ? (
               <p className="text-center py-12 text-foreground/50">Nada encontrado para "{searchTerm}".</p>
             ) : (
-              <div className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-5 px-2" : viewMode === "vertical" ? "flex flex-col gap-5 px-2" : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 px-2"}>
-                {searchResults.map(p => <PackCardV2 key={p.id} pack={p} />)}
+              <div className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-5 px-2" : viewMode === "vertical" ? "flex flex-col gap-5 px-2" : "flex overflow-x-auto snap-x snap-mandatory gap-2.5 px-2 pb-4 scrollbar-hide"}>
+                {searchResults.map(p => (
+                  <div key={p.id} className={viewMode === "horizontal" ? "snap-start shrink-0 w-[240px] sm:w-[260px] md:w-[280px]" : "w-full min-w-0"}>
+                    <PackCardV2 pack={p} />
+                  </div>
+                ))}
               </div>
             )}
           </div>
