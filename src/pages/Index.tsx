@@ -99,7 +99,7 @@ function SectionTitle({ icon: Icon, title, badge }: { icon: any; title: string; 
 function Carousel({ children, viewMode }: { children: React.ReactNode; viewMode: string }) {
   return (
     <div
-      className={`${viewMode === "horizontal" ? "flex overflow-x-auto snap-x" : viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" : "flex flex-col"} gap-x-5 gap-y-6 scrollbar-hide pb-4 px-2`
+      className={`${viewMode === "horizontal" ? "flex overflow-x-auto snap-x gap-x-5" : viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8" : "flex flex-col gap-y-8"} scrollbar-hide pb-4 px-2`}
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       {children}
