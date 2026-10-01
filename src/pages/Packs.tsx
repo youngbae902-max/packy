@@ -250,7 +250,7 @@ const Packs = () => {
 
         {/* Tabs: Início / Packs Geral */}
         {q.length === 0 && (
-          <div className="mb-7 mt-5 flex p-1 rounded-2xl bg-[#1A1A1A] border border-[#252525]">
+          <div className="mb-7 mt-5 flex items-center gap-7 border-b border-white/10 px-1">
             {([
               { id: 'inicio', label: 'Início' },
               { id: 'geral', label: 'Packs Geral' },
@@ -258,10 +258,10 @@ const Packs = () => {
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`flex-1 py-2.5 rounded-xl text-[13.5px] font-semibold transition-all ${
+                className={`relative py-3 text-[13.5px] font-semibold transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:rounded-full after:transition-opacity ${
                   activeTab === t.id
-                    ? 'bg-foreground text-background shadow-sm'
-                    : 'text-[#9E9E9E] hover:text-foreground'
+                    ? 'text-foreground after:bg-foreground after:opacity-100'
+                    : 'text-[#777] after:opacity-0 hover:text-foreground'
                 }`}
               >
                 {t.label}
@@ -303,7 +303,7 @@ const Packs = () => {
             {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack encontrado.</p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3">
                 {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
@@ -319,7 +319,7 @@ const Packs = () => {
             {allPacks.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3">
                 {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
@@ -330,7 +330,7 @@ const Packs = () => {
             {releases.visible && releasePacks.length > 0 && (
               <HorizontalCarousel title={releases.title}>
                 {releasePacks.map(pack => (
-                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                  <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
                     <PackCardV2 pack={pack} />
                   </div>
                 ))}
@@ -344,7 +344,7 @@ const Packs = () => {
               packs.length > 0 && (
                 <HorizontalCarousel key={section.id} title={section.title}>
                   {packs.map(pack => (
-                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                    <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
                       <PackCardV2 pack={pack} />
                     </div>
                   ))}
@@ -356,7 +356,7 @@ const Packs = () => {
               categories.map(category => (
                 <HorizontalCarousel key={category.id} title={category.name}>
                   {premiumPacks.slice(0, 8).map(pack => (
-                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                    <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
                       <PackCardV2 pack={pack} />
                     </div>
                   ))}
@@ -368,7 +368,7 @@ const Packs = () => {
                 {premiumPacks.length > 0 && (
                   <HorizontalCarousel title="Premium & Exclusivos">
                     {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -378,7 +378,7 @@ const Packs = () => {
                 {projectPacks.length > 0 && (
                   <HorizontalCarousel title="Projetos e FLPs">
                     {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[150px] max-w-[150px] sm:min-w-[170px] sm:max-w-[170px] md:min-w-[190px] md:max-w-[190px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
