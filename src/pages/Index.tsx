@@ -32,7 +32,7 @@ const packTypeLabel: Record<string, string> = {
 
 function CardShell({ pack, viewMode }: { pack: Pack; viewMode: string }) {
   return (
-    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[240px] sm:w-[260px] md:w-[280px]" : "w-full min-w-0"}>
+    <div className={viewMode === "horizontal" ? "snap-start shrink-0 w-[175px] sm:w-[190px] md:w-[210px]" : "w-full min-w-0"}>
       <PackCardV2 pack={pack} />
     </div>
   );
@@ -408,9 +408,9 @@ const Index = () => {
             {searchResults.length === 0 ? (
               <p className="text-center py-12 text-foreground/50">Nada encontrado para "{searchTerm}".</p>
             ) : (
-              <div className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-5 px-2" : viewMode === "vertical" ? "flex flex-col gap-5 px-2" : "flex overflow-x-auto snap-x snap-mandatory gap-2.5 px-2 pb-4 scrollbar-hide"}>
+              <div className={viewMode === "grid" ? "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-x-3 gap-y-4 px-2" : viewMode === "vertical" ? "flex flex-col gap-5 px-2" : "flex overflow-x-auto snap-x snap-mandatory gap-2.5 px-2 pb-4 scrollbar-hide"}>
                 {searchResults.map(p => (
-                  <div key={p.id} className={viewMode === "horizontal" ? "snap-start shrink-0 w-[240px] sm:w-[260px] md:w-[280px]" : "w-full min-w-0"}>
+                  <div key={p.id} className={viewMode === "horizontal" ? "snap-start shrink-0 w-[175px] sm:w-[190px] md:w-[210px]" : "w-full min-w-0"}>
                     <PackCardV2 pack={p} />
                   </div>
                 ))}
