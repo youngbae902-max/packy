@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Upload, Search, Menu, Inbox, X } from 'lucide-react';
+import { Upload, Search, Menu, Inbox, X, Mic } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -88,6 +88,11 @@ const Packs = () => {
     );
   }, [q, approvedPacks, premiumPacks, projectPacks]);
 
+  const searchedMCs = useMemo(() => {
+    if (!q) return [];
+    return acapellas.filter(mc => mc.artist_name.toLowerCase().includes(q));
+  }, [q, acapellas]);
+
   const allPacks = useMemo(() => {
     const seen = new Set<string>();
     return [...approvedPacks, ...premiumPacks, ...projectPacks].filter(p => {
@@ -152,6 +157,19 @@ const Packs = () => {
                   </div>
                 </div>
               )}
+              {searchedMCs.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">MCs</p>
+                  <div className="space-y-1">
+                    {searchedMCs.map(mc => (
+                      <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl hover:bg-muted px-3 py-2">
+                        {mc.image_url ? <img src={mc.image_url} alt="" className="size-9 rounded-full object-cover" /> : <span className="size-9 rounded-full bg-muted flex items-center justify-center"><Mic className="size-4" /></span>}
+                        <span className="font-semibold text-sm">{mc.artist_name}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
               {searchedPacks.length > 0 ? (
                 <div>
                   <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Packs & Projetos</p>
@@ -163,7 +181,7 @@ const Packs = () => {
                     ))}
                   </div>
                 </div>
-              ) : q.length > 0 && searchedProfiles.length === 0 ? (
+              ) : q.length > 0 && searchedProfiles.length === 0 && searchedMCs.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">Nenhum resultado encontrado.</p>
               ) : null}
             </div>
@@ -266,10 +284,23 @@ const Packs = () => {
           <div className="flex justify-center py-20"><p className="text-muted-foreground animate-pulse font-semibold">Carregando conteúdo...</p></div>
         ) : q.length > 0 ? (
           <div>
-            <h2 className="text-lg md:text-2xl font-black mb-4 px-1">
+            <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
               Resultados para "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
             </h2>
-            {searchedPacks.length === 0 ? (
+            {searchedMCs.length > 0 && (
+              <div className="mb-7">
+                <p className="text-xs uppercase text-muted-foreground font-bold mb-3">MCs</p>
+                <div className="space-y-2">
+                  {searchedMCs.map(mc => (
+                    <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl bg-card border border-border p-3">
+                      {mc.image_url ? <img src={mc.image_url} alt="" className="size-12 rounded-full object-cover" /> : <span className="size-12 rounded-full bg-muted flex items-center justify-center"><Mic className="size-5" /></span>}
+                      <span className="font-display font-bold">{mc.artist_name}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+            {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack encontrado.</p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
@@ -280,7 +311,7 @@ const Packs = () => {
         ) : activeTab === 'geral' ? (
           <div>
             <div className="flex items-center justify-between mb-4 px-1">
-              <h2 className="text-lg md:text-2xl font-black tracking-tight">Todos os Packs</h2>
+              <h2 className="text-lg md:text-2xl font-display font-bold">Todos os Packs</h2>
               <span className="text-[11px] font-bold text-muted-foreground bg-[#1A1A1A] border border-[#252525] rounded-full px-3 py-1">
                 {allPacks.length}
               </span>
@@ -354,20 +385,6 @@ const Packs = () => {
                   </HorizontalCarousel>
                 )}
 
-                {acapellas.length > 0 && (
-                  <HorizontalCarousel title="Acapellas & Vozes">
-                    {acapellas.slice(0, 8).map(acapella => (
-                      <div key={acapella.id} className="min-w-[280px] max-w-[320px] shrink-0 snap-start">
-                        <AudioPlayer
-                          artistName={acapella.artist_name}
-                          audioUrl={acapella.audio_url}
-                          downloadUrl={acapella.download_url}
-                          duration={acapella.duration_seconds || undefined}
-                        />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                )}
               </>
             )}
           </div>

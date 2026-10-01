@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import logoG from '@/assets/packy-logo-g.png';
+import packySymbol from '@/assets/packy-symbol.png.asset.json';
 
 interface WelcomeScreenProps {
   onStart: () => void;
@@ -7,20 +7,19 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
   return (
-    <div className="min-h-screen bg-background flex flex-col px-6 pt-16 pb-10">
+    <div className="min-h-screen bg-background flex flex-col px-6 pt-10 pb-8">
       {/* Hero logo */}
       <div className="flex-1 flex flex-col items-center justify-center text-center">
-        <div className="relative mb-10">
-          <div className="absolute inset-0 blur-3xl bg-foreground/10 rounded-full" />
+        <div className="relative mb-6">
           <img
-            src={logoG}
+            src={packySymbol.url}
             alt="PACKY"
-            className="relative w-40 h-40 object-contain select-none drop-shadow-sm grayscale contrast-125 dark:brightness-200"
+            className="relative w-24 h-24 object-contain select-none"
             draggable={false}
           />
         </div>
 
-        <h1 className="text-[44px] leading-[1] font-black tracking-tighter mb-4">PACKY</h1>
+        <h1 className="text-[34px] leading-none font-black mb-3">PACKY</h1>
         <p className="text-[15px] text-muted-foreground max-w-xs leading-relaxed">
           A plataforma feita para a comunidade de editores compartilhar, descobrir e
           organizar packs.
@@ -31,7 +30,7 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
       <div className="w-full max-w-sm mx-auto space-y-3">
         <button
           onClick={onStart}
-          className="w-full flex items-center justify-center gap-2 bg-foreground text-background font-bold py-4 rounded-2xl text-[15px] hover:opacity-90 transition-opacity"
+          className="w-full flex items-center justify-center gap-2 bg-foreground text-background font-bold py-3.5 rounded-xl text-sm hover:opacity-90 transition-opacity"
         >
           Começar
           <ArrowRight className="w-4 h-4" />

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { X, Globe, Mail, Star, Monitor, Compass, FileArchive } from 'lucide-react';
+import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
 
@@ -14,6 +14,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
 
   const baseItems = [
     { to: '/', icon: Compass, label: 'Explorar' },
+    { to: '/mcs', icon: Mic, label: 'Acapella' },
     { to: '/sites', icon: Globe, label: 'Sites' },
     { to: '/inbox', icon: Mail, label: 'Caixa de entrada' },
     { to: '/desejos', icon: Star, label: 'Lista de desejos' },

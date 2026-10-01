@@ -104,7 +104,7 @@
     font-weight: 400;
     font-feature-settings: 'cv11', 'ss01';
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5, h6, .font-display {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
     letter-spacing: -0.02em;
     font-weight: 700;
