@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Menu, Inbox, X, Mic, Compass, Grid2X2, Sparkles } from 'lucide-react';
+import { Search, Menu, Inbox, X, Mic, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -233,12 +233,20 @@ const Packs = () => {
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Explore a PACKY</h1>
                 <p className="text-sm text-muted-foreground mt-1">Descubra novos sons, packs e projetos.</p>
               </div>
-              <div className="flex w-full sm:w-auto p-1 rounded-xl bg-secondary/70 border border-border/50">
-                <button onClick={() => setActiveTab('inicio')} className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'inicio' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                  <Compass className="w-4 h-4" /> Início
+              <div className="flex w-full sm:w-auto items-center gap-6">
+                <button
+                  onClick={() => setActiveTab('inicio')}
+                  className={`relative pb-2 text-sm font-semibold transition-colors ${activeTab === 'inicio' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  Início
+                  {activeTab === 'inicio' && <span className="absolute bottom-0 left-0 right-0 h-px bg-foreground" />}
                 </button>
-                <button onClick={() => setActiveTab('geral')} className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'geral' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                  <Grid2X2 className="w-4 h-4" /> Packs em geral
+                <button
+                  onClick={() => setActiveTab('geral')}
+                  className={`relative pb-2 text-sm font-semibold transition-colors ${activeTab === 'geral' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  Packs Geral
+                  {activeTab === 'geral' && <span className="absolute bottom-0 left-0 right-0 h-px bg-foreground" />}
                 </button>
               </div>
             </div>
