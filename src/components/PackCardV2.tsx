@@ -122,10 +122,10 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#1C1C1C] border border-[#1E1E1E] transition-all p-2.5 flex flex-col"
+        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#181818] border border-[#181818] transition-all p-2.5 flex flex-col"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
-        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#1C1C1C]">
+        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#181818]">
           {pack.cover_url ? (
             <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
           ) : (
@@ -157,7 +157,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
         </p>
 
-        <div className="mt-2 pt-2 border-t border-[#1E1E1E] text-[10px] font-normal tracking-wider text-muted-foreground">
+        <div className="mt-2 pt-2 border-t border-[#181818] text-[10px] font-normal tracking-wider text-muted-foreground">
           {categoryLabel}
         </div>
       </button>
@@ -167,7 +167,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => { setShowDetails(false); setSheetTab('info'); }}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
-            className="relative w-full max-w-lg bg-[#1C1C1C] border-t border-[#252525] rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
+            className="relative w-full max-w-lg bg-[#181818] border-t border-[#252525] rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
             onClick={e => e.stopPropagation()}
           >
             <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
