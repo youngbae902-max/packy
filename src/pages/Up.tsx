@@ -62,7 +62,7 @@ export default function Up() {
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <Link to="/" className="p-2 rounded-full hover:bg-foreground/10 text-muted-foreground">
-              <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
+              <ChevronLeft className="w-5 h-5" />
             </Link>
             <div className="flex items-center gap-2">
               <FileArchive className="w-5 h-5 text-foreground" />
