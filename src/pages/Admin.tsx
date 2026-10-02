@@ -51,12 +51,14 @@ import { useQueryClient } from '@tanstack/react-query';
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home';
 type SubTab = 'pending' | 'approved' | 'rejected';
+type AdminCategory = 'visao' | 'conteudo' | 'comunidade' | 'sistema';
 
 const MAIN_ADMIN_USERNAME = 'goat';
 
 export default function Admin() {
   const { isAdmin, isLoading, user, profile } = useAuth();
   const [mainTab, setMainTab] = useState<MainTab>('stats');
+  const [adminCategory, setAdminCategory] = useState<AdminCategory>('visao');
   const [subTab, setSubTab] = useState<SubTab>('pending');
   const [reorderQuick, setReorderQuick] = useState(false);
   const [quickOrder, setQuickOrder] = useState<string[]>(() => {
@@ -357,23 +359,63 @@ export default function Admin() {
           <div className="w-16" />
         </div>
 
-        {/* Main Tabs — ícones sem fundo, scroll fino */}
-        <div className="flex gap-4 mb-6 overflow-x-auto pb-2 -mx-4 px-4 snap-x admin-thin-scroll">
-          {mainTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-              title={tab.label}
-              className={`snap-start flex items-center justify-center p-1 bg-transparent transition-all flex-shrink-0 ${
-                mainTab === tab.id
-                  ? 'text-foreground scale-110'
-                  : 'text-muted-foreground/60 hover:text-foreground'
-              }`}
-            >
-              <tab.icon className="w-5 h-5" aria-label={tab.label} />
-            </button>
-          ))}
-        </div>
+        {/* Admin navigation */}
+        {(() => {
+          const categories: { id: AdminCategory; label: string }[] = [
+            { id: 'visao', label: 'Visão geral' },
+            { id: 'conteudo', label: 'Conteúdo' },
+            { id: 'comunidade', label: 'Comunidade' },
+            { id: 'sistema', label: 'Sistema' },
+          ];
+          const categoryTabs: Record<AdminCategory, MainTab[]> = {
+            visao: ['stats', 'home'],
+            conteudo: ['pendentes', 'packs', 'projetos', 'acapellas', 'albuns', 'eventos', 'paginas'],
+            comunidade: ['usuarios', 'desejos', 'giftall', 'selos', 'decoracoes'],
+            sistema: ['carteira', 'emojis', 'categorias', 'lixeira'],
+          };
+          const visibleTabs = mainTabs.filter(tab => categoryTabs[adminCategory].includes(tab.id));
+          return (
+            <div className="mb-6 space-y-3">
+              <div className="grid grid-cols-4 gap-1.5 p-1 rounded-2xl bg-[#111111] border border-[#1E1E1E]">
+                {categories.map(category => (
+                  <button
+                    key={category.id}
+                    onClick={() => {
+                      setAdminCategory(category.id);
+                      const first = categoryTabs[category.id][0];
+                      setMainTab(first);
+                      setSubTab('pending');
+                    }}
+                    className={`rounded-xl px-2 py-2 text-[11px] font-semibold transition-colors ${
+                      adminCategory === category.id
+                        ? 'bg-[#242424] text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+                {visibleTabs.map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border whitespace-nowrap text-xs font-medium transition-colors ${
+                      mainTab === tab.id
+                        ? 'bg-foreground text-background border-foreground'
+                        : 'bg-[#111111] text-muted-foreground border-[#1E1E1E] hover:text-foreground'
+                    }`}
+                  >
+                    <tab.icon className="w-3.5 h-3.5" />
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Stats Tab */}
         {mainTab === 'stats' && (() => {
