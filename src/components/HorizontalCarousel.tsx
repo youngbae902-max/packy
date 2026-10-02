@@ -5,9 +5,10 @@ interface HorizontalCarouselProps {
   title: string;
   children: ReactNode;
   showArrows?: boolean;
+  headerRight?: ReactNode;
 }
 
-export function HorizontalCarousel({ title, children, showArrows = true }: HorizontalCarouselProps) {
+export function HorizontalCarousel({ title, children, showArrows = true, headerRight }: HorizontalCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -21,7 +22,10 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
   return (
     <section className="mb-8 relative group">
       <div className="flex items-center justify-between mb-1.5 px-2">
-        <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
+          {headerRight}
+        </div>
         {showArrows && (
           <div className="hidden md:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button 
