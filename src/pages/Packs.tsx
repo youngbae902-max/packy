@@ -229,7 +229,7 @@ const Packs = () => {
             </div>
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Explore a PACKY</h1>
+                <h1 className="text-2xl md:text-3xl font-normal tracking-tight [font-family:system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif]">Explore a PACKY</h1>
                 <p className="text-sm text-muted-foreground mt-1">Descubra novos sons, packs e projetos.</p>
               </div>
               <div className="flex w-full sm:w-auto items-center gap-6">
@@ -296,7 +296,7 @@ const Packs = () => {
           <div>
             <div className="mb-5 px-1">
               <p className="text-xs font-semibold text-muted-foreground mb-1">Biblioteca</p>
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight">Todos os Packs</h2>
+              <h2 className="text-xl md:text-2xl font-normal tracking-tight [font-family:system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif]">Todos os Packs</h2>
               <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p>
             </div>
             {allPacks.length === 0 ? (
