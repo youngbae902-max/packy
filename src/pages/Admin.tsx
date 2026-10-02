@@ -350,8 +350,8 @@ export default function Admin() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Top bar */}
         <div className="flex items-center justify-between mb-6">
-          <Link to="/conta" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="w-4 h-4" />Voltar
+          <Link to="/conta" aria-label="Voltar" className="flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-[#171717] transition-colors">
+            <ArrowLeft className="w-4 h-4" />
           </Link>
           <div className="flex flex-col items-center">
             <h1 className="text-base font-black uppercase tracking-wider">adm</h1>
@@ -397,21 +397,23 @@ export default function Admin() {
                 ))}
               </div>
 
-              <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
-                {visibleTabs.map(tab => (
-                  <button
-                    key={tab.id}
-                    onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border whitespace-nowrap text-xs font-medium transition-colors ${
-                      mainTab === tab.id
-                        ? 'bg-foreground text-background border-foreground'
-                        : 'bg-[#111111] text-muted-foreground border-[#1E1E1E] hover:text-foreground'
-                    }`}
-                  >
-                    <tab.icon className="w-3.5 h-3.5" />
-                    {tab.label}
-                  </button>
-                ))}
+              <div className="rounded-2xl bg-[#111111] border border-[#1E1E1E] p-2">
+                <div className="grid grid-cols-2 gap-1.5">
+                  {visibleTabs.map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
+                      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium text-left transition-colors ${
+                        mainTab === tab.id
+                          ? 'bg-foreground text-background'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-[#171717]'
+                      }`}
+                    >
+                      <tab.icon className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span className="truncate">{tab.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           );
@@ -1149,33 +1151,61 @@ export default function Admin() {
 
         {mainTab === 'decoracoes' && (
           <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><Sparkles className="w-4 h-4" /> Nova decoração</h3>
-              <Input value={decoName} onChange={(e) => setDecoName(e.target.value)} placeholder="Nome (ex: Coroa Dourada)" />
-              <Input type="file" accept="image/png,image/webp" onChange={(e) => setDecoFile(e.target.files?.[0] || null)} />
-              <Button className="w-full" disabled={!decoName.trim() || !decoFile} onClick={async () => {
-                if (!decoFile) return;
-                try {
-                  await createDecoration({ file: decoFile, name: decoName });
-                  setDecoName(''); setDecoFile(null);
-                  toast.success('Decoração criada');
-                } catch (e: any) { toast.error(e.message || 'Erro'); }
-              }}>Enviar decoração</Button>
-              <p className="text-xs text-muted-foreground">PNG transparente recomendado. Todos os usuários poderão escolher.</p>
+            <Card className="p-5 rounded-3xl border-border/50 bg-card space-y-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Adicionar decoração</h3>
+                    <p className="text-xs text-muted-foreground">Crie um novo item para os perfis.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <Input value={decoName} onChange={(e) => setDecoName(e.target.value)} placeholder="Nome da decoração" />
+                <Input type="file" accept="image/png,image/webp" onChange={(e) => setDecoFile(e.target.files?.[0] || null)} />
+                <Button className="w-full" disabled={!decoName.trim() || !decoFile} onClick={async () => {
+                  if (!decoFile) return;
+                  try {
+                    await createDecoration({ file: decoFile, name: decoName });
+                    setDecoName(''); setDecoFile(null);
+                    toast.success('Decoração criada');
+                  } catch (e: any) { toast.error(e.message || 'Erro'); }
+                }}>Enviar decoração</Button>
+              </div>
+              <p className="text-xs text-muted-foreground border-t border-border/50 pt-3">PNG transparente recomendado. Todos os usuários poderão escolher.</p>
             </Card>
 
-            <div className="grid grid-cols-3 gap-2">
-              {decorations.map((d) => (
-                <Card key={d.id} className="p-2 rounded-2xl border-border/50 bg-card flex flex-col items-center gap-2">
-                  <div className="w-full aspect-square rounded-xl bg-secondary overflow-hidden flex items-center justify-center">
-                    <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
-                  </div>
-                  <p className="text-xs font-bold truncate w-full text-center">{d.name}</p>
-                  <Button size="sm" variant="destructive" className="w-full" onClick={() => deleteDecoration(d.id)}><Trash2 className="w-3 h-3" /></Button>
-                </Card>
-              ))}
-              {decorations.length === 0 && <p className="col-span-3 text-center py-8 text-muted-foreground">Nenhuma decoração criada</p>}
-            </div>
+            <Card className="p-5 rounded-3xl border-border/50 bg-card">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="font-bold">Biblioteca</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">{decorations.length} decoração{decorations.length === 1 ? '' : 'ções'} cadastrada{decorations.length === 1 ? '' : 's'}</p>
+                </div>
+              </div>
+
+              {decorations.length === 0 ? (
+                <p className="text-center py-10 text-sm text-muted-foreground">Nenhuma decoração criada</p>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {decorations.map((d) => (
+                    <div key={d.id} className="rounded-2xl bg-secondary/40 border border-border/40 overflow-hidden">
+                      <div className="aspect-square bg-secondary/50 flex items-center justify-center p-3">
+                        <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
+                      </div>
+                      <div className="p-3 space-y-2">
+                        <p className="text-sm font-semibold truncate">{d.name}</p>
+                        <Button size="sm" variant="destructive" className="w-full" onClick={() => deleteDecoration(d.id)}>
+                          <Trash2 className="w-3.5 h-3.5 mr-1.5" />Excluir
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
           </div>
         )}
 
