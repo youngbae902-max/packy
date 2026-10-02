@@ -7,7 +7,7 @@ import { useRepost } from '@/hooks/useSocial';
 import { AuthModal } from './AuthModal';
 import { toast } from 'sonner';
 
-export function ProfilePackRow({ pack }: { pack: Pack }) {
+export function ProfilePackRow({ pack, hideActions = false }: { pack: Pack; hideActions?: boolean }) {
   const { user } = useAuth();
   const { hasLiked, toggleLike } = usePackInteractions(pack.id);
   const { hasReposted, toggleRepost } = useRepost(pack.id);
@@ -42,9 +42,11 @@ export function ProfilePackRow({ pack }: { pack: Pack }) {
           <p className="text-sm font-bold text-foreground truncate">{pack.title}</p>
           <p className="text-xs text-muted-foreground truncate">@{pack.author_name || 'desconhecido'} · {pack.likes_count || 0} curtidas</p>
         </div>
-        <button onClick={() => setShowActions(true)} className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:bg-foreground/10 hover:text-foreground">
-          <MoreHorizontal className="w-5 h-5" />
-        </button>
+        {!hideActions && (
+          <button onClick={() => setShowActions(true)} className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:bg-foreground/10 hover:text-foreground">
+            <MoreHorizontal className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {showActions && (
