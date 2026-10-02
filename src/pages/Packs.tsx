@@ -163,7 +163,7 @@ const Packs = () => {
                   <div className="space-y-1">
                     {searchedMCs.map(mc => (
                       <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl hover:bg-muted px-3 py-2">
-                        {mc.image_url ? <img src={mc.image_url} alt="" className="size-9 rounded-full object-cover" /> : <span className="size-9 rounded-full bg-muted flex items-center justify-center"><Mic className="size-4" /></span>}
+                        {mc.image_url ? <img src={mc.image_url} alt="" className="size-12 rounded-full object-cover" /> : <span className="size-12 rounded-full bg-muted flex items-center justify-center"><Mic className="size-5" /></span>}
                         <span className="font-semibold text-sm">{mc.artist_name}</span>
                       </a>
                     ))}
