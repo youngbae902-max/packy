@@ -5,10 +5,9 @@ interface HorizontalCarouselProps {
   title: string;
   children: ReactNode;
   showArrows?: boolean;
-  headerRight?: ReactNode;
 }
 
-export function HorizontalCarousel({ title, children, showArrows = true, headerRight }: HorizontalCarouselProps) {
+export function HorizontalCarousel({ title, children, showArrows = true }: HorizontalCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -23,7 +22,6 @@ export function HorizontalCarousel({ title, children, showArrows = true, headerR
     <section className="mb-8 relative group">
       <div className="relative flex items-center justify-between mb-1.5 px-2">
         <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
-        {headerRight && <div className="absolute right-0 top-0">{headerRight}</div>}
         {showArrows && (
           <div className="hidden md:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button 
