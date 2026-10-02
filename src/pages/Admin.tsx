@@ -1387,6 +1387,15 @@ export default function Admin() {
           <div className="space-y-3 mt-4">
             {getCurrentAcapellas().map((a) => (
               <div key={a.id} className="pack-card flex items-center gap-3">
+                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-white/10 bg-[#1B1B1B]">
+                  {a.image_url ? (
+                    <img src={a.image_url} alt={a.artist_name} className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Music className="h-4 w-4 text-white/25" />
+                    </div>
+                  )}
+                </div>
                 <div className="flex-1">
                   <h3 className="font-bold">{a.artist_name}</h3>
                 </div>
