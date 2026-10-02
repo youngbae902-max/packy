@@ -682,7 +682,7 @@ export default function Admin() {
             <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h3 className="font-bold">Packs pendentes</h3>
+                  <h3 className="font-bold text-foreground">Packs pendentes</h3>
                   <p className="text-xs text-muted-foreground">Links salvos aqui só aparecem na home quando forem enviados.</p>
                 </div>
                 <Button size="sm" onClick={() => handleSendPendingToHome()} disabled={pendingHomePacks.length === 0}>
