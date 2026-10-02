@@ -1,10 +1,10 @@
-import { Compass, User, Disc, Mic } from 'lucide-react';
+import { Compass, User, Disc, Music2 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useCustomPages } from '@/hooks/useCustomPages';
 
 const navItems = [
   { icon: Compass, label: 'Explorar', to: '/' },
-  { icon: Mic, label: 'Acapella', to: '/mcs' },
+  { icon: Music2, label: 'MC', to: '/mcs' },
   { icon: User, label: 'Perfil', to: '/conta' },
 ];
 
