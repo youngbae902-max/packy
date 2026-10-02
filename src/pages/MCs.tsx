@@ -38,7 +38,7 @@ const MCs = () => {
           <div className="relative min-w-0 flex-1">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/50" />
             <Input
-              placeholder="Buscar MCs..."
+              placeholder="Buscar..."
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               className="h-12 rounded-2xl border-white/5 bg-[#141414] pl-11 text-sm focus-visible:ring-1 focus-visible:ring-white/20"
@@ -55,7 +55,7 @@ const MCs = () => {
           <p className="py-8 text-center text-muted-foreground">Carregando...</p>
         ) : filteredAcapellas.length === 0 ? (
           <p className="py-8 text-center text-muted-foreground">
-            {searchTerm ? 'Nenhum MC encontrado' : 'Nenhuma acapella disponível'}
+            {searchTerm ? 'Nenhum encontrado' : 'Nenhuma acapella disponível'}
           </p>
         ) : (
           <div className={
