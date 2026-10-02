@@ -325,7 +325,7 @@ const Packs = () => {
                     <select
                       value={releaseFilter}
                       onChange={e => setReleaseFilter(e.target.value as typeof releaseFilter)}
-                      className="h-7 appearance-none bg-transparent border border-border/50 rounded-lg pl-8 pr-2 text-xs text-muted-foreground focus:outline-none focus:text-foreground cursor-pointer"
+                      className="h-7 appearance-none bg-transparent border-0 rounded-lg pl-8 pr-0 text-xs text-muted-foreground focus:outline-none focus:text-foreground cursor-pointer"
                       aria-label="Filtrar lançamentos por categoria"
                     >
                       <option value="all">Todos</option>
