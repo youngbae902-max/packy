@@ -1,5 +1,5 @@
 import { ReactNode, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface HorizontalCarouselProps {
   title: string;
@@ -28,7 +28,7 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
               onClick={() => scroll('left')} 
               className="p-1.5 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <span className="text-lg leading-none">&lt;</span>
             </button>
             <button 
               onClick={() => scroll('right')} 
