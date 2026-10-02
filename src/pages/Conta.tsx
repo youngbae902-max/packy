@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History, Pipette, Mic } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History, Pipette } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -507,11 +507,6 @@ const Conta = () => {
 
                 {isAdmin && (
                   <SettingsGroup>
-                    <Link to="/mcs" className="w-full flex items-center gap-3 px-4 py-3.5 bg-card hover:bg-secondary/60 transition-colors">
-                      <Mic className="w-[18px] h-[18px] text-foreground/70" />
-                      <span className="flex-1 text-[15px] font-medium tracking-tight">MCs</span>
-                      <ChevronRight className="w-4 h-4 text-muted-foreground/70" />
-                    </Link>
                     <Link to="/admin" className="w-full flex items-center gap-3 px-4 py-3.5 bg-card hover:bg-secondary/60 transition-colors">
                       <Shield className="w-[18px] h-[18px] text-foreground/70" />
                       <span className="flex-1 text-[15px] font-medium tracking-tight">Painel de Administração</span>
