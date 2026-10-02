@@ -78,20 +78,26 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		fontFamily: {
-  			sans: [
-  				'Inter',
-  				'ui-sans-serif',
-  				'system-ui',
-  				'sans-serif',
-  				'Apple Color Emoji',
-  				'Segoe UI Emoji'
-  			],
-  			display: [
-  				'Inter',
-  				'ui-sans-serif',
-  				'system-ui',
-  				'sans-serif'
-  			],
+  			 sans: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        'SF Pro Text',
+        'SF Pro Display',
+        'Helvetica Neue',
+        'system-ui',
+        'sans-serif',
+        'Apple Color Emoji',
+        'Segoe UI Emoji'
+      ],
+      display: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        'SF Pro Display',
+        'SF Pro Text',
+        'Helvetica Neue',
+        'system-ui',
+        'sans-serif'
+      ],
 
   			serif: [
   				'ui-serif',
