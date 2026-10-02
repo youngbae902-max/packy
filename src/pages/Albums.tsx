@@ -24,7 +24,7 @@ const Albums = () => {
       <div className="max-w-lg mx-auto px-4 pt-6">
         <header className="flex items-center justify-between py-4">
           <Link to="/" className="p-2 -ml-2 rounded-full hover:bg-foreground/5">
-            <ArrowLeft className="w-5 h-5" />
+            <<span className="text-xl leading-none">&lt;</span>
           </Link>
           <div className="text-center">
             <h1 className="text-2xl font-black uppercase tracking-tight flex items-center justify-center gap-2">
