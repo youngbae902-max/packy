@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus, Upload, Download, Edit2, Trash2, FileArchive, ImageIcon, Loader2 } from 'lucide-react';
+import { Plus, Upload, Download, Edit2, Trash2, FileArchive, ImageIcon, Loader2 } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserBeats, UserBeat } from '@/hooks/useUserBeats';
@@ -62,7 +62,7 @@ export default function Up() {
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <Link to="/" className="p-2 rounded-full hover:bg-foreground/10 text-muted-foreground">
-              <ArrowLeft className="w-5 h-5" />
+              <span className="text-xl leading-none">&lt;</span>
             </Link>
             <div className="flex items-center gap-2">
               <FileArchive className="w-5 h-5 text-foreground" />
