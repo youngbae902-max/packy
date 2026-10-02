@@ -86,7 +86,7 @@ export default function PublicProfile() {
     return (
       <div className="min-h-screen bg-background pb-20">
         <div className="max-w-lg mx-auto px-4 pt-6">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground mb-8"><span className="text-base leading-none">&lt;</span> Voltar</Link>
+          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground mb-8"><span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" /> Voltar</Link>
           <p className="text-center text-muted-foreground">Perfil não encontrado</p>
         </div>
         <BottomNav />
@@ -101,7 +101,7 @@ export default function PublicProfile() {
         <div className="max-w-lg mx-auto">
           <div className="flex justify-between items-center mb-8">
             <Link to="/" className="w-11 h-11 flex items-center justify-center text-foreground hover:opacity-80 transition-opacity">
-              <span className="text-xl leading-none">&lt;</span>
+              <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
             </Link>
             {isSelf ? (
               <Link to="/conta?settings=1" className="w-11 h-11 flex items-center justify-center text-foreground hover:opacity-80 transition-opacity" aria-label="Configurações">
