@@ -70,6 +70,8 @@ const Conta = () => {
   const [adminBadgeTextColor, setAdminBadgeTextColor] = useState('#05BD2A');
   const [avatarShape, setAvatarShape] = useState<string>('circle');
   const [onlineShape, setOnlineShape] = useState<string>('pill');
+  const [showFavoritesSection, setShowFavoritesSection] = useState(true);
+  const [showRepostsSection, setShowRepostsSection] = useState(true);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const settingsFileInputRef = useRef<HTMLInputElement>(null);
@@ -98,6 +100,8 @@ const Conta = () => {
       setAdminBadgeTextColor(profile.admin_badge_text_color || '#05BD2A');
       setAvatarShape((profile as any).avatar_shape || 'circle');
       setOnlineShape((profile as any).online_indicator_shape || 'pill');
+      setShowFavoritesSection((profile as any).show_favorites_section !== false);
+      setShowRepostsSection((profile as any).show_reposts_section !== false);
     }
   }, [profile]);
 
@@ -170,6 +174,8 @@ const Conta = () => {
         admin_badge_text_color: adminBadgeTextColor || '#05BD2A',
         avatar_shape: avatarShape,
         online_indicator_shape: onlineShape,
+        show_favorites_section: showFavoritesSection,
+        show_reposts_section: showRepostsSection,
       } as any);
       
       if (username.trim() && username !== profile?.username) {
@@ -369,9 +375,9 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        <FavoritesSection />
+        {showFavoritesSection && <FavoritesSection />}
 
-        <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-4">
+        {showRepostsSection && <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-4">
           <button onClick={() => setRepostedOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.03] transition-colors">
             <div className="flex items-center gap-2">
               <RotateCcw className="w-4 h-4 text-foreground/80" />
@@ -395,6 +401,7 @@ const Conta = () => {
           </div>
           )}
         </div>
+          </div>}
         <div className="h-4" />
       </div>
 
@@ -497,6 +504,8 @@ const Conta = () => {
                   <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
                   <SettingsRow icon={ImageIcon} label="Formato da Foto" onClick={() => setSettingsSub('formato-foto')} />
                   <SettingsRow icon={Smile} label="Indicador Online" onClick={() => setSettingsSub('indicador-online')} />
+                  <SettingsRow icon={EyeOff} label="Mostrar Favoritos" value={showFavoritesSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showFavoritesSection; setShowFavoritesSection(next); await updateProfile({ show_favorites_section: next }); }} />
+                  <SettingsRow icon={EyeOff} label="Mostrar Republicados" value={showRepostsSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showRepostsSection; setShowRepostsSection(next); await updateProfile({ show_reposts_section: next }); }} />
                 </SettingsGroup>
 
                 <SettingsGroup title="Conta">
