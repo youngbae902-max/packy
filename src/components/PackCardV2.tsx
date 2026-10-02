@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
-import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon, ChevronRight, } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
@@ -295,7 +295,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               <>
                 <div className="flex items-center gap-2 mb-4">
                   <button onClick={() => setSheetTab('info')} className="p-1 -ml-1 text-muted-foreground hover:text-foreground" aria-label="Voltar">
-                    <ChevronLeft className="w-5 h-5" />
+                    <span className="text-lg leading-none">&lt;</span>
                   </button>
                   <h3 className="text-base font-bold flex-1 truncate">Comentários</h3>
                 </div>
