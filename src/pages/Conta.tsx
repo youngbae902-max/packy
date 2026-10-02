@@ -1,3 +1,4 @@
+import { ChevronLeft } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History, Pipette } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
