@@ -4,7 +4,7 @@ import { useCustomPages } from '@/hooks/useCustomPages';
 
 const navItems = [
   { icon: Compass, label: 'Explorar', to: '/' },
-  { icon: Mic, label: 'Acapella', to: '/mcs' },
+  { icon: Mic, label: 'MCs', to: '/mcs' },
   { icon: User, label: 'Perfil', to: '/conta' },
 ];
 
