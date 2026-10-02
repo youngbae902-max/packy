@@ -4,7 +4,7 @@ import { useCustomPages } from '@/hooks/useCustomPages';
 
 const navItems = [
   { icon: Compass, label: 'Explorar', to: '/' },
-  { icon: Mic, label: 'Acapella', to: '/mcs' },
+  { icon: Mic, label: 'MCs', to: '/mcs' },
   { icon: User, label: 'Perfil', to: '/conta' },
 ];
 
@@ -17,13 +17,13 @@ export function BottomNav() {
   const items = [navItems[0], navItems[1], ...dynamicItems.slice(0, 1), navItems[2]];
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-[#111111] backdrop-blur-sm border-t border-[#1E1E1E] z-30 md:hidden">
-      <div className="max-w-lg mx-auto flex justify-around items-center py-2 px-2">
+      <div className="max-w-lg mx-auto flex justify-around items-center py-2.5 px-2">
         {items.map(({ icon: Icon, label, to }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 py-1.5 px-6 rounded-xl transition-all ${
+              `flex flex-col items-center gap-0.5 py-1.5 px-5 rounded-xl transition-all ${
                 isActive ? 'text-white' : 'text-[#7A7A7A] hover:text-white'
               }`
             }
