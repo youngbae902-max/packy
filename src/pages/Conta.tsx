@@ -414,7 +414,7 @@ const Conta = () => {
                 className="w-11 h-11 flex items-center justify-center"
                 aria-label="Voltar"
               >
-                <<span className="text-xl leading-none">&lt;</span>
+                <span className="text-xl leading-none">&lt;</span>
               </button>
               <h1 className="text-[17px] font-bold tracking-tight">
                 {settingsSub === 'tema' ? 'Trocar Tema'
