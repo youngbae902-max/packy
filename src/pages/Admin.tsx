@@ -351,7 +351,7 @@ export default function Admin() {
         {/* Top bar */}
         <div className="flex items-center justify-between mb-6">
           <Link to="/conta" aria-label="Voltar" className="flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-[#171717] transition-colors">
-            <<span className="text-lg leading-none">&lt;</span>
+            <span className="text-lg leading-none">&lt;</span>
           </Link>
           <div className="flex flex-col items-center">
             <h1 className="text-base font-black uppercase tracking-wider">adm</h1>
@@ -530,7 +530,7 @@ export default function Admin() {
                   <div key={a.id} className="flex items-center gap-1 rounded-xl bg-[#1C1C1C] border border-[#252525] hover:bg-[#232323] transition-colors overflow-hidden">
                     {reorderQuick && (
                       <button onClick={() => move(i, -1)} className="px-2 py-3 text-muted-foreground hover:text-foreground" aria-label="Mover para trás">
-                        <<span className="text-lg leading-none">&lt;</span>
+                        <span className="text-lg leading-none">&lt;</span>
                       </button>
                     )}
                     <button
@@ -1387,6 +1387,15 @@ export default function Admin() {
           <div className="space-y-3 mt-4">
             {getCurrentAcapellas().map((a) => (
               <div key={a.id} className="pack-card flex items-center gap-3">
+                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-white/10 bg-[#1B1B1B]">
+                  {a.image_url ? (
+                    <img src={a.image_url} alt={a.artist_name} className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Music className="h-4 w-4 text-white/25" />
+                    </div>
+                  )}
+                </div>
                 <div className="flex-1">
                   <h3 className="font-bold">{a.artist_name}</h3>
                 </div>
