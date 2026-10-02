@@ -34,6 +34,8 @@ interface ProfileUpdates {
   online_indicator_shape?: string | null;
   verified_rgb?: boolean;
   verified_badge_text?: string | null;
+  show_favorites_section?: boolean;
+  show_reposts_section?: boolean;
 }
 
 export function useProfile() {
