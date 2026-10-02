@@ -232,7 +232,7 @@ const Packs = () => {
                 <h1 className="text-2xl md:text-3xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
                 <p className="text-sm text-muted-foreground mt-1">Descubra novos sons, packs e projetos.</p>
               </div>
-              <div className="flex w-full sm:w-auto items-center gap-6">
+              <div className="flex w-full items-center justify-center gap-6">
                 <button
                   onClick={() => setActiveTab('inicio')}
                   className={`relative pb-2 text-sm font-semibold transition-colors ${activeTab === 'inicio' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
