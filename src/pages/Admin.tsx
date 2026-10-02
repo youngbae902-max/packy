@@ -351,7 +351,7 @@ export default function Admin() {
         {/* Top bar */}
         <div className="flex items-center justify-between mb-6">
           <Link to="/conta" aria-label="Voltar" className="flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-[#171717] transition-colors">
-            <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
+            <ChevronLeft className="w-5 h-5" />
           </Link>
           <div className="flex flex-col items-center">
             <h1 className="text-base font-black uppercase tracking-wider">adm</h1>
@@ -530,7 +530,7 @@ export default function Admin() {
                   <div key={a.id} className="flex items-center gap-1 rounded-xl bg-[#1C1C1C] border border-[#252525] hover:bg-[#232323] transition-colors overflow-hidden">
                     {reorderQuick && (
                       <button onClick={() => move(i, -1)} className="px-2 py-3 text-muted-foreground hover:text-foreground" aria-label="Mover para trás">
-                        <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
+                        <ChevronLeft className="w-5 h-5" />
                       </button>
                     )}
                     <button
