@@ -371,30 +371,53 @@ const Conta = () => {
 
         <FavoritesSection />
 
-        <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-4">
-          <button onClick={() => setRepostedOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.03] transition-colors">
-            <div className="flex items-center gap-2">
-              <RotateCcw className="w-4 h-4 text-foreground/80" />
-              <span className="text-sm font-bold text-foreground">Republicados</span>
-              <span className="text-xs text-muted-foreground">({repostedPacks.length})</span>
+        <section className="mb-5">
+          <button
+            onClick={() => setRepostedOpen(o => !o)}
+            className="w-full text-left group"
+          >
+            <div className="flex items-end justify-between px-1 pb-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <RotateCcw className="w-4 h-4 text-foreground" />
+                  <span className="text-base font-semibold text-foreground tracking-tight">Republicados</span>
+                  <span className="text-[11px] text-muted-foreground">/{repostedPacks.length}</span>
+                </div>
+                <p className="text-[11px] text-muted-foreground">Packs que você colocou de volta em circulação</p>
+              </div>
+              <div className="w-8 h-8 rounded-full border border-border/50 bg-secondary/60 flex items-center justify-center group-hover:bg-secondary transition-colors">
+                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${repostedOpen ? 'rotate-180' : ''}`} />
+              </div>
             </div>
-            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${repostedOpen ? 'rotate-180' : ''}`} />
+            <div className="h-px bg-border/50 relative">
+              <div className={`absolute left-0 top-0 h-px bg-foreground transition-all duration-300 ${repostedOpen ? 'w-24' : 'w-8'}`} />
+            </div>
           </button>
+
           {repostedOpen && (
-          <div className="px-3 pb-3 pt-1 max-h-[60vh] overflow-y-auto">
-            {repostedPacks.length === 0 ? (
-              <div className="p-6 text-center">
-                <RotateCcw className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">Nenhum pack republicado ainda</p>
+            <div className="mt-3 rounded-2xl border border-border/40 bg-secondary/30 overflow-hidden">
+              <div className="px-3 py-2.5 border-b border-border/30 flex items-center gap-2">
+                <RotateCcw className="w-3.5 h-3.5 text-muted-foreground" />
+                <span className="text-[11px] font-medium text-muted-foreground">Sua atividade recente</span>
               </div>
-            ) : (
-              <div className="space-y-2">
-                {repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} hideActions />)}
+              <div className="px-3 pb-3 pt-1 max-h-[60vh] overflow-y-auto">
+                {repostedPacks.length === 0 ? (
+                  <div className="py-10 text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-secondary border border-border/40 flex items-center justify-center">
+                      <RotateCcw className="w-5 h-5 text-muted-foreground/50" />
+                    </div>
+                    <p className="text-sm font-medium text-foreground/80">Nenhum repost ainda</p>
+                    <p className="text-xs text-muted-foreground mt-1">Quando você republicar um pack, ele aparece aqui.</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-border/30">
+                    {repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} hideActions />)}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
           )}
-        </div>
+        </section>
 
         <div className="h-4" />
       </div>
