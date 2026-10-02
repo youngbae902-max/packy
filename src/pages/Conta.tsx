@@ -49,6 +49,7 @@ const Conta = () => {
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [repostedOpen, setRepostedOpen] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
   const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato-foto' | 'indicador-online'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
@@ -371,13 +372,15 @@ const Conta = () => {
         <FavoritesSection />
 
         <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-4">
-          <div className="w-full flex items-center justify-between px-4 py-3 border-b border-[#252525]">
+          <button onClick={() => setRepostedOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.03] transition-colors">
             <div className="flex items-center gap-2">
               <RotateCcw className="w-4 h-4 text-foreground/80" />
               <span className="text-sm font-bold text-foreground">Republicados</span>
               <span className="text-xs text-muted-foreground">({repostedPacks.length})</span>
             </div>
-          </div>
+            <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${repostedOpen ? 'rotate-90' : ''}`} />
+          </button>
+          {repostedOpen && (
           <div className="px-3 pb-3 pt-1 max-h-[60vh] overflow-y-auto">
             {repostedPacks.length === 0 ? (
               <div className="p-6 text-center">
@@ -386,10 +389,11 @@ const Conta = () => {
               </div>
             ) : (
               <div className="space-y-2">
-                {repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} />)}
+                {repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} hideActions />)}
               </div>
             )}
           </div>
+          )}
         </div>
 
         <div className="h-4" />
