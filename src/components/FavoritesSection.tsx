@@ -8,7 +8,7 @@ export function FavoritesSection() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-3xl border border-border/50 bg-card overflow-hidden mb-4">
+    <div className="rounded-3xl border border-[#171717] bg-card overflow-hidden mb-4">
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.03] transition-colors"
@@ -41,4 +41,3 @@ export function FavoritesSection() {
     </div>
   );
 }
-
