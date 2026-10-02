@@ -648,7 +648,7 @@ export default function Admin() {
                 <BulkLinkInput 
                   onLinksConfirmed={async (links) => {
                     for (let i = 0; i < links.length; i++) {
-                      await addAcapella({ artist_name: `Acapella ${i + 1}`, audio_url: links[i], download_url: links[i], duration_seconds: null });
+                      await addAcapella({ artist_name: `Acapella ${i + 1}`, audio_url: null, image_url: null, download_url: links[i], duration_seconds: null });
                     }
                     toast.success(`${links.length} acapellas salvas em pendentes!`);
                     setShowBulkAcapellaInput(false);

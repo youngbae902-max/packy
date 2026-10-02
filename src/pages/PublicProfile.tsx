@@ -287,7 +287,6 @@ export default function PublicProfile() {
               <p className="text-center text-muted-foreground py-10">Nada por aqui ainda</p>
             )}
           </section>
-        )}
       </div>
       <BottomNav />
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
