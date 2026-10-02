@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Eye, EyeOff, Wallet as WalletIcon } from 'lucide-react';
+import { Eye, EyeOff, Wallet as WalletIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,7 +28,7 @@ export default function Wallet() {
       <div className="max-w-lg mx-auto px-4 pt-6">
         <header className="flex items-center justify-between mb-6">
           <Link to="/conta?settings=1" className="w-11 h-11 -ml-2 flex items-center justify-center" aria-label="Voltar">
-            <ArrowLeft className="w-6 h-6" />
+            <span className="text-xl leading-none">&lt;</span>
           </Link>
           <h1 className="text-[17px] font-bold tracking-tight">Carteira</h1>
           <button onClick={() => setShow(s => !s)} className="w-11 h-11 flex items-center justify-center text-muted-foreground" aria-label="Mostrar/Ocultar">
