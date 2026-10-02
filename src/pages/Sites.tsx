@@ -1,10 +1,9 @@
 import { useState, useRef } from 'react';
-import { Globe, Plus, ExternalLink, Trash2, Pencil, X, Upload, ArrowLeft } from 'lucide-react';
+import { Globe, ExternalLink, Trash2, Pencil, X, Upload, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSites, Site } from '@/hooks/useSites';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const Sites = () => {
@@ -80,18 +79,9 @@ const Sites = () => {
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-lg mx-auto px-4 pt-5">
         <header className="flex items-center gap-3 py-2">
-          <Link to="/" className="p-2 -ml-2 rounded-xl hover:bg-foreground/5 transition-colors">
-            <ArrowLeft className="w-5 h-5" />
+          <Link to="/" className="p-1.5 -ml-2 rounded-xl hover:bg-foreground/5 transition-colors" aria-label="Voltar">
+            <ChevronLeft className="w-5 h-5" />
           </Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-[22px] font-bold tracking-tight leading-none">Sites</h1>
-            <p className="text-[11px] text-muted-foreground mt-1 truncate">Sites parceiros e ferramentas</p>
-          </div>
-          {isAdmin && (
-            <Button size="sm" onClick={openNew} className="gap-1.5 rounded-xl h-9">
-              <Plus className="w-4 h-4" /> Novo
-            </Button>
-          )}
         </header>
 
         <div className="space-y-3 mt-5">
