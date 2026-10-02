@@ -1,3 +1,4 @@
+import { ChevronLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { BadgeCheck, Disc3, Settings, User, Shield, Instagram, Youtube } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
