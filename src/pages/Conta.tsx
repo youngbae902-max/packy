@@ -370,8 +370,8 @@ const Conta = () => {
 
         <FavoritesSection />
 
-        <div className="rounded-3xl border border-border/50 bg-card overflow-hidden mb-4">
-          <div className="w-full flex items-center justify-between px-4 py-3">
+        <div className="rounded-2xl bg-[#181818] overflow-hidden mb-4">
+          <div className="w-full flex items-center justify-between px-4 py-3 border-b border-[#252525]">
             <div className="flex items-center gap-2">
               <RotateCcw className="w-4 h-4 text-foreground/80" />
               <span className="text-sm font-bold text-foreground">Republicados</span>
