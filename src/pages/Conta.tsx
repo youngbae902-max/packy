@@ -19,7 +19,7 @@ import { EmojiText } from '@/components/EmojiText';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { SettingsRow, SettingsGroup } from '@/components/SettingsRow';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { ChevronRight, Palette, Lock, Smile, Sticker, Image as ImageIcon, MoreHorizontal } from 'lucide-react';
+import { ChevronDown, Palette, Lock, Smile, Sticker, Image as ImageIcon, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -378,7 +378,7 @@ const Conta = () => {
               <span className="text-sm font-bold text-foreground">Republicados</span>
               <span className="text-xs text-muted-foreground">({repostedPacks.length})</span>
             </div>
-            <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${repostedOpen ? 'rotate-90' : ''}`} />
+            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${repostedOpen ? 'rotate-180' : ''}`} />
           </button>
           {repostedOpen && (
           <div className="px-3 pb-3 pt-1 max-h-[60vh] overflow-y-auto">
