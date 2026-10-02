@@ -80,7 +80,7 @@ const Sites = () => {
       <div className="max-w-lg mx-auto px-4 pt-5">
         <header className="flex items-center gap-3 py-2">
           <Link to="/" className="p-1.5 -ml-2 rounded-xl hover:bg-foreground/5 transition-colors" aria-label="Voltar">
-            <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
+            <ChevronLeft className="w-5 h-5" />
           </Link>
         </header>
 
