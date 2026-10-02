@@ -84,13 +84,13 @@ const Sites = () => {
           </Link>
         </header>
 
-        <div className="space-y-3 mt-5">
+        <div className="space-y-2.5 mt-5">
           {isLoading ? (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {[0, 1, 2].map(i => (
-                <div key={i} className="rounded-2xl bg-[#1C1C1C] border border-border/60 overflow-hidden animate-pulse">
-                  <div className="aspect-[16/9] w-full bg-foreground/5" />
-                  <div className="p-4 space-y-2">
+                <div key={i} className="rounded-lg bg-[#1B1B1D] border border-[#2B2B2F] overflow-hidden animate-pulse">
+                  <div className="h-36 w-full bg-[#151517]" />
+                  <div className="p-3.5 space-y-2">
                     <div className="h-4 w-1/3 rounded bg-foreground/10" />
                     <div className="h-3 w-2/3 rounded bg-foreground/5" />
                   </div>
@@ -98,7 +98,7 @@ const Sites = () => {
               ))}
             </div>
           ) : sites.length === 0 ? (
-            <div className="text-center py-20 rounded-2xl border border-dashed border-border/60">
+            <div className="text-center py-20 rounded-xl border border-dashed border-border/60">
               <Globe className="w-10 h-10 mx-auto text-muted-foreground/60 mb-3" />
               <p className="text-sm text-muted-foreground">Nenhum site ainda</p>
             </div>
@@ -106,68 +106,69 @@ const Sites = () => {
             sites.map((s) => (
               <article
                 key={s.id}
-                className="group rounded-2xl bg-[#1C1C1C] border border-border/60 overflow-hidden transition-colors hover:border-foreground/25"
+                className="group rounded-lg bg-[#1B1B1D] border border-[#2B2B2F] overflow-hidden transition-colors hover:border-[#3A3A3F]"
               >
                 <a href={s.site_url} target="_blank" rel="noopener noreferrer" className="block">
-                  <div className="relative aspect-[16/9] w-full bg-[#141414] overflow-hidden">
+                  <div className="relative h-36 w-full bg-[#151517] overflow-hidden">
                     {s.image_url ? (
                       <img
                         src={s.image_url}
                         alt={s.name}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Globe className="w-8 h-8 text-muted-foreground/40" />
+                        <Globe className="w-8 h-8 text-muted-foreground/30" />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    <h3 className="absolute left-4 bottom-3 right-4 text-[15px] font-semibold tracking-tight truncate">
-                      {s.name}
-                    </h3>
                   </div>
                 </a>
 
-                <div className="p-4 pt-3">
-                  {s.description && (
-                    <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-3">{s.description}</p>
-                  )}
+                <div className="p-3.5">
+                  <div className="min-w-0">
+                    <h3 className="text-[15px] font-semibold text-foreground truncate">{s.name}</h3>
+                    {s.description && (
+                      <p className="mt-1 text-[13px] text-muted-foreground leading-[1.45] line-clamp-2">
+                        {s.description}
+                      </p>
+                    )}
+                    <p className="mt-2 text-[11px] text-muted-foreground/60 truncate">{s.site_url}</p>
+                  </div>
 
-                  <div className="flex items-center gap-2 mt-4">
+                  <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[#29292D]">
                     <a
                       href={s.site_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-2 bg-foreground text-background font-semibold text-[13px] py-2.5 rounded-xl hover:opacity-90 transition-opacity"
+                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-foreground hover:underline"
                     >
-                      Ir pro site <ExternalLink className="w-3.5 h-3.5" />
+                      Abrir <ExternalLink className="w-3 h-3" />
                     </a>
                     {isAdmin && (
-                      <>
+                      <div className="ml-auto flex items-center gap-1">
                         <button
                           onClick={() => openEdit(s)}
-                          className="p-2.5 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-colors"
+                          className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-[#252529] transition-colors"
                           aria-label="Editar site"
                         >
-                          <Pencil className="w-4 h-4" />
+                          <Pencil className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(s.id)}
-                          className="p-2.5 rounded-xl bg-destructive/10 hover:bg-destructive/20 text-destructive transition-colors"
+                          className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                           aria-label="Excluir site"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
               </article>
             ))
           )}
-        </div>
-      </div>
+        </div>     </div>
 
 
       {/* Admin form */}
