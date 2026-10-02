@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, BadgeCheck, Disc3, Settings, User, Shield, Instagram, Youtube } from 'lucide-react';
+import { BadgeCheck, Disc3, Settings, User, Shield, Instagram, Youtube } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { ProfilePackRow } from '@/components/ProfilePackRow';
 import { useAuth } from '@/contexts/AuthContext';
@@ -86,7 +86,7 @@ export default function PublicProfile() {
     return (
       <div className="min-h-screen bg-background pb-20">
         <div className="max-w-lg mx-auto px-4 pt-6">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground mb-8"><ArrowLeft className="w-4 h-4" /> Voltar</Link>
+          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground mb-8"><span className="text-base leading-none">&lt;</span> Voltar</Link>
           <p className="text-center text-muted-foreground">Perfil não encontrado</p>
         </div>
         <BottomNav />
@@ -101,7 +101,7 @@ export default function PublicProfile() {
         <div className="max-w-lg mx-auto">
           <div className="flex justify-between items-center mb-8">
             <Link to="/" className="w-11 h-11 flex items-center justify-center text-foreground hover:opacity-80 transition-opacity">
-              <ArrowLeft className="w-6 h-6" />
+              <span className="text-xl leading-none">&lt;</span>
             </Link>
             {isSelf ? (
               <Link to="/conta?settings=1" className="w-11 h-11 flex items-center justify-center text-foreground hover:opacity-80 transition-opacity" aria-label="Configurações">
