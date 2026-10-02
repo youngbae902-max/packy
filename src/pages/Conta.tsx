@@ -414,7 +414,7 @@ const Conta = () => {
                 className="w-11 h-11 flex items-center justify-center"
                 aria-label="Voltar"
               >
-                <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
+                <ChevronLeft className="w-5 h-5" />
               </button>
               <h1 className="text-[17px] font-bold tracking-tight">
                 {settingsSub === 'tema' ? 'Trocar Tema'
