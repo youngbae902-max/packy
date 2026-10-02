@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Menu, Inbox, X, Mic, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { Search, Menu, Inbox, X, Mic, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -30,7 +30,6 @@ const Packs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'inicio' | 'geral'>('inicio');
-  const [releaseFilter, setReleaseFilter] = useState<'all' | 'samples' | 'presets' | 'drumkit' | 'loops' | 'project' | 'other'>('all');
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, isLoading } = useSupabasePacks();
@@ -51,11 +50,6 @@ const Packs = () => {
     }
     return approvedPacks.slice(0, releases.limit);
   }, [approvedPacks, releases]);
-
-  const filteredReleasePacks = useMemo(() => {
-    if (releaseFilter === 'all') return releasePacks;
-    return releasePacks.filter(pack => pack.pack_type === releaseFilter);
-  }, [releasePacks, releaseFilter]);
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -319,27 +313,8 @@ const Packs = () => {
             {releases.visible && releasePacks.length > 0 && (
               <HorizontalCarousel
                 title={releases.title}
-                headerRight={
-                  <label className="relative flex items-center">
-                    <SlidersHorizontal className="w-3.5 h-3.5 text-muted-foreground pointer-events-none absolute left-2.5" />
-                    <select
-                      value={releaseFilter}
-                      onChange={e => setReleaseFilter(e.target.value as typeof releaseFilter)}
-                      className="h-7 appearance-none bg-transparent border-0 rounded-lg pl-8 pr-0 text-xs text-muted-foreground focus:outline-none focus:text-foreground cursor-pointer"
-                      aria-label="Filtrar lançamentos por categoria"
-                    >
-                      <option value="all">Todos</option>
-                      <option value="samples">Samples</option>
-                      <option value="presets">Presets</option>
-                      <option value="drumkit">Drum Kits</option>
-                      <option value="loops">Loops</option>
-                      <option value="project">Projetos</option>
-                      <option value="other">Outros</option>
-                    </select>
-                  </label>
-                }
               >
-                {filteredReleasePacks.map(pack => (
+                {releasePacks.map(pack => (
                   <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                     <PackCardV2 pack={pack} />
                   </div>
