@@ -28,7 +28,7 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
               onClick={() => scroll('left')} 
               className="p-1.5 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition"
             >
-              <span className="text-lg leading-none">&lt;</span>
+              <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
             </button>
             <button 
               onClick={() => scroll('right')} 
