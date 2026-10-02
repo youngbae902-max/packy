@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Menu, Inbox, X, Mic, Compass, Grid2X2, Sparkles, ArrowUpRight } from 'lucide-react';
+import { Search, Menu, Inbox, X, Mic, Compass, Grid2X2, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -101,9 +101,9 @@ const Packs = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#080808] text-foreground pb-20 md:pb-8 relative overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground pb-20 md:pb-8">
       {/* Search Header for Desktop */}
-      <header className="hidden md:flex sticky top-0 z-30 bg-[#080808]/85 backdrop-blur-2xl border-b border-white/[0.06] px-8 py-4 items-center justify-between gap-6">
+      <header className="hidden md:flex sticky top-0 z-30 bg-background/90 backdrop-blur-xl border-b border-border/40 px-8 py-4 items-center justify-between gap-6">
         <div className="flex-1 max-w-2xl relative" ref={popupRef}>
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <input
@@ -111,7 +111,7 @@ const Packs = () => {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             onFocus={() => q.length > 0 && setPopupOpen(true)}
-            className="w-full bg-white/[0.045] border border-white/[0.08] rounded-2xl pl-12 pr-10 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-white/15 focus:border-white/15 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
+            className="w-full bg-secondary/70 border border-border/50 rounded-xl pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-white/15 focus:border-white/15 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
             placeholder="O que você quer ouvir ou baixar?"
           />
           {searchQuery && (
@@ -223,29 +223,29 @@ const Packs = () => {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
-        {/* Navegação principal */}
         {q.length === 0 && (
-          <div className="mb-7 md:mb-9 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
-            <div>
-              <div className="flex items-center gap-2 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.22em] text-white/40 mb-2">
-                <Sparkles className="w-3.5 h-3.5" /> Descobrir
-              </div>
-              <h1 className="text-2xl md:text-4xl font-black tracking-[-0.04em]">Explore a PACKY</h1>
-              <p className="text-sm text-white/45 mt-1.5 max-w-xl">Encontre novos sons, packs e projetos feitos pela comunidade.</p>
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-muted-foreground">
+              <Sparkles className="w-3.5 h-3.5" /> Descobrir
             </div>
-            <div className="inline-flex w-full md:w-auto items-center gap-1 p-1 rounded-2xl bg-white/[0.045] border border-white/[0.08] shadow-[0_10px_35px_rgba(0,0,0,0.18)]">
-              <button onClick={() => setActiveTab('inicio')} className={`flex-1 md:flex-none inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[12px] md:text-[13px] font-bold transition-all ${activeTab === 'inicio' ? 'bg-white text-black shadow-lg' : 'text-white/45 hover:text-white hover:bg-white/[0.05]'}`}>
-                <Compass className="w-4 h-4" /> Início
-              </button>
-              <button onClick={() => setActiveTab('geral')} className={`flex-1 md:flex-none inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[12px] md:text-[13px] font-bold transition-all ${activeTab === 'geral' ? 'bg-white text-black shadow-lg' : 'text-white/45 hover:text-white hover:bg-white/[0.05]'}`}>
-                <Grid2X2 className="w-4 h-4" /> Packs em geral
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === 'geral' ? 'bg-black/10' : 'bg-white/[0.08]'}`}>{allPacks.length}</span>
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Explore a PACKY</h1>
+                <p className="text-sm text-muted-foreground mt-1">Descubra novos sons, packs e projetos.</p>
+              </div>
+              <div className="flex w-full sm:w-auto p-1 rounded-xl bg-secondary/70 border border-border/50">
+                <button onClick={() => setActiveTab('inicio')} className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'inicio' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
+                  <Compass className="w-4 h-4" /> Início
+                </button>
+                <button onClick={() => setActiveTab('geral')} className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'geral' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
+                  <Grid2X2 className="w-4 h-4" /> Packs em geral
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-8 md:mb-10 rounded-[28px] overflow-hidden border border-white/[0.07] bg-white/[0.025] shadow-[0_20px_70px_rgba(0,0,0,0.25)]"><HomeBannerCarousel /></div>}
+        {q.length === 0 && activeTab === 'inicio' && <div className="mb-8 rounded-2xl overflow-hidden border border-border/50 bg-card"><HomeBannerCarousel /></div>}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
@@ -287,14 +287,10 @@ const Packs = () => {
           </div>
         ) : activeTab === 'geral' ? (
           <div>
-            <div className="flex items-end justify-between mb-5 px-1">
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35 mb-1">Biblioteca</div>
-                <h2 className="text-xl md:text-3xl font-black tracking-[-0.03em]">Todos os Packs</h2>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/45 bg-white/[0.04] border border-white/[0.07] rounded-full px-3.5 py-2">
-                {allPacks.length} disponíveis <ArrowUpRight className="w-3.5 h-3.5" />
-              </div>
+            <div className="mb-5 px-1">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">Biblioteca</p>
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight">Todos os Packs</h2>
+              <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p>
             </div>
             {allPacks.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
