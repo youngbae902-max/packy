@@ -21,11 +21,9 @@ export function HorizontalCarousel({ title, children, showArrows = true, headerR
 
   return (
     <section className="mb-8 relative group">
-      <div className="flex items-center justify-between mb-1.5 px-2">
-        <div className="flex items-center gap-3">
-          <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
-          {headerRight}
-        </div>
+      <div className="relative flex items-center justify-between mb-1.5 px-2">
+        <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
+        {headerRight && <div className="absolute right-2 top-0">{headerRight}</div>}
         {showArrows && (
           <div className="hidden md:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button 
