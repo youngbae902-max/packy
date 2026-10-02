@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, ArrowLeft, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History, Pipette } from 'lucide-react';
+import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History, Pipette } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { ImageCropModal } from '@/components/ImageCropModal';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -414,7 +414,7 @@ const Conta = () => {
                 className="w-11 h-11 flex items-center justify-center"
                 aria-label="Voltar"
               >
-                <ArrowLeft className="w-6 h-6" />
+                <<span className="text-xl leading-none">&lt;</span>
               </button>
               <h1 className="text-[17px] font-bold tracking-tight">
                 {settingsSub === 'tema' ? 'Trocar Tema'
