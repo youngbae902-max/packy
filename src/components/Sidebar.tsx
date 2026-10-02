@@ -1,8 +1,13 @@
-import { User, Disc, Home, Folder, Mic } from 'lucide-react';
+import { Compass, User, Disc, Home, Inbox, List, Folder, Mic, Crown, Search, Settings } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
+
+const mainNavItems = [
+  { icon: Home, label: 'Início', to: '/' },
+  { icon: Search, label: 'Buscar', to: '/explore' }, // Just an example if there was an explore page
+];
 
 export function Sidebar() {
   const { pages } = useCustomPages();
