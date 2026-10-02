@@ -295,7 +295,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               <>
                 <div className="flex items-center gap-2 mb-4">
                   <button onClick={() => setSheetTab('info')} className="p-1 -ml-1 text-muted-foreground hover:text-foreground" aria-label="Voltar">
-                    <span className="text-lg leading-none">&lt;</span>
+                    <span className="inline-block w-3 h-3 border-l border-b border-current -rotate-45" />
                   </button>
                   <h3 className="text-base font-bold flex-1 truncate">Comentários</h3>
                 </div>
