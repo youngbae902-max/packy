@@ -67,7 +67,7 @@ export function Sidebar() {
             }
           >
             <Mic className="w-5 h-5" />
-            Acapella
+            MCs
           </NavLink>
         </div>
 
