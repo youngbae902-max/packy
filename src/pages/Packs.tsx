@@ -110,7 +110,7 @@ const Packs = () => {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             onFocus={() => q.length > 0 && setPopupOpen(true)}
-            className="w-full bg-secondary/70 border border-border/50 rounded-xl pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-white/15 focus:border-white/15 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
+            className="w-full bg-[#181818] border border-[#242424] rounded-xl pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-white/15 focus:border-white/15 transition-all "
             placeholder="O que você quer ouvir ou baixar?"
           />
           {searchQuery && (
@@ -206,14 +206,14 @@ const Packs = () => {
         </header>
 
         {/* Mobile Search */}
-        <div className="flex items-center gap-2 mt-7 mb-7 relative" ref={popupRef}>
+        <div className="flex items-center gap-2 mt-6 mb-8 relative" ref={popupRef}>
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#9E9E9E]" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full h-[50px] bg-[#181818] border border-[#252525] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-white/10"
+              className="w-full h-[50px] bg-[#181818] border border-[#242424] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-white/10"
               placeholder={animatedPlaceholder}
             />
           </div>
@@ -223,16 +223,16 @@ const Packs = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
         {q.length === 0 && (
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-muted-foreground">
+          <div className="mb-10">
+            <div className="flex items-center gap-2 mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
               <Sparkles className="w-3.5 h-3.5" /> Descobrir
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
+            <div className="flex flex-col gap-5">
               <div>
-                <h1 className="text-2xl md:text-3xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
-                <p className="text-sm text-muted-foreground mt-1">Descubra novos sons, packs e projetos.</p>
+                <h1 className="text-[28px] md:text-[32px] font-semibold tracking-[-0.025em]">Explore a PACKY</h1>
+                <p className="text-sm text-muted-foreground mt-1.5">Descubra novos sons, packs e projetos.</p>
               </div>
-              <div className="flex w-full sm:w-auto items-center gap-6">
+              <div className="flex w-full sm:w-auto items-center gap-7 border-b border-[#1C1C1C] sm:w-fit">
                 <button
                   onClick={() => setActiveTab('inicio')}
                   className={`relative pb-2 text-sm font-semibold transition-colors ${activeTab === 'inicio' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
@@ -252,7 +252,7 @@ const Packs = () => {
           </div>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-8 rounded-2xl overflow-hidden border border-border/50 bg-card"><HomeBannerCarousel /></div>}
+        {q.length === 0 && activeTab === 'inicio' && <div className="mb-10 rounded-2xl overflow-hidden border border-[#242424] bg-[#181818]"><HomeBannerCarousel /></div>}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
@@ -294,9 +294,9 @@ const Packs = () => {
           </div>
         ) : activeTab === 'geral' ? (
           <div>
-            <div className="mb-5 px-1">
+            <div className="mb-7 px-1">
               <p className="text-xs font-semibold text-muted-foreground mb-1">Biblioteca</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Todos os Packs</h2>
+              <h2 className="text-xl md:text-2xl font-semibold tracking-[-0.02em]">Todos os Packs</h2>
               <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p>
             </div>
             {allPacks.length === 0 ? (
@@ -308,7 +308,7 @@ const Packs = () => {
             )}
           </div>
         ) : (
-          <div className="space-y-7 md:space-y-9">
+          <div className="space-y-10 md:space-y-12">
             
             {releases.visible && releasePacks.length > 0 && (
               <HorizontalCarousel
