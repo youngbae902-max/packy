@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Globe, ExternalLink, Trash2, Pencil, X, Upload, ChevronLeft } from 'lucide-react';
+import { Globe, ExternalLink, Trash2, Pencil, X, Upload, } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { useAuth } from '@/contexts/AuthContext';
@@ -80,7 +80,7 @@ const Sites = () => {
       <div className="max-w-lg mx-auto px-4 pt-5">
         <header className="flex items-center gap-3 py-2">
           <Link to="/" className="p-1.5 -ml-2 rounded-xl hover:bg-foreground/5 transition-colors" aria-label="Voltar">
-            <ChevronLeft className="w-5 h-5" />
+            <span className="text-xl leading-none">&lt;</span>
           </Link>
         </header>
 
