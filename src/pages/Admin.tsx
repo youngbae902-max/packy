@@ -375,44 +375,50 @@ export default function Admin() {
           };
           const visibleTabs = mainTabs.filter(tab => categoryTabs[adminCategory].includes(tab.id));
           return (
-            <div className="mb-6 space-y-3">
-              <div className="grid grid-cols-4 gap-1.5 p-1 rounded-2xl bg-[#111111] border border-[#1E1E1E]">
-                {categories.map(category => (
-                  <button
-                    key={category.id}
-                    onClick={() => {
-                      setAdminCategory(category.id);
-                      const first = categoryTabs[category.id][0];
-                      setMainTab(first);
-                      setSubTab('pending');
-                    }}
-                    className={`rounded-xl px-2 py-2 text-[11px] font-semibold transition-colors ${
-                      adminCategory === category.id
-                        ? 'bg-[#242424] text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {category.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="rounded-2xl bg-[#111111] border border-[#1E1E1E] p-2">
-                <div className="grid grid-cols-2 gap-1.5">
-                  {visibleTabs.map(tab => (
+            <div className="mb-6">
+              <div className="rounded-2xl bg-[#111111] border border-[#1E1E1E] overflow-hidden">
+                <div className="flex items-center overflow-x-auto scrollbar-hide border-b border-[#1E1E1E] px-1">
+                  {categories.map(category => (
                     <button
-                      key={tab.id}
-                      onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-                      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium text-left transition-colors ${
-                        mainTab === tab.id
-                          ? 'bg-foreground text-background'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-[#171717]'
+                      key={category.id}
+                      onClick={() => {
+                        setAdminCategory(category.id);
+                        setMainTab(categoryTabs[category.id][0]);
+                        setSubTab('pending');
+                      }}
+                      className={`relative flex-1 min-w-[92px] px-3 py-3 text-[11px] font-semibold whitespace-nowrap transition-colors ${
+                        adminCategory === category.id
+                          ? 'text-foreground'
+                          : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      <tab.icon className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span className="truncate">{tab.label}</span>
+                      {category.label}
+                      {adminCategory === category.id && (
+                        <span className="absolute left-1/2 -translate-x-1/2 bottom-0 w-8 h-0.5 rounded-full bg-foreground" />
+                      )}
                     </button>
                   ))}
+                </div>
+
+                <div className="p-2">
+                  <div className="grid grid-cols-2 gap-1">
+                    {visibleTabs.map(tab => (
+                      <button
+                        key={tab.id}
+                        onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
+                        className={`group flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all ${
+                          mainTab === tab.id
+                            ? 'bg-foreground text-background'
+                            : 'text-muted-foreground hover:bg-[#181818] hover:text-foreground'
+                        }`}
+                      >
+                        <tab.icon className={`w-4 h-4 flex-shrink-0 ${
+                          mainTab === tab.id ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'
+                        }`} />
+                        <span className="text-xs font-medium truncate">{tab.label}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
