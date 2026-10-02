@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid, ChevronLeft, ChevronRight, ChevronDown, Image as ImageIcon } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid, ChevronRight, ChevronDown, Image as ImageIcon } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { NumericKeypad } from '@/components/NumericKeypad';
 import { useAuth } from '@/contexts/AuthContext';
@@ -351,7 +351,7 @@ export default function Admin() {
         {/* Top bar */}
         <div className="flex items-center justify-between mb-6">
           <Link to="/conta" aria-label="Voltar" className="flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-[#171717] transition-colors">
-            <ArrowLeft className="w-4 h-4" />
+            <<span className="text-lg leading-none">&lt;</span>
           </Link>
           <div className="flex flex-col items-center">
             <h1 className="text-base font-black uppercase tracking-wider">adm</h1>
@@ -530,7 +530,7 @@ export default function Admin() {
                   <div key={a.id} className="flex items-center gap-1 rounded-xl bg-[#1C1C1C] border border-[#252525] hover:bg-[#232323] transition-colors overflow-hidden">
                     {reorderQuick && (
                       <button onClick={() => move(i, -1)} className="px-2 py-3 text-muted-foreground hover:text-foreground" aria-label="Mover para trás">
-                        <ChevronLeft className="w-4 h-4" />
+                        <<span className="text-lg leading-none">&lt;</span>
                       </button>
                     )}
                     <button
