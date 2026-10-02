@@ -51,7 +51,7 @@ const Conta = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [repostedOpen, setRepostedOpen] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
-  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato-foto' | 'indicador-online'>(null);
+  const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'personalizacao' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato-foto' | 'indicador-online'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
   
   const [artistName, setArtistName] = useState('');
@@ -418,6 +418,7 @@ const Conta = () => {
               </button>
               <h1 className="text-[17px] font-bold tracking-tight">
                 {settingsSub === 'tema' ? 'Trocar Tema'
+                  : settingsSub === 'personalizacao' ? 'Personalização'
                   : settingsSub === 'cores' ? 'Cores dos Selos'
                   : settingsSub === 'senha' ? 'Senha e Segurança'
                   : settingsSub === 'selos' ? 'Meus Selos'
@@ -497,14 +498,8 @@ const Conta = () => {
                   </Link>
                 </SettingsGroup>
 
-                <SettingsGroup title="Personalização">
-                  <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
-                  <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
-                  <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
-                  <SettingsRow icon={ImageIcon} label="Formato da Foto" onClick={() => setSettingsSub('formato-foto')} />
-                  <SettingsRow icon={Smile} label="Indicador Online" onClick={() => setSettingsSub('indicador-online')} />
-                  <SettingsRow icon={EyeOff} label="Mostrar Favoritos" value={showFavoritesSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showFavoritesSection; setShowFavoritesSection(next); await updateProfile({ show_favorites_section: next }); }} />
-                  <SettingsRow icon={EyeOff} label="Mostrar Republicados" value={showRepostsSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showRepostsSection; setShowRepostsSection(next); await updateProfile({ show_reposts_section: next }); }} />
+                <SettingsGroup>
+                  <SettingsRow icon={Palette} label="Personalização" onClick={() => setSettingsSub('personalizacao')} />
                 </SettingsGroup>
 
                 <SettingsGroup title="Conta">
@@ -526,6 +521,19 @@ const Conta = () => {
                   <SettingsRow icon={MoreHorizontal} label="Mais opções" onClick={() => setSettingsSub('mais')} />
                 </SettingsGroup>
               </>
+            )}
+
+            {/* Personalização subscreen */}
+            {settingsSub === 'personalizacao' && (
+              <div className="space-y-2">
+                <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
+                <SettingsRow icon={BadgeCheck} label="Cores dos Selos" onClick={() => setSettingsSub('cores')} />
+                <SettingsRow icon={Sticker} label="Decoração do Perfil" onClick={() => setDecorPickerOpen(true)} />
+                <SettingsRow icon={ImageIcon} label="Formato da Foto" onClick={() => setSettingsSub('formato-foto')} />
+                <SettingsRow icon={Smile} label="Indicador Online" onClick={() => setSettingsSub('indicador-online')} />
+                <SettingsRow icon={EyeOff} label="Mostrar Favoritos" value={showFavoritesSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showFavoritesSection; setShowFavoritesSection(next); await updateProfile({ show_favorites_section: next }); }} />
+                <SettingsRow icon={EyeOff} label="Mostrar Republicados" value={showRepostsSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showRepostsSection; setShowRepostsSection(next); await updateProfile({ show_reposts_section: next }); }} />
+              </div>
             )}
 
             {/* Theme subscreen */}
