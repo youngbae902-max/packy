@@ -423,21 +423,29 @@ const Index = () => {
                 <Carousel>{trending.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
-
-            <section className="mb-12">
+            <section className="mb-12 rounded-3xl border border-white/5 bg-[#111111] p-4 md:p-5">
               <SectionTitle icon={Mic2} title="Acapellas" badge={String(acapellas.length)} />
-              <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-2" style={{ scrollbarWidth: 'none' }}>
-                {acapellas.slice(0, 10).map((acapella) => (
-                  <a key={acapella.id} href={acapella.download_url} target="_blank" rel="noreferrer" className="group snap-start shrink-0 w-[150px]">
-                    <div className="aspect-square overflow-hidden rounded-2xl border border-white/5 bg-[#141414] transition-transform group-hover:scale-[1.02]">
-                      {acapella.image_url ? <img src={acapella.image_url} alt={acapella.artist_name} className="h-full w-full object-cover" loading="lazy" /> : <div className="h-full w-full flex items-center justify-center"><Mic2 className="h-8 w-8 text-foreground/25" /></div>}
-                    </div>
-                    <div className="mt-2 px-1 text-sm font-black truncate">{acapella.artist_name}</div>
-                    <div className="px-1 text-[10px] font-bold uppercase tracking-widest text-foreground/40">Acapella</div>
-                  </a>
-                ))}
-              </div>
+              {acapellas.length > 0 ? (
+                <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-1" style={{ scrollbarWidth: 'none' }}>
+                  {acapellas.slice(0, 10).map((acapella) => (
+                    <a key={acapella.id} href={acapella.download_url} target="_blank" rel="noreferrer" className="group snap-start shrink-0 w-[150px]">
+                      <div className="aspect-square overflow-hidden rounded-2xl border border-white/5 bg-[#181818] transition-transform group-hover:scale-[1.02]">
+                        {acapella.image_url ? <img src={acapella.image_url} alt={acapella.artist_name} className="h-full w-full object-cover" loading="lazy" /> : <div className="h-full w-full flex items-center justify-center"><Mic2 className="h-8 w-8 text-foreground/25" /></div>}
+                      </div>
+                      <div className="mt-2 px-1 text-sm font-black truncate">{acapella.artist_name}</div>
+                      <div className="px-1 text-[10px] font-bold uppercase tracking-widest text-foreground/40">Acapella</div>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-white/5 bg-[#151515] px-5 py-8 text-center">
+                  <Mic2 className="mx-auto mb-3 h-7 w-7 text-foreground/30" />
+                  <div className="text-sm font-black">Acapellas</div>
+                  <div className="mt-1 text-xs text-foreground/45">Nenhuma acapella publicada ainda.</div>
+                </div>
+              )}
             </section>
+
 
             {beloved.length > 0 && (
               <section className="mb-12">
@@ -494,21 +502,6 @@ const Index = () => {
           </>
         )}
       </div>
-
-      <section className="mb-12">
-        <SectionTitle icon={Mic2} title="Acapellas" badge={String(acapellas.length)} />
-        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-2" style={{ scrollbarWidth: 'none' }}>
-          {acapellas.slice(0, 10).map((acapella) => (
-            <a key={acapella.id} href={acapella.download_url} target="_blank" rel="noreferrer" className="group snap-start shrink-0 w-[150px]">
-              <div className="aspect-square overflow-hidden rounded-2xl border border-white/5 bg-[#141414] transition-transform group-hover:scale-[1.02]">
-                {acapella.image_url ? <img src={acapella.image_url} alt={acapella.artist_name} className="h-full w-full object-cover" loading="lazy" /> : <div className="h-full w-full flex items-center justify-center"><Mic2 className="h-8 w-8 text-foreground/25" /></div>}
-              </div>
-              <div className="mt-2 px-1 text-sm font-black truncate">{acapella.artist_name}</div>
-              <div className="px-1 text-[10px] font-bold uppercase tracking-widest text-foreground/40">Acapella</div>
-            </a>
-          ))}
-        </div>
-      </section>
 
       <FooterNav />
 
