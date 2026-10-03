@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   Plus, Settings, Instagram, MoreVertical, Search,
-  Flame, Sparkles, Download, ChevronRight, Users, Play, Star, TrendingUp
+  Flame, Sparkles, Download, ChevronRight, Users, Play, Star, TrendingUp, ShoppingBag, SlidersHorizontal
 } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { PackCardV2 } from '@/components/PackCardV2';
@@ -327,6 +327,7 @@ const Index = () => {
   const projectsPremium = useMemo(() => premiumPacks.slice(0, 12), [premiumPacks]);
   const samples = useMemo(() => allPacks.filter(p => p.pack_type === 'samples').slice(0, 12), [allPacks]);
   const drumkits = useMemo(() => allPacks.filter(p => p.pack_type === 'drumkit').slice(0, 12), [allPacks]);
+  const premiumFeatured = useMemo(() => premiumPacks.filter(p => p.is_premium).slice(0, 12), [premiumPacks]);
 
   return (
     <div className="min-h-screen bg-[#0B0B0B] pb-20">
@@ -372,6 +373,27 @@ const Index = () => {
         )}
 
         {/* Search */}
+        <div className="mb-6 overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex gap-2 min-w-max px-1">
+            {[
+              ['Todos', '/packs'],
+              ['Sample Packs', '/packs?type=samples'],
+              ['Drum Kits', '/packs?type=drumkit'],
+              ['Loops', '/packs?type=loops'],
+              ['Presets', '/packs?type=presets'],
+              ['Acapellas', '#acapellas'],
+            ].map(([label, href], index) => (
+              <a
+                key={label}
+                href={href}
+                className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap border transition ${index === 0 ? 'bg-foreground text-background border-foreground' : 'bg-[#141414] text-foreground/70 border-white/5 hover:text-foreground hover:bg-[#191919]'}`}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+
         <div className="relative mb-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
           <Input
@@ -401,6 +423,24 @@ const Index = () => {
 
             <div className="mb-10"><SupportCard /></div>
 
+            <section className="mb-12">
+              <div className="flex items-end justify-between mb-4 px-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <ShoppingBag className="w-5 h-5 text-foreground/80" />
+                    <h2 className="text-xl md:text-2xl font-black tracking-tight">Explore produtos</h2>
+                  </div>
+                  <p className="text-xs text-foreground/45 mt-1">Recursos para sua produção, em um só lugar.</p>
+                </div>
+                <Link to="/packs" className="text-xs font-bold text-foreground/60 hover:text-foreground flex items-center gap-1">
+                  Ver tudo <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 px-1">
+                {releases.slice(0, 8).map(p => <PackCardV2 key={p.id} pack={p} />)}
+              </div>
+            </section>
+
             {releases.length > 0 && (
               <section className="mb-12">
                 <SectionTitle icon={Sparkles} title="Lançamentos" />
@@ -423,7 +463,7 @@ const Index = () => {
                 <Carousel>{trending.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
               </section>
             )}
-            <section className="mb-12 rounded-3xl border border-white/5 bg-[#111111] p-4 md:p-5">
+            <section id="acapellas" className="mb-12 rounded-3xl border border-white/5 bg-[#111111] p-4 md:p-5">
               <SectionTitle icon={Mic2} title="Acapellas" badge={String(acapellas.length)} />
               {acapellas.length > 0 ? (
                 <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-1" style={{ scrollbarWidth: 'none' }}>
@@ -446,6 +486,22 @@ const Index = () => {
               )}
             </section>
 
+
+            {premiumFeatured.length > 0 && (
+              <section className="mb-12 rounded-3xl border border-white/5 bg-[#111111] p-4 md:p-5">
+                <div className="flex items-end justify-between mb-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <ShoppingBag className="w-5 h-5 text-foreground/80" />
+                      <h2 className="text-xl md:text-2xl font-black tracking-tight">Packs Premium</h2>
+                    </div>
+                    <p className="text-xs text-foreground/45 mt-1">Produtos pagos da comunidade.</p>
+                  </div>
+                  <Link to="/packs" className="text-xs font-bold text-foreground/60 hover:text-foreground">Ver tudo</Link>
+                </div>
+                <Carousel>{premiumFeatured.map(p => <CardShell key={p.id} pack={p} />)}</Carousel>
+              </section>
+            )}
 
             {beloved.length > 0 && (
               <section className="mb-12">
