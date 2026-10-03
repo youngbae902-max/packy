@@ -576,3 +576,5 @@ const Index = () => {
 };
 
 export default Index;
+
+// Lovable sync checkpoint: marketplace refresh
