@@ -69,7 +69,7 @@ const MCs = () => {
                 rel="noreferrer"
                 className="group flex flex-col items-center gap-2.5"
               >
-                <div className="h-[100px] w-[100px] overflow-hidden rounded-full border border-white/10 bg-[#1B1B1B] transition-transform group-hover:scale-105">
+                <div className="h-[100px] w-[100px] aspect-square overflow-hidden rounded-full border border-white/10 bg-[#1B1B1B] transition-transform group-hover:scale-105">
                   {mc.image_url ? (
                     <img src={mc.image_url} alt={mc.artist_name} className="h-full w-full object-cover" loading="lazy" />
                   ) : (
