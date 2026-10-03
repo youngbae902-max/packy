@@ -121,7 +121,7 @@ const Packs = () => {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             onFocus={() => q.length > 0 && setPopupOpen(true)}
-            className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-all"
+            className="w-full bg-[hsl(0,0%,5%)] border border-border/50 rounded-full pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
             placeholder="O que você quer ouvir ou baixar?"
           />
           {searchQuery && (
@@ -163,7 +163,7 @@ const Packs = () => {
                   <div className="space-y-1">
                     {searchedMCs.map(mc => (
                       <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl hover:bg-muted px-3 py-2">
-                        {mc.image_url ? <img src={mc.image_url} alt="" className="size-12 rounded-full object-cover" /> : <span className="size-12 rounded-full bg-muted flex items-center justify-center"><Mic className="size-5" /></span>}
+                        {mc.image_url ? <img src={mc.image_url} alt="" className="w-12 h-12 min-w-12 min-h-12 rounded-full object-cover" /> : <span className="w-12 h-12 min-w-12 min-h-12 rounded-full bg-muted flex items-center justify-center"><Mic className="w-5 h-5" /></span>}
                         <span className="font-semibold text-sm">{mc.artist_name}</span>
                       </a>
                     ))}
@@ -231,7 +231,7 @@ const Packs = () => {
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full h-[50px] bg-[#1A1A1A] border border-[#252525] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-white/10"
+              className="w-full h-[50px] bg-[#1A1A1A] border border-[#252525] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder={animatedPlaceholder}
             />
           </div>
@@ -293,7 +293,7 @@ const Packs = () => {
                 <div className="space-y-2">
                   {searchedMCs.map(mc => (
                     <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl bg-card border border-border p-3">
-                      {mc.image_url ? <img src={mc.image_url} alt="" className="size-12 rounded-full object-cover" /> : <span className="size-12 rounded-full bg-muted flex items-center justify-center"><Mic className="size-5" /></span>}
+                      {mc.image_url ? <img src={mc.image_url} alt="" className="w-12 h-12 min-w-12 min-h-12 rounded-full object-cover" /> : <span className="w-12 h-12 min-w-12 min-h-12 rounded-full bg-muted flex items-center justify-center"><Mic className="w-5 h-5" /></span>}
                       <span className="font-display font-bold">{mc.artist_name}</span>
                     </a>
                   ))}
@@ -336,8 +336,6 @@ const Packs = () => {
                 ))}
               </HorizontalCarousel>
             )}
-
-
 
             {/* Seções personalizadas da Home (admin) */}
             {customSections.map(({ section, packs }) => (
