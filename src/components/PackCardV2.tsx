@@ -123,50 +123,43 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-[20px] overflow-hidden bg-[#141414] border border-white/[0.06] p-3 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-[#191919] hover:border-white/[0.12] hover:shadow-[0_16px_40px_-12px_rgba(0,0,0,0.7)]"
+        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#181818] border border-[#181818] transition-all p-2.5 flex flex-col"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
-        <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#1c1c1c]">
+        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#181818]">
           {pack.cover_url ? (
-            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]" />
+            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
           ) : (
             <PackImagePlaceholder />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {pack.is_pinned && (
-            <div className="absolute top-2.5 left-2.5 w-6 h-6 rounded-full bg-black/55 backdrop-blur-md flex items-center justify-center">
-              <Pin className="w-3 h-3 text-white" />
+            <div className="absolute top-2 left-2">
+              <Pin className="w-3.5 h-3.5 text-foreground drop-shadow-lg" />
             </div>
           )}
           {pack.is_premium && (
-            <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/55 text-[#f5d67b] px-2 py-1 rounded-full text-[10px] font-semibold tracking-wide backdrop-blur-md border border-[#f5d67b]/25">
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-full text-[10px] font-medium backdrop-blur-sm">
               <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
             </div>
           )}
         </div>
 
-        <h3 className="mt-3 px-0.5 text-[14px] leading-snug font-semibold text-foreground line-clamp-2 min-h-[2.6em]" style={{ letterSpacing: '-0.01em' }}>
+        <h3 className="mt-2.5 text-[14px] leading-tight font-medium text-foreground line-clamp-2 min-h-[2.6em]" style={{ letterSpacing: '-0.01em' }}>
           {pack.title}
         </h3>
 
-        <p className="px-0.5 text-[12px] truncate mt-1 text-muted-foreground font-normal flex items-center gap-1">
-          <span className="truncate">@{displayAuthor}</span>
+        {/* Author (hidden on cards) */}
+        <p className="text-[12px] truncate mt-1 text-muted-foreground font-normal flex items-center gap-1 opacity-0 pointer-events-none h-0 overflow-hidden">
+          <span className="truncate">{displayAuthor}</span>
           {isOwner && !pack.is_anonymous && (
             <BadgeCheck className="w-3.5 h-3.5 text-sky-400 fill-sky-400/20 shrink-0" aria-label="Verificado" />
           )}
         </p>
 
-        <div className="mt-2.5 pt-2.5 mx-0.5 border-t border-white/[0.06] flex items-center justify-between">
-          <span className="text-[10px] font-medium tracking-[0.12em] text-muted-foreground/80 uppercase">
-            {categoryLabel}
-          </span>
-          {pack.is_premium ? (
-            <span className="text-[11px] font-semibold text-[#f5d67b]">Premium</span>
-          ) : (
-            <span className="text-[11px] font-semibold text-emerald-400/90">Grátis</span>
-          )}
+        <div className="mt-2 pt-2 border-t border-[#181818] text-[10px] font-normal tracking-wider text-muted-foreground">
+          {categoryLabel}
         </div>
       </button>
 

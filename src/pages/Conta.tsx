@@ -1,5 +1,4 @@
 import { ChevronLeft } from 'lucide-react';
-import { Bookmark } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { User, LogOut, Shield, AtSign, Trash2, Edit, Instagram, Youtube, Settings, KeyRound, Moon, Sun, BadgeCheck, RotateCcw, Award, Wallet, Sparkles, Eye, EyeOff, History, Pipette } from 'lucide-react';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
@@ -12,7 +11,6 @@ import { useProfile } from '@/hooks/useProfile';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useUserManagement } from '@/hooks/useUserManagement';
 import { usePublicProfile } from '@/hooks/useSocial';
-import { useUserFavorites } from '@/hooks/usePackInteractions';
 import { useDecorations } from '@/hooks/useDecorations';
 import { useWallet } from '@/hooks/useWallet';
 import { FavoritesSection } from '@/components/FavoritesSection';
@@ -39,7 +37,6 @@ const Conta = () => {
   const { updateProfile, uploadAvatar, isUpdating } = useProfile();
   const { userPacks } = useSupabasePacks();
   const { followersCount, followingCount, repostedPacks } = usePublicProfile(user?.id);
-  const { favorites, isLoading: favoritesLoading } = useUserFavorites();
   const { updateUsername, deleteMyAccount } = useUserManagement();
   const { decorations } = useDecorations();
   const { transactions: walletTx } = useWallet(user?.id);
@@ -53,7 +50,7 @@ const Conta = () => {
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
   const [showBalance, setShowBalance] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  const [profileContentTab, setProfileContentTab] = useState<'reposted' | 'favorites'>('reposted');
+  const [repostedOpen, setRepostedOpen] = useState(false);
   const [decorPickerOpen, setDecorPickerOpen] = useState(false);
   const [settingsSub, setSettingsSub] = useState<null | 'tema' | 'personalizacao' | 'cores' | 'senha' | 'selos' | 'mais' | 'formato-foto' | 'indicador-online'>(null);
   const [decorEditing, setDecorEditing] = useState<{ url: string; x: number; y: number; scale: number } | null>(null);
@@ -374,34 +371,37 @@ const Conta = () => {
 
       <div className="max-w-lg mx-auto px-4 -mt-8">
         <div className="grid grid-cols-3 gap-2 mb-6 text-center">
-          <div><p className="text-xl font-black text-foreground">{userPacks.length}</p><p className="text-xs font-black tracking-tight text-foreground/80">Enviados</p></div>
-          <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs font-black tracking-tight text-foreground/80">Seguidores</p></div>
-          <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs font-black tracking-tight text-foreground/80">Seguindo</p></div>
+          <div><p className="text-xl font-black text-foreground">{userPacks.length}</p><p className="text-xs text-muted-foreground">Enviados</p></div>
+          <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs text-muted-foreground">Seguidores</p></div>
+          <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        {(showFavoritesSection || showRepostsSection) && (
-          <div className="mb-5">
-            <div className="flex items-center justify-center gap-1 rounded-2xl border border-white/5 bg-[#111111] p-1">
-              {showRepostsSection && (
-                <button onClick={() => setProfileContentTab('reposted')} className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-black transition-colors ${profileContentTab === 'reposted' ? 'bg-white/10 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-                  <RotateCcw className="h-4 w-4" /> Repostados <span className="text-[10px] opacity-60">{repostedPacks.length}</span>
-                </button>
-              )}
-              {showFavoritesSection && (
-                <button onClick={() => setProfileContentTab('favorites')} className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-black transition-colors ${profileContentTab === 'favorites' ? 'bg-white/10 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-                  <Bookmark className="h-4 w-4" /> Favoritos <span className="text-[10px] opacity-60">{favorites.length}</span>
-                </button>
-              )}
+        {showFavoritesSection && <FavoritesSection />}
+
+        {showRepostsSection && <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-4">
+          <button onClick={() => setRepostedOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.03] transition-colors">
+            <div className="flex items-center gap-2">
+              <RotateCcw className="w-4 h-4 text-foreground/80" />
+              <span className="text-sm font-bold text-foreground">Republicados</span>
+              <span className="text-xs text-muted-foreground">({repostedPacks.length})</span>
             </div>
-            <div className="mt-3">
-              {profileContentTab === 'favorites' && showFavoritesSection ? (
-                favoritesLoading ? <div className="h-16 rounded-2xl bg-[#111111] animate-pulse" /> : favorites.length === 0 ? <div className="rounded-2xl border border-white/5 bg-[#111111] p-6 text-center text-sm text-muted-foreground"><Bookmark className="mx-auto mb-2 h-6 w-6 opacity-40" />Nenhum favorito ainda</div> : <div className="space-y-2">{favorites.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} />)}</div>
-              ) : showRepostsSection ? (
-                repostedPacks.length === 0 ? <div className="rounded-2xl border border-white/5 bg-[#111111] p-6 text-center text-sm text-muted-foreground"><RotateCcw className="mx-auto mb-2 h-6 w-6 opacity-40" />Nenhum pack republicado ainda</div> : <div className="space-y-2">{repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} hideActions />)}</div>
-              ) : null}
-            </div>
+            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${repostedOpen ? 'rotate-180' : ''}`} />
+          </button>
+          {repostedOpen && (
+          <div className="px-3 pb-3 pt-1 max-h-[60vh] overflow-y-auto">
+            {repostedPacks.length === 0 ? (
+              <div className="p-6 text-center">
+                <RotateCcw className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" />
+                <p className="text-sm text-muted-foreground">Nenhum pack republicado ainda</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} hideActions />)}
+              </div>
+            )}
           </div>
-        )}
+          )}
+          </div>}
         <div className="h-4" />
       </div>
 
