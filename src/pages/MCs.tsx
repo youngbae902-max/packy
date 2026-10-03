@@ -60,7 +60,7 @@ const MCs = () => {
             {searchTerm ? 'Nenhum MC encontrado' : 'Nenhum MC disponível'}
           </p>
         ) : layout === 'grid' ? (
-          <div className="grid grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-4">
+          <div className="grid grid-cols-3 gap-x-10 gap-y-8 sm:grid-cols-4">
             {filtered.map((mc) => (
               <a
                 key={mc.id}
