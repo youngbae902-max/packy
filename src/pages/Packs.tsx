@@ -350,7 +350,17 @@ const Packs = () => {
             ) : (
               /* Fallback sections if no categories are setup yet */
               <>
-                {premiumPacks.length > 0 && (\n              <HorizontalCarousel title="Packs Pagos">\n                {premiumPacks.map(pack => (\n                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">\n                    <PackCardV2 pack={pack} />\n                  </div>\n                ))}\n              </HorizontalCarousel>\n            )}\n\n            {premiumPacks.length > 0 && (
+                {premiumPacks.length > 0 && (
+                  <HorizontalCarousel title="Packs Pagos">
+                    {premiumPacks.map(pack => (
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                        <PackCardV2 pack={pack} />
+                      </div>
+                    ))}
+                  </HorizontalCarousel>
+                )}
+
+                {premiumPacks.length > 0 && (
                   <HorizontalCarousel title="Premium & Exclusivos">
                     {premiumPacks.map(pack => (
                       <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
