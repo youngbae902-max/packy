@@ -42,7 +42,7 @@ function CardShell({ pack }: { pack: Pack }) {
 function HeroBanner({ pack }: { pack: Pack | undefined }) {
   if (!pack) return null;
   return (
-    <section className="relative w-full rounded-3xl overflow-hidden border border-white/5 bg-[hsl(0,0%,8%)] mb-10 aspect-[16/9] md:aspect-[21/9]">
+    <section className="relative w-full rounded-[28px] overflow-hidden border border-white/[0.06] bg-[#111] mb-10 aspect-[16/9] md:aspect-[21/9] shadow-2xl">
       {pack.cover_url ? (
         <img src={pack.cover_url} alt={pack.title} className="absolute inset-0 w-full h-full object-cover" />
       ) : (
@@ -51,7 +51,7 @@ function HeroBanner({ pack }: { pack: Pack | undefined }) {
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/10" />
       <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 gap-3 max-w-3xl">
         <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-foreground/70">
-          <Sparkles className="w-3.5 h-3.5" /> Destaque · {packTypeLabel[pack.pack_type] || pack.pack_type}
+          <Sparkles className="w-3.5 h-3.5" /> EM DESTAQUE · {packTypeLabel[pack.pack_type] || pack.pack_type}
         </div>
         <h1 className="text-2xl md:text-5xl font-black tracking-tight text-foreground leading-none">
           {pack.title}
@@ -65,7 +65,7 @@ function HeroBanner({ pack }: { pack: Pack | undefined }) {
             target="_blank" rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-foreground text-background font-bold px-5 py-2.5 text-sm hover:opacity-90 transition"
           >
-            <Download className="w-4 h-4" /> Baixar Agora
+            <Download className="w-4 h-4" /> {pack.is_premium ? `Comprar · R$ ${pack.price?.toFixed(2)}` : 'Baixar grátis'}
           </a>
           {pack.user_id && !pack.is_anonymous && (
             <Link
@@ -328,6 +328,13 @@ const Index = () => {
   const samples = useMemo(() => allPacks.filter(p => p.pack_type === 'samples').slice(0, 12), [allPacks]);
   const drumkits = useMemo(() => allPacks.filter(p => p.pack_type === 'drumkit').slice(0, 12), [allPacks]);
   const premiumFeatured = useMemo(() => premiumPacks.filter(p => p.is_premium).slice(0, 12), [premiumPacks]);
+  const marketplaceCategories = [
+    { label: 'Sample Packs', type: 'samples' },
+    { label: 'Drum Kits', type: 'drumkit' },
+    { label: 'Loops', type: 'loops' },
+    { label: 'Presets', type: 'presets' },
+    { label: 'Projetos', type: 'project' },
+  ];
 
   return (
     <div className="min-h-screen bg-[#0B0B0B] pb-20">
@@ -373,26 +380,27 @@ const Index = () => {
         )}
 
         {/* Search */}
-        <div className="mb-6 overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex gap-2 min-w-max px-1">
-            {[
-              ['Todos', '/packs'],
-              ['Sample Packs', '/packs?type=samples'],
-              ['Drum Kits', '/packs?type=drumkit'],
-              ['Loops', '/packs?type=loops'],
-              ['Presets', '/packs?type=presets'],
-              ['Acapellas', '#acapellas'],
-            ].map(([label, href], index) => (
-              <a
-                key={label}
-                href={href}
-                className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap border transition ${index === 0 ? 'bg-foreground text-background border-foreground' : 'bg-[#141414] text-foreground/70 border-white/5 hover:text-foreground hover:bg-[#191919]'}`}
-              >
-                {label}
-              </a>
-            ))}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-foreground/40">Marketplace</div>
+              <h2 className="text-xl md:text-2xl font-black tracking-tight mt-1">Encontre seu próximo som</h2>
+            </div>
+            <Link to="/packs" className="hidden sm:flex items-center gap-1 text-xs font-bold text-foreground/55 hover:text-foreground">Ver catálogo <ChevronRight className="w-3.5 h-3.5" /></Link>
           </div>
-        </div>
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1" style={{ scrollbarWidth: 'none' }}>
+            {marketplaceCategories.map((category, i) => (
+              <Link key={category.type} to={`/packs?type=${category.type}`} className={`shrink-0 rounded-xl border px-4 py-3 transition-all ${i === 0 ? 'bg-foreground text-background border-foreground' : 'bg-[#141414] border-white/5 text-foreground/70 hover:text-foreground hover:bg-[#191919]'}`}>
+                <span className="block text-sm font-black">{category.label}</span>
+                <span className="block text-[10px] font-medium mt-0.5 opacity-60">Explorar</span>
+              </Link>
+            ))}
+            <a href="#acapellas" className="shrink-0 rounded-xl border border-white/5 bg-[#141414] px-4 py-3 text-foreground/70 hover:text-foreground transition-all">
+              <span className="block text-sm font-black">Acapellas</span>
+              <span className="block text-[10px] font-medium mt-0.5 opacity-60">Explorar</span>
+            </a>
+          </div>
+        </section>
 
         <div className="relative mb-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
