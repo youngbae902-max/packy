@@ -60,7 +60,7 @@ const MCs = () => {
             {searchTerm ? 'Nenhum MC encontrado' : 'Nenhum MC disponível'}
           </p>
         ) : layout === 'grid' ? (
-          <div className="grid grid-cols-3 gap-x-10 gap-y-8 sm:grid-cols-4">
+          <div className="grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-4">
             {filtered.map((mc) => (
               <a
                 key={mc.id}
@@ -69,7 +69,7 @@ const MCs = () => {
                 rel="noreferrer"
                 className="group flex flex-col items-center gap-2.5"
               >
-                <div className="h-[120px] w-[120px] aspect-square overflow-hidden rounded-full border border-white/10 bg-[#1B1B1B] transition-transform group-hover:scale-105" data-mc-avatar="120px" data-lovable-sync="1">
+                <div className="h-[100px] w-[100px] aspect-square overflow-hidden rounded-full border border-white/10 bg-[#1B1B1B] transition-transform group-hover:scale-105" data-mc-avatar="100px" data-lovable-sync="1">
                   {mc.image_url ? (
                     <img src={mc.image_url} alt={mc.artist_name} className="h-full w-full object-cover" loading="lazy" />
                   ) : (
