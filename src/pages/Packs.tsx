@@ -225,34 +225,34 @@ const Packs = () => {
         {q.length === 0 && (
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-muted-foreground">
-              <Sparkles className="w-3.5 h-3.5" /> Descobrir
+              <Sparkles className="w-3 h-3" /> Descobrir
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
-                <h1 className="text-2xl md:text-3xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
-                <p className="text-sm text-muted-foreground mt-1">Descubra novos sons, packs e projetos.</p>
+                <h1 className="text-[25px] md:text-[30px] font-medium tracking-[-0.025em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
+                <p className="text-[13px] text-muted-foreground/90 mt-1">Descubra novos sons, packs e projetos.</p>
               </div>
-              <div className="flex w-full items-center justify-center gap-6">
+              <div className="flex w-full sm:w-auto items-center gap-1 rounded-xl border border-border/50 bg-secondary/40 p-1">
                 <button
                   onClick={() => setActiveTab('inicio')}
-                  className={`relative pb-2 text-sm font-semibold transition-colors ${activeTab === 'inicio' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  className={`relative px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${activeTab === 'inicio' ? 'text-foreground bg-foreground/10 shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}
                 >
                   Início
-                  {activeTab === 'inicio' && <span className="absolute bottom-0 left-0 right-0 h-px bg-foreground" />}
+                  
                 </button>
                 <button
                   onClick={() => setActiveTab('geral')}
-                  className={`relative pb-2 text-sm font-semibold transition-colors ${activeTab === 'geral' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  className={`relative px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${activeTab === 'geral' ? 'text-foreground bg-foreground/10 shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}
                 >
                   Packs Geral
-                  {activeTab === 'geral' && <span className="absolute bottom-0 left-0 right-0 h-px bg-foreground" />}
+                  
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-8 rounded-2xl overflow-hidden border border-border/50 bg-card"><HomeBannerCarousel /></div>}
+        {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden border border-border/40 bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
