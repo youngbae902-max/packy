@@ -337,7 +337,7 @@ const Packs = () => {
             {releases.visible && releasePacks.length > 0 && (
               <section>
                 <SectionHeading title={releases.title} />
-                
+                <PackGrid packs={releasePacks} />
               </section>
             )}
 
@@ -345,7 +345,7 @@ const Packs = () => {
               packs.length > 0 && (
                 <section key={section.id}>
                   <SectionHeading title={section.title === 'Acapellas' ? 'MCs' : section.title} />
-                  
+                  <PackGrid packs={packs} />
                 </section>
               )
             ))}
@@ -354,7 +354,7 @@ const Packs = () => {
               categories.map(category => (
                 <section key={category.id}>
                   <SectionHeading title={category.name} />
-                  
+                  <PackGrid packs={premiumPacks.slice(0, 8)} />
                 </section>
               ))
             ) : (
@@ -362,13 +362,13 @@ const Packs = () => {
                 {premiumPacks.length > 0 && (
                   <section>
                     <SectionHeading title="Premium & Exclusivos" />
-                    
+                    <PackGrid packs={premiumPacks} />
                   </section>
                 )}
                 {projectPacks.length > 0 && (
                   <section>
                     <SectionHeading title="Projetos e FLPs" />
-                    
+                    <PackGrid packs={projectPacks} />
                   </section>
                 )}
               </>
