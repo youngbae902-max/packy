@@ -226,18 +226,22 @@ const Packs = () => {
 
         {q.length === 0 && (
           <>
-            <div className="mb-5 w-full overflow-hidden rounded-[24px] border border-white/[0.06] bg-[#151515] px-5 py-6 md:px-7 md:py-7 shadow-[0_12px_40px_rgba(0,0,0,0.16)]">
-              <div className="flex min-w-0 items-start gap-3">
-                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/[0.07] border border-white/[0.06]">
-                  <Sparkles className="h-3.5 w-3.5 text-foreground/80" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Descobrir</p>
-                  <h1 className="mt-1.5 break-words text-[26px] md:text-[32px] font-medium leading-[1.05] tracking-[-0.035em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
-                  <p className="mt-2 max-w-md break-words text-[13px] leading-relaxed text-muted-foreground">Descubra novos sons, packs e projetos.</p>
-                </div>
+            <section className="mb-7 px-1 md:px-2">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/[0.07] border border-white/[0.08]">
+                  <Sparkles className="h-3 w-3 text-foreground/75" />
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Descobrir</span>
               </div>
-            </div>
+              <div className="min-w-0">
+                <h1 className="break-words text-[30px] md:text-[38px] font-medium leading-[1.02] tracking-[-0.045em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>
+                  Explore a PACKY
+                </h1>
+                <p className="mt-2 max-w-lg text-[13px] md:text-[14px] leading-relaxed text-muted-foreground">
+                  Descubra novos sons, packs e projetos.
+                </p>
+              </div>
+            </section>
           <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
