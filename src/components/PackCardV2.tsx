@@ -162,9 +162,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             {isFree ? (
               <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-green-500 bg-green-500 shrink-0" aria-label="Grátis" />
             ) : (
-              <span className="text-[11px] font-bold text-foreground/75 shrink-0">
-                R$ {pack.price?.toFixed(2)}
-              </span>
+              <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-yellow-400 bg-yellow-400 shrink-0" aria-label="Premium" />
             )}
           </div>
         </div>
