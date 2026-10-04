@@ -498,6 +498,27 @@ export default function Admin() {
             localStorage.setItem('admin_quick_order', JSON.stringify(ids));
           };
 
+          const [insightMode, setInsightMode] = useState<'conteudo' | 'engajamento' | 'comunidade'>('conteudo');
+          const insightSets = {
+            conteudo: [
+              { label: 'Packs', value: stats.totalPacks, icon: Package },
+              { label: 'Acapellas', value: stats.totalAcapellas, icon: Music },
+              { label: 'Pendentes', value: stats.pendingPacks + stats.pendingAcapellas, icon: Clock },
+            ],
+            engajamento: [
+              { label: 'Downloads', value: stats.totalDownloads, icon: BarChart3 },
+              { label: 'Curtidas', value: stats.totalLikes, icon: CheckCircle },
+              { label: 'Packs publicados', value: stats.totalPacks, icon: Package },
+            ],
+            comunidade: [
+              { label: 'Usuários', value: stats.totalUsers, icon: Users },
+              { label: 'Curtidas', value: stats.totalLikes, icon: CheckCircle },
+              { label: 'Downloads', value: stats.totalDownloads, icon: BarChart3 },
+            ],
+          } as const;
+          const insightItems = insightSets[insightMode];
+          const insightMax = Math.max(...insightItems.map(item => item.value), 1);
+
           return (
            <div className="admin-stats space-y-3">
              <div className="admin-stats-hero rounded-3xl border border-white/[0.07] bg-[#151515] p-5">
@@ -527,6 +548,68 @@ export default function Admin() {
                <div><p className="text-[11px] font-semibold">Fila de análise</p><p className="text-[10px] text-muted-foreground mt-0.5">Itens aguardando aprovação</p></div>
                <span className="shrink-0 rounded-full bg-white/[0.07] px-3 py-1.5 text-xs font-bold tabular-nums">{stats.pendingPacks + stats.pendingAcapellas}</span>
              </div>
+             <div className="rounded-2xl border border-white/[0.06] bg-[#151515] overflow-hidden">
+               <div className="px-4 py-3 border-b border-white/[0.05]">
+                 <div className="flex items-center justify-between gap-3">
+                   <div>
+                     <p className="text-[11px] font-semibold">Painel visual</p>
+                     <p className="text-[10px] text-muted-foreground mt-0.5">Toque para alternar os indicadores</p>
+                   </div>
+                   <BarChart3 className="w-4 h-4 text-muted-foreground" />
+                 </div>
+                 <div className="mt-3 flex gap-1 rounded-xl bg-white/[0.035] p-1">
+                   {([
+                     ['conteudo', 'Conteúdo'],
+                     ['engajamento', 'Engajamento'],
+                     ['comunidade', 'Comunidade'],
+                   ] as const).map(([id, label]) => (
+                     <button
+                       key={id}
+                       onClick={() => setInsightMode(id)}
+                       className={`flex-1 rounded-lg px-2 py-2 text-[9px] font-semibold transition-all ${insightMode === id ? 'bg-white text-black' : 'text-muted-foreground hover:text-foreground'}`}
+                     >
+                       {label}
+                     </button>
+                   ))}
+                 </div>
+               </div>
+               <div className="p-4 space-y-4">
+                 {insightItems.map((item, index) => {
+                   const Icon = item.icon;
+                   const percentage = Math.max(4, Math.round((item.value / insightMax) * 100));
+                   return (
+                     <div key={item.label}>
+                       <div className="flex items-center justify-between mb-1.5">
+                         <span className="flex items-center gap-2 text-[10px] font-medium text-muted-foreground">
+                           <Icon className="w-3.5 h-3.5" />
+                           {item.label}
+                         </span>
+                         <span className="text-[11px] font-bold tabular-nums">{item.value}</span>
+                       </div>
+                       <div className="h-2 rounded-full bg-white/[0.045] overflow-hidden">
+                         <div
+                           className="h-full rounded-full bg-foreground/80 transition-all duration-500"
+                           style={{ width: `${percentage}%` }}
+                         />
+                       </div>
+                     </div>
+                   );
+                 })}
+                 <div className="grid grid-cols-3 gap-2 pt-1">
+                   {[
+                     ['Fila', stats.pendingPacks + stats.pendingAcapellas],
+                     ['Packs', stats.totalPacks],
+                     ['Usuários', stats.totalUsers],
+                   ].map(([label, value]) => (
+                     <div key={label as string} className="rounded-xl bg-white/[0.035] border border-white/[0.045] p-2.5">
+                       <p className="text-[16px] font-black tabular-nums">{value}</p>
+                       <p className="mt-1 text-[8px] uppercase tracking-[0.1em] text-muted-foreground">{label}</p>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             </div>
+
              <div className="rounded-2xl border border-white/[0.06] bg-[#151515] overflow-hidden">
                <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05]">
                  <div><p className="text-[11px] font-semibold">Ações rápidas</p><p className="text-[10px] text-muted-foreground mt-0.5">Atalhos para tarefas frequentes</p></div>
