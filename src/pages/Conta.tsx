@@ -376,33 +376,8 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          {showFavoritesSection && <FavoritesSection />}
-          {showRepostsSection && <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-0">
-          <button onClick={() => setRepostedOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.03] transition-colors">
-            <div className="flex items-center gap-2">
-              <RotateCcw className="w-4 h-4 text-foreground/80" />
-              <span className="text-sm font-bold text-foreground">Republicados</span>
-              <span className="text-xs text-muted-foreground">({repostedPacks.length})</span>
-            </div>
-            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${repostedOpen ? 'rotate-180' : ''}`} />
-          </button>
-          {repostedOpen && (
-          <div className="px-3 pb-3 pt-1 max-h-[60vh] overflow-y-auto">
-            {repostedPacks.length === 0 ? (
-              <div className="p-6 text-center">
-                <RotateCcw className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">Nenhum pack republicado ainda</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {repostedPacks.map((pack: any) => <ProfilePackRow key={pack.id} pack={pack} hideActions />)}
-              </div>
-            )}
-          </div>
-          )}
-          </div>}
-        </div>
+        {showFavoritesSection && <FavoritesSection />}
+
         <div className="h-4" />
       </div>
 
