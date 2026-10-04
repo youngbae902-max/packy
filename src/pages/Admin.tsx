@@ -642,7 +642,7 @@ export default function Admin() {
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
-                className="flex-1"
+                className="admin-add-button flex-1"
                 onClick={() => {
                   if (mainTab === 'acapellas') setShowAcapellaModal(true);
                   else setShowPackModal(true);
@@ -864,7 +864,7 @@ export default function Admin() {
         {/* Albums Tab with Approval */}
         {mainTab === 'albuns' && (
           <div className="space-y-4">
-            <Button onClick={() => setShowAlbumModal(true)} className="w-full">
+            <Button onClick={() => setShowAlbumModal(true)} className="admin-add-button w-auto">
               <Plus className="w-4 h-4 mr-2" />Novo Álbum
             </Button>
 
@@ -1065,7 +1065,7 @@ export default function Admin() {
 
         {mainTab === 'paginas' && (
           <div className="space-y-4">
-            <Button onClick={() => setEditingPage({ id: '', title: '', slug: '', content: '', cover_url: '', icon_name: 'file', placement: 'home', is_active: true, display_order: 0 })} className="w-full">
+            <Button onClick={() => setEditingPage({ id: '', title: '', slug: '', content: '', cover_url: '', icon_name: 'file', placement: 'home', is_active: true, display_order: 0 })} className="admin-add-button w-auto">
               <Plus className="w-4 h-4 mr-2" />Nova aba personalizada
             </Button>
             {pages.map((page) => (
