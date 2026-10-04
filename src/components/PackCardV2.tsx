@@ -126,7 +126,7 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="pack-card-v2 group relative text-left w-full min-w-0 overflow-visible bg-transparent border border-white/[0.045] transition-transform duration-200 p-0 flex flex-col shadow-none md:hover:-translate-y-0.5"
+        className="pack-card-v2 group relative text-left w-full min-w-0 overflow-visible bg-transparent border border-white/[0.09] rounded-[16px] transition-transform duration-200 p-0 flex flex-col shadow-none md:hover:-translate-y-0.5"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         <div className="relative w-full aspect-square rounded-[14px] overflow-hidden bg-[#181818]">
