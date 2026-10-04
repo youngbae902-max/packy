@@ -401,8 +401,8 @@ export default function Admin() {
                   ))}
                 </div>
 
-                <div className="p-2">
-                  <div className="grid grid-cols-2 gap-1">
+                <div className="admin-nav-items p-2">
+                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
                     {visibleTabs.map(tab => (
                       <button
                         key={tab.id}
@@ -499,62 +499,54 @@ export default function Admin() {
           };
 
           return (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 gap-2.5">
-              {[
-                { label: 'Downloads', value: stats.totalDownloads },
-                { label: 'Curtidas', value: stats.totalLikes },
-                { label: 'Packs', value: stats.totalPacks },
-                { label: 'Acapellas', value: stats.totalAcapellas },
-                { label: 'Usuários', value: stats.totalUsers },
-                { label: 'Pendentes', value: stats.pendingPacks + stats.pendingAcapellas },
-              ].map(s => (
-                <div key={s.label} className="rounded-2xl bg-[#1C1C1C] border border-[#252525] p-4">
-                  <p className="text-2xl font-black text-foreground">{s.value}</p>
-                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">{s.label}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-4 border-t border-[#1E1E1E]">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Ações Rápidas</p>
-                <button
-                  onClick={() => setReorderQuick(v => !v)}
-                  className={`text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-colors ${reorderQuick ? 'bg-foreground text-background border-foreground' : 'bg-[#1C1C1C] text-muted-foreground border-[#252525] hover:text-foreground'}`}
-                >
-                  {reorderQuick ? 'Concluir' : 'Reordenar'}
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {ordered.map((a, i) => (
-                  <div key={a.id} className="flex items-center gap-1 rounded-xl bg-[#1C1C1C] border border-[#252525] hover:bg-[#232323] transition-colors overflow-hidden">
-                    {reorderQuick && (
-                      <button onClick={() => move(i, -1)} className="px-2 py-3 text-muted-foreground hover:text-foreground" aria-label="Mover para trás">
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                    )}
-                    <button
-                      onClick={reorderQuick ? undefined : a.onClick}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 text-foreground text-sm font-medium"
-                    >
-                      <a.icon className="w-4 h-4" />{a.label}
-                    </button>
-                    {reorderQuick && (
-                      <button onClick={() => move(i, 1)} className="px-2 py-3 text-muted-foreground hover:text-foreground" aria-label="Mover para frente">
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-[#1E1E1E]">
-              <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3">Aparência</p>
-              <AppLogoSettings />
-            </div>
-          </div>
+           <div className="admin-stats space-y-3">
+             <div className="admin-stats-hero rounded-3xl border border-white/[0.07] bg-[#151515] p-5">
+               <div className="flex items-start justify-between gap-4">
+                 <div>
+                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Downloads totais</p>
+                   <p className="mt-1 text-[38px] leading-none font-black tracking-[-0.05em] tabular-nums">{stats.totalDownloads}</p>
+                   <p className="mt-2 text-[11px] text-muted-foreground">Visão geral da atividade do site</p>
+                 </div>
+                 <div className="h-10 w-10 shrink-0 rounded-2xl bg-white/[0.06] flex items-center justify-center"><BarChart3 className="h-4 w-4 text-foreground/80" /></div>
+               </div>
+             </div>
+             <div className="grid grid-cols-2 gap-2">
+               {[
+                 { label: 'Curtidas', value: stats.totalLikes },
+                 { label: 'Packs', value: stats.totalPacks },
+                 { label: 'Acapellas', value: stats.totalAcapellas },
+                 { label: 'Usuários', value: stats.totalUsers },
+               ].map(s => (
+                 <div key={s.label} className="rounded-2xl border border-white/[0.06] bg-[#151515] px-4 py-3.5">
+                   <p className="text-[21px] leading-none font-black tabular-nums">{s.value}</p>
+                   <p className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{s.label}</p>
+                 </div>
+               ))}
+             </div>
+             <div className="rounded-2xl border border-white/[0.06] bg-[#151515] px-4 py-3 flex items-center justify-between gap-3">
+               <div><p className="text-[11px] font-semibold">Fila de análise</p><p className="text-[10px] text-muted-foreground mt-0.5">Itens aguardando aprovação</p></div>
+               <span className="shrink-0 rounded-full bg-white/[0.07] px-3 py-1.5 text-xs font-bold tabular-nums">{stats.pendingPacks + stats.pendingAcapellas}</span>
+             </div>
+             <div className="rounded-2xl border border-white/[0.06] bg-[#151515] overflow-hidden">
+               <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05]">
+                 <div><p className="text-[11px] font-semibold">Ações rápidas</p><p className="text-[10px] text-muted-foreground mt-0.5">Atalhos para tarefas frequentes</p></div>
+                 <button onClick={() => setReorderQuick(v => !v)} className={`text-[10px] font-semibold px-2.5 py-1.5 rounded-full border transition-colors ${reorderQuick ? 'bg-foreground text-background border-foreground' : 'bg-white/[0.04] text-muted-foreground border-white/[0.07] hover:text-foreground'}`}>{reorderQuick ? 'Concluir' : 'Reordenar'}</button>
+               </div>
+               <div className="p-2 grid grid-cols-2 gap-1.5">
+                 {ordered.map((a, i) => (
+                   <div key={a.id} className="flex items-center rounded-xl bg-white/[0.035] border border-white/[0.045] overflow-hidden">
+                     {reorderQuick && <button onClick={() => move(i, -1)} className="px-2 py-2.5 text-muted-foreground" aria-label="Mover para trás"><ChevronLeft className="w-4 h-4" /></button>}
+                     <button onClick={reorderQuick ? undefined : a.onClick} className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 px-2 text-[11px] font-semibold truncate"><a.icon className="w-3.5 h-3.5 shrink-0" />{a.label}</button>
+                     {reorderQuick && <button onClick={() => move(i, 1)} className="px-2 py-2.5 text-muted-foreground" aria-label="Mover para frente"><ChevronRight className="w-3.5 h-3.5" /></button>}
+                   </div>
+                 ))}
+               </div>
+             </div>
+             <div className="rounded-2xl border border-white/[0.06] bg-[#151515] overflow-hidden">
+               <div className="px-4 py-3 border-b border-white/[0.05]"><p className="text-[11px] font-semibold">Aparência</p><p className="text-[10px] text-muted-foreground mt-0.5">Identidade visual do site</p></div>
+               <div className="p-3"><AppLogoSettings /></div>
+             </div>
+           </div>
           );
         })()}
 
@@ -1157,8 +1149,8 @@ export default function Admin() {
         )}
 
         {mainTab === 'decoracoes' && (
-          <div className="space-y-4">
-            <Card className="p-5 rounded-3xl border-border/50 bg-card space-y-4">
+          <div className="admin-wallet space-y-3">
+            <Card className="p-4 rounded-3xl border-white/[0.06] bg-[#151515] space-y-3">
               <div>
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
@@ -1242,8 +1234,8 @@ export default function Admin() {
               </div>
             </Card>
 
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-2">
-              <h3 className="font-bold text-sm">Saldos atuais</h3>
+            <Card className="p-3 rounded-3xl border-white/[0.06] bg-[#151515] space-y-2">
+              <div className="flex items-center justify-between"><h3 className="font-bold text-sm">Saldos atuais</h3><span className="text-[10px] text-muted-foreground">{users?.length || 0} contas</span></div>
               <div className="max-h-96 overflow-y-auto space-y-1">
                 {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
                   <button
