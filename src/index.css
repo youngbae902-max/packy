@@ -112,6 +112,13 @@
 
   button, a { transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1), background-color 200ms, color 200ms, opacity 200ms; }
   button:active { transform: scale(0.97); }
+
+  /* Iconografia geral: traço fino e arredondado, inspirada no SF Symbols/iOS */
+  svg.lucide {
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 }
 
 img.apple-emoji {
