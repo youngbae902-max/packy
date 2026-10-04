@@ -40,3 +40,130 @@
 .read-the-docs {
   color: #888;
 }
+
+
+/* PACKY — Conta: visual refresh */
+.account-page {
+  --account-surface: rgba(255,255,255,.045);
+  --account-surface-strong: rgba(255,255,255,.065);
+  --account-line: rgba(255,255,255,.075);
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255,255,255,.07), transparent 38%),
+    #0b0b0d !important;
+  color: #f5f5f7;
+}
+
+.account-page > .bg-gradient-to-b {
+  background: transparent !important;
+  padding-top: 18px !important;
+  padding-bottom: 48px !important;
+}
+
+.account-page > .bg-gradient-to-b > .max-w-lg {
+  max-width: 560px !important;
+}
+
+.account-page .relative.mb-4.w-32.h-32 {
+  margin-bottom: 18px !important;
+  width: 116px !important;
+  height: 116px !important;
+}
+
+.account-page .relative.mb-4.w-32.h-32 > button {
+  width: 116px !important;
+  height: 116px !important;
+  border: 3px solid rgba(255,255,255,.10) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,.35);
+}
+
+.account-page h2.text-3xl {
+  font-size: 28px !important;
+  letter-spacing: -.04em !important;
+}
+
+.account-page .flex.gap-3 > a {
+  width: 38px !important;
+  height: 38px !important;
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(255,255,255,.08) !important;
+  backdrop-filter: blur(14px);
+}
+
+.account-page .max-w-lg > .space-y-4 > div,
+.account-page .max-w-lg > div[class*="rounded"] {
+  border-color: var(--account-line) !important;
+  background: var(--account-surface) !important;
+  box-shadow: 0 10px 35px rgba(0,0,0,.16);
+  backdrop-filter: blur(18px);
+}
+
+.account-page .fixed.inset-0.z-40 {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(255,255,255,.06), transparent 35%),
+    #0b0b0d !important;
+}
+
+.account-page .fixed.inset-0.z-40 > .max-w-lg {
+  max-width: 560px !important;
+  padding-top: 18px !important;
+}
+
+.account-page .fixed.inset-0.z-40 .rounded-2xl,
+.account-page .fixed.inset-0.z-40 .rounded-xl {
+  border-color: var(--account-line) !important;
+}
+
+.account-page .fixed.inset-0.z-40 .bg-card {
+  background: var(--account-surface) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,.2);
+  backdrop-filter: blur(18px);
+}
+
+.account-page .fixed.inset-0.z-40 button.w-full,
+.account-page .fixed.inset-0.z-40 [role="button"] {
+  transition: background .18s ease, transform .18s ease;
+}
+
+.account-page .fixed.inset-0.z-40 button.w-full:active {
+  transform: scale(.985);
+}
+
+.account-page .fixed.inset-0.z-40 input,
+.account-page .fixed.inset-0.z-40 textarea {
+  background: rgba(255,255,255,.045) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+.account-page .fixed.inset-0.z-40 h1 {
+  font-size: 18px !important;
+  letter-spacing: -.025em;
+}
+
+.account-page .fixed.inset-0.z-40 .border-border\/40 {
+  border-color: var(--account-line) !important;
+}
+
+.account-page .fixed.inset-0.z-40 .bg-secondary {
+  background: var(--account-surface-strong) !important;
+}
+
+.account-page .fixed.inset-0.z-40 .grid {
+  gap: 10px !important;
+}
+
+@media (max-width: 640px) {
+  .account-page {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .account-page > .bg-gradient-to-b {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .account-page .fixed.inset-0.z-40 > .max-w-lg {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
