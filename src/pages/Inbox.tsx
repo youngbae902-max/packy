@@ -48,29 +48,6 @@ export default function Inbox() {
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-lg mx-auto px-4 pt-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center relative">
-              <InboxIcon className="w-5 h-5 text-primary" />
-              {hasUnread && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" />
-              )}
-            </div>
-            <div>
-              <h1 className="text-xl font-bold">Caixa de Entrada</h1>
-              <p className="text-xs text-muted-foreground">
-                {hasUnread ? 'Novas mensagens' : 'Tudo lido'}
-              </p>
-            </div>
-          </div>
-          {hasUnread && (
-            <Button size="sm" variant="outline" onClick={() => markAllAsRead()}>
-              <CheckCheck className="w-4 h-4 mr-1" />
-              Ler tudo
-            </Button>
-          )}
-        </div>
-
         {!user ? (
           <Card className="text-center py-12">
             <InboxIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
