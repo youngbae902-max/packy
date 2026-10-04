@@ -1,5 +1,6 @@
 import { ChevronLeft } from 'lucide-react';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
 import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon, ChevronRight, } from 'lucide-react';
@@ -167,11 +168,11 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       </button>
 
       {/* Details Bottom Sheet */}
-      {showDetails && (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => { setShowDetails(false); setSheetTab('info'); }}>
+      {showDetails && createPortal((
+        <div className="fixed inset-0 z-[9999] flex items-end justify-center" onClick={() => { setShowDetails(false); setSheetTab('info'); }}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
-            className={`relative w-full ${sheetTab === 'comments' ? 'h-[100dvh] max-w-none rounded-none border-0 p-4 pt-5 flex flex-col' : 'max-w-lg rounded-t-2xl border-t border-[#252525] p-5 pb-8'} bg-[#101010] animate-in slide-in-from-bottom duration-300`}
+            className={`relative w-full max-h-[100dvh] overflow-hidden ${sheetTab === 'comments' ? 'h-[100dvh] max-w-none rounded-none border-0 p-4 pt-5 flex flex-col' : 'max-w-lg max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-t-2xl border-t border-[#252525] p-5 pb-8'} bg-[#101010] animate-in slide-in-from-bottom duration-300`}
             onClick={e => e.stopPropagation()}
           >
             <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
@@ -375,7 +376,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             )}
           </div>
         </div>
-      )}
+      ), document.body)}
 
       {showCreditFlow && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
