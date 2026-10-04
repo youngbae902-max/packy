@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Plus, Settings, Instagram, MoreVertical, Search,
+  Plus, Settings, Instagram, MoreVertical, Search, LogOut,
   Flame, Sparkles, Download, ChevronRight, Users, Play, Star, TrendingUp
 } from 'lucide-react';
 import { Header } from '@/components/Header';
@@ -284,7 +284,7 @@ const Index = () => {
 
   const { approvedPacks, premiumPacks, isLoading, addPack } = useSupabasePacks();
   const { activeEvents } = useSiteEvents();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user, profile, signOut } = useAuth();
   const { data: customSections = [] } = useHomeSectionsWithPacks();
 
   const allPacks = useMemo(() => {
@@ -357,6 +357,31 @@ const Index = () => {
                 sideOffset={10}
                 className="w-52 rounded-2xl border border-white/[0.08] bg-[#151515]/95 backdrop-blur-xl p-1.5 shadow-[0_18px_50px_rgba(0,0,0,0.45)]"
               >
+                {user && (
+                  <>
+                    <Link
+                      to="/conta"
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 mb-1 hover:bg-white/[0.06] transition-colors"
+                    >
+                      <Avatar className="w-10 h-10 shrink-0 ring-1 ring-white/[0.08]">
+                        <AvatarImage src={profile?.avatar_url || undefined} />
+                        <AvatarFallback className="bg-[#222222] text-[12px] font-semibold text-foreground/80">
+                          {(profile?.artist_name || profile?.username || user.email || 'U').slice(0, 1).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="min-w-0 flex-1 flex flex-col gap-0.5">
+                        <span className="text-[13px] font-semibold text-foreground truncate">
+                          {profile?.artist_name || profile?.username || user.email?.split('@')[0] || 'Sua conta'}
+                        </span>
+                        <span className="flex items-center gap-1.5 text-[10px] text-foreground/45">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.65)]" />
+                          Ativo
+                        </span>
+                      </span>
+                    </Link>
+                    <div className="h-px bg-white/[0.06] mx-2 my-1" />
+                  </>
+                )}
                 <DropdownMenuItem
                   onClick={() => setIsModalOpen(true)}
                   className="group gap-3 rounded-xl px-3 py-3 text-foreground/90 focus:bg-white/[0.07] focus:text-foreground cursor-pointer outline-none"
@@ -369,6 +394,20 @@ const Index = () => {
                     <span className="text-[10px] text-foreground/40">Compartilhe um novo som</span>
                   </span>
                 </DropdownMenuItem>
+                {user && (
+                  <DropdownMenuItem
+                    onClick={() => void signOut()}
+                    className="group gap-3 rounded-xl px-3 py-3 text-red-400 focus:bg-red-500/10 focus:text-red-300 cursor-pointer outline-none"
+                  >
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-red-500/[0.08] border border-red-500/[0.08] group-focus:bg-red-500/[0.12] transition-colors">
+                      <LogOut className="w-4 h-4" />
+                    </span>
+                    <span className="flex flex-col gap-0.5">
+                      <span className="text-[13px] font-semibold">Sair da conta</span>
+                      <span className="text-[10px] text-red-300/45">Encerrar sessão neste dispositivo</span>
+                    </span>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
