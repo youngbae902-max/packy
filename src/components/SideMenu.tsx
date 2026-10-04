@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
-import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic, LogOut } from 'lucide-react';
+import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface SideMenuProps {
@@ -22,7 +21,6 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
     { to: '/desejos', icon: Star, label: 'Lista de desejos' },
   ];
 
-  // "Up" — só para usuários logados (biblioteca privada)
   const items = user
     ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Projetos' }]
     : baseItems;
@@ -81,24 +79,13 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
           )}
         </nav>
 
-
         <div className="px-4 py-4 border-t border-border/40 space-y-2">
           {user && (
             <button
               type="button"
               onClick={() => { void signOut(); onClose(); }}
-              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors text-left"
-            >
-              <LogOut className="w-[18px] h-[18px] shrink-0" />
-              <span className="text-sm font-medium">Sair da conta</span>
-            </button>
-          )}
-          <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
-          {user && (
-            <Link
-              to="/conta"
-              onClick={onClose}
-              className="flex items-center gap-3 rounded-2xl px-3 py-3 bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] transition-colors"
+              className="w-full flex items-center gap-3 rounded-2xl px-3 py-3 bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] transition-colors text-left"
+              aria-label="Sair da conta"
             >
               <Avatar className="w-10 h-10 shrink-0 ring-1 ring-white/[0.08]">
                 <AvatarImage src={profile?.avatar_url || undefined} />
@@ -112,11 +99,12 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 </span>
                 <span className="flex items-center gap-1.5 mt-0.5 text-[10px] text-foreground/45">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.6)]" />
-                  Ativo
+                  Ativo · tocar para sair
                 </span>
               </span>
-            </Link>
+            </button>
           )}
+          <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
         </div>
       </aside>
     </div>
