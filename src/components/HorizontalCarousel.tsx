@@ -43,7 +43,7 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
       
       <div 
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory scroll-smooth px-2"
+        className="flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-3 px-2 snap-x snap-mandatory scroll-smooth"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {children}
