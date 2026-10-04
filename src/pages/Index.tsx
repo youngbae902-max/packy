@@ -352,9 +352,22 @@ const Index = () => {
                   <MoreVertical className="w-[18px] h-[18px]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-[#1C1C1C] border-[#1E1E1E]">
-                <DropdownMenuItem onClick={() => setIsModalOpen(true)} className="gap-2">
-                  <Plus className="w-4 h-4" /> Novo pack
+              <DropdownMenuContent
+                align="end"
+                sideOffset={10}
+                className="w-52 rounded-2xl border border-white/[0.08] bg-[#151515]/95 backdrop-blur-xl p-1.5 shadow-[0_18px_50px_rgba(0,0,0,0.45)]"
+              >
+                <DropdownMenuItem
+                  onClick={() => setIsModalOpen(true)}
+                  className="group gap-3 rounded-xl px-3 py-3 text-foreground/90 focus:bg-white/[0.07] focus:text-foreground cursor-pointer outline-none"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/[0.07] border border-white/[0.06] group-focus:bg-white/[0.10] transition-colors">
+                    <Plus className="w-4 h-4" />
+                  </span>
+                  <span className="flex flex-col gap-0.5">
+                    <span className="text-[13px] font-semibold">Novo pack</span>
+                    <span className="text-[10px] text-foreground/40">Compartilhe um novo som</span>
+                  </span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
