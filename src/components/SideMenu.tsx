@@ -100,7 +100,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
                   {profile?.artist_name || profile?.username || user.email?.split('@')[0] || 'Sua conta'}
                 </span>
                 <span className="flex items-center gap-1.5 mt-0.5 text-[10px] text-foreground/45">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.6)]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#34C759]" />
                   Ativo
                 </span>
               </span>
