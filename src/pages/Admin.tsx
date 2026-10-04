@@ -349,19 +349,15 @@ export default function Admin() {
   return (
     <div className="admin-scope min-h-screen bg-background pb-8">
       <div className="max-w-2xl mx-auto px-4 py-6">
-        {/* ADM header */}
-        <div className="admin-header mb-4">
-          <Link to="/conta" aria-label="Voltar" className="admin-back">
-            <ChevronLeft className="w-4 h-4" />
+        {/* Top bar */}
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/conta" aria-label="Voltar" className="flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-[#171717] transition-colors">
+            <ChevronLeft className="w-5 h-5" />
           </Link>
-          <div className="admin-header-title">
-            <div className="admin-live-dot" />
-            <div>
-              <p className="admin-eyebrow">PACKY</p>
-              <h1>Admin</h1>
-            </div>
+          <div className="flex flex-col items-center">
+            <h1 className="text-base font-black uppercase tracking-wider">adm</h1>
           </div>
-          <div className="admin-header-chip">LIVE</div>
+          <div className="w-16" />
         </div>
 
         {/* Admin navigation */}
@@ -430,14 +426,14 @@ export default function Admin() {
           );
         })()}
 
-        {/* Stats / Overview */}
+        {/* Stats Tab */}
         {mainTab === 'stats' && (() => {
           const quickActions = [
-            { id: 'pack', icon: Plus, label: 'Novo pack', onClick: () => setShowPackModal(true) },
+            { id: 'pack', icon: Plus, label: 'Pack', onClick: () => setShowPackModal(true) },
             { id: 'premium', icon: Crown, label: 'Premium', onClick: () => setShowPremiumPackModal(true) },
             { id: 'acapella', icon: Mic, label: 'Acapella', onClick: () => setShowAcapellaModal(true) },
-            { id: 'giftall', icon: Send, label: 'Gift all', onClick: () => setMainTab('giftall') },
-            { id: 'capas', icon: ImageIcon, label: 'Capas', onClick: () => setShowBulkCovers(true) },
+            { id: 'giftall', icon: Send, label: 'Gift All', onClick: () => setMainTab('giftall') },
+            { id: 'capas', icon: ImageIcon, label: 'Capas em massa', onClick: () => setShowBulkCovers(true) },
             {
               id: 'links',
               icon: LinkIcon,
@@ -445,10 +441,20 @@ export default function Admin() {
               onClick: async () => {
                 const all = [...allApprovedPacks, ...pendingPacks, ...projectPacks, ...pendingProjectPacks];
                 const seen = new Set<string>();
-                const lines = all.filter(p => p.download_url && !seen.has(p.id) && seen.add(p.id)).map(p => `${p.title} - ${p.download_url}`);
-                if (!lines.length) { toast.error('Nenhum link encontrado'); return; }
-                try { await navigator.clipboard.writeText(lines.join('\n')); } catch {
-                  const ta=document.createElement('textarea'); ta.value=lines.join('\n'); document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+                const lines = all
+                  .filter(p => p.download_url && !seen.has(p.id) && seen.add(p.id))
+                  .map(p => `${p.title} - ${p.download_url}`);
+                if (lines.length === 0) { toast.error('Nenhum link encontrado'); return; }
+                const text = lines.join('\n');
+                try {
+                  await navigator.clipboard.writeText(text);
+                } catch {
+                  const ta = document.createElement('textarea');
+                  ta.value = text;
+                  document.body.appendChild(ta);
+                  ta.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(ta);
                 }
                 toast.success(`${lines.length} link(s) copiado(s)`);
               },
@@ -456,124 +462,91 @@ export default function Admin() {
             {
               id: 'renomear',
               icon: Edit2,
-              label: 'Renomear',
+              label: 'Renomear packs',
               onClick: async () => {
                 const prefix = window.prompt('Prefixo (ex: DRUM KIT). Deixe vazio para remover.');
                 if (prefix === null) return;
                 const emoji = window.prompt('Emoji do final (ex: 🔥). Deixe vazio para nenhum.') || '';
-                const all=[...allApprovedPacks,...pendingPacks]; let ok=0;
-                for(const p of all){
-                  let base=(p.title||'').trim().replace(/^[^|]+|\s*/,'').replace(/\s+[\p{Emoji_Presentation}\p{Extended_Pictographic}]+\s*$/u,'').trim();
-                  const title=[prefix.trim()?prefix.trim()+` | ${base}`:base,emoji.trim()].filter(Boolean).join(' ');
-                  const {error}=await supabase.from('packs').update({title}).eq('id',p.id); if(!error) ok++;
+                const all = [...allApprovedPacks, ...pendingPacks];
+                let ok = 0;
+                for (const p of all) {
+                  let base = (p.title || '').trim();
+                  base = base.replace(/^[^|]+\|\s*/, '');
+                  base = base.replace(/\s+[\p{Emoji_Presentation}\p{Extended_Pictographic}]+\s*$/u, '').trim();
+                  const composed = [
+                    prefix.trim() ? `${prefix.trim()} | ${base}` : base,
+                    emoji.trim(),
+                  ].filter(Boolean).join(' ');
+                  const { error } = await supabase.from('packs').update({ title: composed }).eq('id', p.id);
+                  if (!error) ok++;
                 }
                 toast.success(`${ok} pack(s) renomeado(s)`);
               },
             },
           ];
-          const ordered=[
-            ...quickOrder.map(id=>quickActions.find(a=>a.id===id)).filter(Boolean),
-            ...quickActions.filter(a=>!quickOrder.includes(a.id)),
+          const ordered = [
+            ...quickOrder.map(id => quickActions.find(a => a.id === id)).filter(Boolean),
+            ...quickActions.filter(a => !quickOrder.includes(a.id)),
           ] as typeof quickActions;
-          const move=(index:number,dir:-1|1)=>{
-            const ids=ordered.map(a=>a.id), target=index+dir;
-            if(target<0||target>=ids.length)return;
-            [ids[index],ids[target]]=[ids[target],ids[index]];
-            setQuickOrder(ids); localStorage.setItem('admin_quick_order',JSON.stringify(ids));
+
+          const move = (index: number, dir: -1 | 1) => {
+            const ids = ordered.map(a => a.id);
+            const target = index + dir;
+            if (target < 0 || target >= ids.length) return;
+            [ids[index], ids[target]] = [ids[target], ids[index]];
+            setQuickOrder(ids);
+            localStorage.setItem('admin_quick_order', JSON.stringify(ids));
           };
-          const metrics=[
-            {label:'Curtidas',value:stats.totalLikes,icon:'♡'},
-            {label:'Packs',value:stats.totalPacks,icon:'◫'},
-            {label:'Acapellas',value:stats.totalAcapellas,icon:'◉'},
-            {label:'Usuários',value:stats.totalUsers,icon:'♙'},
-          ];
+
           return (
-            <div className="admin-dashboard">
-              <div className="admin-dashboard-tabs">
-                <button className="is-active" onClick={()=>{setAdminCategory('visao');setMainTab('stats')}}>Overview</button>
-                <button onClick={()=>{setAdminCategory('visao');setMainTab('home')}}>Home</button>
-                <button onClick={()=>{setAdminCategory('conteudo');setMainTab('pendentes')}}>Insights</button>
-                <button onClick={()=>{setAdminCategory('comunidade');setMainTab('usuarios')}}>Community</button>
-              </div>
-
-              <div className="admin-insight-grid">
-                <div className="admin-insight-card admin-insight-main">
-                  <div className="admin-card-label"><BarChart3 className="w-3.5 h-3.5"/> Downloads</div>
-                  <div className="admin-big-number">{stats.totalDownloads}</div>
-                  <div className="admin-card-note">atividade total da plataforma</div>
-                  <div className="admin-sparkline">
-                    {[18,27,22,34,30,46,39,55,48,68,62,76].map((h,i)=><span key={i} style={{height:`${h}%`}}/>)}
-                  </div>
-                </div>
-
-                <div className="admin-insight-card">
-                  <div className="admin-card-label"><Users className="w-3.5 h-3.5"/> Usuários</div>
-                  <div className="admin-card-number">{stats.totalUsers}</div>
-                  <div className="admin-card-note">contas na plataforma</div>
-                  <div className="admin-mini-line"><span style={{width:'72%'}}/></div>
-                </div>
-
-                <div className="admin-insight-card">
-                  <div className="admin-card-label"><Package className="w-3.5 h-3.5"/> Conteúdo</div>
-                  <div className="admin-card-number">{stats.totalPacks}</div>
-                  <div className="admin-card-note">packs publicados</div>
-                  <div className="admin-mini-line"><span style={{width:'84%'}}/></div>
-                </div>
-
-                <div className="admin-insight-card">
-                  <div className="admin-card-label"><Clock className="w-3.5 h-3.5"/> Fila</div>
-                  <div className="admin-card-number">{stats.pendingPacks + stats.pendingAcapellas}</div>
-                  <div className="admin-card-note">itens esperando análise</div>
-                  <div className="admin-status-pill">{stats.pendingPacks + stats.pendingAcapellas > 0 ? 'Atenção' : 'Tudo certo'}</div>
-                </div>
-
-                <div className="admin-insight-card">
-                  <div className="admin-card-label"><Music className="w-3.5 h-3.5"/> Acapellas</div>
-                  <div className="admin-card-number">{stats.totalAcapellas}</div>
-                  <div className="admin-card-note">arquivos publicados</div>
-                </div>
-              </div>
-
-              <div className="admin-section-heading">
-                <div><span>Engagement</span><small>Visão rápida</small></div>
-              </div>
-
-              <div className="admin-metric-row">
-                {metrics.slice(0,3).map(m=>(
-                  <div key={m.label} className="admin-metric">
-                    <span className="admin-metric-icon">{m.icon}</span>
-                    <b>{m.value}</b>
-                    <small>{m.label}</small>
-                  </div>
-                ))}
-              </div>
-
-              <div className="admin-quick-panel">
-                <div className="admin-panel-head">
-                  <div><b>Ações rápidas</b><small>Ferramentas frequentes</small></div>
-                  <button className="admin-reorder-pill" onClick={()=>setReorderQuick(v=>!v)}>{reorderQuick?'Concluir':'Editar'}</button>
-                </div>
-                <div className="admin-quick-grid">
-                  {ordered.map((a,i)=>(
-                    <div key={a.id} className="admin-quick-item">
-                      {reorderQuick && <button onClick={()=>move(i,-1)}><ChevronLeft className="w-3.5 h-3.5"/></button>}
-                      <button onClick={reorderQuick?undefined:a.onClick}><a.icon className="w-4 h-4"/><span>{a.label}</span></button>
-                      {reorderQuick && <button onClick={()=>move(i,1)}><ChevronRight className="w-3.5 h-3.5"/></button>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="admin-report-card">
-                <div><FileText className="w-4 h-4"/><div><b>Insight report</b><small>Resumo da atividade do Packy</small></div></div>
-                <button onClick={()=>toast.success('Relatório em preparação')}><ChevronRight className="w-4 h-4"/></button>
-              </div>
-
-              <div className="admin-section-heading admin-appearance-heading">
-                <div><span>Aparência</span><small>Identidade visual do site</small></div>
-              </div>
-              <div className="admin-appearance-card"><AppLogoSettings /></div>
-            </div>
+           <div className="admin-stats space-y-3">
+             <div className="admin-stats-hero rounded-3xl border border-white/[0.07] bg-[#151515] p-5">
+               <div className="flex items-start justify-between gap-4">
+                 <div>
+                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Downloads totais</p>
+                   <p className="mt-1 text-[38px] leading-none font-black tracking-[-0.05em] tabular-nums">{stats.totalDownloads}</p>
+                   <p className="mt-2 text-[11px] text-muted-foreground">Visão geral da atividade do site</p>
+                 </div>
+                 <div className="h-10 w-10 shrink-0 rounded-2xl bg-white/[0.06] flex items-center justify-center"><BarChart3 className="h-4 w-4 text-foreground/80" /></div>
+               </div>
+             </div>
+             <div className="grid grid-cols-2 gap-2">
+               {[
+                 { label: 'Curtidas', value: stats.totalLikes },
+                 { label: 'Packs', value: stats.totalPacks },
+                 { label: 'Acapellas', value: stats.totalAcapellas },
+                 { label: 'Usuários', value: stats.totalUsers },
+               ].map(s => (
+                 <div key={s.label} className="rounded-2xl border border-white/[0.06] bg-[#151515] px-4 py-3.5">
+                   <p className="text-[21px] leading-none font-black tabular-nums">{s.value}</p>
+                   <p className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{s.label}</p>
+                 </div>
+               ))}
+             </div>
+             <div className="rounded-2xl border border-white/[0.06] bg-[#151515] px-4 py-3 flex items-center justify-between gap-3">
+               <div><p className="text-[11px] font-semibold">Fila de análise</p><p className="text-[10px] text-muted-foreground mt-0.5">Itens aguardando aprovação</p></div>
+               <span className="shrink-0 rounded-full bg-white/[0.07] px-3 py-1.5 text-xs font-bold tabular-nums">{stats.pendingPacks + stats.pendingAcapellas}</span>
+             </div>
+             <div className="rounded-2xl border border-white/[0.06] bg-[#151515] overflow-hidden">
+               <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05]">
+                 <div><p className="text-[11px] font-semibold">Ações rápidas</p><p className="text-[10px] text-muted-foreground mt-0.5">Atalhos para tarefas frequentes</p></div>
+                 <button onClick={() => setReorderQuick(v => !v)} className={`text-[10px] font-semibold px-2.5 py-1.5 rounded-full border transition-colors ${reorderQuick ? 'bg-foreground text-background border-foreground' : 'bg-white/[0.04] text-muted-foreground border-white/[0.07] hover:text-foreground'}`}>{reorderQuick ? 'Concluir' : 'Reordenar'}</button>
+               </div>
+               <div className="p-2 grid grid-cols-2 gap-1.5">
+                 {ordered.map((a, i) => (
+                   <div key={a.id} className="flex items-center rounded-xl bg-white/[0.035] border border-white/[0.045] overflow-hidden">
+                     {reorderQuick && <button onClick={() => move(i, -1)} className="px-2 py-2.5 text-muted-foreground" aria-label="Mover para trás"><ChevronLeft className="w-4 h-4" /></button>}
+                     <button onClick={reorderQuick ? undefined : a.onClick} className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 px-2 text-[11px] font-semibold truncate"><a.icon className="w-3.5 h-3.5 shrink-0" />{a.label}</button>
+                     {reorderQuick && <button onClick={() => move(i, 1)} className="px-2 py-2.5 text-muted-foreground" aria-label="Mover para frente"><ChevronRight className="w-3.5 h-3.5" /></button>}
+                   </div>
+                 ))}
+               </div>
+             </div>
+             <div className="rounded-2xl border border-white/[0.06] bg-[#151515] overflow-hidden">
+               <div className="px-4 py-3 border-b border-white/[0.05]"><p className="text-[11px] font-semibold">Aparência</p><p className="text-[10px] text-muted-foreground mt-0.5">Identidade visual do site</p></div>
+               <div className="p-3"><AppLogoSettings /></div>
+             </div>
+           </div>
           );
         })()}
 
