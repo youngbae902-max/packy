@@ -30,7 +30,8 @@ const Packs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'inicio' | 'geral' | 'pagos'>('inicio');
-  const popupRef = useRef<HTMLDivElement>(null);
+  const desktopPopupRef = useRef<HTMLDivElement>(null);
+  const mobilePopupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, isLoading } = useSupabasePacks();
   const { acapellas, isLoading: acapellasLoading } = useAcapellas();
@@ -62,7 +63,10 @@ const Packs = () => {
   useEffect(() => {
     if (!popupOpen) return;
     const onClick = (e: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+      if (
+        desktopPopupRef.current && !desktopPopupRef.current.contains(e.target as Node) &&
+        mobilePopupRef.current && !mobilePopupRef.current.contains(e.target as Node)
+      ) {
         setPopupOpen(false);
       }
     };
@@ -103,7 +107,7 @@ const Packs = () => {
     <div className="min-h-screen bg-background text-foreground pb-20 md:pb-8">
       {/* Search Header for Desktop */}
       <header className="hidden md:flex sticky top-0 z-30 bg-background/90 backdrop-blur-xl border-b border-border/40 px-8 py-4 items-center justify-between gap-6">
-        <div className="flex-1 max-w-2xl relative" ref={popupRef}>
+        <div className="flex-1 max-w-2xl relative" ref={desktopPopupRef}>
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <input
             type="text"
@@ -206,7 +210,7 @@ const Packs = () => {
         </header>
 
         {/* Mobile Search */}
-        <div className="flex items-center gap-2 mt-7 mb-7 relative" ref={popupRef}>
+        <div className="flex items-center gap-2 mt-7 mb-7 relative" ref={mobilePopupRef}>
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#9E9E9E]" />
             <input
