@@ -124,7 +124,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-md bg-card border border-border rounded-2xl p-8 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
+      <div className="relative w-full max-w-md bg-card border border-border/60 rounded-3xl p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-colors"
@@ -201,7 +201,7 @@ export function EditPackModal({ isOpen, pack, onClose, onSave }: EditPackModalPr
               </button>
               
               {coverPreview && (
-                <div className="relative h-32 rounded-xl overflow-hidden">
+                <div className="relative aspect-square w-full max-w-[260px] mx-auto rounded-2xl overflow-hidden border border-white/[0.08] bg-black/20">
                   <img 
                     src={coverPreview} 
                     alt="Preview" 
