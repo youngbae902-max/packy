@@ -29,7 +29,7 @@ const Packs = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'inicio' | 'geral'>('inicio');
+  const [activeTab, setActiveTab] = useState<'inicio' | 'geral' | 'pagos'>('inicio');
   const popupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, isLoading } = useSupabasePacks();
@@ -247,6 +247,12 @@ const Packs = () => {
                   Packs Geral
                   
                 </button>
+                <button
+                  onClick={() => setActiveTab('pagos')}
+                  className={`relative px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${activeTab === 'pagos' ? 'text-foreground bg-foreground/10 shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}
+                >
+                  Pagos
+                </button>
               </div>
             </div>
           </div>
@@ -289,6 +295,19 @@ const Packs = () => {
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                 {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+              </div>
+            )}
+          </div>
+        ) : activeTab === 'pagos' ? (
+          <div>
+            <div className="mb-5 px-1">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">Premium</p>
+              <h2 className="text-xl md:text-2xl font-normal tracking-tight">Packs pagos</h2>
+              <p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} packs disponíveis</p>
+            </div>
+            {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum pack pago disponível ainda.</p> : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
           </div>
