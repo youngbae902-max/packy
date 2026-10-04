@@ -135,7 +135,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             <PackImagePlaceholder />
           )}
 
-          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/15 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#111111]/70 via-[#111111]/20 to-transparent pointer-events-none" />
 
           {pack.is_pinned && (
             <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/55 backdrop-blur-md border border-white/10 flex items-center justify-center">
