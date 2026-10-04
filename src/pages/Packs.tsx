@@ -102,7 +102,7 @@ const Packs = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 md:pb-8">
+    <div className="min-h-screen bg-[#111111] text-foreground pb-20 md:pb-8">
       {/* Search Header for Desktop */}
       <header className="hidden md:flex sticky top-0 z-30 bg-background/90 backdrop-blur-xl border-b border-border/40 px-8 py-4 items-center justify-between gap-6">
         <div className="flex-1 max-w-2xl relative" ref={desktopPopupRef}>
