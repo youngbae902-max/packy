@@ -44,6 +44,8 @@
 
 /* PACKY — Conta: visual refresh */
 .account-page {
+  width: calc(100% + 4rem);
+  margin-left: -2rem;
   --account-surface: rgba(255,255,255,.045);
   --account-surface-strong: rgba(255,255,255,.065);
   --account-line: rgba(255,255,255,.075);
@@ -153,6 +155,8 @@
 
 @media (max-width: 640px) {
   .account-page {
+    width: 100%;
+    margin-left: 0;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
