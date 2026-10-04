@@ -125,7 +125,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="pack-card-v2 group relative text-left w-full rounded-2xl overflow-hidden bg-[#141414] border border-white/[0.05] hover:border-white/[0.12] hover:bg-[#171717] transition-all p-2.5 flex flex-col shadow-sm hover:shadow-xl"
+        className="pack-card-v2 group relative text-left w-full rounded-2xl overflow-hidden bg-[#141414] border border-white/[0.05] hover:border-white/[0.12] hover:bg-[#171717] transition-all p-2 flex flex-col shadow-sm hover:shadow-xl"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#181818]">
@@ -148,22 +148,16 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
         </div>
 
-        <div className="mt-2.5 min-h-[4.7rem]">
+        <div className="mt-2 min-h-[2.8rem]">
           <h3 className="text-[14px] leading-tight font-bold text-foreground line-clamp-2" style={{ letterSpacing: '-0.01em' }}>
             {pack.title}
           </h3>
-          <div className="flex items-center gap-1 mt-1.5 text-[11px] text-muted-foreground">
-            <span className="truncate opacity-0">@{displayAuthor}</span>
-            {isOwner && !pack.is_anonymous && <BadgeCheck className="w-3 h-3 text-sky-400 shrink-0" />}
-          </div>
-          <div className={`mt-1 text-[10px] font-bold uppercase tracking-wider text-foreground/40 ${pack.pack_type === 'drumkit' ? 'opacity-0' : ''}`}>{categoryLabel}</div>
         </div>
 
-        <div className="flex items-center justify-between gap-2 border-t border-white/[0.05] pt-2 mt-auto">
-          <span className={`text-xs font-black ${isFree ? 'text-foreground/70' : 'text-foreground'}`}>
+        <div className="flex items-center justify-between gap-2 border-t border-white/[0.05] pt-1.5 mt-auto">
+          <span className={`text-xs font-black ${isFree ? 'text-foreground' : 'text-foreground'}`}>
             {isFree ? 'GRÁTIS' : `R$ ${pack.price?.toFixed(2)}`}
           </span>
-          <span className="text-[10px] font-bold text-foreground/35">{pack.likes_count || 0} curtidas</span>
         </div>
       </button>
 
