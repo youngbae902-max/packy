@@ -144,8 +144,8 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
           )}
 
           {pack.is_premium && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-white text-black px-2 py-1 rounded-full text-[10px] font-bold shadow-lg">
-              <Crown className="w-3 h-3 text-yellow-400" />
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-yellow-400 text-yellow-950 px-2 py-1 rounded-full text-[10px] font-bold shadow-lg">
+              <Crown className="w-3 h-3 text-yellow-600" />
               R$ {pack.price?.toFixed(2)}
             </div>
           )}
