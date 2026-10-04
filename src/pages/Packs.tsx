@@ -5,7 +5,6 @@ import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
 import { PackCardV2 } from '@/components/PackCardV2';
 import { AudioPlayer } from '@/components/AudioPlayer';
-import { AuthModal } from '@/components/AuthModal';
 import { EventCard } from '@/components/EventCard';
 import { HorizontalCarousel } from '@/components/HorizontalCarousel';
 import { HomeBannerCarousel } from '@/components/HomeBannerCarousel';
@@ -25,7 +24,6 @@ import { useReleasesSection } from '@/hooks/useReleasesSection';
 
 const Packs = () => {
   const { user } = useAuth();
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
@@ -34,7 +32,7 @@ const Packs = () => {
   const mobilePopupRef = useRef<HTMLDivElement>(null);
 
   const { approvedPacks, premiumPacks, projectPacks, isLoading } = useSupabasePacks();
-  const { acapellas, isLoading: acapellasLoading } = useAcapellas();
+  const { acapellas } = useAcapellas();
   const { activeEvents } = useSiteEvents();
   const { hasUnread } = useInbox();
   const { logoUrl } = useAppLogo();
@@ -422,7 +420,6 @@ const Packs = () => {
       <BottomNav />
       <SideMenu isOpen={showMenu} onClose={() => setShowMenu(false)} />
 
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 };
