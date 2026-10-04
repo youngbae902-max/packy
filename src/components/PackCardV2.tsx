@@ -125,39 +125,44 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="pack-card-v2 group relative text-left w-full rounded-2xl overflow-hidden bg-[#141414] border border-white/[0.05] hover:border-white/[0.12] hover:bg-[#171717] transition-all p-2 flex flex-col shadow-sm hover:shadow-xl"
+        className="pack-card-v2 group relative text-left w-full min-w-0 rounded-[18px] overflow-hidden bg-[#121212] border border-white/[0.045] hover:border-white/[0.10] hover:bg-[#151515] transition-all duration-200 p-1.5 flex flex-col shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(0,0,0,0.28)]"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
-        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#181818]">
+        <div className="relative w-full aspect-square rounded-[14px] overflow-hidden bg-[#181818]">
           {pack.cover_url ? (
-            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
+            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.035]" />
           ) : (
             <PackImagePlaceholder />
           )}
 
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/15 to-transparent pointer-events-none" />
+
           {pack.is_pinned && (
-            <div className="absolute top-2 left-2">
-              <Pin className="w-3.5 h-3.5 text-foreground drop-shadow-lg" />
+            <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/55 backdrop-blur-md border border-white/10 flex items-center justify-center">
+              <Pin className="w-3.5 h-3.5 text-white" />
             </div>
           )}
+
           {pack.is_premium && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-amber-400/95 text-black px-1.5 py-0.5 rounded-lg text-[10px] font-bold backdrop-blur-sm">
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-white text-black px-2 py-1 rounded-full text-[10px] font-bold shadow-lg">
               <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
             </div>
           )}
         </div>
 
-        <div className="mt-2 min-h-[2.8rem]">
-          <h3 className="text-[14px] leading-tight font-bold text-foreground line-clamp-2" style={{ letterSpacing: '-0.01em' }}>
+        <div className="px-1.5 pt-2.5 pb-1">
+          <h3 className="text-[13px] leading-[1.15] font-semibold text-foreground line-clamp-2 tracking-[-0.015em]">
             {pack.title}
           </h3>
-        </div>
-
-        <div className="flex items-center justify-between gap-2 border-t border-white/[0.05] pt-1.5 mt-auto">
-          <span className={`text-xs font-black ${isFree ? 'text-foreground' : 'text-foreground'}`}>
-            {isFree ? 'GRÁTIS' : `R$ ${pack.price?.toFixed(2)}`}
-          </span>
+          <div className="flex items-center justify-between gap-2 mt-2">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-foreground/40 truncate">
+              {categoryLabel}
+            </span>
+            <span className="text-[11px] font-bold text-foreground/75 shrink-0">
+              {isFree ? 'GRÁTIS' : `R$ {pack.price?.toFixed(2)}`}
+            </span>
+          </div>
         </div>
       </button>
 
