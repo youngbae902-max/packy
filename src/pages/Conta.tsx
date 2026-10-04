@@ -376,9 +376,9 @@ const Conta = () => {
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
 
-        {showFavoritesSection && <FavoritesSection />}
-
-        {showRepostsSection && <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-4">
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {showFavoritesSection && <FavoritesSection />}
+          {showRepostsSection && <div className="rounded-2xl bg-[#111111] border border-[#171717] overflow-hidden mb-0">
           <button onClick={() => setRepostedOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-foreground/[0.03] transition-colors">
             <div className="flex items-center gap-2">
               <RotateCcw className="w-4 h-4 text-foreground/80" />
@@ -402,6 +402,7 @@ const Conta = () => {
           </div>
           )}
           </div>}
+        </div>
         <div className="h-4" />
       </div>
 
