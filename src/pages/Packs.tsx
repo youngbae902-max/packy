@@ -238,7 +238,6 @@ const Packs = () => {
                 </div>
               </div>
             </div>
-            </div>
           <nav className="mb-9 flex w-full items-center justify-center" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
