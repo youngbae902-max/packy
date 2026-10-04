@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Plus, Trash2, Edit3, Save, X, Check, GripVertical } from 'lucide-react';
+import { Plus, Trash2, Edit3, Save, X, Check, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,18 @@ export function HomeSectionsManager() {
     } catch { toast.error('Erro ao criar seção'); }
   };
 
+  const moveSection = async (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= sections.length) return;
+    const current = sections[index];
+    const other = sections[target];
+    try {
+      await updateSection({ id: current.id, display_order: other.display_order });
+      await updateSection({ id: other.id, display_order: current.display_order });
+      toast.success('Ordem atualizada');
+    } catch { toast.error('Não foi possível reordenar'); }
+  };
+
   const togglePackInSection = async (sectionId: string, packId: string) => {
     const sec = sections.find(s => s.id === sectionId);
     if (!sec) return;
@@ -53,7 +65,7 @@ export function HomeSectionsManager() {
         </p>
         <div className="flex gap-2">
           <Input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Ex: Meus Favoritos" />
-          <Button onClick={handleCreate}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
+          <Button className="admin-add-button" onClick={handleCreate}><Plus className="w-4 h-4 mr-1" /> Criar</Button>
         </div>
       </div>
 
@@ -62,9 +74,12 @@ export function HomeSectionsManager() {
       )}
 
       {sections.map(sec => (
-        <div key={sec.id} className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+        <div key={sec.id} className="rounded-2xl border border-white/[0.06] bg-[#151515] p-3.5 space-y-3">
           <div className="flex items-center gap-2">
-            <GripVertical className="w-4 h-4 text-muted-foreground" />
+            <div className="flex flex-col -space-y-1">
+              <button type="button" onClick={() => moveSection(sections.indexOf(sec), -1)} className="admin-mini-icon" aria-label="Subir seção"><ChevronUp className="w-3.5 h-3.5" /></button>
+              <button type="button" onClick={() => moveSection(sections.indexOf(sec), 1)} className="admin-mini-icon" aria-label="Descer seção"><ChevronDown className="w-3.5 h-3.5" /></button>
+            </div>
             {editingId === sec.id ? (
               <>
                 <Input value={editingTitle} onChange={e => setEditingTitle(e.target.value)} className="h-9" />
@@ -89,7 +104,7 @@ export function HomeSectionsManager() {
                 type="number"
                 value={sec.display_order}
                 onChange={e => updateSection({ id: sec.id, display_order: Number(e.target.value) || 0 })}
-                className="w-20 h-8 text-xs"
+                className="w-16 h-8 text-xs"
                 title="Ordem"
               />
               <Button size="sm" variant="outline" onClick={() => setPickerFor(pickerFor === sec.id ? null : sec.id)}>
