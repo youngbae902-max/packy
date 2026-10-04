@@ -236,8 +236,6 @@ const Packs = () => {
                 </div>
               </div>
             </div>
-          </div>
-
           <nav className="mb-9 flex w-full items-center justify-center border-b border-white/[0.06]" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
@@ -259,7 +257,8 @@ const Packs = () => {
                 </button>
               ))}
             </div>
-          </nav></div>
+          </nav>
+          </div>
         )}
 
         {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden border border-border/40 bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
