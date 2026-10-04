@@ -247,7 +247,7 @@ const Conta = () => {
 
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="account-page min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
         <div className="max-w-lg mx-auto">
