@@ -236,7 +236,7 @@ const Packs = () => {
       <div className="packs-page relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
         {q.length === 0 && (
-          <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
+          <nav className="mb-14 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
                 ['inicio', 'Início'],
