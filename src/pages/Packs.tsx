@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Menu, Inbox, X, Mic, Sparkles } from 'lucide-react';
+import { Search, Menu, Inbox, X, Mic } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -225,23 +225,6 @@ const Packs = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
         {q.length === 0 && (
-          <>
-            <section className="mb-7 px-1 md:px-2">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/[0.07] border border-white/[0.08]">
-                  <Sparkles className="h-3 w-3 text-foreground/75" />
-                </span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Descobrir</span>
-              </div>
-              <div className="min-w-0">
-                <h1 className="break-words text-[30px] md:text-[38px] font-medium leading-[1.02] tracking-[-0.045em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>
-                  Explore a PACKY
-                </h1>
-                <p className="mt-2 max-w-lg text-[13px] md:text-[14px] leading-relaxed text-muted-foreground">
-                  Descubra novos sons, packs e projetos.
-                </p>
-              </div>
-            </section>
           <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
@@ -264,10 +247,9 @@ const Packs = () => {
               ))}
             </div>
           </nav>
-          </>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden border border-border/40 bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
+        {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
