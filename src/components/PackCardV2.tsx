@@ -159,9 +159,13 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-foreground/40 truncate">
               {categoryLabel}
             </span>
-            <span className="text-[11px] font-bold text-foreground/75 shrink-0">
-              {isFree ? 'GRÁTIS' : `R$ {pack.price?.toFixed(2)}`}
-            </span>
+            {isFree ? (
+              <span className="w-8 h-4 rounded-[5px] border border-green-500/70 shrink-0" aria-label="Grátis" />
+            ) : (
+              <span className="text-[11px] font-bold text-foreground/75 shrink-0">
+                R$ {pack.price?.toFixed(2)}
+              </span>
+            )}
           </div>
         </div>
       </button>
