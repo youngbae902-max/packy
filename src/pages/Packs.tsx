@@ -232,27 +232,25 @@ const Packs = () => {
                 <h1 className="text-[25px] md:text-[30px] font-medium tracking-[-0.025em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
                 <p className="text-[13px] text-muted-foreground/90 mt-1">Descubra novos sons, packs e projetos.</p>
               </div>
-              <div className="flex w-full sm:w-auto items-center gap-1 rounded-xl border border-border/50 bg-secondary/40 p-1">
-                <button
-                  onClick={() => setActiveTab('inicio')}
-                  className={`relative px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${activeTab === 'inicio' ? 'text-foreground bg-foreground/10 shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}
-                >
-                  Início
-                  
-                </button>
-                <button
-                  onClick={() => setActiveTab('geral')}
-                  className={`relative px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${activeTab === 'geral' ? 'text-foreground bg-foreground/10 shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}
-                >
-                  Packs Geral
-                  
-                </button>
-                <button
-                  onClick={() => setActiveTab('pagos')}
-                  className={`relative px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${activeTab === 'pagos' ? 'text-foreground bg-foreground/10 shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}
-                >
-                  Pagos
-                </button>
+              <div className="flex w-full sm:w-auto items-center gap-6 border-b border-white/[0.06]">
+                {[
+                  ['inicio', 'Início'],
+                  ['geral', 'Packs em geral'],
+                  ['pagos', 'Packs pagos'],
+                ].map(([tab, label]) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab as 'inicio' | 'geral' | 'pagos')}
+                    className={`relative pb-2.5 text-[12px] font-medium whitespace-nowrap transition-colors ${
+                      activeTab === tab ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {label}
+                    {activeTab === tab && (
+                      <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-foreground" />
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
