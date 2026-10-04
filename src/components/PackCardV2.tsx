@@ -171,7 +171,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => { setShowDetails(false); setSheetTab('info'); }}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
-            className={`relative w-full ${sheetTab === 'comments' ? 'h-[100dvh] max-w-none rounded-none border-0 p-4 pt-5' : 'max-w-lg rounded-t-2xl border-t border-[#252525] p-5 pb-8'} bg-[#101010] animate-in slide-in-from-bottom duration-300`}
+            className={`relative w-full ${sheetTab === 'comments' ? 'h-[100dvh] max-w-none rounded-none border-0 p-4 pt-5 flex flex-col' : 'max-w-lg rounded-t-2xl border-t border-[#252525] p-5 pb-8'} bg-[#101010] animate-in slide-in-from-bottom duration-300`}
             onClick={e => e.stopPropagation()}
           >
             <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
@@ -318,7 +318,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                   </button>
                 </div>
 
-                <div className="space-y-4 max-h-[45vh] overflow-y-auto pr-1">
+                <div className="space-y-4 flex-1 min-h-0 overflow-y-auto pr-1 pb-4">
                   {comments.length === 0 ? (
                     <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
                   ) : comments.map((comment) => {
