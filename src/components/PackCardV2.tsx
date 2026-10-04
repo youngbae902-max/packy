@@ -125,7 +125,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="pack-card-v2 group relative text-left w-full min-w-0 rounded-[18px] overflow-hidden bg-[#121212] border border-white/[0.045] hover:border-white/[0.10] hover:bg-[#151515] transition-all duration-200 p-1.5 flex flex-col shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(0,0,0,0.28)]"
+        className="pack-card-v2 group relative text-left w-full min-w-0 rounded-[18px] overflow-hidden bg-[#111111] border border-white/[0.045] hover:border-white/[0.10] hover:bg-[#151515] transition-all duration-200 p-1.5 flex flex-col shadow-[0_8px_24px_rgba(0,0,0,0.18)] hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(0,0,0,0.28)]"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         <div className="relative w-full aspect-square rounded-[14px] overflow-hidden bg-[#181818]">
