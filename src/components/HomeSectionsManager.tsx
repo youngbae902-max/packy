@@ -56,8 +56,63 @@ export function HomeSectionsManager() {
     } catch { toast.error('Erro ao atualizar packs'); }
   };
 
+  const maxPacks = Math.max(...sections.map(s => s.pack_ids.length), 1);
+
   return (
     <div className="space-y-5">
+      {sections.length > 0 && (
+        <div className="rounded-2xl border border-white/[0.06] bg-[#151515] overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05]">
+            <div>
+              <p className="text-[13px] font-bold">Mapa dos carrosséis</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Quantidade de packs por seção da Home</p>
+            </div>
+            <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              ativa
+            </div>
+          </div>
+
+          <div className="p-4 space-y-3">
+            {sections.map((sec, index) => {
+              const width = Math.max(5, Math.round((sec.pack_ids.length / maxPacks) * 100));
+              return (
+                <div key={sec.id} className="group">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-[9px] text-muted-foreground tabular-nums w-4">0{index + 1}</span>
+                      <span className="text-[10px] font-semibold truncate">{sec.title}</span>
+                    </div>
+                    <span className="text-[9px] text-muted-foreground tabular-nums">{sec.pack_ids.length} packs</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-white/[0.045] overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-foreground/75 transition-all duration-500 group-hover:bg-foreground"
+                      style={{ width: `${width}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+
+            <div className="grid grid-cols-3 gap-2 pt-2">
+              <div className="rounded-xl bg-white/[0.035] border border-white/[0.045] p-2.5">
+                <p className="text-[16px] font-black tabular-nums">{sections.length}</p>
+                <p className="text-[8px] text-muted-foreground uppercase tracking-wider mt-1">Seções</p>
+              </div>
+              <div className="rounded-xl bg-white/[0.035] border border-white/[0.045] p-2.5">
+                <p className="text-[16px] font-black tabular-nums">{sections.filter(s => s.is_active).length}</p>
+                <p className="text-[8px] text-muted-foreground uppercase tracking-wider mt-1">Ativas</p>
+              </div>
+              <div className="rounded-xl bg-white/[0.035] border border-white/[0.045] p-2.5">
+                <p className="text-[16px] font-black tabular-nums">{sections.reduce((sum, s) => sum + s.pack_ids.length, 0)}</p>
+                <p className="text-[8px] text-muted-foreground uppercase tracking-wider mt-1">Packs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="rounded-2xl border border-border/40 bg-card p-4">
         <p className="text-[13px] font-bold mb-1">Nova seção da Home</p>
         <p className="text-[11px] text-muted-foreground mb-3">
