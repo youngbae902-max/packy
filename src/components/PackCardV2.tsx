@@ -372,58 +372,6 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                     </button>
                   </div>
                 </div>
-                  {comments.length === 0 ? (
-                    <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
-                  ) : comments.map((comment) => {
-                    const canEdit = user?.id === comment.user_id;
-                    const canDelete = canEdit || isAdmin;
-                    const name = comment.profiles?.username || comment.profiles?.artist_name || 'Usuário';
-                    return (
-                      <div key={comment.id}>
-                        <div className="flex items-start gap-2">
-                          <Avatar className="w-9 h-9">
-                            <AvatarImage src={comment.profiles?.avatar_url || undefined} />
-                            <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-sm font-bold truncate">@{name}</span>
-                              {comment.is_pinned && <span className="text-[10px] text-primary font-bold">Fixado</span>}
-                            </div>
-                            {editingComment?.id === comment.id ? (
-                              <div className="mt-2 space-y-2">
-                                <Textarea value={editingComment.content} onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })} className="min-h-[52px] rounded-xl bg-[#232323] border-[#2A2A2A]" />
-                                <div className="flex gap-2">
-                                  <button onClick={handleUpdateComment} className="text-xs font-bold text-foreground">Salvar</button>
-                                  <button onClick={() => setEditingComment(null)} className="text-xs text-muted-foreground">Cancelar</button>
-                                </div>
-                              </div>
-                            ) : (
-                              <p className="text-sm text-foreground/90 mt-0.5 whitespace-pre-wrap leading-snug"><EmojiText text={comment.content} /></p>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            {isAdmin && (
-                              <button onClick={() => pinComment({ id: comment.id, pinned: !comment.is_pinned })} className="p-1 text-muted-foreground hover:text-foreground">
-                                <Pin className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                            {canEdit && (
-                              <button onClick={() => setEditingComment({ id: comment.id, content: comment.content })} className="p-1 text-muted-foreground hover:text-foreground">
-                                <Edit2 className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                            {canDelete && (
-                              <button onClick={() => deleteComment(comment.id)} className="p-1 text-muted-foreground hover:text-destructive">
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
               </>
             )}
           </div>
