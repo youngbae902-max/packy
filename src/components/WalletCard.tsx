@@ -1,4 +1,4 @@
-import { Eye, EyeOff, History, Plus } from 'lucide-react';
+import { Eye, EyeOff, History } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/hooks/useWallet';
@@ -21,63 +21,16 @@ export function WalletCard() {
 
   return (
     <>
-      <div
-        className="relative w-full rounded-3xl p-5 overflow-hidden border border-white/5"
-        style={{
-          background:
-            'radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 35%, rgba(0,0,0,0) 70%), linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)',
-          boxShadow: '0 20px 50px -20px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.06)',
-        }}
-      >
-        {/* Top row */}
-        <div className="flex items-start justify-between mb-8">
-          <div className="flex items-center gap-2">
-            {logoUrl ? (
-              <img src={logoUrl} alt="" className="w-7 h-7 rounded-md object-contain" />
-            ) : (
-              <div className="w-7 h-7 rounded-md bg-white/10 flex items-center justify-center text-[11px] font-black">P</div>
-            )}
-            <span className="text-sm font-medium text-white/90 tracking-tight">Wallet</span>
+      <div className="wallet-card-compact relative w-full rounded-[26px] p-4 overflow-hidden border border-white/[0.07]" style={{background:'linear-gradient(145deg,#181818 0%,#0d0d0d 100%)',boxShadow:'0 24px 60px -28px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.045)'}}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5 min-w-0">
+            {logoUrl ? <img src={logoUrl} alt="" className="w-8 h-8 rounded-xl object-contain bg-white/[0.04]" /> : <div className="w-8 h-8 rounded-xl bg-white/[0.06] flex items-center justify-center text-[10px] font-black">P</div>}
+            <div className="min-w-0"><p className="text-[11px] font-semibold text-white/55">Carteira</p><p className="text-[13px] font-semibold text-white truncate">{profile?.artist_name || profile?.username || 'Conta'}</p></div>
           </div>
-          <button
-            onClick={() => setOpenHistory(true)}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/80 transition-colors"
-            aria-label="Histórico"
-          >
-            <History className="w-4 h-4" />
-          </button>
+          <button onClick={() => setOpenHistory(true)} className="w-8 h-8 rounded-xl bg-white/[0.05] border border-white/[0.06] flex items-center justify-center text-white/65" aria-label="Histórico"><History className="w-4 h-4" /></button>
         </div>
-
-        {/* Name */}
-        <p className="text-white/60 text-base font-medium mb-1 tracking-tight">
-          {profile?.artist_name || profile?.username || 'Conta'}
-        </p>
-
-        {/* Balance */}
-        <div className="flex items-end justify-between mt-6">
-          <div className="flex items-center gap-3">
-            <h2 className="text-white text-3xl font-black tabular-nums tracking-tight">
-              {show ? `R$ ${formatted}` : masked}
-            </h2>
-            <button
-              onClick={() => setShow(s => !s)}
-              className="w-8 h-8 rounded-full text-white/60 hover:text-white flex items-center justify-center"
-              aria-label="Mostrar saldo"
-            >
-              {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-          {/* Mastercard-like circles */}
-          <div className="relative w-12 h-7 flex items-center">
-            <span className="absolute left-0 w-7 h-7 rounded-full bg-[#EB001B]" />
-            <span className="absolute left-5 w-7 h-7 rounded-full bg-[#F79E1B] mix-blend-screen" />
-          </div>
-        </div>
-
-        <div className="flex items-end justify-between mt-3">
-          <p className="text-white/50 text-xs tracking-wider">Account •• {last4}</p>
-          <p className="text-white/30 text-xs tracking-[0.25em] font-mono">•••• {idTail}</p>
-        </div>
+        <div className="mt-7"><p className="text-[10px] uppercase tracking-[0.14em] text-white/40">Saldo disponível</p><div className="mt-1 flex items-center gap-2.5"><h2 className="text-white text-[32px] leading-none font-black tracking-[-0.04em] tabular-nums">{show ? `R$ ${formatted}` : masked}</h2><button onClick={() => setShow(s => !s)} className="w-7 h-7 rounded-full text-white/45 flex items-center justify-center" aria-label="Mostrar saldo">{show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button></div></div>
+        <div className="mt-6 flex items-center justify-between border-t border-white/[0.06] pt-3"><p className="text-[10px] text-white/35">Conta •• {last4}</p><p className="text-[10px] text-white/25 font-mono tracking-[0.18em]">•••• {idTail}</p></div>
       </div>
 
       <Dialog open={openHistory} onOpenChange={setOpenHistory}>
