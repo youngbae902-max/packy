@@ -223,14 +223,17 @@ const Packs = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
         {q.length === 0 && (
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-muted-foreground">
-              <Sparkles className="w-3 h-3" /> Descobrir
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              <div>
-                <h1 className="text-[25px] md:text-[30px] font-medium tracking-[-0.025em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
-                <p className="text-[13px] text-muted-foreground/90 mt-1">Descubra novos sons, packs e projetos.</p>
+          <div className="mb-9">
+            <div className="flex flex-col gap-5 rounded-[24px] border border-white/[0.06] bg-[#151515] px-5 py-6 md:px-7 md:py-7 shadow-[0_12px_40px_rgba(0,0,0,0.16)]">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/[0.07] border border-white/[0.06]">
+                  <Sparkles className="h-3.5 w-3.5 text-foreground/80" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Descobrir</p>
+                  <h1 className="mt-1.5 text-[26px] md:text-[32px] font-medium leading-[1.05] tracking-[-0.035em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
+                  <p className="mt-2 max-w-md text-[13px] leading-relaxed text-muted-foreground">Descubra novos sons, packs e projetos.</p>
+                </div>
               </div>
               <div className="flex w-full sm:w-auto items-center gap-6">
                 {[
