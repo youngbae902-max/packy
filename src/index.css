@@ -219,4 +219,18 @@ img.apple-emoji {
   --border: 0 0% 15%;
   --input: 0 0% 16%;
 }
-
+/* PACKY: remove any accidental surface/card styling from home section containers */
+.packs-page section {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+}
+.packs-page section::before,
+.packs-page section::after {
+  display: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
