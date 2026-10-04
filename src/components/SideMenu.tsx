@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic } from 'lucide-react';
+import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -9,7 +10,7 @@ interface SideMenuProps {
 }
 
 export function SideMenu({ isOpen, onClose }: SideMenuProps) {
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, user, profile, signOut } = useAuth();
   const { logoUrl } = useAppLogo();
 
   const baseItems = [
@@ -50,6 +51,32 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
           </div>
         </div>
 
+        {user && (
+          <div className="px-4 pt-4">
+            <Link
+              to="/conta"
+              onClick={onClose}
+              className="flex items-center gap-3 rounded-2xl px-3 py-3 bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] transition-colors"
+            >
+              <Avatar className="w-10 h-10 shrink-0 ring-1 ring-white/[0.08]">
+                <AvatarImage src={profile?.avatar_url || undefined} />
+                <AvatarFallback className="bg-[#222222] text-xs font-semibold">
+                  {(profile?.artist_name || profile?.username || user.email || 'U').slice(0, 1).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[13px] font-semibold text-foreground truncate">
+                  {profile?.artist_name || profile?.username || user.email?.split('@')[0] || 'Sua conta'}
+                </span>
+                <span className="flex items-center gap-1.5 mt-0.5 text-[10px] text-foreground/45">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.6)]" />
+                  Ativo
+                </span>
+              </span>
+            </Link>
+          </div>
+        )}
+
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
           {items.map(({ to, icon: Icon, label }) => (
             <Link
@@ -80,8 +107,18 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
         </nav>
 
 
-        <div className="px-6 py-4 border-t border-border/40">
-          <p className="text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
+        <div className="px-4 py-4 border-t border-border/40 space-y-2">
+          {user && (
+            <button
+              type="button"
+              onClick={() => { void signOut(); onClose(); }}
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors text-left"
+            >
+              <LogOut className="w-[18px] h-[18px] shrink-0" />
+              <span className="text-sm font-medium">Sair da conta</span>
+            </button>
+          )}
+          <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
         </div>
       </aside>
     </div>
