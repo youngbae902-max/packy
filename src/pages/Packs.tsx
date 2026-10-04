@@ -235,7 +235,7 @@ const Packs = () => {
                   <p className="mt-2 max-w-md text-[13px] leading-relaxed text-muted-foreground">Descubra novos sons, packs e projetos.</p>
                 </div>
               </div>
-              <div className="flex w-full sm:w-auto items-center gap-6">
+              <div className="flex w-full items-center justify-center gap-6">
                 {[
                   ['inicio', 'Início'],
                   ['geral', 'Packs em geral'],
