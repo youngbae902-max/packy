@@ -31,7 +31,7 @@ const App = () => (
         <Toaster />
         <Sonner position="top-center" duration={900} />
         <BrowserRouter>
-          <div className="flex min-h-screen bg-background">
+          <div className="flex min-h-screen bg-[#111111]">
             <Sidebar />
             <div className="flex-1 w-full md:pl-64 pb-20 md:pb-0">
               <Routes>
