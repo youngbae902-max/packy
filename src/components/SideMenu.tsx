@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,6 +13,7 @@ interface SideMenuProps {
 export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const { isAdmin, user, profile, signOut } = useAuth();
   const { logoUrl } = useAppLogo();
+  const [showSignOutConfirm, setShowSignOutConfirm] = React.useState(false);
 
   const baseItems = [
     { to: '/', icon: Compass, label: 'Explorar' },
@@ -83,9 +85,9 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
           {user && (
             <button
               type="button"
-              onClick={() => { void signOut(); onClose(); }}
+              onClick={() => setShowSignOutConfirm(true)}
               className="w-full flex items-center gap-3 rounded-2xl px-3 py-3 bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] transition-colors text-left"
-              aria-label="Sair da conta"
+              aria-label="Conta"
             >
               <Avatar className="w-10 h-10 shrink-0 ring-1 ring-white/[0.08]">
                 <AvatarImage src={profile?.avatar_url || undefined} />
@@ -99,7 +101,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 </span>
                 <span className="flex items-center gap-1.5 mt-0.5 text-[10px] text-foreground/45">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.6)]" />
-                  Ativo · tocar para sair
+                  Ativo
                 </span>
               </span>
             </button>
@@ -107,6 +109,37 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
           <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
         </div>
       </aside>
+
+      {showSignOutConfirm && user && (
+        <div className="absolute inset-0 z-[70] flex items-center justify-center px-5">
+          <button
+            type="button"
+            aria-label="Fechar confirmação"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowSignOutConfirm(false)}
+          />
+          <div className="relative z-10 w-full max-w-[320px] rounded-3xl bg-[#1A1A1A] border border-white/[0.08] p-5 shadow-2xl">
+            <h2 className="text-base font-semibold text-foreground">Sair da conta?</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Você será desconectado desta conta.</p>
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setShowSignOutConfirm(false)}
+                className="rounded-xl px-4 py-3 text-sm font-medium bg-white/[0.06] hover:bg-white/[0.1] transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={() => { void signOut(); setShowSignOutConfirm(false); onClose(); }}
+                className="rounded-xl px-4 py-3 text-sm font-semibold bg-white text-black hover:bg-white/90 transition-colors"
+              >
+                Sair
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
