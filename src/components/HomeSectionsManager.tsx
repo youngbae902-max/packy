@@ -56,6 +56,8 @@ export function HomeSectionsManager() {
     } catch { toast.error('Erro ao atualizar packs'); }
   };
 
+  return (
+    <div className="space-y-4">
       <div className="rounded-2xl border border-border/40 bg-card p-4">
         <p className="text-[13px] font-bold mb-1">Nova seção da Home</p>
         <p className="text-[11px] text-muted-foreground mb-3">
