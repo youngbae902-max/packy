@@ -71,7 +71,7 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
             >
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-foreground/[0.06] transition-[width] duration-100"
-                style={{ width: \`calc(\${progress * 100}% + 22px)\` }}
+                style={{ width: `calc(${progress * 100}% + 22px)` }}
               />
               <button
                 type="button"
@@ -82,7 +82,7 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
                 onPointerCancel={finishDrag}
                 onLostPointerCapture={finishDrag}
                 className="absolute top-1/2 left-1 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-foreground text-background flex items-center justify-center shadow-sm transition-transform duration-100 active:scale-95"
-                style={{ transform: \`translate(\${progress * 146}px, -50%)\` }}
+                style={{ transform: `translate(${progress * 146}px, -50%)` }}
               >
                 <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.2} />
               </button>
