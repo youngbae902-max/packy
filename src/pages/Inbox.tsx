@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Inbox as InboxIcon, Gift, Bell, MessageSquare, Check, CheckCheck, Trash2 } from 'lucide-react';
+import { Inbox as InboxIcon, Gift, Bell, MessageSquare, Trash2 } from 'lucide-react';
 import { useInbox, InboxMessage } from '@/hooks/useInbox';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useAuth } from '@/contexts/AuthContext';
