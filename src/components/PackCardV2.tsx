@@ -305,21 +305,79 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
                   <h3 className="text-base font-bold flex-1 truncate">Comentários</h3>
                 </div>
 
-                <div className="flex items-start gap-2 mb-4">
-                  <div className="flex-1 rounded-2xl border border-white/[0.07] bg-[#181818] p-2 focus-within:border-white/[0.16] transition">
-                    <Textarea
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder="Escreva um feedback..."
-                      className="min-h-[40px] max-h-28 rounded-xl bg-transparent border-0 resize-none focus-visible:ring-0 px-2 py-1.5"
-                    />
-                  </div>
-                  <button onClick={handleAddComment} className="h-11 w-11 rounded-2xl bg-white text-black hover:bg-white/90 flex items-center justify-center shrink-0 shadow-lg">
-                    <Send className="w-4 h-4" />
-                  </button>
+                <div className="space-y-4 flex-1 min-h-0 overflow-y-auto pr-1 pt-1 pb-4 overscroll-contain">
+                  {comments.length === 0 ? (
+                    <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
+                  ) : comments.map((comment) => {
+                    const canEdit = user?.id === comment.user_id;
+                    const canDelete = canEdit || isAdmin;
+                    const name = comment.profiles?.username || comment.profiles?.artist_name || 'Usuário';
+                    return (
+                      <div key={comment.id}>
+                        <div className="flex items-start gap-2">
+                          <Avatar className="w-9 h-9">
+                            <AvatarImage src={comment.profiles?.avatar_url || undefined} />
+                            <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-sm font-bold truncate">@{name}</span>
+                              {comment.is_pinned && <span className="text-[10px] text-primary font-bold">Fixado</span>}
+                            </div>
+                            {editingComment?.id === comment.id ? (
+                              <div className="mt-2 space-y-2">
+                                <Textarea value={editingComment.content} onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })} className="min-h-[52px] rounded-xl bg-[#232323] border-[#2A2A2A]" />
+                                <div className="flex gap-2">
+                                  <button onClick={handleUpdateComment} className="text-xs font-bold text-foreground">Salvar</button>
+                                  <button onClick={() => setEditingComment(null)} className="text-xs text-muted-foreground">Cancelar</button>
+                                </div>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-foreground/90 mt-0.5 whitespace-pre-wrap leading-snug"><EmojiText text={comment.content} /></p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {isAdmin && (
+                              <button onClick={() => pinComment({ id: comment.id, pinned: !comment.is_pinned })} className="p-1 text-muted-foreground hover:text-foreground">
+                                <Pin className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            {canEdit && (
+                              <button onClick={() => setEditingComment({ id: comment.id, content: comment.content })} className="p-1 text-muted-foreground hover:text-foreground">
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button onClick={() => deleteComment(comment.id)} className="p-1 text-muted-foreground hover:text-destructive">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                <div className="space-y-4 flex-1 min-h-0 overflow-y-auto pr-1 pb-4">
+                <div className="shrink-0 border-t border-white/[0.06] pt-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] bg-[#101010]">
+                  <div className="flex items-end gap-2">
+                    <div className="flex-1 rounded-2xl border border-white/[0.07] bg-[#181818] p-2 focus-within:border-white/[0.16] transition">
+                      <Textarea
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="Escreva um feedback..."
+                        className="min-h-[40px] max-h-28 rounded-xl bg-transparent border-0 resize-none focus-visible:ring-0 px-2 py-1.5"
+                      />
+                    </div>
+                    <button
+                      onClick={handleAddComment}
+                      className="h-11 w-11 rounded-2xl bg-white text-black hover:bg-white/90 flex items-center justify-center shrink-0 shadow-lg"
+                      aria-label="Enviar comentário"
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
                   {comments.length === 0 ? (
                     <p className="text-xs text-muted-foreground py-2">Ainda sem comentários</p>
                   ) : comments.map((comment) => {
