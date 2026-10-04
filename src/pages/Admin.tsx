@@ -767,11 +767,11 @@ export default function Admin() {
                   <h3 className="font-bold text-sm truncate">{pack.title}</h3>
                   <p className="text-xs text-muted-foreground truncate">{pack.download_url}</p>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <Button size="sm" onClick={() => handleSendPendingToHome([pack.id])}>
+                <div className="flex items-center gap-1.5">
+                  <Button size="sm" className="admin-approve-button" onClick={() => handleSendPendingToHome([pack.id])}>
                     <Send className="w-4 h-4" />
                   </Button>
-                  <Button size="sm" variant="destructive" onClick={() => rejectPack(pack.id)}>
+                  <Button size="sm" className="admin-reject-button" variant="destructive" onClick={() => rejectPack(pack.id)}>
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
@@ -897,10 +897,10 @@ export default function Admin() {
                   <div className="flex flex-col gap-1">
                     {albumSubTab === 'pending' && (
                       <>
-                        <button onClick={() => approveAlbum(a.id)} className="p-1.5 rounded-lg bg-success/20 text-success hover:bg-success/30">
+                        <button onClick={() => approveAlbum(a.id)} className="admin-approve-button p-1.5 rounded-lg">
                           <Check className="w-4 h-4" />
                         </button>
-                        <button onClick={() => rejectAlbum(a.id)} className="p-1.5 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30">
+                        <button onClick={() => rejectAlbum(a.id)} className="admin-reject-button p-1.5 rounded-lg">
                           <X className="w-4 h-4" />
                         </button>
                       </>
