@@ -28,9 +28,10 @@ const packTypeLabels: Record<string, string> = {
 interface PackCardV2Props {
   pack: Pack;
   showAdminBadge?: boolean;
+  hidePremiumBadge?: boolean;
 }
 
-export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
+export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = false }: PackCardV2Props) {
   const { user, isAdmin } = useAuth();
   const { hasLiked, hasFavorited, isDownloadUnlocked, toggleLike, toggleFavorite, unlockDownload } = usePackInteractions(pack.id);
   const [showAuthModal, setShowAuthModal] = useState(false);
