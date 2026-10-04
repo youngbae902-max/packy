@@ -19,7 +19,7 @@ export function HomeBannerCarousel() {
 
   return (
     <div className="mb-6">
-      <div className="relative w-full overflow-hidden rounded-2xl border border-border/60 bg-card aspect-[16/9] md:aspect-[21/7]">
+      <div className="relative w-full overflow-hidden rounded-2xl border-0 bg-transparent aspect-[16/9] md:aspect-[21/7]">
         {banners.map((b, i) => {
           const content = (
             <>
