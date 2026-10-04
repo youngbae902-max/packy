@@ -97,7 +97,9 @@
   html { scroll-behavior: smooth; }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    background: #111111 !important;
+    color: #f5f5f5;
+    @apply font-sans antialiased;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     letter-spacing: -0.011em;
@@ -184,6 +186,8 @@ img.apple-emoji {
   border-radius: 9999px;
   background-color: #22c55e;
 }
+
+#root { background: #111111; }
 
 #lovable-badge { display: none !important; }
 
