@@ -232,7 +232,7 @@ const Packs = () => {
                 <h1 className="text-[25px] md:text-[30px] font-medium tracking-[-0.025em]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Explore a PACKY</h1>
                 <p className="text-[13px] text-muted-foreground/90 mt-1">Descubra novos sons, packs e projetos.</p>
               </div>
-              <div className="flex w-full sm:w-auto items-center gap-6 border-b border-white/[0.06]">
+              <div className="flex w-full sm:w-auto items-center gap-6">
                 {[
                   ['inicio', 'Início'],
                   ['geral', 'Packs em geral'],
