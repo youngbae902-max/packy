@@ -25,8 +25,8 @@ export default function Wallet() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="max-w-lg mx-auto px-4 pt-6">
+    <div className="wallet-page min-h-screen bg-background pb-24">
+      <div className="max-w-lg mx-auto px-4 pt-5">
         <header className="flex items-center justify-between mb-6">
           <Link to="/conta?settings=1" className="w-11 h-11 -ml-2 flex items-center justify-center" aria-label="Voltar">
             <ChevronLeft className="w-5 h-5" />
@@ -37,12 +37,9 @@ export default function Wallet() {
           </button>
         </header>
 
-        <div className="rounded-3xl border border-border/40 bg-card p-6 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-foreground/5 border border-border/40 flex items-center justify-center mx-auto mb-4">
-            <WalletIcon className="w-5 h-5 text-foreground/70" />
-          </div>
-          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Saldo disponível</p>
-          <p className="text-[34px] font-black tabular-nums leading-none mt-2">
+        <div className="wallet-balance-panel rounded-[26px] border border-white/[0.07] bg-[#151515] p-5 text-left">
+          <div className="flex items-center gap-3 mb-7"><div className="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/[0.06] flex items-center justify-center"><WalletIcon className="w-4 h-4 text-foreground/70" /></div><div><p className="text-[11px] font-semibold text-muted-foreground">Carteira</p><p className="text-[10px] text-muted-foreground/60">Saldo disponível</p></div></div>
+          <p className="text-[34px] font-black tabular-nums leading-none">
             {show ? `R$ ${formatted}` : '••••••'}
           </p>
         </div>
