@@ -223,8 +223,8 @@ const Packs = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
         {q.length === 0 && (
-          <div className="mb-9">
-            <div className="flex flex-col gap-5 rounded-[24px] border border-white/[0.06] bg-[#151515] px-5 py-6 md:px-7 md:py-7 shadow-[0_12px_40px_rgba(0,0,0,0.16)]">
+          <div className="mb-5">
+            <div className="rounded-[24px] border border-white/[0.06] bg-[#151515] px-5 py-6 md:px-7 md:py-7 shadow-[0_12px_40px_rgba(0,0,0,0.16)]">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/[0.07] border border-white/[0.06]">
                   <Sparkles className="h-3.5 w-3.5 text-foreground/80" />
@@ -235,28 +235,31 @@ const Packs = () => {
                   <p className="mt-2 max-w-md text-[13px] leading-relaxed text-muted-foreground">Descubra novos sons, packs e projetos.</p>
                 </div>
               </div>
-              <div className="flex w-full items-center justify-center gap-6">
-                {[
-                  ['inicio', 'Início'],
-                  ['geral', 'Packs em geral'],
-                  ['pagos', 'Packs pagos'],
-                ].map(([tab, label]) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab as 'inicio' | 'geral' | 'pagos')}
-                    className={`relative pb-2.5 text-[12px] font-medium whitespace-nowrap transition-colors ${
-                      activeTab === tab ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {label}
-                    {activeTab === tab && (
-                      <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-foreground" />
-                    )}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
+
+          <nav className="mb-9 flex w-full items-center justify-center border-b border-white/[0.06]" aria-label="Navegação de packs">
+            <div className="flex items-center justify-center gap-7 md:gap-9">
+              {[
+                ['inicio', 'Início'],
+                ['geral', 'Packs em geral'],
+                ['pagos', 'Packs pagos'],
+              ].map(([tab, label]) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab as 'inicio' | 'geral' | 'pagos')}
+                  className={`relative px-1 pb-3 text-[12px] font-medium whitespace-nowrap transition-colors ${
+                    activeTab === tab ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {label}
+                  {activeTab === tab && (
+                    <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-foreground" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </nav></div>
         )}
 
         {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden border border-border/40 bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
