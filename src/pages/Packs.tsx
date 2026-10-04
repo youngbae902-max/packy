@@ -6,7 +6,6 @@ import { SideMenu } from '@/components/SideMenu';
 import { PackCardV2 } from '@/components/PackCardV2';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { EventCard } from '@/components/EventCard';
-import { HorizontalCarousel } from '@/components/HorizontalCarousel';
 import { HomeBannerCarousel } from '@/components/HomeBannerCarousel';
 import { useSupabasePacks } from '@/hooks/useSupabasePacks';
 import { useAcapellas } from '@/hooks/useAcapellas';
@@ -21,6 +20,18 @@ import { useHomeSectionsWithPacks } from '@/hooks/useHomeSections';
 import { useTypedPlaceholder } from '@/hooks/useTypedPlaceholder';
 import { useReleasesSection } from '@/hooks/useReleasesSection';
 
+
+const SectionHeading = ({ title }: { title: string }) => (
+  <div className="mb-4 px-1">
+    <h2 className="text-[16px] md:text-lg font-semibold tracking-tight text-foreground">{title}</h2>
+  </div>
+);
+
+const PackGrid = ({ packs }: { packs: typeof approvedPacks }) => (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+    {packs.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+  </div>
+);
 
 const Packs = () => {
   const { user } = useAuth();
@@ -249,7 +260,11 @@ const Packs = () => {
           </nav>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
+        {q.length === 0 && activeTab === 'inicio' && (
+          <div className="mb-8">
+            <HomeBannerCarousel />
+          </div>
+        )}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
@@ -318,87 +333,63 @@ const Packs = () => {
             )}
           </div>
         ) : (
-          <div className="space-y-7 md:space-y-9">
-            
+          <div className="space-y-10 md:space-y-12">
             {releases.visible && releasePacks.length > 0 && (
-              <HorizontalCarousel
-                title={releases.title}
-              >
-                {releasePacks.map(pack => (
-                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                    <PackCardV2 pack={pack} />
-                  </div>
-                ))}
-              </HorizontalCarousel>
+              <section>
+                <SectionHeading title={releases.title} />
+                <PackGrid packs={releasePacks} />
+              </section>
             )}
 
-
-
-            {/* Seções personalizadas da Home (admin) */}
             {customSections.map(({ section, packs }) => (
               packs.length > 0 && (
-                <div key={section.id} className="bg-[#111111] border-0 rounded-none">
-                  <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
-                    {packs.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                </div>
+                <section key={section.id}>
+                  <SectionHeading title={section.title === 'Acapellas' ? 'MCs' : section.title} />
+                  <PackGrid packs={packs} />
+                </section>
               )
             ))}
 
             {hasCategories ? (
               categories.map(category => (
-                <HorizontalCarousel key={category.id} title={category.name}>
-                  {premiumPacks.slice(0, 8).map(pack => (
-                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                      <PackCardV2 pack={pack} />
-                    </div>
-                  ))}
-                </HorizontalCarousel>
+                <section key={category.id}>
+                  <SectionHeading title={category.name} />
+                  <PackGrid packs={premiumPacks.slice(0, 8)} />
+                </section>
               ))
             ) : (
-              /* Fallback sections if no categories are setup yet */
               <>
                 {premiumPacks.length > 0 && (
-                  <HorizontalCarousel title="Premium & Exclusivos">
-                    {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
+                  <section>
+                    <SectionHeading title="Premium & Exclusivos" />
+                    <PackGrid packs={premiumPacks} />
+                  </section>
                 )}
-
                 {projectPacks.length > 0 && (
-                  <HorizontalCarousel title="Projetos e FLPs">
-                    {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
+                  <section>
+                    <SectionHeading title="Projetos e FLPs" />
+                    <PackGrid packs={projectPacks} />
+                  </section>
                 )}
-
               </>
             )}
 
             {acapellas.length > 0 && (
-              <HorizontalCarousel title="Acapellas">
-                {acapellas.slice(0, 8).map(acapella => (
-                  <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+              <section>
+                <SectionHeading title="MCs" />
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                  {acapellas.slice(0, 8).map(acapella => (
                     <AudioPlayer
+                      key={acapella.id}
                       artistName={acapella.artist_name}
                       imageUrl={acapella.image_url}
                       audioUrl={acapella.audio_url}
                       downloadUrl={acapella.download_url}
                       duration={acapella.duration_seconds ?? undefined}
                     />
-                  </div>
-                ))}
-              </HorizontalCarousel>
+                  ))}
+                </div>
+              </section>
             )}
           </div>
         )}
