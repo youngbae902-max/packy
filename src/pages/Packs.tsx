@@ -110,7 +110,7 @@ const Packs = () => {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             onFocus={() => q.length > 0 && setPopupOpen(true)}
-            className="w-full bg-secondary/70 border border-border/50 rounded-xl pl-12 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-white/15 focus:border-white/15 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
+            className="w-full bg-[#111111] border border-white/[0.05] rounded-xl pl-12 pr-10 py-3 text-sm text-[#F5F5F5] placeholder:text-[#8A8A8A] focus:outline-none focus:ring-1 focus:ring-white/[0.08] focus:border-white/[0.10] transition-all shadow-none"
             placeholder="O que você quer ouvir ou baixar?"
           />
           {searchQuery && (
@@ -124,7 +124,7 @@ const Packs = () => {
 
           {/* Desktop Search Dropdown */}
           {popupOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-border/60 bg-[hsl(0,0%,3%)]/95 backdrop-blur-xl shadow-2xl p-3 animate-fade-in max-h-96 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-white/[0.06] bg-[#111111]/98 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.35)] p-3 animate-fade-in max-h-96 overflow-y-auto">
               {searchedProfiles.length > 0 && (
                 <div className="mb-4">
                   <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Usuários</p>
@@ -213,7 +213,7 @@ const Packs = () => {
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full h-[50px] bg-[#181818] border border-[#252525] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#9E9E9E] focus:outline-none focus:ring-2 focus:ring-white/10"
+              className="w-full h-[50px] bg-[#111111] border border-white/[0.05] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#8A8A8A] focus:outline-none focus:border-white/[0.10] focus:ring-1 focus:ring-white/[0.08] transition-all"
               placeholder={animatedPlaceholder}
             />
           </div>
