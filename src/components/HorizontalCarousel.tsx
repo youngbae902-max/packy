@@ -1,6 +1,5 @@
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ReactNode, useRef } from 'react';
-import { ChevronRight } from 'lucide-react';
 
 interface HorizontalCarouselProps {
   title: string;
@@ -20,30 +19,32 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
   };
 
   return (
-    <section className="mb-8 relative group">
-      <div className="relative flex items-center justify-between mb-1.5 px-2">
+    <section className="mb-8 relative group bg-transparent border-0 shadow-none">
+      <div className="relative flex items-center justify-between mb-1.5 px-2 bg-transparent">
         <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
         {showArrows && (
           <div className="hidden md:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button 
-              onClick={() => scroll('left')} 
-              className="p-1.5 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition"
+            <button
+              onClick={() => scroll('left')}
+              className="p-1.5 rounded-full bg-transparent text-foreground/70 hover:bg-transparent transition"
+              aria-label="Rolar para a esquerda"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <button 
-              onClick={() => scroll('right')} 
-              className="p-1.5 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition"
+            <button
+              onClick={() => scroll('right')}
+              className="p-1.5 rounded-full bg-transparent text-foreground/70 hover:bg-transparent transition"
+              aria-label="Rolar para a direita"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         )}
       </div>
-      
-      <div 
+
+      <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-3 px-2 snap-x snap-mandatory scroll-smooth"
+        className="flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-3 px-2 snap-x snap-mandatory scroll-smooth bg-transparent"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {children}
