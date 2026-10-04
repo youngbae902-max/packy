@@ -124,7 +124,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="group relative text-left w-full rounded-2xl overflow-hidden bg-[#141414] border border-white/[0.05] hover:border-white/[0.12] hover:bg-[#171717] transition-all p-2.5 flex flex-col shadow-sm hover:shadow-xl"
+        className="pack-card-v2 group relative text-left w-full rounded-2xl overflow-hidden bg-[#141414] border border-white/[0.05] hover:border-white/[0.12] hover:bg-[#171717] transition-all p-2.5 flex flex-col shadow-sm hover:shadow-xl"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
         <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#181818]">
@@ -140,7 +140,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             </div>
           )}
           {pack.is_premium && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-premium/90 text-premium-foreground px-1.5 py-0.5 rounded-full text-[10px] font-medium backdrop-blur-sm">
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-amber-400/95 text-black px-1.5 py-0.5 rounded-lg text-[10px] font-bold backdrop-blur-sm">
               <Crown className="w-3 h-3" />
               R$ {pack.price?.toFixed(2)}
             </div>
@@ -152,10 +152,10 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
             {pack.title}
           </h3>
           <div className="flex items-center gap-1 mt-1.5 text-[11px] text-muted-foreground">
-            <span className="truncate">@{displayAuthor}</span>
+            <span className="truncate opacity-0">@{displayAuthor}</span>
             {isOwner && !pack.is_anonymous && <BadgeCheck className="w-3 h-3 text-sky-400 shrink-0" />}
           </div>
-          <div className="mt-1 text-[10px] font-bold uppercase tracking-wider text-foreground/40">{categoryLabel}</div>
+          <div className={`mt-1 text-[10px] font-bold uppercase tracking-wider text-foreground/40 ${pack.pack_type === 'drumkit' ? 'opacity-0' : ''}`}>{categoryLabel}</div>
         </div>
 
         <div className="flex items-center justify-between gap-2 border-t border-white/[0.05] pt-2 mt-auto">
@@ -171,7 +171,7 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
         <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={() => { setShowDetails(false); setSheetTab('info'); }}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div 
-            className="relative w-full max-w-lg bg-[#181818] border-t border-[#252525] rounded-t-2xl p-5 pb-8 animate-in slide-in-from-bottom duration-300"
+            className={`relative w-full ${sheetTab === 'comments' ? 'h-[100dvh] max-w-none rounded-none border-0 p-4 pt-5' : 'max-w-lg rounded-t-2xl border-t border-[#252525] p-5 pb-8'} bg-[#101010] animate-in slide-in-from-bottom duration-300`}
             onClick={e => e.stopPropagation()}
           >
             <div className="w-10 h-1 bg-foreground/20 rounded-full mx-auto mb-5" />
@@ -297,29 +297,23 @@ export function PackCardV2({ pack, showAdminBadge = false }: PackCardV2Props) {
               </>
             ) : (
               <>
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-5 border-b border-white/[0.06] pb-4">
                   <button onClick={() => setSheetTab('info')} className="p-1 -ml-1 text-muted-foreground hover:text-foreground" aria-label="Voltar">
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <h3 className="text-base font-bold flex-1 truncate">Comentários</h3>
                 </div>
 
-                <button
-                  onClick={handleDownloadClick}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-foreground text-background py-3 font-bold hover:opacity-90 transition mb-4"
-                >
-                  <Download className="w-4 h-4" />
-                  {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
-                </button>
-
                 <div className="flex items-start gap-2 mb-4">
-                  <Textarea
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Dar feedback..."
-                    className="min-h-[46px] rounded-2xl bg-[#232323] border-[#2A2A2A] resize-none"
-                  />
-                  <button onClick={handleAddComment} className="h-[46px] w-11 rounded-full bg-foreground text-background flex items-center justify-center shrink-0">
+                  <div className="flex-1 rounded-2xl border border-white/[0.07] bg-[#181818] p-2 focus-within:border-white/[0.16] transition">
+                    <Textarea
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder="Escreva um feedback..."
+                      className="min-h-[40px] max-h-28 rounded-xl bg-transparent border-0 resize-none focus-visible:ring-0 px-2 py-1.5"
+                    />
+                  </div>
+                  <button onClick={handleAddComment} className="h-11 w-11 rounded-2xl bg-white text-black hover:bg-white/90 flex items-center justify-center shrink-0 shadow-lg">
                     <Send className="w-4 h-4" />
                   </button>
                 </div>
