@@ -2,7 +2,7 @@ import { Zap, ExternalLink } from 'lucide-react';
 
 export function SupportCard() {
   return (
-    <div className="pack-card">
+    <div className="pack-card border-b-0">
       <div className="flex flex-col items-center text-center gap-3">
         <span className="inline-flex items-center gap-1.5 bg-destructive text-destructive-foreground px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
           Inscreva-se
