@@ -19,8 +19,13 @@ export default function MCProfile() {
   const loadVotes = async () => {
     if (!id) return;
     setLoadingVotes(true);
-    const { data } = await (supabase as any).from('acapella_votes').select('choice, suggestion').eq('acapella_id', id);
-    setVotes((data || []) as Vote[]);
+    const { data, error } = await (supabase as any).from('acapella_votes').select('choice, suggestion').eq('acapella_id', id);
+    if (error) {
+      console.error('Failed to load acapella votes:', error);
+      setVotes([]);
+    } else {
+      setVotes((data || []) as Vote[]);
+    }
     setLoadingVotes(false);
   };
 
