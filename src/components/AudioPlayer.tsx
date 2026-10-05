@@ -15,9 +15,9 @@ export function AudioPlayer({ artistName, imageUrl, downloadUrl }: AudioPlayerPr
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Abrir link de ${artistName}`}
-      className="group flex flex-col items-center gap-4 px-2 text-center"
+      className="flex flex-col items-center gap-4 px-2 text-center"
     >
-      <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-transform duration-300 group-hover:scale-105 group-hover:border-primary/50 sm:w-40">
+      <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-colors duration-300 sm:w-40 hover:border-primary/50">
         {imageUrl ? (
           <img
             src={imageUrl}
