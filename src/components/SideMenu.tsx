@@ -16,15 +16,15 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const [showSignOutConfirm, setShowSignOutConfirm] = React.useState(false);
 
   const baseItems = [
-    { to: '/', icon: Compass, label: 'Explorar' },
+    { to: '/', icon: Compass, label: 'Explore' },
     { to: '/mcs', icon: Mic, label: 'Acapella' },
     { to: '/sites', icon: Globe, label: 'Sites' },
-    { to: '/inbox', icon: Mail, label: 'Caixa de entrada' },
-    { to: '/desejos', icon: Star, label: 'Lista de desejos' },
+    { to: '/inbox', icon: Mail, label: 'Inbox' },
+    { to: '/desejos', icon: Star, label: 'Wishlist' },
   ];
 
   const items = user
-    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Projetos' }]
+    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Projects' }]
     : baseItems;
 
   if (!isOpen) return null;
@@ -44,7 +44,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
             </div>
             <button
               onClick={onClose}
-              aria-label="Fechar menu"
+              aria-label="Close menu"
               className="p-2 rounded-full hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-colors"
             >
               <X className="w-5 h-5" />
@@ -72,10 +72,10 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 to="/admin"
                 onClick={onClose}
                 className="group flex items-center gap-4 px-4 py-3 rounded-xl text-foreground/90 hover:bg-foreground/[0.06] transition-all"
-                aria-label="Painel"
+                aria-label="Dashboard"
               >
                 <Monitor className="w-[18px] h-[18px] shrink-0" />
-                <span className="text-sm font-semibold">Painel</span>
+                <span className="text-sm font-semibold">Dashboard</span>
               </Link>
             </>
           )}
@@ -87,7 +87,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
               type="button"
               onClick={() => setShowSignOutConfirm(true)}
               className="w-full flex items-center gap-3 rounded-2xl px-3 py-3 bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] transition-colors text-left"
-              aria-label="Conta"
+              aria-label="Account"
             >
               <Avatar className="w-10 h-10 shrink-0 ring-1 ring-white/[0.08]">
                 <AvatarImage src={profile?.avatar_url || undefined} />
@@ -97,16 +97,16 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
               </Avatar>
               <span className="min-w-0 flex-1">
                 <span className="block text-[13px] font-semibold text-foreground truncate">
-                  {profile?.artist_name || profile?.username || user.email?.split('@')[0] || 'Sua conta'}
+                  {profile?.artist_name || profile?.username || user.email?.split('@')[0] || 'Your account'}
                 </span>
                 <span className="flex items-center gap-1.5 mt-0.5 text-[10px] text-foreground/45">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#34C759]" />
-                  Ativo
+                  Active
                 </span>
               </span>
             </button>
           )}
-          <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
+          <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Connected' : 'Guest'} · v1.0</p>
         </div>
       </aside>
 
@@ -119,22 +119,22 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
             onClick={() => setShowSignOutConfirm(false)}
           />
           <div className="relative z-10 w-full max-w-[320px] rounded-3xl bg-[#1A1A1A] border border-white/[0.08] p-5 shadow-2xl">
-            <h2 className="text-base font-semibold text-foreground">Sair da conta?</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Você será desconectado desta conta.</p>
+            <h2 className="text-base font-semibold text-foreground">Sign out?</h2>
+            <p className="mt-2 text-sm text-muted-foreground">You will be signed out of this account.</p>
             <div className="mt-5 grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setShowSignOutConfirm(false)}
                 className="rounded-xl px-4 py-3 text-sm font-medium bg-white/[0.06] hover:bg-white/[0.1] transition-colors"
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 type="button"
                 onClick={() => { void signOut(); setShowSignOutConfirm(false); onClose(); }}
                 className="rounded-xl px-4 py-3 text-sm font-semibold bg-white text-black hover:bg-white/90 transition-colors"
               >
-                Sair
+                Sign out
               </button>
             </div>
           </div>
