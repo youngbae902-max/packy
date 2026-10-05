@@ -388,7 +388,7 @@ const Packs = () => {
             {acapellas.length > 0 && (
               <HorizontalCarousel title="Acapellas">
                 {acapellas.slice(0, 8).map(acapella => (
-                  <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                  <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start flex justify-center">
                     <AudioPlayer
                       artistName={acapella.artist_name}
                       imageUrl={acapella.image_url}
