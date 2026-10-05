@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Packs from "./pages/Packs";
 import Projetos from "./pages/Projetos";
 import MCs from "./pages/MCs";
+import MCProfile from "./pages/MCProfile";
 import Conta from "./pages/Conta";
 import Admin from "./pages/Admin";
 import Albums from "./pages/Albums";
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/" element={<Packs />} />
                 <Route path="/projetos" element={<Projetos />} />
                 <Route path="/mcs" element={<MCs />} />
+                <Route path="/mcs/:id" element={<MCProfile />} />
                 <Route path="/albuns" element={<Albums />} />
                 <Route path="/sites" element={<Sites />} />
                 <Route path="/desejos" element={<Wishlist />} />
