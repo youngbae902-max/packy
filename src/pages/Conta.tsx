@@ -307,8 +307,8 @@ const Conta = () => {
             </div>
 
             {/* Name & Username */}
-            <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-3xl font-bold text-foreground tracking-tight">{profile?.artist_name || 'Sem nome'}</h2>
+            <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
+              <h2 className="text-[26px] sm:text-3xl font-bold text-foreground tracking-tight">{profile?.artist_name || 'Sem nome'}</h2>
               {(profile as any)?.has_spotify_badge && (
                 <div
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
@@ -322,7 +322,7 @@ const Conta = () => {
               )}
               <button 
                 onClick={() => setIsEditingProfile(true)} 
-                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                className="w-8 h-8 rounded-full bg-secondary border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-colors"
               >
                 <Edit className="w-4 h-4" />
               </button>
@@ -344,7 +344,7 @@ const Conta = () => {
 
             {/* Bio */}
             {profile?.bio && (
-              <p className="text-sm text-muted-foreground max-w-xs mb-4"><EmojiText text={profile.bio} /></p>
+              <p className="text-[13px] leading-5 text-muted-foreground max-w-sm mb-4"><EmojiText text={profile.bio} /></p>
             )}
 
             {/* Social Links */}
