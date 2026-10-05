@@ -774,7 +774,7 @@ export default function Admin() {
             )}
 
             {showBulkAcapellaInput && mainTab === 'acapellas' && (
-              <Card className="p-4 rounded-3xl border-border/50 bg-card">
+              <Card className="p-4 rounded-3xl border-border/50 bg-[#151515]">
                 <h3 className="font-bold text-sm mb-2">Adicionar Acapellas em Massa</h3>
                 <p className="text-xs text-muted-foreground mb-3">Cole links de áudio ou download. Cada link cria uma acapella pendente.</p>
                 <BulkLinkInput 
@@ -814,7 +814,7 @@ export default function Admin() {
         {/* Pending packs ready to send home */}
         {mainTab === 'pendentes' && (
           <div className="space-y-4">
-            <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
+            <Card className="p-4 bg-[#111111] border-border/40">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <h3 className="font-bold text-foreground">Packs pendentes</h3>
@@ -831,7 +831,7 @@ export default function Admin() {
             </Button>
 
             {showBulkPackInput && (
-              <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
+              <Card className="p-4 bg-[#111111] border-border/40">
                 <BulkLinkInput
                   onLinksConfirmed={async (links) => {
                     for (let i = 0; i < links.length; i++) {
@@ -1282,7 +1282,7 @@ export default function Admin() {
               value={packSearch}
               onChange={(e) => setPackSearch(e.target.value)}
               placeholder="Buscar por nome, ID, criador ou categoria…"
-              className="bg-card border-border/60"
+              className="bg-[#151515] border-border/60"
             />
             {filtered.map((pack) => (
               <div key={pack.id} className="pack-card flex gap-3">
