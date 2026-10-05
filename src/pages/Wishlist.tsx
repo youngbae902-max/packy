@@ -40,24 +40,24 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="max-w-lg mx-auto px-4 pt-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center relative">
+    <div className="min-h-screen bg-[#111111] pb-20">
+      <div className="max-w-xl mx-auto px-5 pt-8">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-11 h-11 rounded-2xl bg-[#181818] border border-white/[0.07] flex items-center justify-center relative">
             <Gift className="w-5 h-5 text-primary" />
             {hasUpdates && (
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" />
             )}
           </div>
           <div>
-            <h1 className="text-xl font-bold">Lista de Desejos</h1>
-            <p className="text-xs text-muted-foreground">Peça packs que você quer</p>
+            <h1 className="text-[20px] font-bold tracking-tight">Lista de Desejos</h1>
+            <p className="text-[12px] text-muted-foreground">Peça packs que você quer</p>
           </div>
         </div>
 
         {/* Request Form */}
-        <Card className="mb-6">
-          <CardContent className="pt-4">
+        <Card className="mb-8 rounded-2xl border-white/[0.07] bg-[#151515] shadow-none">
+          <CardContent className="pt-5">
             <Textarea
               placeholder="Descreva o pack que você quer..."
               value={requestText}
