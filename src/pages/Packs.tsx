@@ -366,7 +366,7 @@ const Packs = () => {
                   <HorizontalCarousel title="Premium & Exclusivos">
                     {premiumPacks.map(pack => (
                       <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
+                        <PackCardV2 pack={pack} hidePremiumBadge />
                       </div>
                     ))}
                   </HorizontalCarousel>
