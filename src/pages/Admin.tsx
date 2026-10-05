@@ -53,6 +53,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home' | 'aplicativos';
 type SubTab = 'pending' | 'approved' | 'rejected';
+type PackSection = 'geral' | 'pagos';
 type AdminCategory = 'visao' | 'conteudo' | 'comunidade' | 'sistema';
 
 const MAIN_ADMIN_USERNAME = 'goat';
@@ -62,6 +63,7 @@ export default function Admin() {
   const [mainTab, setMainTab] = useState<MainTab>('stats');
   const [adminCategory, setAdminCategory] = useState<AdminCategory>('visao');
   const [subTab, setSubTab] = useState<SubTab>('pending');
+  const [packSection, setPackSection] = useState<PackSection>('geral');
   const [reorderQuick, setReorderQuick] = useState(false);
   const [quickOrder, setQuickOrder] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('admin_quick_order') || '[]'); } catch { return []; }
@@ -724,6 +726,23 @@ export default function Admin() {
         {/* Sub Tabs for content moderation */}
         {(mainTab === 'packs' || mainTab === 'projetos' || mainTab === 'acapellas') && (
           <div className="space-y-4">
+            {mainTab === 'packs' && (
+              <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+                {(['geral', 'pagos'] as PackSection[]).map((section) => (
+                  <button
+                    key={section}
+                    onClick={() => setPackSection(section)}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
+                      packSection === section
+                        ? 'bg-foreground text-background border-foreground'
+                        : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground'
+                    }`}
+                  >
+                    {section === 'geral' ? 'Geral' : 'Pagos'}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
@@ -1403,8 +1422,11 @@ export default function Admin() {
         {/* Packs/Projects content */}
         {(mainTab === 'packs' || mainTab === 'projetos') && (() => {
           const q = packSearch.trim().toLowerCase();
+          const packItems = mainTab === 'packs'
+            ? getPacksContent().filter((p) => packSection === 'pagos' ? p.is_premium : !p.is_premium)
+            : getPacksContent();
           const filtered = q
-            ? getPacksContent().filter((p) =>
+            ? packItems.filter((p) =>
                 [p.id, p.title, p.author_name, p.pack_type]
                   .filter(Boolean)
                   .some((v) => String(v).toLowerCase().includes(q))
