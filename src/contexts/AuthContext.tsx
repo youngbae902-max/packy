@@ -27,6 +27,7 @@ interface Profile {
   recovery_keyword?: string | null;
   online_indicator_shape?: string | null;
   avatar_shape?: string | null;
+  is_banned?: boolean | null;
 }
 
 interface AuthContextType {
