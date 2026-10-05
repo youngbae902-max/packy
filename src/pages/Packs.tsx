@@ -116,7 +116,7 @@ const Packs = () => {
             onChange={e => setSearchQuery(e.target.value)}
             onFocus={() => q.length > 0 && setPopupOpen(true)}
             className="w-full bg-[#111111] border border-white/[0.05] rounded-xl pl-12 pr-10 py-3 text-sm text-[#F5F5F5] placeholder:text-[#8A8A8A] focus:outline-none focus:ring-1 focus:ring-white/[0.08] focus:border-white/[0.10] transition-all shadow-none"
-            placeholder="O que você quer ouvir ou baixar?"
+            placeholder="What do you want to hear or download?"
           />
           {searchQuery && (
             <button
@@ -132,7 +132,7 @@ const Packs = () => {
             <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-white/[0.06] bg-[#111111]/98 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.35)] p-3 animate-fade-in max-h-96 overflow-y-auto">
               {searchedProfiles.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Usuários</p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Users</p>
                   <div className="space-y-1">
                     {searchedProfiles.map(profile => (
                       <Link
@@ -166,7 +166,7 @@ const Packs = () => {
               )}
               {searchedPacks.length > 0 ? (
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Packs & Projetos</p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Packs & Projects</p>
                   <div className="space-y-2">
                     {searchedPacks.slice(0, 5).map(pack => (
                       <div key={pack.id} className="transform scale-95 origin-left">
@@ -176,7 +176,7 @@ const Packs = () => {
                   </div>
                 </div>
               ) : q.length > 0 && searchedProfiles.length === 0 && searchedMCs.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">Nenhum resultado encontrado.</p>
+                <p className="text-sm text-muted-foreground text-center py-4">No results found.</p>
               ) : null}
             </div>
           )}
@@ -231,9 +231,9 @@ const Packs = () => {
           <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
-                ['inicio', 'Início'],
-                ['geral', 'Packs em geral'],
-                ['pagos', 'Packs pagos'],
+                ['inicio', 'Home'],
+                ['geral', 'All Packs'],
+                ['pagos', 'Paid Packs'],
               ].map(([tab, label]) => (
                 <button
                   key={tab}
@@ -269,7 +269,7 @@ const Packs = () => {
         ) : q.length > 0 ? (
           <div>
             <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
-              Resultados para "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
+              Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
             </h2>
             {searchedMCs.length > 0 && (
               <div className="mb-7">
@@ -285,7 +285,7 @@ const Packs = () => {
               </div>
             )}
             {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
-              <p className="text-center py-16 text-muted-foreground">Nenhum pack encontrado.</p>
+              <p className="text-center py-16 text-muted-foreground">No packs found.</p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                 {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
@@ -295,25 +295,25 @@ const Packs = () => {
         ) : activeTab === 'pagos' ? (
           <div>
             <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Premium</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight">Packs pagos</h2>
-              <p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} packs disponíveis</p>
+              <p className="text-xs font-semibold text-muted-foreground mb-1">Paid</p>
+              <h2 className="text-xl md:text-2xl font-normal tracking-tight">Paid Packs</h2>
+              <p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} packs available</p>
             </div>
-            {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum pack pago disponível ainda.</p> : (
+            {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">No paid packs available yet.</p> : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePremiumBadge />)}
+                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePaidBadge />)}
               </div>
             )}
           </div>
         ) : activeTab === 'geral' ? (
           <div>
             <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Biblioteca</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Todos os Packs</h2>
-              <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p>
+              <p className="text-xs font-semibold text-muted-foreground mb-1">Library</p>
+              <h2 className="text-xl md:text-2xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>All Packs</h2>
+              <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs available</p>
             </div>
             {allPacks.length === 0 ? (
-              <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
+              <p className="text-center py-16 text-muted-foreground">No packs available yet.</p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                 {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
@@ -370,7 +370,7 @@ const Packs = () => {
               /* Fallback sections if no categories are setup yet */
               <>
                 {premiumPacks.length > 0 && (
-                  <HorizontalCarousel title="Premium & Exclusivos">
+                  <HorizontalCarousel title="Paid & Exclusivos">
                     {premiumPacks.map(pack => (
                       <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
@@ -380,7 +380,7 @@ const Packs = () => {
                 )}
 
                 {projectPacks.length > 0 && (
-                  <HorizontalCarousel title="Projetos e FLPs">
+                  <HorizontalCarousel title="Projects & FLPs">
                     {projectPacks.map(pack => (
                       <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
