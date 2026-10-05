@@ -91,7 +91,7 @@ export default function Inbox() {
                         </p>
                       )}
                       <p className="text-xs text-muted-foreground mt-2">
-                        {new Date(message.created_at).toLocaleDateString('pt-BR', {
+                        {new Date(message.created_at).toLocaleDateString('en-US', {
                           day: '2-digit',
                           month: 'short',
                           hour: '2-digit',
@@ -166,7 +166,7 @@ export default function Inbox() {
           )}
 
           <p className="text-xs text-muted-foreground">
-            Recebido em {selectedMessage && new Date(selectedMessage.created_at).toLocaleDateString('pt-BR', {
+            Recebido em {selectedMessage && new Date(selectedMessage.created_at).toLocaleDateString('en-US', {
               day: '2-digit',
               month: 'long',
               year: 'numeric',
