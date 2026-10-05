@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Pack } from '@/hooks/useSupabasePacks';
 import { Image as ImageIcon, Crown, Heart, Bookmark, ExternalLink, Pin, MoreHorizontal, Download, X, User, BadgeCheck, Repeat2, MessageCircle, Send, Edit2, Trash2, Link as LinkIcon, ChevronRight, } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePackInteractions } from '@/hooks/usePackInteractions';
 import { AuthModal } from './AuthModal';
@@ -21,8 +21,8 @@ const packTypeLabels: Record<string, string> = {
   drumkit: 'Drumkit',
   loops: 'Loops',
   presets: 'Presets',
-  project: 'Projeto',
-  other: 'Outros'
+  project: 'Project',
+  other: 'Other'
 };
 
 interface PackCardV2Props {
@@ -46,14 +46,14 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
 
   const isOwner = (pack.author_name || '').toLowerCase().replace(/^@/, '') === 'goat';
 
-  const formattedDate = format(new Date(pack.created_at), "dd/MM/yyyy", { locale: ptBR });
-  const displayAuthor = pack.is_anonymous ? 'Anônimo' : pack.author_name || 'Desconhecido';
+  const formattedDate = format(new Date(pack.created_at), "dd/MM/yyyy", { locale: enUS });
+  const displayAuthor = pack.is_anonymous ? 'Anonymous' : pack.author_name || 'Unknown';
   const authorProfileUrl = pack.user_id && !pack.is_anonymous ? `/perfil/${pack.user_id}` : null;
 
   const handleLikeClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) { setShowAuthModal(true); return; }
-    try { await toggleLike(); } catch { toast.error('Erro ao curtir'); }
+    try { await toggleLike(); } catch { toast.error('Like failed'); }
   };
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
@@ -61,8 +61,8 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
     if (!user) { setShowAuthModal(true); return; }
     try {
       await toggleFavorite();
-      toast.success(hasFavorited ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
-    } catch { toast.error('Erro ao favoritar'); }
+      toast.success(hasFavorited ? 'Removed from favorites' : 'Added to favorites');
+    } catch { toast.error('Favorite failed'); }
   };
 
   const handleDownloadClick = (e: React.MouseEvent) => {
@@ -82,14 +82,14 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
     try {
       await unlockDownload();
       setShowCreditFlow(false);
-      toast.success('Download liberado!');
-    } catch { toast.error('Erro ao liberar download'); }
+      toast.success('Download unlocked!');
+    } catch { toast.error('Failed to unlock download'); }
   };
 
   const handleRepostClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) { setShowAuthModal(true); return; }
-    try { await toggleRepost(); } catch { toast.error('Erro ao republicar'); }
+    try { await toggleRepost(); } catch { toast.error('Repost failed'); }
   };
 
   const handleAddComment = async () => {
@@ -98,7 +98,7 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
     try {
       await addComment(commentText);
       setCommentText('');
-    } catch { toast.error('Erro ao comentar'); }
+    } catch { toast.error('Comment failed'); }
   };
 
   const handleUpdateComment = async () => {
@@ -109,13 +109,13 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
     } catch { toast.error('Erro ao editar comentário'); }
   };
 
-  const timeAgo = formatDistanceToNowStrict(new Date(pack.created_at), { locale: ptBR })
-    .replace(' segundos', 's').replace(' segundo', 's')
-    .replace(' minutos', 'min').replace(' minuto', 'min')
-    .replace(' horas', 'h').replace(' hora', 'h')
-    .replace(' dias', ' DIAS').replace(' dia', ' DIA')
-    .replace(' meses', ' MESES').replace(' mês', ' MÊS')
-    .replace(' anos', ' ANOS').replace(' ano', ' ANO')
+  const timeAgo = formatDistanceToNowStrict(new Date(pack.created_at), { locale: enUS })
+    .replace(' seconds', 's').replace(' second', 's')
+    .replace(' min', 'min').replace(' min', 'min')
+    .replace(' h', 'h').replace(' h', 'h')
+    .replace(' DAYS', ' DIAS').replace(' DAY', ' DIA')
+    .replace(' MONTHS', ' MESES').replace(' MONTH', ' MÊS')
+    .replace(' YEARS', ' ANOS').replace(' YEAR', ' ANO')
     .toUpperCase();
 
   const categoryLabel = (packTypeLabels[pack.pack_type] || pack.pack_type || '').toUpperCase();
@@ -313,7 +313,7 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
                   ) : comments.map((comment) => {
                     const canEdit = user?.id === comment.user_id;
                     const canDelete = canEdit || isAdmin;
-                    const name = comment.profiles?.username || comment.profiles?.artist_name || 'Usuário';
+                    const name = comment.profiles?.username || comment.profiles?.artist_name || 'User';
                     return (
                       <div key={comment.id}>
                         <div className="flex items-start gap-2">
