@@ -97,7 +97,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-sm bg-card border border-border rounded-[2rem] p-8 shadow-2xl animate-scale-in">
+      <div className="relative w-full max-w-[390px] max-h-[calc(100dvh-32px)] overflow-y-auto bg-[#151515] border border-white/[0.08] rounded-[28px] p-6 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.45)] animate-scale-in">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-colors"
@@ -111,13 +111,13 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             <h2 className="text-2xl font-black tracking-tight leading-none">
               {mode === 'login' ? 'Entrar no PACKY' : 'Criar sua conta'}
             </h2>
-            <p className="text-[12px] text-muted-foreground mt-1.5">
+            <p className="text-[12px] text-muted-foreground mt-2">
               {mode === 'login' ? 'Bem-vindo de volta' : 'Junte-se à comunidade de editores'}
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
             <label className="label-field flex items-center gap-1">
               <Mail className="w-3 h-3" />
@@ -128,7 +128,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={mode === 'login' ? 'seu@email.com ou @user' : 'seu@email.com'}
-              className="input-field"
+              className="input-field bg-[#111111] border-white/[0.08] rounded-xl h-11 px-3.5 focus:border-white/[0.18] focus:ring-0"
               required
             />
           </div>
@@ -154,7 +154,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="input-field pr-12"
+                className="input-field pr-12 bg-[#111111] border-white/[0.08] rounded-xl h-11 px-3.5 focus:border-white/[0.18] focus:ring-0"
                 required
                 minLength={6}
               />
@@ -177,18 +177,18 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           )}
 
           {forgotByKeyword && mode === 'login' && (
-            <button type="button" onClick={handleKeywordReset} className="btn-secondary w-full">Trocar senha com palavra-chave</button>
+            <button type="button" onClick={handleKeywordReset} className="btn-secondary w-full h-11 rounded-xl font-semibold">Trocar senha com palavra-chave</button>
           )}
 
           <button 
             type="submit" 
-            className="btn-primary w-full"
+            className="btn-primary w-full h-11 rounded-xl font-semibold"
             disabled={isLoading}
           >
             {isLoading ? 'Carregando...' : mode === 'login' ? 'Entrar' : 'Criar Conta'}
           </button>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 py-0.5">
             <div className="flex-1 h-px bg-border" />
             <span className="text-[11px] text-muted-foreground uppercase tracking-wider">ou</span>
             <div className="flex-1 h-px bg-border" />
@@ -204,7 +204,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
                 toast.error('Erro ao entrar com Google');
               }
             }}
-            className="w-full flex items-center justify-center gap-2 bg-white text-black font-semibold py-3 rounded-xl hover:bg-white/90 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-white/[0.06] text-foreground border border-white/[0.08] font-semibold h-11 rounded-xl hover:bg-white/[0.1] transition-colors"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -215,7 +215,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             Entrar com Google
           </button>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-[13px] text-muted-foreground pt-1">
             {mode === 'login' ? (
               <>
                 Não tem conta?{' '}
