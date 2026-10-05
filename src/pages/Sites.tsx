@@ -41,9 +41,9 @@ const Sites = () => {
     try {
       const url = await uploadSiteImage(f);
       setImageUrl(url);
-      toast.success('Imagem enviada');
+      toast.success('Image uploaded');
     } catch {
-      toast.error('Erro ao enviar imagem');
+      toast.error('Failed to upload image');
     } finally {
       setUploading(false);
     }
@@ -51,28 +51,28 @@ const Sites = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !siteUrl.trim()) return toast.error('Preencha nome e link');
+    if (!name.trim() || !siteUrl.trim()) return toast.error('Enter a name and link');
     try {
       if (editing) {
         await updateSite({ id: editing.id, name, description, site_url: siteUrl, image_url: imageUrl });
-        toast.success('Site atualizado');
+        toast.success('Site updated');
       } else {
         await addSite({ name, description, site_url: siteUrl, image_url: imageUrl, display_order: 0 });
-        toast.success('Site adicionado');
+        toast.success('Site added');
       }
       setIsFormOpen(false);
     } catch {
-      toast.error('Erro ao salvar');
+      toast.error('Failed to save');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Excluir este site?')) return;
+    if (!confirm('Delete this site?')) return;
     try {
       await deleteSite(id);
-      toast.success('Site removido');
+      toast.success('Site removed');
     } catch {
-      toast.error('Erro ao excluir');
+      toast.error('Failed to delete');
     }
   };
 
@@ -181,7 +181,7 @@ const Sites = () => {
               <X className="w-5 h-5" />
             </button>
             <h2 className="text-xl font-black uppercase mb-6">
-              {editing ? 'Editar Site' : 'Novo Site'}
+              {editing ? 'Edit Site' : 'New Site'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -206,7 +206,7 @@ const Sites = () => {
                     className="w-full flex items-center justify-center gap-2 bg-muted/50 border border-border border-dashed rounded-xl px-4 py-6 text-muted-foreground hover:text-foreground"
                   >
                     <Upload className="w-4 h-4" />
-                    {uploading ? 'Enviando...' : 'Carregar imagem'}
+                    {uploading ? 'Uploading...' : 'Upload image'}
                   </button>
                 )}
               </div>
@@ -235,7 +235,7 @@ const Sites = () => {
                 />
               </div>
               <button type="submit" className="btn-primary w-full">
-                {editing ? 'Salvar' : 'Adicionar'}
+                {editing ? 'Save' : 'Add'}
               </button>
             </form>
           </div>
