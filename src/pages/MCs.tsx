@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, LayoutGrid, List, Music, X, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { BottomNav } from '@/components/BottomNav';
@@ -8,6 +9,7 @@ type LayoutMode = 'grid' | 'list';
 
 const MCs = () => {
   const { acapellas, isLoading } = useAcapellas();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [layout, setLayout] = useState<LayoutMode>('grid');
   const [selectedMc, setSelectedMc] = useState<Acapella | null>(null);
@@ -22,9 +24,7 @@ const MCs = () => {
 
   const openPoll = (event: React.MouseEvent, mc: Acapella) => {
     event.preventDefault();
-    setSelectedMc(mc);
-    setPollChoice('');
-    setPollText('');
+    navigate(`/mcs/${mc.id}`);
   };
 
   const continueToAcapella = () => {
