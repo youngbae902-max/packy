@@ -249,21 +249,20 @@ const Conta = () => {
   return (
     <div className="account-page min-h-screen bg-background pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
-        <div className="max-w-lg mx-auto">
-          <div className="flex justify-end mb-8">
-            <button onClick={() => setSearchParams({ settings: '1' })} className="w-11 h-11 flex items-center justify-center text-foreground" aria-label="Configurações">
+      <div className="px-4 pt-4 sm:pt-6">
+        <div className="max-w-lg mx-auto overflow-hidden rounded-[28px] border border-border/50 bg-[#151515]">
+          <div className="relative h-24 bg-gradient-to-br from-secondary via-background to-secondary"><div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_55%)]" />
+            <button onClick={() => setSearchParams({ settings: '1' })} className="absolute right-3 top-3 z-10 w-10 h-10 rounded-full bg-background/60 border border-border/50 backdrop-blur flex items-center justify-center text-foreground hover:bg-background transition-colors" aria-label="Configurações">
               <Settings className="w-5 h-5" />
-            </button>
-          </div>
+            </button></div>
 
           {/* Profile Card */}
-          <div className="flex flex-col items-center text-center">
+          <div className="relative flex flex-col items-center text-center px-5 pb-6 -mt-12">
             {/* Avatar */}
             <div className="relative mb-4 w-32 h-32">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className={`w-32 h-32 bg-secondary border-2 border-border overflow-hidden cursor-pointer hover:opacity-80 transition-opacity block ${avatarShapeClasses(avatarShape)}`}
+                className={`w-28 h-28 sm:w-32 sm:h-32 bg-secondary border-[3px] border-[#151515] shadow-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity block ${avatarShapeClasses(avatarShape)}`}
               >
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
@@ -330,7 +329,7 @@ const Conta = () => {
             </div>
             
             {profile?.username && (
-              <p className="text-sm text-muted-foreground mb-3">@{profile.username}</p>
+              <p className="text-[13px] text-muted-foreground mb-3">@{profile.username}</p>
             )}
 
             {/* Badges */}
@@ -369,11 +368,11 @@ const Conta = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-8">
-        <div className="grid grid-cols-3 gap-2 mb-6 text-center">
-          <div><p className="text-xl font-black text-foreground">{userPacks.length}</p><p className="text-xs text-muted-foreground">Enviados</p></div>
-          <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs text-muted-foreground">Seguidores</p></div>
-          <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
+      <div className="max-w-lg mx-auto px-4 pt-4">
+        <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-border/50 bg-[#151515] mb-6 text-center">
+          <div className="py-4 border-r border-border/40"><p className="text-lg font-black text-foreground">{userPacks.length}</p><p className="text-[11px] text-muted-foreground mt-0.5">Enviados</p></div>
+          <div className="py-4 border-r border-border/40"><p className="text-lg font-black text-foreground">{followersCount}</p><p className="text-[11px] text-muted-foreground mt-0.5">Seguidores</p></div>
+          <div className="py-4"><p className="text-lg font-black text-foreground">{followingCount}</p><p className="text-[11px] text-muted-foreground mt-0.5">Seguindo</p></div>
         </div>
 
         {showFavoritesSection && <FavoritesSection />}
