@@ -1303,44 +1303,77 @@ export default function Admin() {
         )}
 
         {mainTab === 'carteira' && (
-          <div className="space-y-4">
-            <Card className="p-5 rounded-3xl border-border/50 bg-card space-y-4">
-              <div>
-                <h3 className="font-bold flex items-center gap-2 text-base"><Wallet className="w-4 h-4" /> Ajustar saldo</h3>
-                <p className="text-xs text-muted-foreground mt-1">Selecione um usuário e abra o teclado.</p>
+          <div className="space-y-3">
+            <Card className="rounded-3xl border-border/50 bg-card overflow-hidden">
+              <div className="p-5 pb-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-white/[0.06] flex items-center justify-center shrink-0">
+                    <Wallet className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base">Ajustar saldo</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Escolha uma conta para alterar o saldo.</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Input
-                  value={walletUsername}
-                  onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))}
-                  placeholder="@username"
-                  className="rounded-2xl"
-                />
-                <Button
-                  className="rounded-2xl px-5"
-                  disabled={!walletUsername.trim()}
-                  onClick={() => {
-                    const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
-                    if (!target) { toast.error('Usuário não encontrado'); return; }
-                    setKeypadOpen(true);
-                  }}
-                >Abrir teclado</Button>
+
+              <div className="px-5 pb-5">
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.025] p-3">
+                  <div className="flex gap-2">
+                    <Input
+                      value={walletUsername}
+                      onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))}
+                      placeholder="@username"
+                      className="h-11 rounded-2xl border-white/[0.07] bg-background/40"
+                    />
+                    <Button
+                      className="h-11 rounded-2xl px-5 shrink-0"
+                      disabled={!walletUsername.trim()}
+                      onClick={() => {
+                        const target = users?.find((u: any) => u.username?.toLowerCase() === walletUsername.trim().toLowerCase());
+                        if (!target) { toast.error('Usuário não encontrado'); return; }
+                        setKeypadOpen(true);
+                      }}
+                    >
+                      Ajustar
+                    </Button>
+                  </div>
+                </div>
               </div>
             </Card>
 
-            <Card className="p-3 rounded-3xl border-white/[0.06] bg-[#151515] space-y-2">
-              <div className="flex items-center justify-between"><h3 className="font-bold text-sm">Saldos atuais</h3><span className="text-[10px] text-muted-foreground">{users?.length || 0} contas</span></div>
-              <div className="max-h-96 overflow-y-auto space-y-1">
-                {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
-                  <button
-                    key={u.user_id}
-                    onClick={() => { setWalletUsername(u.username || ''); setKeypadOpen(true); }}
-                    className="w-full flex items-center justify-between py-2 px-2 rounded-lg hover:bg-secondary/40 text-left"
-                  >
-                    <span className="text-xs truncate mr-2">@{u.username || '—'}</span>
-                    <span className="text-xs font-bold tabular-nums">R$ {Number(u.wallet_balance || 0).toFixed(2)}</span>
-                  </button>
-                ))}
+            <Card className="rounded-3xl border-border/50 bg-card overflow-hidden">
+              <div className="p-5 pb-3 flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-sm">Contas</h3>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Clique em uma conta para ajustar o saldo.</p>
+                </div>
+                <span className="text-[10px] font-medium text-muted-foreground bg-white/[0.04] border border-white/[0.06] rounded-full px-2.5 py-1">
+                  {users?.length || 0}
+                </span>
+              </div>
+
+              <div className="px-3 pb-3">
+                <div className="max-h-[420px] overflow-y-auto space-y-1 rounded-2xl border border-white/[0.05] bg-white/[0.015] p-1.5">
+                  {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
+                    <button
+                      key={u.user_id}
+                      onClick={() => { setWalletUsername(u.username || ''); setKeypadOpen(true); }}
+                      className="w-full flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-white/[0.04]"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-xs font-medium truncate">@{u.username || '—'}</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">ID {String(u.user_id).slice(0, 8)}</p>
+                      </div>
+                      <span className="text-xs font-bold tabular-nums shrink-0">
+                        R$ {Number(u.wallet_balance || 0).toFixed(2)}
+                      </span>
+                    </button>
+                  ))}
+                  {(!users || users.length === 0) && (
+                    <p className="text-center py-8 text-xs text-muted-foreground">Nenhuma conta encontrada.</p>
+                  )}
+                </div>
               </div>
             </Card>
 
@@ -1359,7 +1392,6 @@ export default function Admin() {
             />
           </div>
         )}
-
         {/* Trash Tab */}
         {mainTab === 'lixeira' && (
           <div className="space-y-4">
