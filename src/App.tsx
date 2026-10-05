@@ -2,8 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Packs from "./pages/Packs";
 import Projetos from "./pages/Projetos";
 import MCs from "./pages/MCs";
@@ -22,47 +22,9 @@ import Up from "./pages/Up";
 import Apps from "./pages/Apps";
 import { Sidebar } from "@/components/Sidebar";
 
-
-// Acapella selection opens the poll flow.
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner position="top-center" duration={900} />
-        <BrowserRouter>
-          <div className="flex min-h-screen bg-[#111111]">
-            <Sidebar />
-            <div className="flex-1 w-full md:pl-64 pb-20 md:pb-0">
-              <Routes>
-                <Route path="/" element={<Packs />} />
-                <Route path="/projetos" element={<Projetos />} />
-                <Route path="/mcs" element={<MCs />} />
-                <Route path="/albuns" element={<Albums />} />
-                <Route path="/sites" element={<Sites />} />
-                <Route path="/desejos" element={<Wishlist />} />
-                <Route path="/inbox" element={<Inbox />} />
-                <Route path="/perfil/:userId" element={<PublicProfile />} />
-                <Route path="/pagina/:slug" element={<CustomPage />} />
-                <Route path="/conta" element={<Conta />} />
-                <Route path="/carteira" element={<Wallet />} />
-                <Route path="/up" element={<Up />} />
-                <Route path="/aplicativos" element={<Apps />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </div>
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
-
-export default App;const AppContent = () => {
+const AppContent = () => {
   const { user } = useAuth();
   const location = useLocation();
 
