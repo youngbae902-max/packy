@@ -894,7 +894,7 @@ export default function Admin() {
                     <div className="flex items-center gap-3">
                       <div className="relative shrink-0"><img src={u.avatar_url || '/placeholder.svg'} alt="" className="w-11 h-11 rounded-full object-cover border border-white/[0.07]" />{u.is_online && <span className="absolute right-0 bottom-0 w-3 h-3 rounded-full border-2 border-[#111111]" style={{ backgroundColor: u.online_accent_color || u.theme_accent_color || 'hsl(var(--success))' }} />}</div>
                       <div className="min-w-0 flex-1"><div className="flex items-center gap-1.5 min-w-0"><span className="font-semibold text-sm truncate">@{u.username || 'sem-username'}</span>{isMainAdmin(u.user_id) && <Crown className="w-3.5 h-3.5 shrink-0 text-warning" />}</div><p className="text-[10px] text-muted-foreground truncate mt-0.5">{u.user_id}</p><div className="flex gap-1 mt-1.5 flex-wrap">{isUserAdmin(u.user_id) && <Badge className="text-[9px] px-1.5 py-0 bg-foreground/10 text-foreground border-0">ADM</Badge>}{isMainAdmin(u.user_id) && <Badge className="text-[9px] px-1.5 py-0 bg-foreground text-background border-0">Principal</Badge>}{u.is_banned && <Badge variant="destructive" className="text-[9px] px-1.5 py-0">Banido</Badge>}{u.has_spotify_badge && <Badge className="text-[9px] px-1.5 py-0 bg-success/15 text-success border-0">Spotify</Badge>}</div></div>
-                      <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-white/[0.04] text-muted-foreground"><ChevronRight className="w-4 h-4" /></div>
+
                     </div>
                   </button>
                 ))}
