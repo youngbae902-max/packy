@@ -15,7 +15,7 @@ export function AdminSection({ title, description, icon: Icon, defaultOpen = fal
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="rounded-2xl border border-[#252525] bg-[#1C1C1C] overflow-hidden">
+    <div className="rounded-[20px] border border-white/[0.07] bg-[#151515] overflow-hidden shadow-none">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
