@@ -1,6 +1,6 @@
 import { ChevronLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid, ChevronRight, ChevronDown, Image as ImageIcon } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid, ChevronRight, ChevronDown, Image as ImageIcon, Smartphone } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { NumericKeypad } from '@/components/NumericKeypad';
 import { useAuth } from '@/contexts/AuthContext';
@@ -45,12 +45,13 @@ import { HomeSectionsManager } from '@/components/HomeSectionsManager';
 import { HomeBannersManager } from '@/components/HomeBannersManager';
 import { AdminSection } from '@/components/AdminSection';
 import { ReleasesSectionManager } from '@/components/ReleasesSectionManager';
+import { AdminApplicationsManager } from '@/components/AdminApplicationsManager';
 
 import { BulkCoversManager } from '@/components/BulkCoversManager';
 import { useQueryClient } from '@tanstack/react-query';
 
 
-type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home';
+type MainTab = 'stats' | 'pendentes' | 'packs' | 'projetos' | 'acapellas' | 'usuarios' | 'desejos' | 'albuns' | 'eventos' | 'paginas' | 'emojis' | 'selos' | 'decoracoes' | 'carteira' | 'giftall' | 'lixeira' | 'categorias' | 'home' | 'aplicativos';
 type SubTab = 'pending' | 'approved' | 'rejected';
 type AdminCategory = 'visao' | 'conteudo' | 'comunidade' | 'sistema';
 
@@ -165,6 +166,7 @@ export default function Admin() {
   const mainTabs = [
     { id: 'stats' as const, label: 'Stats', icon: BarChart3 },
     { id: 'home' as const, label: 'Home', icon: LayoutGrid },
+    { id: 'aplicativos' as const, label: 'Aplicativos', icon: Smartphone },
     { id: 'pendentes' as const, label: 'Packs Pendentes', icon: Clock },
     { id: 'packs' as const, label: 'Packs', icon: Package },
     { id: 'projetos' as const, label: 'Projetos', icon: Folder },
@@ -1457,6 +1459,8 @@ export default function Admin() {
           </div>
           );
         })()}
+
+        {mainTab === 'aplicativos' && <AdminApplicationsManager />}
 
         {/* Acapellas content */}
         {mainTab === 'acapellas' && (
