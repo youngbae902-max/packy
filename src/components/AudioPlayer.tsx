@@ -6,15 +6,15 @@ interface AudioPlayerProps {
   audioUrl: string | null;
   downloadUrl: string;
   duration?: number;
+  onSelect?: () => void;
 }
 
-export function AudioPlayer({ artistName, imageUrl, downloadUrl }: AudioPlayerProps) {
+export function AudioPlayer({ artistName, imageUrl, onSelect }: AudioPlayerProps) {
   return (
-    <a
-      href={downloadUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Abrir link de ${artistName}`}
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-label={`Abrir acapella de ${artistName}`}
       className="group flex flex-col items-center gap-4 px-2 text-center"
     >
       <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-transform duration-300 group-hover:scale-105 group-hover:border-primary/50 sm:w-40">
@@ -32,6 +32,6 @@ export function AudioPlayer({ artistName, imageUrl, downloadUrl }: AudioPlayerPr
         )}
       </div>
       <h3 className="max-w-full truncate text-sm font-bold uppercase tracking-tight">{artistName}</h3>
-    </a>
+    </button>
   );
 }
