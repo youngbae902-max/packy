@@ -139,6 +139,7 @@ export default function Admin() {
   const [packSearch, setPackSearch] = useState('');
   const { stats } = useStats();
   const [insightMode, setInsightMode] = useState<'conteudo' | 'engajamento' | 'comunidade'>('conteudo');
+  const [packSection, setPackSection] = useState<'geral' | 'pagos'>('geral');
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
   if (!isAdmin) return <Navigate to="/conta" replace />;
@@ -397,8 +398,7 @@ export default function Admin() {
                       {category.label}
                       {adminCategory === category.id && (
                         <span className="absolute left-1/2 -translate-x-1/2 bottom-0 w-8 h-0.5 rounded-full bg-foreground" />
-                      )}
-                    </button>
+                      )}                    </button>
                   ))}
                 </div>
 
@@ -797,8 +797,7 @@ export default function Admin() {
                 >
                   <tab.icon className="w-3 h-3" />{tab.label}
                 </button>
-              ))}
-            </div>
+              ))}            </div>
           </div>
         )}
 
@@ -1197,8 +1196,7 @@ export default function Admin() {
 
         {mainTab === 'selos' && (
           <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><BadgeCheck className="w-4 h-4" /> Novo selo</h3>
+            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">              <h3 className="font-bold flex items-center gap-2"><BadgeCheck className="w-4 h-4" /> Novo selo</h3>
               <Input value={badgeName} onChange={(e) => setBadgeName(e.target.value)} placeholder="Nome do selo" />
               <Input value={badgeDesc} onChange={(e) => setBadgeDesc(e.target.value)} placeholder="Descrição (opcional)" />
               <Input type="file" accept="image/*" onChange={(e) => setBadgeFile(e.target.files?.[0] || null)} />
@@ -1401,15 +1399,31 @@ export default function Admin() {
         {/* Packs/Projects content */}
         {(mainTab === 'packs' || mainTab === 'projetos') && (() => {
           const q = packSearch.trim().toLowerCase();
+          const packItems = mainTab === 'packs'
+            ? getPacksContent().filter((p) => packSection === 'pagos' ? p.is_premium : !p.is_premium)
+            : getPacksContent();
           const filtered = q
-            ? getPacksContent().filter((p) =>
+            ? packItems.filter((p) =>
                 [p.id, p.title, p.author_name, p.pack_type]
                   .filter(Boolean)
                   .some((v) => String(v).toLowerCase().includes(q))
               )
-            : getPacksContent();
+            : packItems;
           return (
           <div className="space-y-3 mt-4">
+            {mainTab === 'packs' && (
+              <div className="mt-4 flex gap-1 rounded-xl bg-white/[0.035] p-1">
+                {([['geral', 'Geral'], ['pagos', 'Pagos']] as const).map(([id, label]) => (
+                  <button
+                    key={id}
+                    onClick={() => setPackSection(id)}
+                    className={`flex-1 rounded-lg px-2 py-2 text-[9px] font-semibold transition-all ${packSection === id ? 'bg-white text-black' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
             <Input
               value={packSearch}
               onChange={(e) => setPackSearch(e.target.value)}
@@ -1598,183 +1612,3 @@ export default function Admin() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Crown className="w-5 h-5 text-warning" />
-              Adicionar Pack Premium
-            </DialogTitle>
-          </DialogHeader>
-          <AdminPackForm onSubmit={handleAddPremiumPack} onClose={() => setShowPremiumPackModal(false)} isPremium />
-        </DialogContent>
-      </Dialog>
-
-      <EditPackModal isOpen={!!editingPack} pack={editingPack} onClose={() => setEditingPack(null)} onSave={async (id, updates) => { await updatePack({ id, ...updates }); }} />
-      <EditAcapellaModal isOpen={!!editingAcapella} acapella={editingAcapella} onClose={() => setEditingAcapella(null)} onSave={async (id, updates) => { await updateAcapella({ id, ...updates }); }} />
-      <EditAlbumModal album={editingAlbum} isOpen={!!editingAlbum} onClose={() => setEditingAlbum(null)} onSave={(id, updates) => updateAlbum({ id, ...updates })} />
-      <AddAlbumModal isOpen={showAlbumModal} onClose={() => setShowAlbumModal(false)} />
-      <AddEventModal isOpen={showEventModal} onClose={() => setShowEventModal(false)} />
-      <AddAcapellaModal isOpen={showAcapellaModal} onClose={() => setShowAcapellaModal(false)} onAdd={addAcapella} />
-      <CustomPageModal page={editingPage} onClose={() => setEditingPage(null)} onSave={savePage} />
-    </div>
-  );
-}
-
-function CustomPageModal({ page, onClose, onSave }: { page: CustomPage | null; onClose: () => void; onSave: (page: any) => Promise<void> }) {
-  const [title, setTitle] = useState(page?.title || '');
-  const [slug, setSlug] = useState(page?.slug || '');
-  const [content, setContent] = useState(page?.content || '');
-  const [coverUrl, setCoverUrl] = useState(page?.cover_url || '');
-  const [placement, setPlacement] = useState(page?.placement || 'home');
-  const [isActive, setIsActive] = useState(page?.is_active ?? true);
-
-  useEffect(() => {
-    setTitle(page?.title || '');
-    setSlug(page?.slug || '');
-    setContent(page?.content || '');
-    setCoverUrl(page?.cover_url || '');
-    setPlacement(page?.placement || 'home');
-    setIsActive(page?.is_active ?? true);
-  }, [page]);
-
-  if (!page) return null;
-
-  const submit = async () => {
-    if (!title.trim() || !slug.trim()) return toast.error('Preencha título e link');
-    await onSave({ id: page.id || undefined, title, slug, content, cover_url: coverUrl || null, placement, is_active: isActive });
-    onClose();
-  };
-
-  return (
-    <Dialog open={!!page} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader><DialogTitle>{page.id ? 'Editar aba' : 'Nova aba'}</DialogTitle></DialogHeader>
-        <div className="space-y-3">
-          <div><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Sites úteis" /></div>
-          <div><Label>Link da página</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="sites-uteis" /></div>
-          <div><Label>Capa (opcional)</Label><Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://..." /></div>
-          <div><Label>Onde aparece</Label><Select value={placement} onValueChange={(value) => setPlacement(value as CustomPage['placement'])}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="home">Home</SelectItem><SelectItem value="bottom">Botões de baixo</SelectItem><SelectItem value="hidden">Oculta</SelectItem></SelectContent></Select></div>
-          <div><Label>Conteúdo</Label><Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={8} placeholder="Escreva ou cole o conteúdo da aba..." /></div>
-          <Button variant={isActive ? 'default' : 'outline'} onClick={() => setIsActive(!isActive)} className="w-full">{isActive ? 'Ativa' : 'Inativa'}</Button>
-          <Button onClick={submit} className="w-full">Salvar aba</Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-// Admin Pack Form Component
-function AdminPackForm({ 
-  onSubmit, 
-  onClose, 
-  isPremium = false 
-}: { 
-  onSubmit: (pack: any) => Promise<void>; 
-  onClose: () => void;
-  isPremium?: boolean;
-}) {
-  const [title, setTitle] = useState('');
-  const [authorName, setAuthorName] = useState('');
-  const [packType, setPackType] = useState('samples');
-  const [downloadUrl, setDownloadUrl] = useState('');
-  const [coverUrl, setCoverUrl] = useState('');
-  const [price, setPrice] = useState('');
-  const [requiresShortener, setRequiresShortener] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [coverFile, setCoverFile] = useState<File | null>(null);
-
-  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setCoverFile(file);
-    
-    // Upload to storage
-    const fileName = `admin/${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage.from('covers').upload(fileName, file);
-    if (error) {
-      toast.error('Erro ao fazer upload da capa');
-      return;
-    }
-    const { data } = supabase.storage.from('covers').getPublicUrl(fileName);
-    setCoverUrl(data.publicUrl);
-    toast.success('Capa enviada!');
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !downloadUrl.trim()) {
-      toast.error('Preencha os campos obrigatórios');
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      await onSubmit({
-        title: title.trim(),
-        author_name: authorName.trim() || 'ADM',
-        pack_type: packType,
-        download_url: downloadUrl.trim(),
-        cover_url: coverUrl || null,
-        requires_shortener: requiresShortener,
-        price: isPremium && price ? Number(price) : null,
-      });
-      onClose();
-    } catch (error) {
-      toast.error('Erro ao adicionar pack');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label>Título *</Label>
-        <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Nome do pack" />
-      </div>
-      <div>
-        <Label>Autor</Label>
-        <Input value={authorName} onChange={e => setAuthorName(e.target.value)} placeholder="ADM" />
-      </div>
-      <div>
-        <Label>Tipo</Label>
-        <Select value={packType} onValueChange={setPackType}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="samples">Samples</SelectItem>
-            <SelectItem value="drumkit">Drumkit</SelectItem>
-            <SelectItem value="loops">Loops</SelectItem>
-            <SelectItem value="presets">Presets</SelectItem>
-            <SelectItem value="project">Projeto</SelectItem>
-            <SelectItem value="other">Outro</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Label>Capa</Label>
-        <Input type="file" accept="image/*" onChange={handleCoverUpload} />
-        {coverUrl && (
-          <img src={coverUrl} alt="Preview" className="mt-2 w-24 h-24 rounded-lg object-cover" />
-        )}
-      </div>
-      <div>
-        <Label>Link de Download *</Label>
-        <Input value={downloadUrl} onChange={e => setDownloadUrl(e.target.value)} placeholder="https://..." />
-      </div>
-      <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-        <input type="checkbox" checked={requiresShortener} onChange={(e) => setRequiresShortener(e.target.checked)} />
-        Passar pelo encurtador
-      </label>
-      {isPremium && (
-        <div>
-          <Label>Preço (R$)</Label>
-          <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="19.90" />
-        </div>
-      )}
-      <div className="flex gap-2 pt-2">
-        <Button type="submit" disabled={isSubmitting} className="flex-1">
-          {isSubmitting ? 'Adicionando...' : 'Adicionar'}
-        </Button>
-        <Button type="button" variant="outline" onClick={onClose}>
-          Cancelar
-        </Button>
-      </div>
-    </form>
-  );
-}
