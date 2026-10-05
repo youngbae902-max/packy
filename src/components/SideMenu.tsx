@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic } from 'lucide-react';
+import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic, Smartphone } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,6 +21,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
     { to: '/sites', icon: Globe, label: 'Sites' },
     { to: '/inbox', icon: Mail, label: 'Caixa de entrada' },
     { to: '/desejos', icon: Star, label: 'Lista de desejos' },
+    { to: '/aplicativos', icon: Smartphone, label: 'Aplicativos' },
   ];
 
   const items = user
