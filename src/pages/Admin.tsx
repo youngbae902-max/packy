@@ -1402,6 +1402,8 @@ export default function Admin() {
               )}
             </Card>
           </div>
+        )}
+        
         {/* Trash Tab */}
         {mainTab === 'lixeira' && (
           <div className="space-y-4">
