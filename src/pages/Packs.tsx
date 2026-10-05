@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, Menu, Inbox, X, Mic } from 'lucide-react';
+import { Search, Menu, Inbox, X, Mic, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BottomNav } from '@/components/BottomNav';
 import { SideMenu } from '@/components/SideMenu';
@@ -28,6 +28,9 @@ const Packs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'inicio' | 'geral' | 'pagos'>('inicio');
+  const [selectedAcapella, setSelectedAcapella] = useState<typeof acapellas[number] | null>(null);
+  const [pollChoice, setPollChoice] = useState('');
+  const [pollText, setPollText] = useState('');
   const desktopPopupRef = useRef<HTMLDivElement>(null);
   const mobilePopupRef = useRef<HTMLDivElement>(null);
 
@@ -395,6 +398,7 @@ const Packs = () => {
                       audioUrl={acapella.audio_url}
                       downloadUrl={acapella.download_url}
                       duration={acapella.duration_seconds ?? undefined}
+                      onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }}
                     />
                   </div>
                 ))}
@@ -404,6 +408,32 @@ const Packs = () => {
         )}
 
       </div>
+
+
+      {selectedAcapella && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm" onClick={() => setSelectedAcapella(null)}>
+          <div className="w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-[#151515] shadow-2xl" onClick={(event) => event.stopPropagation()}>
+            <div className="relative p-5 pb-3">
+              <button type="button" onClick={() => setSelectedAcapella(null)} className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-sm text-white/70 hover:bg-white/15">Fechar</button>
+              <div className="mx-auto h-32 w-32 overflow-hidden rounded-2xl border border-white/10 bg-[#1B1B1B]">
+                {selectedAcapella.image_url ? <img src={selectedAcapella.image_url} alt={selectedAcapella.artist_name} className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center"><Mic className="h-9 w-9 text-white/25" /></div>}
+              </div>
+              <h2 className="mt-4 text-center text-xl font-bold">{selectedAcapella.artist_name}</h2>
+            </div>
+            <div className="space-y-3 px-5 pb-5">
+              <p className="text-base font-semibold">Com que a voz da {selectedAcapella.artist_name} combina?</p>
+              <div className="grid grid-cols-2 gap-2">
+                {['ZN', 'ZS', 'Automotivo', 'BH', 'Capixaba', 'Nenhum desses'].map(option => (
+                  <button key={option} type="button" onClick={() => setPollChoice(option)} className={`rounded-2xl border px-3 py-3 text-sm font-medium transition-colors ${pollChoice === option ? 'border-white/30 bg-white/15 text-white' : 'border-white/10 bg-white/[0.03] text-white/70 hover:bg-white/[0.07]'}`}>{option}</button>
+                ))}
+              </div>
+              <textarea value={pollText} onChange={event => setPollText(event.target.value)} placeholder="Fala aqui..." rows={3} className="w-full resize-none rounded-2xl border border-white/10 bg-[#101010] px-4 py-3 text-sm outline-none placeholder:text-white/30 focus:border-white/20" />
+              <button type="button" disabled={!pollChoice && !pollText.trim()} onClick={() => setSelectedAcapella(null)} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-bold text-black disabled:cursor-not-allowed disabled:opacity-30">Avançar <ArrowRight className="h-4 w-4" /></button>
+              <p className="text-center text-[11px] text-white/35">A votação permanece aberta.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <BottomNav />
       <SideMenu isOpen={showMenu} onClose={() => setShowMenu(false)} />
