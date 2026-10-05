@@ -22,7 +22,7 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
     <section className="mb-9 relative group bg-transparent border-0 shadow-none">
       <div className="relative flex items-center justify-between mb-3 px-2">
         <div className="flex items-center gap-3">
-          <span className="h-5 w-1 rounded-full bg-muted-foreground/40" />
+          <span className="h-5 w-1 rounded-full bg-[#292929]" />
           <div className="flex flex-col">
             <h2 className="text-[16px] md:text-[17px] font-semibold tracking-[-0.02em] text-foreground">
               {title}
