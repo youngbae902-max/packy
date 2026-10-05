@@ -1,6 +1,7 @@
 import { Music } from 'lucide-react';
 
 interface AudioPlayerProps {
+  acapellaId: string;
   artistName: string;
   imageUrl?: string | null;
   audioUrl: string | null;
@@ -8,7 +9,7 @@ interface AudioPlayerProps {
   duration?: number;
 }
 
-export function AudioPlayer({ artistName, imageUrl, downloadUrl }: AudioPlayerProps) {
+export function AudioPlayer({ acapellaId, artistName, imageUrl, downloadUrl }: AudioPlayerProps) {
   return (
     <a
       href={downloadUrl}
