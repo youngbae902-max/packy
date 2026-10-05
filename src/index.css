@@ -134,7 +134,7 @@ img.apple-emoji {
 
 @layer components {
   .pack-card {
-    @apply bg-card rounded-xl border border-border p-5 shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply bg-card rounded-xl border border-border p-5 shadow-none transition-all duration-300;
   }
 
   .badge-exclusive {
