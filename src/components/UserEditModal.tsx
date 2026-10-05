@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
-import { Ban, Shield, Trash2, Gift, X, KeyRound, Copy } from 'lucide-react';
+import { Ban, Shield, Trash2, Gift, X, KeyRound, Copy, Crown, Circle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
@@ -63,22 +63,22 @@ export function UserEditModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm rounded-[2rem] border-border bg-card">
-        <DialogHeader>
+      <DialogContent className="max-w-md rounded-[2rem] border-white/[0.07] bg-[#111111] p-0 overflow-hidden shadow-2xl">
+        <DialogHeader className="p-5 pb-4 border-b border-white/[0.06]">
           <DialogTitle className="flex items-center gap-3">
             <img 
               src={user.avatar_url || '/placeholder.svg'} 
               alt="" 
-              className="w-10 h-10 rounded-full object-cover" 
+              className="w-14 h-14 rounded-full object-cover border-2 border-white/[0.08]" 
             />
             <div className="flex-1 min-w-0">
-              <p className="font-bold truncate">@{user.username || 'sem-username'}</p>
-              <p className="text-sm text-muted-foreground truncate">{user.artist_name || 'Sem nome'}</p>
+              <div className="flex items-center gap-1.5"><p className="font-bold truncate">@{user.username || 'sem-username'}</p>{isProtected && <Crown className="w-3.5 h-3.5 text-warning shrink-0" />}</div>
+              <p className="text-xs text-muted-foreground truncate">{user.artist_name || 'Sem nome'}</p>
             </div>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-1.5 px-5 py-3 border-b border-white/[0.06]">
           {userIsAdmin && <Badge className="bg-primary/20 text-primary">Admin</Badge>}
           {isProtected && <Badge className="bg-yellow-500/20 text-yellow-500">Principal</Badge>}
           {user.is_banned && <Badge variant="destructive">Banido</Badge>}
@@ -86,7 +86,7 @@ export function UserEditModal({
           {user.is_online && <Badge variant="outline" style={{ color: accent, borderColor: accent }}>Online</Badge>}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 p-5 pt-4">
           <Button 
             variant="outline" 
             className="w-full justify-start"
@@ -170,7 +170,7 @@ export function UserEditModal({
           )}
         </div>
 
-        <Button variant="outline" onClick={onClose} className="w-full mt-2">
+        <Button variant="outline" onClick={onClose} className="w-full mt-2 bg-white/[0.03] border-white/[0.07]">
           <X className="w-4 h-4 mr-2" />
           Fechar
         </Button>
