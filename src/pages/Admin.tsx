@@ -138,6 +138,7 @@ export default function Admin() {
   const [keypadOpen, setKeypadOpen] = useState(false);
   const [packSearch, setPackSearch] = useState('');
   const { stats } = useStats();
+  const [insightMode, setInsightMode] = useState<'conteudo' | 'engajamento' | 'comunidade'>('conteudo');
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
   if (!isAdmin) return <Navigate to="/conta" replace />;
@@ -498,7 +499,6 @@ export default function Admin() {
             localStorage.setItem('admin_quick_order', JSON.stringify(ids));
           };
 
-          const [insightMode, setInsightMode] = useState<'conteudo' | 'engajamento' | 'comunidade'>('conteudo');
           const insightSets = {
             conteudo: [
               { label: 'Packs', value: stats.totalPacks, icon: Package },
