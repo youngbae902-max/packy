@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Music } from 'lucide-react';
-import { AcapellaPollDialog } from '@/components/AcapellaPollDialog';
+import { useNavigate } from 'react-router-dom';
 
 interface AudioPlayerProps {
   acapellaId: string;
@@ -11,14 +10,13 @@ interface AudioPlayerProps {
   duration?: number;
 }
 
-export function AudioPlayer({ acapellaId, artistName, imageUrl, downloadUrl }: AudioPlayerProps) {
-  const [open, setOpen] = useState(false);
+export function AudioPlayer({ acapellaId, artistName, imageUrl }: AudioPlayerProps) {
+  const navigate = useNavigate();
 
   return (
-    <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => navigate(`/mcs/${acapellaId}`)}
         aria-label={`Abrir acapella de ${artistName}`}
         className="flex flex-col items-center gap-4 px-2 text-center"
       >
@@ -38,15 +36,5 @@ export function AudioPlayer({ acapellaId, artistName, imageUrl, downloadUrl }: A
         </div>
         <h3 className="max-w-full truncate text-sm font-bold uppercase tracking-tight">{artistName}</h3>
       </button>
-
-      <AcapellaPollDialog
-        open={open}
-        onClose={() => setOpen(false)}
-        acapellaId={acapellaId}
-        artistName={artistName}
-        imageUrl={imageUrl}
-        downloadUrl={downloadUrl}
-      />
-    </>
   );
 }
