@@ -131,7 +131,7 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
       >
         <div className="relative w-full aspect-square rounded-[14px] overflow-hidden bg-[#181818]">
           {pack.cover_url ? (
-            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.035]" />
+            <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover" />
           ) : (
             <PackImagePlaceholder />
           )}
