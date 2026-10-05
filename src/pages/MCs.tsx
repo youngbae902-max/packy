@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, LayoutGrid, List, Music, X, ArrowRight } from 'lucide-react';
+import { Search, LayoutGrid, List, Music } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { BottomNav } from '@/components/BottomNav';
-import { useAcapellas, Acapella } from '@/hooks/useAcapellas';
+import { useAcapellas } from '@/hooks/useAcapellas';
 
 type LayoutMode = 'grid' | 'list';
 
@@ -12,10 +12,6 @@ const MCs = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [layout, setLayout] = useState<LayoutMode>('grid');
-  const [selectedMc, setSelectedMc] = useState<Acapella | null>(null);
-  const [pollChoice, setPollChoice] = useState('');
-  const [pollText, setPollText] = useState('');
-
   const filtered = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     if (!query) return acapellas;
@@ -27,10 +23,6 @@ const MCs = () => {
     navigate(`/mcs/${mc.id}`);
   };
 
-  const continueToAcapella = () => {
-    if (!selectedMc?.download_url) return;
-    window.open(selectedMc.download_url, '_blank', 'noopener,noreferrer');
-  };
 
   const layoutButton = (mode: LayoutMode, label: string, Icon: typeof LayoutGrid) => (
     <button
@@ -125,57 +117,7 @@ const MCs = () => {
         )}
       </div>
       <BottomNav />
-
-      {selectedMc && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 backdrop-blur-sm sm:items-center">
-          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#151515] p-5 shadow-2xl">
-            <div className="mb-5 flex items-center justify-between">
-              <div className="flex items-center gap-3 min-w-0">
-                <img src={selectedMc.image_url || '/placeholder.svg'} alt="" className="h-12 w-12 shrink-0 rounded-full object-cover" />
-                <div className="min-w-0">
-                  <p className="text-[10px] uppercase tracking-widest text-white/40">Acapella</p>
-                  <h2 className="truncate text-base font-bold">{selectedMc.artist_name}</h2>
-                </div>
-              </div>
-              <button type="button" onClick={() => setSelectedMc(null)} className="rounded-full p-2 text-white/50 hover:bg-white/5 hover:text-white" aria-label="Fechar">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <h3 className="mb-3 text-sm font-bold">Com que a voz da {selectedMc.artist_name} combina?</h3>
-            <div className="grid grid-cols-2 gap-2">
-              {['ZN', 'ZS', 'Automotivo', 'BH', 'Capixaba', 'Nenhum desses'].map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setPollChoice(option)}
-                  className={`rounded-xl border px-3 py-3 text-sm font-semibold transition-colors ${pollChoice === option ? 'border-white bg-white text-black' : 'border-white/10 bg-white/[0.03] text-white/75 hover:bg-white/[0.07]'}`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-
-            {pollChoice === 'Nenhum desses' && (
-              <input
-                value={pollText}
-                onChange={(event) => setPollText(event.target.value)}
-                placeholder="Fale aqui qual combina..."
-                className="mt-3 h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm outline-none placeholder:text-white/30 focus:border-white/20"
-              />
-            )}
-
-            <button
-              type="button"
-              disabled={!pollChoice || (pollChoice === 'Nenhum desses' && !pollText.trim())}
-              onClick={continueToAcapella}
-              className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-white text-sm font-bold text-black disabled:cursor-not-allowed disabled:opacity-30"
-            >
-              Avançar <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      )}
+    </div>
     </div>
   );
 };
