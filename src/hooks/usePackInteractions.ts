@@ -16,7 +16,7 @@ export function usePackInteractions(packId?: string) {
         .select('id')
         .eq('pack_id', packId)
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
       return !!data;
     },
     enabled: !!user && !!packId,
@@ -32,7 +32,7 @@ export function usePackInteractions(packId?: string) {
         .select('id')
         .eq('pack_id', packId)
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
       return !!data;
     },
     enabled: !!user && !!packId,
@@ -48,7 +48,7 @@ export function usePackInteractions(packId?: string) {
         .select('id')
         .eq('pack_id', packId)
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
       return !!data;
     },
     enabled: !!user && !!packId,

@@ -27,6 +27,7 @@ interface Profile {
   recovery_keyword?: string | null;
   online_indicator_shape?: string | null;
   avatar_shape?: string | null;
+  is_banned?: boolean | null;
 }
 
 interface AuthContextType {
@@ -76,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .select('role')
       .eq('user_id', userId)
       .eq('role', 'admin')
-      .single();
+      .maybeSingle();
     
     setIsAdmin(!!data);
   };

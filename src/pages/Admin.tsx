@@ -917,7 +917,7 @@ export default function Admin() {
           return (
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-2">
-                {[['Usuários', users.length, Users], ['Online', online, CheckCircle], ['ADM', admins, BadgeCheck]].map(([label, value, Icon]) => (
+                {([{ label: 'Usuários', value: users.length, Icon: Users }, { label: 'Online', value: online, Icon: CheckCircle }, { label: 'ADM', value: admins, Icon: BadgeCheck }]).map(({ label, value, Icon }) => (
                   <div key={String(label)} className="rounded-2xl border border-white/[0.06] bg-[#111111] px-3 py-3">
                     <div className="flex items-center gap-2 text-muted-foreground"><Icon className="w-3.5 h-3.5" /><span className="text-[10px] font-medium">{label}</span></div>
                     <p className="mt-1 text-lg font-bold tracking-tight">{value}</p>
