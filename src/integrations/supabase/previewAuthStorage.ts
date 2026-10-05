@@ -4,6 +4,25 @@
 // postMessage so the project's preview surfaces share one login; else localStorage.
 export function brokeredPreviewStorage() {
   if (typeof window === 'undefined') return undefined;
+
+  // Lovable can render the app inside a restricted preview iframe where
+  // localStorage access may throw. Keep auth storage alive instead of letting
+  // that browser restriction crash the entire React app.
+  let fallbackStorage: Storage | null = null;
+  try {
+    fallbackStorage = window.localStorage;
+    void fallbackStorage.getItem('__packy_storage_probe__');
+  } catch {
+    const memory = new Map<string, string>();
+    fallbackStorage = {
+      get length() { return memory.size; },
+      clear: () => memory.clear(),
+      getItem: (key: string) => memory.get(key) ?? null,
+      key: (index: number) => Array.from(memory.keys())[index] ?? null,
+      removeItem: (key: string) => { memory.delete(key); },
+      setItem: (key: string, value: string) => { memory.set(key, value); },
+    } as Storage;
+  }
   const host = location.hostname;
   const PREVIEW_ZONES = ['lovableproject.com', 'lovableproject-dev.com', 'lovable.app', 'gpt-eng.com', 'gptengineer.run'];
   const onPreviewZone = PREVIEW_ZONES.some((z) => host === z || host.endsWith('.' + z));
@@ -71,22 +90,22 @@ export function brokeredPreviewStorage() {
       // '' is the logout tombstone: clear the local copy too so it can't resurrect if
       // the broker later goes silent. A null reply means never-synced -> keep local.
       if (res && res.ok && typeof res.value === 'string') {
-        if (res.value === '') { localStorage.removeItem(key); return null; }
+        if (res.value === '') { fallbackStorage!.removeItem(key); return null; }
         return res.value;
       }
-      return localStorage.getItem(key);
+      return fallbackStorage!.getItem(key);
     },
     setItem: (key: string, value: string) => {
-      localStorage.setItem(key, value);
+      fallbackStorage!.setItem(key, value);
       return request('lovable-preview-auth:set', key, value).then((res) => {
-        if (res && res.ok && typeof res.value === 'string' && localStorage.getItem(key) === value) {
-          if (res.value === '') localStorage.removeItem(key);
-          else localStorage.setItem(key, res.value);
+        if (res && res.ok && typeof res.value === 'string' && fallbackStorage!.getItem(key) === value) {
+          if (res.value === '') fallbackStorage!.removeItem(key);
+          else fallbackStorage!.setItem(key, res.value);
         }
       });
     },
     removeItem: (key: string) => {
-      localStorage.removeItem(key);
+      fallbackStorage!.removeItem(key);
       return request('lovable-preview-auth:remove', key).then(() => undefined);
     },
   };
