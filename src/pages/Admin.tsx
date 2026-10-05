@@ -1424,7 +1424,7 @@ export default function Admin() {
           const q = packSearch.trim().toLowerCase();
           const packItems = mainTab === 'packs'
             ? getPacksContent().filter((p) => packSection === 'pagos' ? p.is_premium : !p.is_premium)
-            : getPacksContent();
+            : packItems;
           const filtered = q
             ? packItems.filter((p) =>
                 [p.id, p.title, p.author_name, p.pack_type]
