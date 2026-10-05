@@ -395,7 +395,7 @@ const Packs = () => {
             {acapellas.length > 0 && (
               <div className="flex justify-center">
                 <div className="w-full max-w-3xl">
-                  <HorizontalCarousel title="Acapellas">
+                  <HorizontalCarousel title="Acapellas" centered>
                 {acapellas.slice(0, 8).map(acapella => (
                   <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
                     <AudioPlayer
