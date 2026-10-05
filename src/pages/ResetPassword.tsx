@@ -14,7 +14,7 @@ export default function ResetPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 6) {
-      toast.error('A senha precisa ter pelo menos 6 caracteres');
+      toast.error('Password must be at least 6 characters');
       return;
     }
     setIsLoading(true);
@@ -22,7 +22,7 @@ export default function ResetPassword() {
     setIsLoading(false);
     if (error) toast.error(error.message);
     else {
-      toast.success('Senha alterada!');
+      toast.success('Password updated!');
       navigate('/conta');
     }
   };
@@ -52,14 +52,14 @@ export default function ResetPassword() {
               type="button"
               onClick={() => setShowPassword((value) => !value)}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
-              aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
         </div>
         <button type="submit" className="btn-primary w-full" disabled={isLoading}>
-          {isLoading ? 'Salvando...' : 'Salvar senha'}
+          {isLoading ? 'Saving...' : 'Save password'}
         </button>
       </form>
     </div>
