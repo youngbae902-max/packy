@@ -40,22 +40,22 @@ export interface PackComment {
 }
 
 export function useProfileSearch(query: string) {
-  const q = query.trim().toLowerCase();
+  const searchTerm = query.trim().toLowerCase();
 
   return useQuery({
-    queryKey: ['profile-search', q],
+    queryKey: ['profile-search', searchTerm],
     queryFn: async () => {
-      if (q.length < 2) return [];
+      if (searchTerm.length < 2) return [];
       const { data, error } = await (supabase as any)
         .from('profiles')
         .select('id, user_id, username, artist_name, avatar_url, bio, has_spotify_badge, instagram_url, spotify_url, soundcloud_url, youtube_url, theme_accent_color, online_accent_color, verified_badge_color, verified_badge_bg_color, verified_badge_text_color, admin_badge_color, admin_badge_bg_color, admin_badge_border_color, admin_badge_text_color')
-        .or(`username.ilike.%${q}%,artist_name.ilike.%${q}%`)
+        .or(`username.ilike.%${searchTerm}%,artist_name.ilike.%${searchTerm}%`)
         .limit(5);
 
       if (error) throw error;
       return (data || []) as PublicProfile[];
     },
-    enabled: q.length >= 2,
+    enabled: searchTerm.length >= 2,
   });
 }
 
