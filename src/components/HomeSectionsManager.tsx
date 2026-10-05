@@ -57,8 +57,8 @@ export function HomeSectionsManager() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-2xl border border-border/40 bg-card p-4">
+    <div className="space-y-3">
+      <div className="rounded-2xl border border-white/[0.06] bg-[#151515] p-4 shadow-none">
         <p className="text-[13px] font-bold mb-1">Nova seção da Home</p>
         <p className="text-[11px] text-muted-foreground mb-3">
           Crie carrosséis personalizados que aparecem na Home logo abaixo de "Projetos Premium".
@@ -74,7 +74,7 @@ export function HomeSectionsManager() {
       )}
 
       {sections.map(sec => (
-        <div key={sec.id} className="rounded-2xl border border-white/[0.06] bg-[#151515] p-3.5 space-y-3">
+        <div key={sec.id} className="rounded-2xl border border-white/[0.07] bg-[#151515] p-4 space-y-4 shadow-none">
           <div className="flex items-center gap-2">
             <div className="flex flex-col -space-y-1">
               <button type="button" onClick={() => moveSection(sections.indexOf(sec), -1)} className="admin-mini-icon" aria-label="Subir seção"><ChevronUp className="w-3.5 h-3.5" /></button>
@@ -114,7 +114,7 @@ export function HomeSectionsManager() {
           </div>
 
           {pickerFor === sec.id && (
-            <div className="border-t border-border/30 pt-3 space-y-3">
+            <div className="mt-1 rounded-2xl border border-white/[0.05] bg-[#111111] p-3 space-y-3">
               <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar pack por nome ou autor…" className="h-9" />
               <div className="max-h-[320px] overflow-y-auto pr-1 space-y-1">
                 {filteredPacks.map(p => {
