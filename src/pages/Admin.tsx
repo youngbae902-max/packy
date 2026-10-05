@@ -422,7 +422,10 @@ export default function Admin() {
                       </button>
                     ))}
                   </div>
-                </div>          );
+                </div>
+              </div>
+            </div>
+          );
         })()}
 
         {/* Stats Tab */}
