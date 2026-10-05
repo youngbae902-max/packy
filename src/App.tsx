@@ -10,7 +10,6 @@ import MCs from "./pages/MCs";
 import MCProfile from "./pages/MCProfile";
 import Conta from "./pages/Conta";
 import Admin from "./pages/Admin";
-import Albums from "./pages/Albums";
 import Sites from "./pages/Sites";
 import Wishlist from "./pages/Wishlist";
 import Inbox from "./pages/Inbox";
@@ -40,7 +39,6 @@ const App = () => (
                 <Route path="/projetos" element={<Projetos />} />
                 <Route path="/mcs" element={<MCs />} />
                 <Route path="/mcs/:id" element={<MCProfile />} />
-                <Route path="/albuns" element={<Albums />} />
                 <Route path="/sites" element={<Sites />} />
                 <Route path="/desejos" element={<Wishlist />} />
                 <Route path="/inbox" element={<Inbox />} />
