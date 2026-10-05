@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { useCustomPages } from '@/hooks/useCustomPages';
 
 const navItems = [
-  { icon: Compass, label: 'Explorar', to: '/' },
+  { icon: Compass, label: 'Explore', to: '/' },
   { icon: Mic, label: 'MCs', to: '/mcs' },
-  { icon: User, label: 'Perfil', to: '/conta' },
+  { icon: User, label: 'Profile', to: '/conta' },
 ];
 
 export function BottomNav() {
