@@ -404,69 +404,25 @@ export default function Admin() {
                 </div>
 
                 <div className="admin-nav-items p-2">
-                  {(() => {
-                    const managementIds: MainTab[] = ['giftall', 'decoracoes', 'selos', 'emojis', 'albuns', 'packs', 'carteira'];
-                    const managementTabs = visibleTabs.filter(tab => managementIds.includes(tab.id));
-                    const regularTabs = visibleTabs.filter(tab => !managementIds.includes(tab.id));
-
-                    return (
-                      <div className="space-y-2">
-                        {managementTabs.length > 0 && (
-                          <div className="grid grid-cols-2 gap-2">
-                            {managementTabs.map(tab => (
-                              <button
-                                key={tab.id}
-                                onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-                                className={`flex items-center gap-3 rounded-2xl border px-3.5 py-3.5 text-left transition-all ${
-                                  mainTab === tab.id
-                                    ? 'border-foreground bg-foreground text-background'
-                                    : 'border-white/[0.07] bg-[#151515] text-muted-foreground hover:border-white/[0.12] hover:text-foreground'
-                                }`}
-                              >
-                                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
-                                  mainTab === tab.id ? 'bg-black/10' : 'bg-white/[0.06]'
-                                }`}>
-                                  <tab.icon className="w-4 h-4" />
-                                </div>
-                                <div className="min-w-0">
-                                  <p className="truncate text-[11px] font-semibold">{tab.label}</p>
-                                  <p className={`mt-0.5 text-[9px] ${
-                                    mainTab === tab.id ? 'text-background/55' : 'text-muted-foreground/70'
-                                  }`}>
-                                    {mainTab === tab.id ? 'Aberto' : 'Abrir seção'}
-                                  </p>
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-
-                        {regularTabs.length > 0 && (
-                          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pt-0.5">
-                            {regularTabs.map(tab => (
-                              <button
-                                key={tab.id}
-                                onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-                                className={`group flex items-center gap-3 rounded-xl px-3 py-3 text-left transition-all ${
-                                  mainTab === tab.id
-                                    ? 'bg-foreground text-background'
-                                    : 'text-muted-foreground hover:bg-[#181818] hover:text-foreground'
-                                }`}
-                              >
-                                <tab.icon className="w-4 h-4 flex-shrink-0 opacity-80" />
-                                <span className="text-xs font-medium truncate">{tab.label}</span>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
-
-                </div>
-              </div>
-            </div>
-          );
+                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+                    {visibleTabs.map(tab => (
+                      <button
+                        key={tab.id}
+                        onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
+                        className={`group flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all ${
+                          mainTab === tab.id
+                            ? 'bg-foreground text-background'
+                            : 'text-muted-foreground hover:bg-[#181818] hover:text-foreground'
+                        }`}
+                      >
+                        <tab.icon className={`w-4 h-4 flex-shrink-0 ${
+                          mainTab === tab.id ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'
+                        }`} />
+                        <span className="text-xs font-medium truncate">{tab.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>          );
         })()}
 
         {/* Stats Tab */}
