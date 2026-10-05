@@ -63,13 +63,13 @@ export function UserEditModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto rounded-[28px] border-white/[0.08] bg-[#111111] p-0 overflow-x-hidden shadow-2xl">
-        <div className="relative">
-          <div className="h-24 bg-gradient-to-br from-white/[0.08] via-white/[0.03] to-transparent" />
+      <DialogContent className="!fixed !inset-0 !left-0 !top-0 !translate-x-0 !translate-y-0 !w-screen !max-w-none !h-screen !max-h-none !rounded-none border-0 bg-[#111111] p-0 overflow-y-auto overflow-x-hidden shadow-none">
+        <div className="relative min-h-screen">
+          <div className="h-32 md:h-40 bg-gradient-to-br from-white/[0.08] via-white/[0.03] to-transparent" />
           <button onClick={onClose} className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/30 border border-white/[0.08] flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/[0.08] transition-colors">
             <X className="w-4 h-4" />
           </button>
-          <div className="px-5 -mt-10">
+          <div className="px-5 md:px-10 lg:px-16 -mt-10">
             <div className="flex items-end gap-4">
               <div className="relative shrink-0">
                 <img src={user.avatar_url || '/placeholder.svg'} alt="" className="w-20 h-20 rounded-[24px] object-cover border-4 border-[#111111] shadow-lg" />
@@ -86,7 +86,7 @@ export function UserEditModal({
           </div>
         </div>
 
-        <div className="px-5 pt-4 pb-5">
+        <div className="px-5 md:px-10 lg:px-16 pt-5 pb-10 max-w-5xl mx-auto">
           <div className="flex flex-wrap gap-1.5 mb-5">
             {userIsAdmin && <Badge className="rounded-full bg-primary/15 text-primary border-0 px-2.5">Admin</Badge>}
             {isProtected && <Badge className="rounded-full bg-yellow-400/10 text-yellow-400 border-0 px-2.5">Principal</Badge>}
@@ -106,7 +106,7 @@ export function UserEditModal({
             </Button>
           </div>
 
-          {!isProtected && <div className="mt-5 pt-5 border-t border-white/[0.06] space-y-2">
+          {!isProtected && <div className="mt-6 pt-6 border-t border-white/[0.06] space-y-2">
             <p className="px-1 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/60">Moderação</p>
             <Button variant="outline" className={`h-12 w-full justify-start rounded-2xl border-white/[0.07] ${user.is_banned ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400 hover:bg-red-500/15'}`} onClick={() => onBan(user.user_id, !user.is_banned)}>
               <Ban className="w-4 h-4 mr-3" />{user.is_banned ? 'Desbanir Usuário' : 'Banir Usuário'}
@@ -119,7 +119,7 @@ export function UserEditModal({
             </Button>
           </div>}
 
-          {canEnterAccount && !isProtected && <div className="mt-5 pt-5 border-t border-white/[0.06]">
+          {canEnterAccount && !isProtected && <div className="mt-6 pt-6 border-t border-white/[0.06]">
             <p className="px-1 mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/60">Acesso</p>
             <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-3 space-y-2">
               <Button variant="outline" className="h-11 w-full justify-start rounded-xl border-white/[0.07]" disabled={isLoadingLogin} onClick={async () => { setIsLoadingLogin(true); try { setLoginEmail(await onGetLogin?.(user.user_id) || null); } catch { toast.error('Erro ao buscar login'); } finally { setIsLoadingLogin(false); } }}>
