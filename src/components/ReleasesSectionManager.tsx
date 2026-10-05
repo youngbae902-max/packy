@@ -39,7 +39,7 @@ export function ReleasesSectionManager() {
 
   return (
     <div className="space-y-3">
-      <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+      <div className="rounded-2xl border border-white/[0.06] bg-[#151515] p-4 space-y-4 shadow-none">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-[13px] font-bold">Mostrar seção</p>
@@ -99,7 +99,7 @@ export function ReleasesSectionManager() {
       </div>
 
       {config.mode === 'manual' && (
-        <div className="rounded-2xl border border-border/40 bg-card p-4 space-y-3">
+        <div className="rounded-2xl border border-white/[0.06] bg-[#151515] p-4 space-y-4 shadow-none">
           <div className="flex items-center justify-between">
             <p className="text-[13px] font-bold">Packs selecionados ({config.pack_ids.length})</p>
             {config.pack_ids.length > 0 && (
