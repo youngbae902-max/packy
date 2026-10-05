@@ -36,6 +36,12 @@ CREATE TABLE IF NOT EXISTS public.acapella_votes (
 CREATE INDEX IF NOT EXISTS acapella_votes_acapella_id_idx ON public.acapella_votes(acapella_id);
 ALTER TABLE public.acapella_votes ENABLE ROW LEVEL SECURITY;
 GRANT SELECT, INSERT ON public.acapella_votes TO anon, authenticated;
-CREATE POLICY "Anyone can read acapella votes" ON public.acapella_votes FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Anyone can read acapella votes" ON public.acapella_votes;
+CREATE POLICY "Anyone can read acapella votes" ON public.acapella_votes FOR SELECT
+  TO anon, authenticated
+  USING (true);
+
+DROP POLICY IF EXISTS "Anyone can submit acapella votes" ON public.acapella_votes;
 CREATE POLICY "Anyone can submit acapella votes" ON public.acapella_votes FOR INSERT
+  TO anon, authenticated
   WITH CHECK (user_id IS NULL OR user_id = auth.uid());
