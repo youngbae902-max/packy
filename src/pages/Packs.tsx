@@ -338,7 +338,9 @@ const Packs = () => {
 
 
             {/* Seções personalizadas da Home (admin) */}
-            {customSections.map(({ section, packs }) => (
+            {customSections
+              .filter(({ section }) => !['efeitos', 'lançamentos', 'presets essenciais'].includes(section.title.trim().toLocaleLowerCase('pt-BR')))
+              .map(({ section, packs }) => (
               packs.length > 0 && (
                 <div key={section.id} className="bg-[#111111] border-0 rounded-none">
                   <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
