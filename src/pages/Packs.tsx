@@ -390,6 +390,7 @@ const Packs = () => {
                 {acapellas.slice(0, 8).map(acapella => (
                   <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start flex justify-center">
                     <AudioPlayer
+                      acapellaId={acapella.id}
                       artistName={acapella.artist_name}
                       imageUrl={acapella.image_url}
                       audioUrl={acapella.audio_url}
