@@ -77,9 +77,9 @@ const MCs = () => {
         ) : layout === 'grid' ? (
           <div className="grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-4">
             {filtered.map((mc) => (
-              <a
+              <button
+                type="button"
                 key={mc.id}
-                href={mc.download_url}
                 onClick={(event) => openPoll(event, mc)}
                 className="group flex flex-col items-center gap-2.5"
               >
@@ -95,17 +95,17 @@ const MCs = () => {
                 <span className="max-w-full truncate text-center text-xs font-bold text-foreground/90">
                   {mc.artist_name}
                 </span>
-              </a>
+              </button>
             ))}
           </div>
         ) : (
           <div className="flex flex-col gap-2">
             {filtered.map((mc) => (
-              <a
+              <button
+                type="button"
                 key={mc.id}
-                href={mc.download_url}
                 onClick={(event) => openPoll(event, mc)}
-                className="group flex items-center gap-4 rounded-2xl border border-white/5 bg-[#141414] p-3 transition-colors hover:bg-[#1B1B1B]"
+                className="group flex w-full items-center gap-4 rounded-2xl border border-white/5 bg-[#141414] p-3 text-left transition-colors hover:bg-[#1B1B1B]"
               >
                 <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full border border-white/10 bg-[#1B1B1B]">
                   {mc.image_url ? (
@@ -119,7 +119,7 @@ const MCs = () => {
                 <span className="min-w-0 flex-1 truncate text-sm font-bold text-foreground/90">
                   {mc.artist_name}
                 </span>
-              </a>
+              </button>
             ))}
           </div>
         )}
