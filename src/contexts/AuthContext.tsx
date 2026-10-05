@@ -97,7 +97,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (session?.user) {
           setTimeout(async () => {
-            await fetchProfile(session.user.id);
+            const loadedProfile = await fetchProfile(session.user.id);
+            if (loadedProfile?.is_banned) {
+              await supabase.auth.signOut();
+              setSession(null);
+              setUser(null);
+              setProfile(null);
+              setIsAdmin(false);
+              return;
+            }
             await checkAdminRole(session.user.id);
           }, 0);
         } else {
@@ -136,8 +144,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user?.id) return;
     const channel = supabase
       .channel(`profile-live-${user.id}`)
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `user_id=eq.${user.id}` }, () => {
-        fetchProfile(user.id);
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `user_id=eq.${user.id}` }, async () => {
+        const loadedProfile = await fetchProfile(user.id);
+        if (loadedProfile?.is_banned) {
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setIsAdmin(false);
+        }
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wallet_transactions', filter: `user_id=eq.${user.id}` }, () => {
         fetchProfile(user.id);
