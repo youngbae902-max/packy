@@ -137,6 +137,7 @@ export default function Admin() {
   const [walletUsername, setWalletUsername] = useState('');
   const [keypadOpen, setKeypadOpen] = useState(false);
   const [packSearch, setPackSearch] = useState('');
+  const [userSearch, setUserSearch] = useState('');
   const { stats } = useStats();
   const [insightMode, setInsightMode] = useState<'conteudo' | 'engajamento' | 'comunidade'>('conteudo');
   const [packSection, setPackSection] = useState<'geral' | 'pagos'>('geral');
@@ -866,34 +867,42 @@ export default function Admin() {
         )}
 
         {/* Users Tab */}
-        {mainTab === 'usuarios' && (
-          <div className="space-y-3">
-            {users.map((u) => (
-              <div key={u.id} className="pack-card flex items-center gap-3">
-                <img src={u.avatar_url || '/placeholder.svg'} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-bold text-sm truncate">@{u.username || 'sem-username'}</span>
-                    {u.is_online && <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: u.online_accent_color || u.theme_accent_color || 'hsl(var(--success))' }} />}
+        {mainTab === 'usuarios' && (() => {
+          const q = userSearch.trim().toLowerCase();
+          const filteredUsers = users.filter((u) => !q || [u.username, u.user_id].filter(Boolean).some((v) => String(v).toLowerCase().includes(q)));
+          const admins = users.filter((u) => isUserAdmin(u.user_id)).length;
+          const banned = users.filter((u) => u.is_banned).length;
+          const online = users.filter((u) => u.is_online).length;
+          return (
+            <div className="space-y-4">
+              <div className="grid grid-cols-3 gap-2">
+                {[['Usuários', users.length, Users], ['Online', online, CheckCircle], ['ADM', admins, BadgeCheck]].map(([label, value, Icon]) => (
+                  <div key={String(label)} className="rounded-2xl border border-white/[0.06] bg-[#111111] px-3 py-3">
+                    <div className="flex items-center gap-2 text-muted-foreground"><Icon className="w-3.5 h-3.5" /><span className="text-[10px] font-medium">{label}</span></div>
+                    <p className="mt-1 text-lg font-bold tracking-tight">{value}</p>
                   </div>
-                  <div className="flex gap-1 mt-0.5 flex-wrap">
-                    {isUserAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground/10 text-foreground border-0">ADM</Badge>}
-                    {isMainAdmin(u.user_id) && <Badge className="text-[10px] px-1.5 py-0 bg-foreground text-background border-0">Principal</Badge>}
-                    {u.is_banned && <Badge variant="destructive" className="text-[10px] px-1.5 py-0">Banido</Badge>}
-                    {u.has_spotify_badge && <Badge className="text-[10px] px-1.5 py-0 bg-success/15 text-success border-0">Spotify</Badge>}
-                  </div>
-                </div>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => setEditingUser(u)}
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+              <div className="relative">
+                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input value={userSearch} onChange={(e) => setUserSearch(e.target.value)} placeholder="Buscar usuário ou ID..." className="h-11 pl-9 rounded-xl bg-[#111111] border-white/[0.07] focus-visible:ring-0" />
+              </div>
+              <div className="flex items-center justify-between px-1"><div><h2 className="text-sm font-semibold">Usuários</h2><p className="text-[11px] text-muted-foreground">{filteredUsers.length} de {users.length}</p></div>{banned > 0 && <Badge variant="destructive" className="text-[10px]">{banned} banido{banned === 1 ? '' : 's'}</Badge>}</div>
+              <div className="space-y-2">
+                {filteredUsers.map((u) => (
+                  <button key={u.id} type="button" onClick={() => setEditingUser(u)} className="w-full text-left rounded-2xl border border-white/[0.06] bg-[#111111] p-3 transition-colors hover:bg-[#151515] hover:border-white/[0.10]">
+                    <div className="flex items-center gap-3">
+                      <div className="relative shrink-0"><img src={u.avatar_url || '/placeholder.svg'} alt="" className="w-11 h-11 rounded-full object-cover border border-white/[0.07]" />{u.is_online && <span className="absolute right-0 bottom-0 w-3 h-3 rounded-full border-2 border-[#111111]" style={{ backgroundColor: u.online_accent_color || u.theme_accent_color || 'hsl(var(--success))' }} />}</div>
+                      <div className="min-w-0 flex-1"><div className="flex items-center gap-1.5 min-w-0"><span className="font-semibold text-sm truncate">@{u.username || 'sem-username'}</span>{isMainAdmin(u.user_id) && <Crown className="w-3.5 h-3.5 shrink-0 text-warning" />}</div><p className="text-[10px] text-muted-foreground truncate mt-0.5">{u.user_id}</p><div className="flex gap-1 mt-1.5 flex-wrap">{isUserAdmin(u.user_id) && <Badge className="text-[9px] px-1.5 py-0 bg-foreground/10 text-foreground border-0">ADM</Badge>}{isMainAdmin(u.user_id) && <Badge className="text-[9px] px-1.5 py-0 bg-foreground text-background border-0">Principal</Badge>}{u.is_banned && <Badge variant="destructive" className="text-[9px] px-1.5 py-0">Banido</Badge>}{u.has_spotify_badge && <Badge className="text-[9px] px-1.5 py-0 bg-success/15 text-success border-0">Spotify</Badge>}</div></div>
+                      <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-white/[0.04] text-muted-foreground"><ChevronRight className="w-4 h-4" /></div>
+                    </div>
+                  </button>
+                ))}
+                {filteredUsers.length === 0 && <div className="rounded-2xl border border-dashed border-white/[0.08] py-10 text-center text-sm text-muted-foreground">Nenhum usuário encontrado</div>}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Wishlist Tab */}
         {mainTab === 'desejos' && (
