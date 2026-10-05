@@ -290,31 +290,31 @@ const Packs = () => {
             )}
           </div>
         ) : activeTab === 'pagos' ? (
-          <div>
-            <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Premium</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight">Packs pagos</h2>
-              <p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} packs disponíveis</p>
-            </div>
-            {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum pack pago disponível ainda.</p> : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePremiumBadge />)}
-              </div>
+          <div className="space-y-7 md:space-y-9">
+            {premiumPacks.length === 0 ? (
+              <p className="text-center py-16 text-muted-foreground">Nenhum pack pago disponível ainda.</p>
+            ) : (
+              <HorizontalCarousel title="Packs pagos">
+                {premiumPacks.map(pack => (
+                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                    <PackCardV2 pack={pack} hidePremiumBadge />
+                  </div>
+                ))}
+              </HorizontalCarousel>
             )}
           </div>
         ) : activeTab === 'geral' ? (
-          <div>
-            <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Biblioteca</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Todos os Packs</h2>
-              <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p>
-            </div>
+          <div className="space-y-7 md:space-y-9">
             {allPacks.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
-              </div>
+              <HorizontalCarousel title="Packs em geral">
+                {allPacks.map(pack => (
+                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                    <PackCardV2 pack={pack} />
+                  </div>
+                ))}
+              </HorizontalCarousel>
             )}
           </div>
         ) : (
