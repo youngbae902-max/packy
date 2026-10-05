@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string): Promise<Profile | null> => {
     const { data } = await supabase
       .from('profiles')
       .select('id,user_id,username,artist_name,avatar_url,created_at,updated_at,username_changes_today,last_username_change_date,is_banned,is_online,last_seen,has_spotify_badge,bio,instagram_url,spotify_url,soundcloud_url,youtube_url,banner_url,status_ring_color,thought_bubble,theme_preference,theme_accent_color,online_accent_color,theme_mode,verified_badge_color,admin_badge_color,verified_badge_bg_color,verified_badge_text_color,admin_badge_bg_color,admin_badge_border_color,admin_badge_text_color,show_badges_in_bio,show_badges_in_thought,profile_decoration_url,profile_decoration_position,saved_themes,show_admin_badge,verified_rgb,avatar_shape,online_indicator_shape,verified_badge_text')
@@ -67,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const loadedProfile = (data ? { ...(data as any), ...(privRow || {}) } : null) as Profile | null;
     setProfile(loadedProfile);
     document.documentElement.classList.toggle('light', loadedProfile?.theme_mode === 'light');
+    return loadedProfile;
   };
 
   const checkAdminRole = async (userId: string) => {
@@ -112,8 +113,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        fetchProfile(session.user.id);
-        checkAdminRole(session.user.id);
+        Promise.all([fetchProfile(session.user.id), checkAdminRole(session.user.id)]).then(async ([loadedProfile]) => {
+          if (loadedProfile?.is_banned) {
+            await supabase.auth.signOut();
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+            setIsAdmin(false);
+          }
+        });
       }
       
       setIsLoading(false);
@@ -149,11 +157,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    return { error: error as Error | null };
+    if (error) return { error: error as Error | null };
+
+    if (data.user) {
+      const { data: bannedProfile, error: profileError } = await supabase
+        .from('profiles')
+        .select('is_banned')
+        .eq('user_id', data.user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        await supabase.auth.signOut();
+        return { error: profileError as Error };
+      }
+
+      if (bannedProfile?.is_banned) {
+        await supabase.auth.signOut();
+        return { error: new Error('Esta conta foi banida e não pode acessar o PACKY.') };
+      }
+    }
+
+    return { error: null };
   };
 
   const resetPassword = async (email: string) => {
