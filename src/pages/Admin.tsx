@@ -1305,14 +1305,14 @@ export default function Admin() {
 
         {mainTab === 'carteira' && (
           <div className="space-y-3">
-            <Card className="rounded-3xl border-border/50 bg-card overflow-hidden">
+            <Card className="rounded-3xl border-border/40 bg-[#111111] overflow-hidden shadow-none">
               <button
                 type="button"
                 onClick={() => setWalletOpen((open) => !open)}
                 className="w-full flex items-center justify-between gap-3 p-4 text-left hover:bg-white/[0.02] transition-colors"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-white/[0.06] flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.05] flex items-center justify-center shrink-0">
                     <Wallet className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -1324,8 +1324,8 @@ export default function Admin() {
               </button>
 
               {walletOpen && (
-                <div className="border-t border-white/[0.06] p-4 space-y-3">
-                  <div className="rounded-2xl border border-white/[0.06] bg-white/[0.025] p-3">
+                <div className="border-t border-white/[0.05] p-4 space-y-3 bg-[#111111]">
+                  <div className="rounded-2xl border border-white/[0.05] bg-[#111111] p-3">
                     <div className="flex gap-2">
                       <Input
                         value={walletUsername}
@@ -1347,7 +1347,7 @@ export default function Admin() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-white/[0.06] bg-white/[0.025] overflow-hidden">
+                  <div className="rounded-2xl border border-white/[0.05] bg-[#111111] overflow-hidden">
                     <div className="p-3 flex items-center justify-between">
                       <div>
                         <h3 className="font-semibold text-xs">Contas</h3>
@@ -1359,7 +1359,7 @@ export default function Admin() {
                     </div>
 
                     <div className="px-2 pb-2">
-                      <div className="max-h-[420px] overflow-y-auto space-y-1 rounded-xl bg-white/[0.015] p-1">
+                      <div className="max-h-[420px] overflow-y-auto space-y-1 rounded-xl bg-[#111111] p-1">
                         {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
                           <button
                             key={u.user_id}
