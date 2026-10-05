@@ -785,20 +785,24 @@ export default function Admin() {
               </Card>
             )}
 
-            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
-              {subTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setSubTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
-                    subTab === tab.id
-                      ? 'bg-foreground text-background border-foreground'
-                      : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground'
-                  }`}
-                >
-                  <tab.icon className="w-3 h-3" />{tab.label}
-                </button>
-              ))}            </div>
+            <div className="rounded-2xl border border-white/[0.06] bg-[#151515] p-1 overflow-x-auto scrollbar-hide">
+              <div className="grid grid-cols-3 min-w-[300px] gap-1">
+                {subTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setSubTab(tab.id)}
+                    className={`flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-semibold whitespace-nowrap transition-all ${
+                      subTab === tab.id
+                        ? 'bg-[#F5F5F5] text-[#111111] shadow-sm'
+                        : 'text-white/45 hover:bg-white/[0.04] hover:text-white/80'
+                    }`}
+                  >
+                    <tab.icon className={`w-3.5 h-3.5 ${subTab === tab.id ? 'opacity-100' : 'opacity-55'}`} />
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
