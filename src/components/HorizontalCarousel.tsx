@@ -5,9 +5,10 @@ interface HorizontalCarouselProps {
   title: string;
   children: ReactNode;
   showArrows?: boolean;
+  centered?: boolean;
 }
 
-export function HorizontalCarousel({ title, children, showArrows = true }: HorizontalCarouselProps) {
+export function HorizontalCarousel({ title, children, showArrows = true, centered = false }: HorizontalCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -44,7 +45,7 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
 
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-3 px-2 snap-x snap-mandatory scroll-smooth bg-transparent"
+        className={`flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-3 px-2 snap-x snap-mandatory scroll-smooth bg-transparent ${centered ? "justify-center" : ""}`}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {children}
