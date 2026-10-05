@@ -3,7 +3,6 @@ import { Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -153,7 +152,17 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             <div className="h-px flex-1 bg-white/[0.07]" />
           </div>
 
-          <button type="button" onClick={async () => { try { const result = await lovable.auth.signInWithOAuth('google', { redirect_uri: window.location.origin }); if (result.error) toast.error('Erro ao entrar com Google'); } catch { toast.error('Erro ao entrar com Google'); } }} className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] text-[13px] font-medium hover:bg-[#191919] transition flex items-center justify-center gap-2.5">
+          <button type="button" onClick={async () => {
+              try {
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: 'google',
+                  options: { redirectTo: window.location.origin },
+                });
+                if (error) toast.error('Erro ao entrar com Google');
+              } catch {
+                toast.error('Erro ao entrar com Google');
+              }
+            }} className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] text-[13px] font-medium hover:bg-[#191919] transition flex items-center justify-center gap-2.5">
             <span className="font-bold text-[15px]">G</span>
             Entrar com Google
           </button>
