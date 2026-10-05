@@ -153,7 +153,7 @@ function TopCreatorsRow({ packs }: { packs: Pack[] }) {
               </Avatar>
               <div className="text-center">
                 <div className="text-sm font-bold truncate">@{displayName}</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">{c.count} packs</div>
+                <div className="text-[11px] font-medium text-foreground/45 mt-1 tracking-tight">{c.count} packs</div>
                 <div className="mt-2 text-[10px] font-bold uppercase tracking-wider text-foreground/70">Ver perfil</div>
               </div>
             </Link>
