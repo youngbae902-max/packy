@@ -1,4 +1,5 @@
 import { Music } from 'lucide-react';
+import { useRef } from 'react';
 
 interface AudioPlayerProps {
   artistName: string;
@@ -10,12 +11,31 @@ interface AudioPlayerProps {
 }
 
 export function AudioPlayer({ artistName, imageUrl, onSelect }: AudioPlayerProps) {
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const moved = useRef(false);
+
   return (
     <button
       type="button"
-      onClick={onSelect}
+      onPointerDown={(event) => {
+        pointerStart.current = { x: event.clientX, y: event.clientY };
+        moved.current = false;
+      }}
+      onPointerMove={(event) => {
+        if (!pointerStart.current) return;
+        const dx = Math.abs(event.clientX - pointerStart.current.x);
+        const dy = Math.abs(event.clientY - pointerStart.current.y);
+        if (dx > 8 || dy > 8) moved.current = true;
+      }}
+      onPointerUp={() => {
+        pointerStart.current = null;
+      }}
+      onClick={() => {
+        if (!moved.current) onSelect?.();
+        moved.current = false;
+      }}
       aria-label={`Abrir acapella de ${artistName}`}
-      className="group flex flex-col items-center gap-4 px-2 text-center"
+      className="group flex flex-col items-center gap-4 px-2 text-center touch-pan-x select-none"
     >
       <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-transform duration-300 group-hover:scale-105 group-hover:border-primary/50 sm:w-40">
         {imageUrl ? (
