@@ -358,19 +358,20 @@ const Packs = () => {
               categories
                 .filter(category => !['efeitos', 'lançamentos', 'presets essenciais'].includes(category.name.trim().toLocaleLowerCase('pt-BR')))
                 .map(category => (
-                <div key={category.id} className="pt-1"><HorizontalCarousel title={category.name}>
-                  {premiumPacks.slice(0, 8).map(pack => (
-                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                      <PackCardV2 pack={pack} />
-                    </div>
-                  ))}
-                </HorizontalCarousel>
-              ))
+                  <div key={category.id} className="pt-1">
+                    <HorizontalCarousel title={category.name}>
+                      {premiumPacks.slice(0, 8).map(pack => (
+                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                          <PackCardV2 pack={pack} />
+                        </div>
+                      ))}
+                    </HorizontalCarousel>
+                  </div>
+                ))
             ) : (
-              /* Fallback sections if no categories are setup yet */
               <>
                 {premiumPacks.length > 0 && (
-                  <HorizontalCarousel title="Paid & Exclusivos">
+                  <HorizontalCarousel title="Paid & Exclusive">
                     {premiumPacks.map(pack => (
                       <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
@@ -388,7 +389,6 @@ const Packs = () => {
                     ))}
                   </HorizontalCarousel>
                 )}
-
               </>
             )}
 
