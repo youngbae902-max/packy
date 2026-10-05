@@ -13,7 +13,7 @@ export default function Wallet() {
   const [showAuth, setShowAuth] = useState(false);
 
   const balance = Number((profile as any)?.wallet_balance || 0);
-  const formatted = balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const formatted = balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   if (!user) {
     return (
