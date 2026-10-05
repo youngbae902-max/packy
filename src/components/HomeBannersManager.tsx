@@ -89,7 +89,7 @@ export function HomeBannersManager() {
         onChange={e => handleReplace(e.target.files?.[0])}
       />
 
-      <div className="rounded-2xl border border-border/60 bg-card p-4 space-y-3">
+      <div className="rounded-2xl border border-white/[0.06] bg-[#151515] p-4 space-y-3 shadow-none">
         <h3 className="text-sm font-semibold">Novo banner da Home</h3>
         <Input placeholder="Título (opcional)" value={title} onChange={e => setTitle(e.target.value)} />
         <Input placeholder="Subtítulo (opcional)" value={subtitle} onChange={e => setSubtitle(e.target.value)} />
@@ -112,7 +112,7 @@ export function HomeBannersManager() {
           <p className="text-sm text-muted-foreground text-center py-6">Nenhum banner cadastrado.</p>
         )}
         {banners.map(b => (
-          <div key={b.id} className="rounded-2xl border border-border/60 bg-card overflow-hidden">
+          <div key={b.id} className="rounded-2xl border border-white/[0.07] bg-[#151515] overflow-hidden shadow-none">
             <div className="relative aspect-[16/9] w-full bg-muted/30">
               <img src={b.image_url} alt={b.title || 'Banner'} className="w-full h-full object-cover" />
               <button
@@ -128,7 +128,7 @@ export function HomeBannersManager() {
               </button>
             </div>
 
-            <div className="p-3 space-y-3">
+            <div className="p-4 space-y-3">
               {editingId === b.id ? (
                 <div className="space-y-2">
                   <Input
