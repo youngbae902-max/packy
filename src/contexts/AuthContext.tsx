@@ -71,6 +71,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return loadedProfile;
   };
 
+  const forceSignOutBannedUser = () => {
+    setTimeout(() => {
+      void supabase.auth.signOut();
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      setIsAdmin(false);
+    }, 0);
+  };
+
   const checkAdminRole = async (userId: string) => {
     const { data } = await supabase
       .from('user_roles')
@@ -99,11 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setTimeout(async () => {
             const loadedProfile = await fetchProfile(session.user.id);
             if (loadedProfile?.is_banned) {
-              await supabase.auth.signOut();
-              setSession(null);
-              setUser(null);
-              setProfile(null);
-              setIsAdmin(false);
+              forceSignOutBannedUser();
               return;
             }
             await checkAdminRole(session.user.id);
@@ -124,11 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         Promise.all([fetchProfile(session.user.id), checkAdminRole(session.user.id)]).then(async ([loadedProfile]) => {
           if (loadedProfile?.is_banned) {
-            await supabase.auth.signOut();
-            setSession(null);
-            setUser(null);
-            setProfile(null);
-            setIsAdmin(false);
+            forceSignOutBannedUser();
           }
         });
       }
@@ -147,11 +149,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `user_id=eq.${user.id}` }, async () => {
         const loadedProfile = await fetchProfile(user.id);
         if (loadedProfile?.is_banned) {
-          await supabase.auth.signOut();
-          setSession(null);
-          setUser(null);
-          setProfile(null);
-          setIsAdmin(false);
+          forceSignOutBannedUser();
         }
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wallet_transactions', filter: `user_id=eq.${user.id}` }, () => {
