@@ -37,7 +37,7 @@ export function AudioPlayer({ artistName, imageUrl, onSelect }: AudioPlayerProps
       aria-label={`Abrir acapella de ${artistName}`}
       className="group flex flex-col items-center gap-4 px-2 text-center touch-pan-x select-none"
     >
-      <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-transform duration-300 group-hover:scale-105 group-hover:border-primary/50 sm:w-40">
+      <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-colors duration-200 group-hover:border-primary/50 sm:w-40">
         {imageUrl ? (
           <img
             src={imageUrl}
