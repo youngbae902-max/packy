@@ -252,7 +252,7 @@ const Packs = () => {
           </nav>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
+        {q.length === 0 && activeTab === 'inicio' && <div className="mb-9 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
@@ -321,7 +321,7 @@ const Packs = () => {
             )}
           </div>
         ) : (
-          <div className="space-y-7 md:space-y-9">
+          <div className="space-y-10 md:space-y-12">
             
             {releases.visible && releasePacks.length > 0 && (
               <HorizontalCarousel
@@ -358,7 +358,7 @@ const Packs = () => {
               categories
                 .filter(category => !['efeitos', 'lançamentos', 'presets essenciais'].includes(category.name.trim().toLocaleLowerCase('pt-BR')))
                 .map(category => (
-                <HorizontalCarousel key={category.id} title={category.name}>
+                <div key={category.id} className="pt-1"><HorizontalCarousel title={category.name}>
                   {premiumPacks.slice(0, 8).map(pack => (
                     <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                       <PackCardV2 pack={pack} />
@@ -422,7 +422,7 @@ const Packs = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm" onClick={() => setSelectedAcapella(null)}>
           <div className="w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-[#151515] shadow-2xl" onClick={(event) => event.stopPropagation()}>
             <div className="relative p-5 pb-3">
-              <button type="button" onClick={() => setSelectedAcapella(null)} className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-sm text-white/70 hover:bg-white/15">Fechar</button>
+              <button type="button" onClick={() => setSelectedAcapella(null)} className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-sm text-white/70 hover:bg-white/15">Close</button>
               <div className="mx-auto h-32 w-32 overflow-hidden rounded-2xl border border-white/10 bg-[#1B1B1B]">
                 {selectedAcapella.image_url ? <img src={selectedAcapella.image_url} alt={selectedAcapella.artist_name} className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center"><Mic className="h-9 w-9 text-white/25" /></div>}
               </div>
