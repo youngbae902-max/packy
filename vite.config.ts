@@ -1,25 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+// Keep the Vite config minimal for Lovable Preview. The preview must not
+// depend on editor-only plugins or custom HMR behavior.
+export default defineConfig({
   server: {
     host: "::",
     port: 8080,
-    watch: {
-      usePolling: true,
-      interval: 500,
-    },
-    hmr: {
-      overlay: false,
-    },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-}));
+});
