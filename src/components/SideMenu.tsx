@@ -16,16 +16,16 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const [showSignOutConfirm, setShowSignOutConfirm] = React.useState(false);
 
   const baseItems = [
-    { to: '/', icon: Compass, label: 'Explorar' },
+    { to: '/', icon: Compass, label: 'Explore' },
     { to: '/mcs', icon: Mic, label: 'Acapella' },
     { to: '/sites', icon: Globe, label: 'Sites' },
-    { to: '/inbox', icon: Mail, label: 'Caixa de entrada' },
-    { to: '/desejos', icon: Star, label: 'Lista de desejos' },
-    { to: '/aplicativos', icon: Smartphone, label: 'Aplicativos' },
+    { to: '/inbox', icon: Mail, label: 'Inbox' },
+    { to: '/desejos', icon: Star, label: 'Wishlist' },
+    { to: '/aplicativos', icon: Smartphone, label: 'Apps' },
   ];
 
   const items = user
-    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Projetos' }]
+    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Projects' }]
     : baseItems;
 
   if (!isOpen) return null;
@@ -98,7 +98,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
               </Avatar>
               <span className="min-w-0 flex-1">
                 <span className="block text-[13px] font-semibold text-foreground truncate">
-                  {profile?.artist_name || profile?.username || user.email?.split('@')[0] || 'Sua conta'}
+                  {profile?.artist_name || profile?.username || user.email?.split('@')[0] || 'Your account'}
                 </span>
                 <span className="flex items-center gap-1.5 mt-0.5 text-[10px] text-foreground/45">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#34C759]" />
@@ -107,7 +107,7 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
               </span>
             </button>
           )}
-          <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Conectado' : 'Visitante'} · v1.0</p>
+          <p className="px-2 text-[11px] text-muted-foreground">{user ? 'Connected' : 'Guest'} · v1.0</p>
         </div>
       </aside>
 
