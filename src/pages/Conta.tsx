@@ -17,7 +17,6 @@ import { FavoritesSection } from '@/components/FavoritesSection';
 import { ProfilePackRow } from '@/components/ProfilePackRow';
 import { WalletCard } from '@/components/WalletCard';
 import { EmojiText } from '@/components/EmojiText';
-import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { SettingsRow, SettingsGroup } from '@/components/SettingsRow';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ChevronDown, ChevronRight, Palette, Lock, Smile, Sticker, Image as ImageIcon, MoreHorizontal } from 'lucide-react';
@@ -239,8 +238,7 @@ const Conta = () => {
   if (!user) {
     return (
       <>
-        <WelcomeScreen onStart={() => setShowAuthModal(true)} />
-        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} initialMode="signup" />
+        <AuthModal isOpen={true} onClose={() => setShowAuthModal(false)} initialMode="login" />
       </>
     );
   }
