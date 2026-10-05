@@ -1176,8 +1176,11 @@ export default function Admin() {
 
         {mainTab === 'emojis' && (
           <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><SmilePlus className="w-4 h-4" /></div><div><h3 className="font-bold">Novo emoji</h3><p className="text-xs text-muted-foreground">Adicione um emoji personalizado.</p></div></div>
+            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-white/[0.06] flex items-center justify-center"><SmilePlus className="w-4 h-4" /></div>
+                <div><h3 className="font-bold">Novo emoji</h3><p className="text-xs text-muted-foreground">Adicione um emoji personalizado.</p></div>
+              </div>
               <Input value={emojiName} onChange={(e) => setEmojiName(e.target.value)} placeholder="Nome do emoji" />
               <Input value={emojiCode} onChange={(e) => setEmojiCode(e.target.value.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase())} placeholder="codigo sem dois pontos" />
               <Input type="file" accept="image/*" onChange={(e) => setEmojiFile(e.target.files?.[0] || null)} />
@@ -1205,7 +1208,8 @@ export default function Admin() {
 
         {mainTab === 'selos' && (
           <div className="space-y-4">
-            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">\n              <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-2xl bg-white/[0.06] flex items-center justify-center"><BadgeCheck className="w-4 h-4" /></div><div><h3 className="font-bold">Novo selo</h3><p className="text-xs text-muted-foreground">Crie um selo para os perfis.</p></div></div>
+            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">
+              <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-2xl bg-white/[0.06] flex items-center justify-center"><BadgeCheck className="w-4 h-4" /></div><div><h3 className="font-bold">Novo selo</h3><p className="text-xs text-muted-foreground">Crie um selo para os perfis.</p></div></div>
               <Input value={badgeName} onChange={(e) => setBadgeName(e.target.value)} placeholder="Nome do selo" />
               <Input value={badgeDesc} onChange={(e) => setBadgeDesc(e.target.value)} placeholder="Descrição (opcional)" />
               <Input type="file" accept="image/*" onChange={(e) => setBadgeFile(e.target.files?.[0] || null)} />
