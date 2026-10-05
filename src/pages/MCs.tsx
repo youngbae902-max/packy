@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, LayoutGrid, List, Music } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { BottomNav } from '@/components/BottomNav';
-import { useAcapellas } from '@/hooks/useAcapellas';
+import { useAcapellas, type Acapella } from '@/hooks/useAcapellas';
 
 type LayoutMode = 'grid' | 'list';
 
@@ -117,7 +117,6 @@ const MCs = () => {
         )}
       </div>
       <BottomNav />
-    </div>
     </div>
   );
 };
