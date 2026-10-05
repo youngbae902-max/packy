@@ -19,6 +19,7 @@ import PublicProfile from "./pages/PublicProfile";
 import CustomPage from "./pages/CustomPage";
 import Wallet from "./pages/Wallet";
 import Up from "./pages/Up";
+import Applications from "./pages/Applications";
 import { Sidebar } from "@/components/Sidebar";
 
 
@@ -47,6 +48,7 @@ const App = () => (
                 <Route path="/conta" element={<Conta />} />
                 <Route path="/carteira" element={<Wallet />} />
                 <Route path="/up" element={<Up />} />
+                <Route path="/aplicativos" element={<Applications />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<NotFound />} />
