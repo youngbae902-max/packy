@@ -118,7 +118,7 @@ export default function Wishlist() {
                     </div>
                   )}
                   <p className="text-xs text-muted-foreground mt-2">
-                    {new Date(wish.created_at).toLocaleDateString('pt-BR')}
+                    {new Date(wish.created_at).toLocaleDateString('en-US')}
                   </p>
                 </CardContent>
               </Card>
