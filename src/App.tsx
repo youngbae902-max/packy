@@ -62,4 +62,57 @@ const App = () => (
   </QueryClientProvider>
 );
 
+export default App;const AppContent = () => {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (location.pathname === "/conta" && !user) {
+    return (
+      <Routes>
+        <Route path="/conta" element={<Conta />} />
+      </Routes>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen bg-[#111111]">
+      <Sidebar />
+      <div className="flex-1 w-full md:pl-64 pb-20 md:pb-0">
+        <Routes>
+          <Route path="/" element={<Packs />} />
+          <Route path="/projetos" element={<Projetos />} />
+          <Route path="/mcs" element={<MCs />} />
+          <Route path="/albuns" element={<Albums />} />
+          <Route path="/sites" element={<Sites />} />
+          <Route path="/desejos" element={<Wishlist />} />
+          <Route path="/inbox" element={<Inbox />} />
+          <Route path="/perfil/:userId" element={<PublicProfile />} />
+          <Route path="/pagina/:slug" element={<CustomPage />} />
+          <Route path="/conta" element={<Conta />} />
+          <Route path="/carteira" element={<Wallet />} />
+          <Route path="/up" element={<Up />} />
+          <Route path="/aplicativos" element={<Apps />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    </div>
+  );
+};
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner position="top-center" duration={900} />
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
+  </QueryClientProvider>
+);
+
 export default App;
