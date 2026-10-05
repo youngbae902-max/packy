@@ -23,6 +23,7 @@ import Applications from "./pages/Applications";
 import { Sidebar } from "@/components/Sidebar";
 
 
+// Acapella selection opens the poll flow.
 const queryClient = new QueryClient();
 
 const App = () => (
