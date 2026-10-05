@@ -19,21 +19,32 @@ export function HorizontalCarousel({ title, children, showArrows = true }: Horiz
   };
 
   return (
-    <section className="mb-8 relative group bg-transparent border-0 shadow-none">
-      <div className="relative flex items-center justify-between mb-1.5 px-2 bg-transparent">
-        <h2 className="text-[15px] md:text-base font-medium tracking-tight text-foreground/85">{title}</h2>
+    <section className="mb-9 relative group bg-transparent border-0 shadow-none">
+      <div className="relative flex items-center justify-between mb-3 px-2">
+        <div className="flex items-center gap-3">
+          <span className="h-5 w-1 rounded-full bg-foreground/80" />
+          <div className="flex flex-col">
+            <h2 className="text-[16px] md:text-[17px] font-semibold tracking-[-0.02em] text-foreground">
+              {title}
+            </h2>
+            <span className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/55">
+              PACKS
+            </span>
+          </div>
+        </div>
+
         {showArrows && (
-          <div className="hidden md:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="hidden md:flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => scroll('left')}
-              className="p-1.5 rounded-full bg-transparent text-foreground/70 hover:bg-transparent transition"
+              className="p-1.5 rounded-full bg-transparent text-foreground/55 hover:text-foreground transition"
               aria-label="Rolar para a esquerda"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={() => scroll('right')}
-              className="p-1.5 rounded-full bg-transparent text-foreground/70 hover:bg-transparent transition"
+              className="p-1.5 rounded-full bg-transparent text-foreground/55 hover:text-foreground transition"
               aria-label="Rolar para a direita"
             >
               <ChevronRight className="w-5 h-5" />
