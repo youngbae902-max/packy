@@ -44,8 +44,8 @@ const MCs = () => {
             />
           </div>
           <div className="flex shrink-0 items-center gap-0.5 rounded-xl border border-white/10 bg-[#141414] p-1">
-            {layoutButton('grid', 'Grade', LayoutGrid)}
-            {layoutButton('list', 'Lista', List)}
+            {layoutButton('grid', 'Grid', LayoutGrid)}
+            {layoutButton('list', 'List', List)}
           </div>
         </div>
 
@@ -57,7 +57,7 @@ const MCs = () => {
           <p className="py-8 text-center text-muted-foreground">Carregando...</p>
         ) : filtered.length === 0 ? (
           <p className="py-8 text-center text-muted-foreground">
-            {searchTerm ? 'Nenhum MC encontrado' : 'Nenhum MC disponível'}
+            {searchTerm ? 'No MCs found' : 'No MCs available'}
           </p>
         ) : layout === 'grid' ? (
           <div className="grid grid-cols-3 gap-x-4 gap-y-8 sm:grid-cols-4">
