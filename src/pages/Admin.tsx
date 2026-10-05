@@ -675,7 +675,7 @@ export default function Admin() {
                     placeholder="Uma mensagem especial..."
                   />
                 </div>
-                <Button onClick={handleSendExternalGiftToAll} className="w-full">
+                <Button onClick={handleSendExternalGiftToAll} className="w-full h-11 rounded-2xl">
                   <Send className="w-4 h-4 mr-2" />
                   Enviar para Todos
                 </Button>
@@ -844,7 +844,7 @@ export default function Admin() {
             )}
 
             {pendingHomePacks.map((pack) => (
-              <div key={pack.id} className="pack-card flex gap-3">
+              <div key={pack.id} className="rounded-3xl border border-white/[0.07] bg-[#151515] p-3 flex gap-3">
                 <img src={pack.cover_url || '/placeholder.svg'} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-sm truncate">{pack.title}</h3>
@@ -977,7 +977,7 @@ export default function Admin() {
             </div>
             
             {getCurrentAlbums().map((a) => (
-              <div key={a.id} className="pack-card">
+              <div key={a.id} className="rounded-3xl border border-white/[0.07] bg-[#151515] p-4">
                 <div className="flex items-start gap-4 mb-4">
                   <img src={a.cover_url || '/placeholder.svg'} alt="" className="w-16 h-16 rounded-lg object-cover" />
                   <div className="flex-1 min-w-0">
@@ -1177,7 +1177,7 @@ export default function Admin() {
         {mainTab === 'emojis' && (
           <div className="space-y-4">
             <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><SmilePlus className="w-4 h-4" /> Novo emoji</h3>
+              <h3 className="font-bold flex items-center gap-2"><SmilePlus className="w-4 h-4" /></div><div><h3 className="font-bold">Novo emoji</h3><p className="text-xs text-muted-foreground">Adicione um emoji personalizado.</p></div></div>
               <Input value={emojiName} onChange={(e) => setEmojiName(e.target.value)} placeholder="Nome do emoji" />
               <Input value={emojiCode} onChange={(e) => setEmojiCode(e.target.value.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase())} placeholder="codigo sem dois pontos" />
               <Input type="file" accept="image/*" onChange={(e) => setEmojiFile(e.target.files?.[0] || null)} />
@@ -1189,7 +1189,7 @@ export default function Admin() {
 
             <div className="space-y-2">
               {emojis.map((emoji) => (
-                <div key={emoji.id} className="pack-card flex items-center gap-3">
+                <div key={emoji.id} className="rounded-2xl border border-white/[0.06] bg-[#151515] p-3 flex items-center gap-3">
                   <img src={emoji.image_url} alt={emoji.name} className="w-10 h-10 object-contain rounded-lg bg-secondary" />
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm truncate">{emoji.name}</p>
@@ -1205,7 +1205,7 @@ export default function Admin() {
 
         {mainTab === 'selos' && (
           <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">              <h3 className="font-bold flex items-center gap-2"><BadgeCheck className="w-4 h-4" /> Novo selo</h3>
+            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">\n              <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-2xl bg-white/[0.06] flex items-center justify-center"><BadgeCheck className="w-4 h-4" /></div><div><h3 className="font-bold">Novo selo</h3><p className="text-xs text-muted-foreground">Crie um selo para os perfis.</p></div></div>
               <Input value={badgeName} onChange={(e) => setBadgeName(e.target.value)} placeholder="Nome do selo" />
               <Input value={badgeDesc} onChange={(e) => setBadgeDesc(e.target.value)} placeholder="Descrição (opcional)" />
               <Input type="file" accept="image/*" onChange={(e) => setBadgeFile(e.target.files?.[0] || null)} />
@@ -1217,7 +1217,7 @@ export default function Admin() {
 
             <div className="space-y-2">
               {adminBadges.map((badge) => (
-                <Card key={badge.id} className="p-3 rounded-2xl border-border/50 bg-card flex items-center gap-3">
+                <Card key={badge.id} className="p-3.5 rounded-2xl border-white/[0.06] bg-white/[0.025] flex items-center gap-3">
                   <img src={badge.image_url} alt={badge.name} className="w-10 h-10 object-contain rounded-lg bg-secondary" />
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm truncate">{badge.name}</p>
@@ -1240,7 +1240,7 @@ export default function Admin() {
 
         {mainTab === 'decoracoes' && (
           <div className="admin-wallet space-y-3">
-            <Card className="p-4 rounded-3xl border-white/[0.06] bg-[#151515] space-y-3">
+            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">
               <div>
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
@@ -1267,7 +1267,7 @@ export default function Admin() {
               <p className="text-xs text-muted-foreground border-t border-border/50 pt-3">PNG transparente recomendado. Todos os usuários poderão escolher.</p>
             </Card>
 
-            <Card className="p-5 rounded-3xl border-border/50 bg-card">
+            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515]">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="font-bold">Biblioteca</h3>
@@ -1280,8 +1280,8 @@ export default function Admin() {
               ) : (
                 <div className="grid grid-cols-2 gap-3">
                   {decorations.map((d) => (
-                    <div key={d.id} className="rounded-2xl bg-secondary/40 border border-border/40 overflow-hidden">
-                      <div className="aspect-square bg-secondary/50 flex items-center justify-center p-3">
+                    <div key={d.id} className="rounded-2xl bg-white/[0.025] border border-white/[0.06] overflow-hidden">
+                      <div className="aspect-square bg-white/[0.03] flex items-center justify-center p-3">
                         <img src={d.image_url} alt={d.name} className="w-full h-full object-contain" />
                       </div>
                       <div className="p-3 space-y-2">
