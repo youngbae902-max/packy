@@ -53,12 +53,12 @@ const Packs = () => {
     return approvedPacks.slice(0, releases.limit);
   }, [approvedPacks, releases]);
 
-  const q = searchQuery.toLowerCase().trim();
+  const query = searchQuery.toLowerCase().trim();
 
   // Open popup whenever the user types
   useEffect(() => {
-    setPopupOpen(q.length > 0);
-  }, [q]);
+    setPopupOpen(query.length > 0);
+  }, [query]);
 
   // Click outside closes popup
   useEffect(() => {
@@ -76,16 +76,16 @@ const Packs = () => {
   }, [popupOpen]);
 
   const searchedPacks = useMemo(() => {
-    if (!q) return [];
+    if (!query) return [];
     return [...approvedPacks, ...premiumPacks, ...projectPacks].filter(p => 
-      p.title.toLowerCase().includes(q) || p.author_name?.toLowerCase().includes(q)
+      p.title.toLowerCase().includes(query) || p.author_name?.toLowerCase().includes(query)
     );
-  }, [q, approvedPacks, premiumPacks, projectPacks]);
+  }, [query, approvedPacks, premiumPacks, projectPacks]);
 
   const searchedMCs = useMemo(() => {
-    if (!q) return [];
-    return acapellas.filter(mc => mc.artist_name.toLowerCase().includes(q));
-  }, [q, acapellas]);
+    if (!query) return [];
+    return acapellas.filter(mc => mc.artist_name.toLowerCase().includes(query));
+  }, [query, acapellas]);
 
   const allPacks = useMemo(() => {
     const seen = new Set<string>();
@@ -114,7 +114,7 @@ const Packs = () => {
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            onFocus={() => q.length > 0 && setPopupOpen(true)}
+            onFocus={() => query.length > 0 && setPopupOpen(true)}
             className="w-full bg-[#111111] border border-white/[0.05] rounded-xl pl-12 pr-10 py-3 text-sm text-[#F5F5F5] placeholder:text-[#8A8A8A] focus:outline-none focus:ring-1 focus:ring-white/[0.08] focus:border-white/[0.10] transition-all shadow-none"
             placeholder="What do you want to hear or download?"
           />
@@ -175,7 +175,7 @@ const Packs = () => {
                     ))}
                   </div>
                 </div>
-              ) : q.length > 0 && searchedProfiles.length === 0 && searchedMCs.length === 0 ? (
+              ) : query.length > 0 && searchedProfiles.length === 0 && searchedMCs.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">No results found.</p>
               ) : null}
             </div>
@@ -227,7 +227,7 @@ const Packs = () => {
 
       <div className="packs-page relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
 
-        {q.length === 0 && (
+        {query.length === 0 && (
           <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
@@ -252,7 +252,7 @@ const Packs = () => {
           </nav>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-9 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
+        {query.length === 0 && activeTab === 'inicio' && <div className="mb-9 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
 
         {/* Banners / Eventos */}
         {activeTab === 'inicio' && activeEvents.length > 0 && (
@@ -266,7 +266,7 @@ const Packs = () => {
         {/* Main Feed Content */}
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 py-16">{Array.from({ length: 10 }).map((_, i) => <div key={i} className="aspect-[0.9] rounded-2xl bg-white/[0.04] animate-pulse" />)}</div>
-        ) : q.length > 0 ? (
+        ) : query.length > 0 ? (
           <div>
             <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
               Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
