@@ -375,7 +375,7 @@ export default function Admin() {
             visao: ['stats', 'home'],
             conteudo: ['pendentes', 'packs', 'projetos', 'acapellas', 'albuns', 'eventos', 'paginas'],
             comunidade: ['usuarios', 'desejos', 'giftall', 'selos', 'decoracoes'],
-            sistema: ['carteira', 'emojis', 'categorias', 'lixeira'],
+            sistema: ['carteira', 'emojis', 'categorias', 'aplicativos', 'lixeira'],
           };
           const visibleTabs = mainTabs.filter(tab => categoryTabs[adminCategory].includes(tab.id));
           return (
