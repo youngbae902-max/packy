@@ -640,7 +640,8 @@ export default function Admin() {
           <div className="space-y-6">
 
           <button type="button" onClick={() => setAdminPanelOpen(adminPanelOpen === 'giftall' ? null : 'giftall')} className="w-full flex items-center justify-between rounded-2xl border border-white/[0.06] bg-[#151515] px-4 py-3 text-left hover:bg-white/[0.04] transition-colors"><div className="flex items-center gap-2"><Send className="w-4 h-4" /><span className="text-sm font-semibold">Gift All</span></div><ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${adminPanelOpen === 'giftall' ? 'rotate-90' : ''}`} /></button>
-          {adminPanelOpen === 'giftall' && (            <Card className="p-4">
+          {adminPanelOpen === 'giftall' && (<>
+            <Card className="p-4">
               <h3 className="font-bold mb-4 flex items-center gap-2">
                 <LinkIcon className="w-4 h-4" />
                 Enviar Link Externo para Todos
@@ -997,7 +998,8 @@ export default function Admin() {
           <div className="space-y-4">
 
           <button type="button" onClick={() => setAdminPanelOpen(adminPanelOpen === 'selos' ? null : 'selos')} className="w-full flex items-center justify-between rounded-2xl border border-white/[0.06] bg-[#151515] px-4 py-3 text-left hover:bg-white/[0.04] transition-colors"><div className="flex items-center gap-2"><BadgeCheck className="w-4 h-4" /><span className="text-sm font-semibold">Selos</span></div><ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${adminPanelOpen === 'selos' ? 'rotate-90' : ''}`} /></button>
-          {adminPanelOpen === 'selos' && (            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">
+          {adminPanelOpen === 'selos' && (<>
+            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">
               <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-2xl bg-white/[0.06] flex items-center justify-center"><BadgeCheck className="w-4 h-4" /></div><div><h3 className="font-bold">Novo selo</h3><p className="text-xs text-muted-foreground">Crie um selo para os perfis.</p></div></div>
               <Input value={badgeName} onChange={(e) => setBadgeName(e.target.value)} placeholder="Nome do selo" />
               <Input value={badgeDesc} onChange={(e) => setBadgeDesc(e.target.value)} placeholder="Descrição (opcional)" />
@@ -1029,6 +1031,7 @@ export default function Admin() {
               {adminBadges.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhum selo criado</p>}
             </div>
           </div>
+          </>
           )}
         )}
 
@@ -1036,7 +1039,8 @@ export default function Admin() {
           <div className="admin-wallet space-y-3">
 
           <button type="button" onClick={() => setAdminPanelOpen(adminPanelOpen === 'decoracoes' ? null : 'decoracoes')} className="w-full flex items-center justify-between rounded-2xl border border-white/[0.06] bg-[#151515] px-4 py-3 text-left hover:bg-white/[0.04] transition-colors"><div className="flex items-center gap-2"><Sparkles className="w-4 h-4" /><span className="text-sm font-semibold">Decorações</span></div><ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${adminPanelOpen === 'decoracoes' ? 'rotate-90' : ''}`} /></button>
-          {adminPanelOpen === 'decoracoes' && (            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">
+          {adminPanelOpen === 'decoracoes' && (<>
+            <Card className="p-5 rounded-3xl border-white/[0.07] bg-[#151515] space-y-4">
               <div>
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
@@ -1092,6 +1096,7 @@ export default function Admin() {
               )}
             </Card>
           </div>
+          </>
           )}
         )}
 
