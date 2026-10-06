@@ -383,9 +383,9 @@ const Conta = () => {
 
       {settingsMode && (
         <div className="fixed inset-0 z-40 bg-background overflow-y-auto pb-24">
-          <div className="max-w-lg mx-auto px-4 py-6">
+          <div className="max-w-lg mx-auto px-4 pt-4 pb-8">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-8">
               <button
                 onClick={() => { if (settingsSub) setSettingsSub(null); else setSearchParams({}); }}
                 className="w-11 h-11 flex items-center justify-center"
@@ -393,7 +393,7 @@ const Conta = () => {
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-[17px] font-bold tracking-tight">
+              <h1 className="text-[19px] font-bold tracking-tight">
                 {settingsSub === 'tema' ? 'Trocar Tema'
                   : settingsSub === 'personalizacao' ? 'Personalização'
                   : settingsSub === 'cores' ? 'Cores dos Selos'
@@ -445,9 +445,9 @@ const Conta = () => {
 
             {/* Settings home */}
             {!settingsSub && (
-              <>
+              <div className="space-y-4">
                 {/* Small profile card */}
-                <div className="rounded-2xl border border-border/40 bg-card p-3 flex items-center gap-3 mb-6">
+                <div className="rounded-[20px] border border-border/40 bg-card p-4 flex items-center gap-3 mb-2 shadow-sm">
                   <button
                     onClick={() => settingsFileInputRef.current?.click()}
                     className={`w-11 h-11 bg-secondary overflow-hidden flex-shrink-0 border border-border/40 ${avatarShapeClasses(avatarShape)}`}
@@ -497,10 +497,10 @@ const Conta = () => {
                 <SettingsGroup>
                   <SettingsRow icon={MoreHorizontal} label="Mais opções" onClick={() => setSettingsSub('mais')} />
                 </SettingsGroup>
-              </>
+              </div>
             )}
 
-            {/* Personalização subscreen */}
+            {/* Personalização subscreen */
             {settingsSub === 'personalizacao' && (
               <div className="space-y-2">
                 <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
