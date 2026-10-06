@@ -99,8 +99,8 @@ export function Sidebar() {
         {user ? (
           <>
             <NavLink
-              to="#"
-              onClick={(e) => { e.preventDefault(); setShowAuthModal(true); }}
+              to={user ? `/perfil/${user.id}` : "#"}
+              onClick={(e) => { if (!user) { e.preventDefault(); setShowAuthModal(true); } }}
               className="flex items-center gap-3 px-3 py-2 rounded-xl transition-colors text-muted-foreground hover:text-foreground hover:bg-foreground/5"
             >
               <User className="w-5 h-5" />
