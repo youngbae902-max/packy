@@ -90,9 +90,9 @@ export default function PublicProfile() {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header matching Conta.tsx */}
-      <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
+      <div className="bg-gradient-to-b from-secondary to-background pt-6 pb-12 px-4">
         <div className="max-w-lg mx-auto">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-end items-center mb-6">
             <div className="w-11 h-11" />
             {isSelf ? (
               <Link to="/conta?settings=1" className="w-11 h-11 flex items-center justify-center text-foreground hover:opacity-80 transition-opacity" aria-label="Configurações">
@@ -104,7 +104,7 @@ export default function PublicProfile() {
           {/* Profile Card */}
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
-            <div className="relative mb-4 w-32 h-32">
+            <div className="relative mb-5 w-32 h-32">
               <div className={`w-32 h-32 bg-secondary border-2 border-border overflow-hidden block ${avatarShapeClasses((profile as any)?.avatar_shape)}`}>
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
@@ -149,7 +149,7 @@ export default function PublicProfile() {
             </div>
 
             {/* Name & Username */}
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-2">
               <h2 className="text-2xl font-bold text-foreground">{displayName}</h2>
               {profile?.has_spotify_badge && (
                 <div
@@ -165,11 +165,11 @@ export default function PublicProfile() {
             </div>
             
             {profile?.username && (
-              <p className="text-base text-muted-foreground mb-3">@{profile.username}</p>
+              <p className="text-base text-muted-foreground mb-4">@{profile.username}</p>
             )}
 
             {/* Badges */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 mb-5">
               {isOwner && ((profile as any)?.show_admin_badge !== false) && (
                 <Badge className="border gap-1" style={{ color: adminText, borderColor: adminBorder, backgroundColor: adminBg }}>
                   <Shield className="w-3 h-3" />
@@ -180,7 +180,7 @@ export default function PublicProfile() {
 
             {/* Bio */}
             {bio && (
-              <p className="text-sm text-muted-foreground max-w-xs mb-4 whitespace-pre-wrap">
+              <p className="text-sm text-muted-foreground max-w-sm mb-5 whitespace-pre-wrap">
                 <EmojiText text={shownBio} />
                 {shouldClampBio && (
                   <button onClick={() => setBioExpanded(!bioExpanded)} className="ml-1 font-bold text-xs" style={{ color: accent }}>
@@ -192,7 +192,7 @@ export default function PublicProfile() {
 
             {/* Social Links */}
             {socialLinks.length > 0 && (
-              <div className="flex gap-3 mb-6">
+              <div className="flex gap-3 mb-5">
                 {socialLinks.map((link, i) => (
                   <a 
                     key={i} 
@@ -210,7 +210,7 @@ export default function PublicProfile() {
 
             {/* Custom Badges display in bio */}
             {((profile as any).show_badges_in_bio !== false) && userBadges.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 justify-center mb-4">
+              <div className="flex flex-wrap gap-1.5 justify-center mb-5">
                 {userBadges.map(b => b.badge && (
                   <span key={b.id} title={b.badge.name} className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-secondary border border-border/40 text-[11px] font-semibold">
                     <img src={b.badge.image_url} alt={b.badge.name} className="w-3.5 h-3.5" />
@@ -233,8 +233,8 @@ export default function PublicProfile() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-8">
-        <div className="grid grid-cols-3 gap-2 mb-6 text-center">
+      <div className="max-w-lg mx-auto px-4 -mt-4">
+        <div className="grid grid-cols-3 gap-2 mb-8 text-center">
           <div><p className="text-xl font-black text-foreground">{packs.length}</p><p className="text-xs text-muted-foreground">Enviados</p></div>
           <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs text-muted-foreground">Seguidores</p></div>
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
