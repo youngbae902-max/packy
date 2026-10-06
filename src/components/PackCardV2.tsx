@@ -67,7 +67,7 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
 
   const handleDownloadClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) { setShowAuthModal(true); return; }
+    // Downloads are public. An account is only needed for optional social actions.
     if (pack.credit_channel_url && !isDownloadUnlocked) { setShowCreditFlow(true); return; }
     setShowDownloadConfirm(true);
   };
@@ -280,7 +280,7 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
                   className="w-full flex items-center justify-center gap-2 rounded-xl bg-foreground text-background py-3 font-bold hover:opacity-90 transition mb-3"
                 >
                   <Download className="w-4 h-4" />
-                  {pack.credit_channel_url && !isDownloadUnlocked && user ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
+                  {pack.credit_channel_url && !isDownloadUnlocked ? 'Dar Crédito para Baixar' : 'Baixar Pack'}
                 </button>
 
                 <button
