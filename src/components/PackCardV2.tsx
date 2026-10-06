@@ -153,10 +153,10 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
           </h3>
           <div className="flex items-center justify-between gap-2 mt-2">
             <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-foreground/40 truncate">
-              {categoryLabel}
+              {categoryLabel === 'DRUMKIT' ? <span className="opacity-0">DRUMKIT</span> : categoryLabel}
             </span>
             {isFree ? (
-              <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-green-500 bg-green-500 shrink-0" aria-label="Grátis" />
+              <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-green-500 bg-green-500 shrink-0 opacity-0" aria-label="Grátis" />
             ) : (
               <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-yellow-400 bg-yellow-400 shrink-0" aria-label="Premium" />
             )}
