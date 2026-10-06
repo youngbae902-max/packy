@@ -80,7 +80,7 @@ export default function PublicProfile() {
     return (
       <div className="min-h-screen bg-background pb-20">
         <div className="max-w-lg mx-auto px-4 pt-6">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground mb-8"><ChevronLeft className="w-5 h-5" /> Voltar</Link>
+          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground mb-8"> Voltar</Link>
           <p className="text-center text-muted-foreground">Perfil não encontrado</p>
         </div>
         <BottomNav />
@@ -107,8 +107,8 @@ export default function PublicProfile() {
           {/* Profile Card */}
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
-            <div className="relative mb-4 w-24 h-24">
-              <div className={`w-24 h-24 bg-secondary border-2 border-border overflow-hidden block ${avatarShapeClasses((profile as any)?.avatar_shape)}`}>
+            <div className="relative mb-4 w-32 h-32">
+              <div className={`w-32 h-32 bg-secondary border-2 border-border overflow-hidden block ${avatarShapeClasses((profile as any)?.avatar_shape)}`}>
                 {profile?.avatar_url ? (
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -153,7 +153,7 @@ export default function PublicProfile() {
 
             {/* Name & Username */}
             <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-xl font-bold text-foreground">{displayName}</h2>
+              <h2 className="text-2xl font-bold text-foreground">{displayName}</h2>
               {profile?.has_spotify_badge && (
                 <div
                   className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${(profile as any)?.verified_rgb ? 'badge-rgb' : ''}`}
@@ -168,7 +168,7 @@ export default function PublicProfile() {
             </div>
             
             {profile?.username && (
-              <p className="text-sm text-muted-foreground mb-3">@{profile.username}</p>
+              <p className="text-base text-muted-foreground mb-3">@{profile.username}</p>
             )}
 
             {/* Badges */}
