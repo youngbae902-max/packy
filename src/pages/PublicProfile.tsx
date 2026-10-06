@@ -45,11 +45,6 @@ export default function PublicProfile() {
   const shouldClampBio = bio.length > BIO_LIMIT;
   const shownBio = shouldClampBio && !bioExpanded ? `${bio.slice(0, BIO_LIMIT).trim()}...` : bio;
 
-  const currentPacks = useMemo(() => {
-    if (activeTab === 'reposts') return repostedPacks;
-    if (activeTab === 'likes') return likedPacks;
-    return packs;
-  }, [activeTab, likedPacks, packs, repostedPacks]);
 
   const handleFollow = async () => {
     if (!user) {
