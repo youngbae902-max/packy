@@ -7,7 +7,6 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Packs from "./pages/Packs";
 import Projetos from "./pages/Projetos";
 import MCs from "./pages/MCs";
-import Conta from "./pages/Conta";
 import Admin from "./pages/Admin";
 import Albums from "./pages/Albums";
 import Sites from "./pages/Sites";
@@ -28,14 +27,6 @@ const AppContent = () => {
   const { user } = useAuth();
   const location = useLocation();
 
-  if (location.pathname === "/conta" && !user) {
-    return (
-      <Routes>
-        <Route path="/conta" element={<Conta />} />
-      </Routes>
-    );
-  }
-
   return (
     <div className="flex min-h-screen bg-[#111111]">
       <Sidebar />
@@ -50,7 +41,6 @@ const AppContent = () => {
           <Route path="/inbox" element={<Inbox />} />
           <Route path="/perfil/:userId" element={<PublicProfile />} />
           <Route path="/pagina/:slug" element={<CustomPage />} />
-          <Route path="/conta" element={<Conta />} />
           <Route path="/carteira" element={<Wallet />} />
           <Route path="/up" element={<Up />} />
           <Route path="/aplicativos" element={<Apps />} />
