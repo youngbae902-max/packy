@@ -102,82 +102,82 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
 
   return (
     <main className="fixed inset-0 z-[9999] h-[100svh] w-full overflow-x-hidden overflow-y-auto bg-black text-white">
-      <div className="mx-auto flex min-h-full w-full max-w-[800px] items-center px-6 py-12 sm:px-8 sm:py-16">
+      <div className="mx-auto flex min-h-full w-full max-w-[560px] items-center px-5 py-6 sm:px-6 sm:py-8">
         <div className="w-full">
-          <div className="text-center mb-10 sm:mb-14">
-            <div className="flex justify-center mb-10 sm:mb-12">
-              <span className="text-[42px] sm:text-[48px] leading-none font-serif font-black tracking-[-0.12em] text-white/30">𐌆</span>
+          <div className="text-center mb-7 sm:mb-9">
+            <div className="flex justify-center mb-8 sm:mb-9">
+              <span className="text-[34px] sm:text-[38px] leading-none font-serif font-black tracking-[-0.12em] text-white/30">𐌆</span>
             </div>
 
-            <h1 className="text-[30px] sm:text-[38px] leading-none font-bold tracking-[-0.04em]">
+            <h1 className="text-[26px] sm:text-[30px] leading-none font-bold tracking-[-0.04em]">
               {mode === 'login' ? 'Welcome back' : 'Create account'}
             </h1>
 
-            <p className="mt-4 sm:mt-5 text-[17px] sm:text-[21px] leading-tight text-white/45 tracking-[-0.02em]">
+            <p className="mt-3 sm:mt-4 text-[15px] sm:text-[17px] leading-tight text-white/45 tracking-[-0.02em]">
               {mode === 'login' ? 'Entre na sua conta PACKY' : 'Crie sua conta PACKY'}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             <div className="relative">
-              <Mail className="absolute left-5 sm:left-7 top-1/2 -translate-y-1/2 h-5 w-5 sm:h-6 sm:w-6 text-white/40" />
+              <Mail className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
               <input
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={mode === 'login' ? 'Seu email ou usuário' : 'Seu email'}
-                className="w-full h-[72px] sm:h-[92px] rounded-[20px] sm:rounded-[23px] bg-transparent border border-white/[0.20] pl-[68px] sm:pl-[84px] pr-5 sm:pr-7 text-[18px] sm:text-[22px] text-white placeholder:text-white/35 outline-none transition focus:border-white/[0.38]"
+                className="w-full h-[58px] sm:h-[64px] rounded-[16px] sm:rounded-[18px] bg-transparent border border-white/[0.20] pl-[56px] sm:pl-[62px] pr-4 sm:pr-5 text-[16px] sm:text-[17px] text-white placeholder:text-white/35 outline-none transition focus:border-white/[0.38]"
                 required
               />
             </div>
 
             {forgotByKeyword && mode === 'login' && (
               <div className="relative">
-                <KeyRound className="absolute left-5 sm:left-7 top-1/2 -translate-y-1/2 h-5 w-5 sm:h-6 sm:w-6 text-white/40" />
+                <KeyRound className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
                 <input
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                   placeholder="Sua palavra-chave"
-                  className="w-full h-[72px] sm:h-[92px] rounded-[20px] sm:rounded-[23px] bg-transparent border border-white/[0.20] pl-[68px] sm:pl-[84px] pr-5 sm:pr-7 text-[18px] sm:text-[22px] text-white placeholder:text-white/35 outline-none focus:border-white/[0.38]"
+                  className="w-full h-[58px] sm:h-[64px] rounded-[16px] sm:rounded-[18px] bg-transparent border border-white/[0.20] pl-[56px] sm:pl-[62px] pr-4 sm:pr-5 text-[16px] sm:text-[17px] text-white placeholder:text-white/35 outline-none focus:border-white/[0.38]"
                 />
               </div>
             )}
 
             <div className="relative">
-              <Lock className="absolute left-5 sm:left-7 top-1/2 -translate-y-1/2 h-5 w-5 sm:h-6 sm:w-6 text-white/40" />
+              <Lock className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Sua senha"
-                className="w-full h-[72px] sm:h-[92px] rounded-[20px] sm:rounded-[23px] bg-transparent border border-white/[0.20] pl-[68px] sm:pl-[84px] pr-14 sm:pr-16 text-[18px] sm:text-[22px] text-white placeholder:text-white/35 outline-none transition focus:border-white/[0.38]"
+                className="w-full h-[58px] sm:h-[64px] rounded-[16px] sm:rounded-[18px] bg-transparent border border-white/[0.20] pl-[56px] sm:pl-[62px] pr-14 sm:pr-16 text-[16px] sm:text-[17px] text-white placeholder:text-white/35 outline-none transition focus:border-white/[0.38]"
                 required
                 minLength={6}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(v => !v)}
-                className="absolute right-5 sm:right-7 top-1/2 -translate-y-1/2 text-white/35 hover:text-white/70 transition"
+                className="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 text-white/35 hover:text-white/70 transition"
                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
               >
-                {showPassword ? <EyeOff className="h-5 w-5 sm:h-6 sm:w-6" /> : <Eye className="h-5 w-5 sm:h-6 sm:w-6" />}
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
 
             {mode === 'login' && (
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-                <button type="button" onClick={handleForgotPassword} className="text-[17px] sm:text-[20px] text-white/45 hover:text-white/75 transition">
+                <button type="button" onClick={handleForgotPassword} className="text-[15px] sm:text-[16px] text-white/45 hover:text-white/75 transition">
                   Esqueceu a senha?
                 </button>
                 <span className="text-white/15 text-[18px]">·</span>
-                <button type="button" onClick={() => setForgotByKeyword(v => !v)} className="text-[17px] sm:text-[20px] text-white/45 hover:text-white/75 transition">
+                <button type="button" onClick={() => setForgotByKeyword(v => !v)} className="text-[15px] sm:text-[16px] text-white/45 hover:text-white/75 transition">
                   {forgotByKeyword ? 'Fechar' : 'Palavra-chave'}
                 </button>
               </div>
             )}
 
             {forgotByKeyword && mode === 'login' && (
-              <button type="button" onClick={handleKeywordReset} className="w-full h-[64px] sm:h-[76px] rounded-[20px] sm:rounded-[22px] bg-[#171717] border border-white/[0.12] text-[18px] sm:text-[21px] font-semibold hover:bg-[#202020] transition">
+              <button type="button" onClick={handleKeywordReset} className="w-full h-[56px] sm:h-[60px] rounded-[16px] sm:rounded-[18px] bg-[#171717] border border-white/[0.12] text-[15px] sm:text-[16px] font-semibold hover:bg-[#202020] transition">
                 Trocar senha
               </button>
             )}
@@ -185,36 +185,36 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-[76px] sm:h-[92px] rounded-full bg-white text-black text-[21px] sm:text-[25px] font-bold hover:bg-white/90 active:scale-[0.995] transition disabled:opacity-50"
+              className="w-full h-[58px] sm:h-[64px] rounded-full bg-white text-black text-[17px] sm:text-[18px] font-bold hover:bg-white/90 active:scale-[0.995] transition disabled:opacity-50"
             >
               {isLoading ? 'Entrando...' : mode === 'login' ? 'Entrar' : 'Criar conta'}
             </button>
 
-            <div className="flex items-center gap-4 sm:gap-5 py-2 sm:py-3">
+            <div className="flex items-center gap-3 py-1">
               <div className="h-px flex-1 bg-white/[0.15]" />
-              <span className="text-[17px] sm:text-[20px] text-white/35">OU</span>
+              <span className="text-[15px] sm:text-[16px] text-white/35">OU</span>
               <div className="h-px flex-1 bg-white/[0.15]" />
             </div>
 
             <button
               type="button"
               onClick={() => handleOAuth('apple')}
-              className="w-full h-[76px] sm:h-[92px] rounded-full bg-[#1b1b1d] border border-white/[0.14] text-[20px] sm:text-[24px] font-semibold hover:bg-[#222224] transition flex items-center justify-center gap-4 sm:gap-5"
+              className="w-full h-[58px] sm:h-[64px] rounded-full bg-[#1b1b1d] border border-white/[0.14] text-[16px] sm:text-[17px] font-semibold hover:bg-[#222224] transition flex items-center justify-center gap-4 sm:gap-5"
             >
-              <span className="text-[27px] sm:text-[31px] leading-none"></span>
+              <span className="text-[21px] sm:text-[22px] leading-none"></span>
               Entrar com a Apple
             </button>
 
             <button
               type="button"
               onClick={() => handleOAuth('google')}
-              className="w-full h-[76px] sm:h-[92px] rounded-full bg-[#1b1b1d] border border-white/[0.14] text-[20px] sm:text-[24px] font-semibold hover:bg-[#222224] transition flex items-center justify-center gap-4 sm:gap-5"
+              className="w-full h-[58px] sm:h-[64px] rounded-full bg-[#1b1b1d] border border-white/[0.14] text-[16px] sm:text-[17px] font-semibold hover:bg-[#222224] transition flex items-center justify-center gap-4 sm:gap-5"
             >
-              <span className="text-[23px] sm:text-[25px] font-bold text-[#4285F4]">G</span>
+              <span className="text-[21px] sm:text-[22px] font-bold text-[#4285F4]">G</span>
               Entrar com o Google
             </button>
 
-            <p className="text-center text-[18px] sm:text-[21px] text-white/45 pt-4 sm:pt-7 pb-2">
+            <p className="text-center text-[15px] sm:text-[16px] text-white/45 pt-3 pb-1">
               {mode === 'login' ? (
                 <>Não tem conta? <button type="button" onClick={() => setMode('signup')} className="text-white font-semibold hover:text-white/80 transition">Criar conta</button></>
               ) : (
