@@ -1,8 +1,10 @@
+import React from 'react';
 import { Compass, User, Disc, Home, Inbox, List, Folder, Mic, Crown, Search, Settings } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
+import { AuthModal } from '@/components/AuthModal';
 
 const mainNavItems = [
   { icon: Home, label: 'Início', to: '/' },
@@ -12,6 +14,7 @@ const mainNavItems = [
 export function Sidebar() {
   const { pages } = useCustomPages();
   const { user } = useAuth();
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
   const { logoUrl } = useAppLogo();
 
   const dynamicItems = pages
@@ -96,12 +99,9 @@ export function Sidebar() {
         {user ? (
           <>
             <NavLink
-              to="/conta"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-xl transition-colors ${
-                  isActive ? 'bg-foreground/10 text-foreground font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
-                }`
-              }
+              to="#"
+              onClick={(e) => { e.preventDefault(); setShowAuthModal(true); }}
+              className="flex items-center gap-3 px-3 py-2 rounded-xl transition-colors text-muted-foreground hover:text-foreground hover:bg-foreground/5"
             >
               <User className="w-5 h-5" />
               Minha Conta
@@ -116,6 +116,7 @@ export function Sidebar() {
           </Link>
         )}
       </div>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </aside>
   );
 }
