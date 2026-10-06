@@ -1,12 +1,12 @@
 import { ChevronLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
-import { BadgeCheck, Disc3, Settings, User, Shield, Instagram, Youtube, Package, Repeat2, Heart } from 'lucide-react';
+import { BadgeCheck, Disc3, Settings, User, Shield, Instagram, Youtube, Heart } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { ProfilePackRow } from '@/components/ProfilePackRow';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePublicProfile } from '@/hooks/useSocial';
 import { AuthModal } from '@/components/AuthModal';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { EmojiText } from '@/components/EmojiText';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { avatarShapeClasses } from '@/lib/avatarShape';
@@ -17,7 +17,6 @@ export default function PublicProfile() {
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [bioExpanded, setBioExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState<'packs' | 'reposts' | 'likes'>('packs');
   const {
     profile,
     packs,
@@ -264,30 +263,17 @@ export default function PublicProfile() {
           </section>
         )}
 
-        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border/40 mb-3">
-          <div className="grid grid-cols-3 gap-1 py-2">
-            {[
-              { id: 'packs', label: 'Packs', icon: Package },
-              { id: 'reposts', label: 'Republicados', icon: Repeat2 },
-              { id: 'likes', label: 'Favoritos', icon: Heart },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                className={`py-2 text-xs font-black rounded-full transition ${activeTab === tab.id ? 'text-background' : 'text-muted-foreground'}`}
-                style={activeTab === tab.id ? { backgroundColor: accent } : undefined}
-              >
-                <tab.icon className="w-3.5 h-3.5" />{tab.label}
-              </button>
-            ))}
+        <section className="mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Heart className="w-5 h-5" />
+            <h2 className="text-xl font-black">Favoritos</h2>
           </div>
-        </div>
-
-        <section className="divide-y divide-border/30">
-            {currentPacks.length > 0 ? currentPacks.map(pack => <ProfilePackRow key={pack.id} pack={pack} />) : (
-              <p className="text-center text-muted-foreground py-10">Nada por aqui ainda</p>
+          <div className="divide-y divide-border/30">
+            {likedPacks.length > 0 ? likedPacks.map(pack => <ProfilePackRow key={pack.id} pack={pack} />) : (
+              <p className="text-center text-muted-foreground py-10">Nenhum favorito ainda</p>
             )}
-          </section>
+          </div>
+        </section>
       </div>
       <BottomNav />
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
