@@ -7,11 +7,11 @@ import { supabase } from '@/integrations/supabase/client';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialMode?: 'login' | 'signup';
+  initialMode?: 'login';
 }
 
 export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalProps) {
-  const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
+  const mode = 'login';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [keyword, setKeyword] = useState('');
@@ -64,7 +64,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
         if (data) loginEmail = data as string;
       }
 
-      if (mode === 'signup') {
+      if (false) {
         const { error } = await signUp(loginEmail, password);
         if (error) {
           toast.error(error.message);
@@ -98,16 +98,16 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             </div>
             <span className="text-[15px] font-semibold tracking-[-0.02em]">PACKY</span>
           </div>
-          <h1 className="text-[30px] font-semibold tracking-[-0.045em]">{mode === 'login' ? 'Bem-vindo de volta.' : 'Crie sua conta.'}</h1>
-          <p className="text-[13px] text-white/40 mt-2">{mode === 'login' ? 'Entre para continuar na PACKY.' : 'Faça parte da comunidade de editores.'}</p>
+          <h1 className="text-[30px] font-semibold tracking-[-0.045em]">Bem-vindo de volta.</h1>
+          <p className="text-[13px] text-white/40 mt-2">Entre para continuar na PACKY.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-[11px] font-medium text-white/45 ml-1">{mode === 'login' ? 'EMAIL OU USUÁRIO' : 'EMAIL'}</label>
+            <label className="text-[11px] font-medium text-white/45 ml-1">EMAIL OU USUÁRIO</label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25" />
-              <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={mode === 'login' ? 'seu@email.com ou @usuario' : 'seu@email.com'} className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] pl-10 pr-4 text-[13px] text-foreground placeholder:text-white/20 outline-none transition focus:border-white/[0.16] focus:bg-[#171717]" required />
+              <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com ou @usuario" className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] pl-10 pr-4 text-[13px] text-foreground placeholder:text-white/20 outline-none transition focus:border-white/[0.16] focus:bg-[#171717]" required />
             </div>
           </div>
 
@@ -168,7 +168,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           </button>
 
           <p className="text-center text-[12px] text-white/35 pt-2">
-            {mode === 'login' ? <>Não tem conta? <button type="button" onClick={() => setMode('signup')} className="text-white/80 font-semibold hover:text-white transition">Criar conta</button></> : <>Já tem conta? <button type="button" onClick={() => setMode('login')} className="text-white/80 font-semibold hover:text-white transition">Entrar</button></>}
+            Entre com sua conta para acessar recursos da comunidade.
           </p>
         </form>
       </div>
