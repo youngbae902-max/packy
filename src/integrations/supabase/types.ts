@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      acapella_votes: {
+        Row: {
+          acapella_id: string
+          choice: string
+          created_at: string
+          id: string
+          suggestion: string | null
+          user_id: string | null
+        }
+        Insert: {
+          acapella_id: string
+          choice: string
+          created_at?: string
+          id?: string
+          suggestion?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          acapella_id?: string
+          choice?: string
+          created_at?: string
+          id?: string
+          suggestion?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "acapella_votes_acapella_id_fkey"
+            columns: ["acapella_id"]
+            isOneToOne: false
+            referencedRelation: "acapellas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       acapellas: {
         Row: {
           artist_name: string
@@ -248,6 +283,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      categories: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       custom_emojis: {
         Row: {
@@ -738,6 +800,8 @@ export type Database = {
           show_admin_badge: boolean
           show_badges_in_bio: boolean | null
           show_badges_in_thought: boolean | null
+          show_favorites_section: boolean
+          show_reposts_section: boolean
           soundcloud_url: string | null
           spotify_url: string | null
           status_ring_color: string | null
@@ -784,6 +848,8 @@ export type Database = {
           show_admin_badge?: boolean
           show_badges_in_bio?: boolean | null
           show_badges_in_thought?: boolean | null
+          show_favorites_section?: boolean
+          show_reposts_section?: boolean
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null
@@ -830,6 +896,8 @@ export type Database = {
           show_admin_badge?: boolean
           show_badges_in_bio?: boolean | null
           show_badges_in_thought?: boolean | null
+          show_favorites_section?: boolean
+          show_reposts_section?: boolean
           soundcloud_url?: string | null
           spotify_url?: string | null
           status_ring_color?: string | null

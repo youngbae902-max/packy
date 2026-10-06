@@ -301,7 +301,7 @@ const Packs = () => {
             </div>
             {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">No paid packs available yet.</p> : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePaidBadge />)}
+                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePremiumBadge />)}
               </div>
             )}
           </div>

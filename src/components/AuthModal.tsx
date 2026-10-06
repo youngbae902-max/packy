@@ -174,4 +174,4 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
       </div>
     </main>
   );
-}\n\n}
+}
