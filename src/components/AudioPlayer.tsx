@@ -36,13 +36,16 @@ export function AudioPlayer({ artistName, imageUrl, onSelect }: AudioPlayerProps
       }}
       aria-label={`Abrir acapella de ${artistName}`}
       className="group flex flex-col items-center gap-4 px-2 text-center touch-pan-x select-none"
+      style={{ WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
     >
-      <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-colors duration-200 group-hover:border-primary/50 sm:w-40">
+      <div className="aspect-square w-36 shrink-0 overflow-hidden rounded-full border border-border/50 bg-muted transition-colors duration-200 md:group-hover:border-primary/50 sm:w-40">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={`Foto de ${artistName}`}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover select-none"
+            draggable={false}
+            onDragStart={(event) => event.preventDefault()}
             loading="lazy"
           />
         ) : (
@@ -51,7 +54,7 @@ export function AudioPlayer({ artistName, imageUrl, onSelect }: AudioPlayerProps
           </div>
         )}
       </div>
-      <h3 className="max-w-full truncate text-sm font-bold uppercase tracking-tight">{artistName}</h3>
+      <h3 className="max-w-full truncate text-sm font-bold uppercase tracking-tight select-none">{artistName}</h3>
     </button>
   );
 }
