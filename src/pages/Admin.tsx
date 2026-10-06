@@ -1424,14 +1424,14 @@ export default function Admin() {
           const q = packSearch.trim().toLowerCase();
           const packItems = mainTab === 'packs'
             ? getPacksContent().filter((p) => packSection === 'pagos' ? p.is_premium : !p.is_premium)
-            : packItems;
+            : getPacksContent();
           const filtered = q
             ? packItems.filter((p) =>
                 [p.id, p.title, p.author_name, p.pack_type]
                   .filter(Boolean)
                   .some((v) => String(v).toLowerCase().includes(q))
               )
-            : getPacksContent();
+            : packItems;
           return (
           <div className="space-y-3 mt-4">
             <Input
