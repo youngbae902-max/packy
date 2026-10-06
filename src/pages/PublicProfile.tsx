@@ -1,6 +1,6 @@
 import { ChevronLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
-import { BadgeCheck, Disc3, Settings, User, Shield, Instagram, Youtube, Heart } from 'lucide-react';
+import { Disc3, Settings, User, Shield, Instagram, Youtube } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { ProfilePackRow } from '@/components/ProfilePackRow';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,7 +20,6 @@ export default function PublicProfile() {
   const {
     profile,
     packs,
-    likedPacks,
     repostedPacks,
     albums,
     followersCount,
@@ -258,17 +257,7 @@ export default function PublicProfile() {
           </section>
         )}
 
-        <section className="mb-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Heart className="w-5 h-5" />
-            <h2 className="text-xl font-black">Favoritos</h2>
-          </div>
-          <div className="divide-y divide-border/30">
-            {likedPacks.length > 0 ? likedPacks.map(pack => <ProfilePackRow key={pack.id} pack={pack} />) : (
-              <p className="text-center text-muted-foreground py-10">Nenhum favorito ainda</p>
-            )}
-          </div>
-        </section>
+
       </div>
       <BottomNav />
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
