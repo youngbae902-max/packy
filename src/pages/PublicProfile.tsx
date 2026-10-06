@@ -1,4 +1,3 @@
-import { ChevronLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { Disc3, Settings, User, Shield, Instagram, Youtube } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
@@ -94,9 +93,7 @@ export default function PublicProfile() {
       <div className="bg-gradient-to-b from-secondary to-background pt-8 pb-16 px-4">
         <div className="max-w-lg mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <Link to="/" className="w-11 h-11 flex items-center justify-center text-foreground hover:opacity-80 transition-opacity">
-              <ChevronLeft className="w-5 h-5" />
-            </Link>
+            <div className="w-11 h-11" />
             {isSelf ? (
               <Link to="/conta?settings=1" className="w-11 h-11 flex items-center justify-center text-foreground hover:opacity-80 transition-opacity" aria-label="Configurações">
                 <Settings className="w-5 h-5" />
