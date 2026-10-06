@@ -7,11 +7,11 @@ import { supabase } from '@/integrations/supabase/client';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialMode?: 'login';
+  initialMode?: 'login' | 'signup';
 }
 
 export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalProps) {
-  const mode = 'login';
+  const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [keyword, setKeyword] = useState('');
@@ -54,22 +54,19 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
 
     try {
       let loginEmail = email.trim();
-      // Permite login com @username
+
       if (mode === 'login' && !loginEmail.includes('@')) {
         const cleaned = loginEmail.replace(/^@/, '');
         const { data } = await supabase.rpc('email_for_username' as any, { uname: cleaned });
         if (data) loginEmail = data as string;
-      } else if (mode === 'login' && loginEmail.startsWith('@')) {
-        const { data } = await supabase.rpc('email_for_username' as any, { uname: loginEmail.slice(1) });
-        if (data) loginEmail = data as string;
       }
 
-      if (false) {
+      if (mode === 'signup') {
         const { error } = await signUp(loginEmail, password);
         if (error) {
           toast.error(error.message);
         } else {
-          toast.success('Conta criada!');
+          toast.success('Conta criada! Verifique seu email para confirmar.');
           onClose();
         }
       } else {
@@ -98,16 +95,20 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             </div>
             <span className="text-[15px] font-semibold tracking-[-0.02em]">PACKY</span>
           </div>
-          <h1 className="text-[30px] font-semibold tracking-[-0.045em]">Bem-vindo de volta.</h1>
-          <p className="text-[13px] text-white/40 mt-2">Entre para continuar na PACKY.</p>
+          <h1 className="text-[30px] font-semibold tracking-[-0.045em]">
+            {mode === 'login' ? 'Bem-vindo de volta.' : 'Crie sua conta.'}
+          </h1>
+          <p className="text-[13px] text-white/40 mt-2">
+            {mode === 'login' ? 'Entre para continuar na PACKY.' : 'Cadastre-se para usar os recursos da PACKY.'}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-[11px] font-medium text-white/45 ml-1">EMAIL OU USUÁRIO</label>
+            <label className="text-[11px] font-medium text-white/45 ml-1">EMAIL</label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25" />
-              <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com ou @usuario" className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] pl-10 pr-4 text-[13px] text-foreground placeholder:text-white/20 outline-none transition focus:border-white/[0.16] focus:bg-[#171717]" required />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com" className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] pl-10 pr-4 text-[13px] text-foreground placeholder:text-white/20 outline-none transition focus:border-white/[0.16] focus:bg-[#171717]" required />
             </div>
           </div>
 
@@ -127,7 +128,9 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25" />
               <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] pl-10 pr-12 text-[13px] outline-none focus:border-white/[0.16]" required minLength={6} />
-              <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/65" aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}>{showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>
+              <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/65" aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}>
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
@@ -143,7 +146,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           )}
 
           <button type="submit" disabled={isLoading} className="w-full h-12 rounded-[14px] bg-white text-black text-[13px] font-semibold hover:bg-white/90 active:scale-[0.99] transition disabled:opacity-50">
-            {isLoading ? 'Entrando...' : mode === 'login' ? 'Entrar' : 'Criar conta'}
+            {isLoading ? (mode === 'login' ? 'Entrando...' : 'Criando...') : mode === 'login' ? 'Entrar' : 'Criar conta'}
           </button>
 
           <div className="flex items-center gap-3 py-1.5">
@@ -153,22 +156,35 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           </div>
 
           <button type="button" onClick={async () => {
-              try {
-                const { error } = await supabase.auth.signInWithOAuth({
-                  provider: 'google',
-                  options: { redirectTo: window.location.origin },
-                });
-                if (error) toast.error('Erro ao entrar com Google');
-              } catch {
-                toast.error('Erro ao entrar com Google');
-              }
-            }} className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] text-[13px] font-medium hover:bg-[#191919] transition flex items-center justify-center gap-2.5">
+            try {
+              const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: window.location.origin },
+              });
+              if (error) toast.error('Erro ao entrar com Google');
+            } catch {
+              toast.error('Erro ao entrar com Google');
+            }
+          }} className="w-full h-12 rounded-[14px] bg-[#151515] border border-white/[0.07] text-[13px] font-medium hover:bg-[#191919] transition flex items-center justify-center gap-2.5">
             <span className="font-bold text-[15px]">G</span>
-            Entrar com Google
+            {mode === 'login' ? 'Entrar com Google' : 'Cadastrar com Google'}
           </button>
 
-          <p className="text-center text-[12px] text-white/35 pt-2">
-            Entre com sua conta para acessar recursos da comunidade.
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === 'login' ? 'signup' : 'login');
+              setForgotByKeyword(false);
+              setKeyword('');
+              setPassword('');
+            }}
+            className="w-full text-[12px] text-white/40 hover:text-white/70 transition pt-1"
+          >
+            {mode === 'login' ? 'Ainda não tem conta? Criar conta' : 'Já tem uma conta? Entrar'}
+          </button>
+
+          <p className="text-center text-[12px] text-white/35 pt-1">
+            {mode === 'login' ? 'Entre com sua conta para acessar recursos da comunidade.' : 'O cadastro é opcional.'}
           </p>
         </form>
       </div>
