@@ -89,8 +89,8 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
   if (!isOpen) return null;
 
   return (
-    <main className="min-h-[100dvh] w-full bg-[#111111] text-foreground flex items-center justify-center px-5 py-8">
-      <div className="w-full max-w-[420px]">
+    <main className="fixed inset-0 z-[9999] min-h-[100dvh] w-screen overflow-y-auto bg-[#111111] text-foreground flex items-center justify-center px-5 py-8">
+      <div className="relative z-[10000] w-full max-w-[420px]">
         <div className="mb-7">
           <div className="flex items-center gap-2.5 mb-8">
             <div className="w-9 h-9 rounded-[11px] bg-[#1b1b1b] border border-white/[0.08] flex items-center justify-center">
