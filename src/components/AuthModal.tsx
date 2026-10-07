@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -85,8 +86,8 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
 
   if (!isOpen) return null;
 
-  return (
-    <main className="fixed inset-0 z-[9999] min-h-[100dvh] w-screen overflow-y-auto bg-[#111111] text-foreground flex items-center justify-center px-5 py-8">
+  return createPortal(
+    <main className="fixed inset-0 z-[99999] h-[100dvh] w-full overflow-y-auto overscroll-contain bg-[#111111] text-foreground flex items-center justify-center px-5 py-8">
       <div className="relative z-[10000] w-full max-w-[420px]">
         <div className="mb-7">
           <div className="flex items-center gap-2.5 mb-8">
@@ -188,6 +189,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           </p>
         </form>
       </div>
-    </main>
+    </main>,
+    document.body
   );
 }
