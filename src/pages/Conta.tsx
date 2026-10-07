@@ -500,7 +500,7 @@ const Conta = () => {
               </div>
             )}
 
-            {/* Personalização subscreen */
+            {/* Personalização subscreen */}
             {settingsSub === 'personalizacao' && (
               <div className="space-y-2">
                 <SettingsRow icon={Palette} label="Trocar Tema" value={themeMode === 'light' ? 'Claro' : 'Escuro'} onClick={() => setSettingsSub('tema')} />
