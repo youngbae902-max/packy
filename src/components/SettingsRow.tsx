@@ -14,14 +14,16 @@ export function SettingsRow({ icon: Icon, label, value, onClick, destructive, ri
     <button
       onClick={onClick}
       type="button"
-      className={`w-full flex items-center gap-3.5 px-4 min-h-[56px] py-3 bg-card hover:bg-secondary/60 transition-colors text-left ${
-        destructive ? 'text-destructive' : 'text-foreground'
-      }`}
+      className="group w-full flex items-center gap-3 px-3.5 min-h-[52px] py-2.5 bg-transparent hover:bg-white/[0.035] active:bg-white/[0.055] transition-colors text-left"
     >
-      <Icon className={`w-[19px] h-[19px] flex-shrink-0 ${destructive ? 'text-destructive' : 'text-foreground/75'}`} />
-      <span className="flex-1 text-[15px] font-medium tracking-tight">{label}</span>
-      {value && <span className="text-[13px] text-muted-foreground">{value}</span>}
-      {rightSlot ?? <ChevronRight className="w-4 h-4 text-muted-foreground/70" />}
+      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-white/[0.045] border border-white/[0.055] transition-colors group-hover:bg-white/[0.065] ${destructive ? 'text-destructive' : 'text-foreground/70'}`}>
+        <Icon className="w-[16px] h-[16px]" />
+      </span>
+      <span className={`flex-1 min-w-0 text-[14px] font-medium tracking-[-0.01em] ${destructive ? 'text-destructive' : 'text-foreground'}`}>
+        {label}
+      </span>
+      {value && <span className="max-w-[120px] truncate text-[12px] text-muted-foreground/80">{value}</span>}
+      {rightSlot ?? <ChevronRight className="w-[15px] h-[15px] shrink-0 text-muted-foreground/45 group-hover:text-muted-foreground/70 transition-colors" />}
     </button>
   );
 }
@@ -33,15 +35,15 @@ interface SettingsGroupProps {
 
 export function SettingsGroup({ title, children }: SettingsGroupProps) {
   return (
-    <div className="mb-6">
+    <section className="mb-7">
       {title && (
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 mb-2">
+        <p className="px-1.5 mb-2 text-[10px] font-semibold text-muted-foreground/65 uppercase tracking-[0.12em]">
           {title}
         </p>
       )}
-      <div className="rounded-2xl border border-border/40 overflow-hidden divide-y divide-[#1E1E1E]">
+      <div className="overflow-hidden rounded-[15px] border border-white/[0.065] bg-white/[0.018] divide-y divide-white/[0.055]">
         {children}
       </div>
-    </div>
+    </section>
   );
 }
