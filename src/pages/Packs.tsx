@@ -329,7 +329,7 @@ const Packs = () => {
                 title={releases.title}
               >
                 {releasePacks.map(pack => (
-                  <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                     <PackCardV2 pack={pack} />
                   </div>
                 ))}
@@ -346,7 +346,7 @@ const Packs = () => {
                 <div key={section.id} className="bg-[#111111] border-0 rounded-none">
                   <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
                     {packs.map(pack => (
-                      <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -362,7 +362,7 @@ const Packs = () => {
                   <div key={category.id} className="pt-1">
                     <HorizontalCarousel title={category.name}>
                       {premiumPacks.slice(0, 8).map(pack => (
-                        <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                           <PackCardV2 pack={pack} />
                         </div>
                       ))}
@@ -374,7 +374,7 @@ const Packs = () => {
                 {premiumPacks.length > 0 && (
                   <HorizontalCarousel title="Paid & Exclusive">
                     {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -384,7 +384,7 @@ const Packs = () => {
                 {projectPacks.length > 0 && (
                   <HorizontalCarousel title="Projects & FLPs">
                     {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -398,7 +398,7 @@ const Packs = () => {
                 <div className="w-full max-w-3xl">
                   <HorizontalCarousel title="Acapellas" centered>
                 {acapellas.slice(0, 8).map(acapella => (
-                  <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                  <div key={acapella.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                     <AudioPlayer
                       artistName={acapella.artist_name}
                       imageUrl={acapella.image_url}
