@@ -107,8 +107,8 @@ const Packs = () => {
   return (
     <div className="min-h-screen bg-[#111111] text-foreground pb-20 md:pb-8">
       {/* Search Header for Desktop */}
-      <header className="hidden md:flex sticky top-0 z-30 bg-background/90 backdrop-blur-xl border-b border-border/40 px-8 py-4 items-center justify-between gap-6">
-        <div className="flex-1 max-w-2xl relative" ref={desktopPopupRef}>
+      <header className="hidden md:flex sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/40 px-6 py-3 flex-col gap-3">
+        <div className="w-full flex items-center gap-5"><div className="flex items-center gap-1 shrink-0">{[['/','Explore'],['/mcs','Acapella'],['/sites','Sites'],['/inbox','Inbox'],['/desejos','Wishlist'],['/aplicativos','Apps'],...(user ? [['/up','Projects']] : []),...(isAdmin ? [['/admin','Painel']] : [])].map(([to,label]) => <Link key={to} to={to} className="px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-white/[0.05] transition-colors">{label}</Link>)}</div><div className="flex-1 max-w-xl mx-auto relative" ref={desktopPopupRef}>
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <input
             type="text"
@@ -182,11 +182,11 @@ const Packs = () => {
           )}
         </div>
         
-        <div className="flex items-center gap-4">
-          <Link to="/inbox" className="relative p-2 rounded-full hover:bg-secondary transition-colors" aria-label="Caixa de entrada">
-            <Inbox className="w-6 h-6" />
+        <div className="flex items-center gap-2">
+          <Link to="/inbox" className="relative p-1.5 rounded-lg hover:bg-secondary transition-colors" aria-label="Caixa de entrada">
+            <Inbox className="w-[17px] h-[17px]" />
             {hasUnread && (
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />
+              <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-green-500 rounded-full" />
             )}
           </Link>
         </div>
@@ -225,7 +225,7 @@ const Packs = () => {
         </div>
       </div>
 
-      <div className="packs-page relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
+      <div className="packs-page relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6 pt-4 md:pt-5">
 
         {query.length === 0 && (
           <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
@@ -287,7 +287,7 @@ const Packs = () => {
             {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">No packs found.</p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-3">
                 {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
@@ -328,7 +328,7 @@ const Packs = () => {
                 title={releases.title}
               >
                 {releasePacks.map(pack => (
-                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                  <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
                     <PackCardV2 pack={pack} />
                   </div>
                 ))}
@@ -345,7 +345,7 @@ const Packs = () => {
                 <div key={section.id} className="bg-[#111111] border-0 rounded-none">
                   <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
                     {packs.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -361,7 +361,7 @@ const Packs = () => {
                   <div key={category.id} className="pt-1">
                     <HorizontalCarousel title={category.name}>
                       {premiumPacks.slice(0, 8).map(pack => (
-                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                        <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
                           <PackCardV2 pack={pack} />
                         </div>
                       ))}
@@ -373,7 +373,7 @@ const Packs = () => {
                 {premiumPacks.length > 0 && (
                   <HorizontalCarousel title="Paid & Exclusive">
                     {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
@@ -383,7 +383,7 @@ const Packs = () => {
                 {projectPacks.length > 0 && (
                   <HorizontalCarousel title="Projects & FLPs">
                     {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                      <div key={pack.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
                         <PackCardV2 pack={pack} />
                       </div>
                     ))}
