@@ -291,7 +291,7 @@ const Packs = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 py-16">{Array.from({ length: 10 }).map((_, i) => <div key={i} className="aspect-[0.9] rounded-2xl bg-white/[0.04] animate-pulse" />)}</div>
         ) : query.length > 0 ? (
           <div>
-            <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
+            <h2 className="text-lg md:text-2xl font-display font-normal mb-4 px-1">
               Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
             </h2>
             {searchedPacks.length > 0 && !isMCSearch && (
