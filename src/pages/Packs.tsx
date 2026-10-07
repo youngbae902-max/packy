@@ -87,6 +87,10 @@ const Packs = () => {
     return acapellas.filter(mc => mc.artist_name.toLowerCase().includes(query));
   }, [query, acapellas]);
 
+  const isMCSearch = searchedMCs.length > 0 && searchedMCs.some(
+    mc => mc.artist_name.toLowerCase().trim() === query
+  );
+
   const allPacks = useMemo(() => {
     const seen = new Set<string>();
     return [...approvedPacks, ...premiumPacks, ...projectPacks].filter(p => {
@@ -225,7 +229,7 @@ const Packs = () => {
             />
             {popupOpen && (
               <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-white/[0.06] bg-[#111111]/98 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.35)] p-3 max-h-80 overflow-y-auto">
-                {searchedPacks.length > 0 && (
+                {searchedPacks.length > 0 && !isMCSearch && (
                   <div className="space-y-2">
                     {searchedPacks.slice(0, 5).map(pack => <div key={pack.id} className="transform scale-95 origin-left"><PackCardV2 pack={pack} /></div>)}
                   </div>
@@ -290,7 +294,7 @@ const Packs = () => {
             <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
               Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
             </h2>
-            {searchedPacks.length > 0 && (
+            {searchedPacks.length > 0 && !isMCSearch && (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-3">
                 {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
