@@ -1197,7 +1197,7 @@ export default function Admin() {
                 Enviar emoji
               </Button>
               <p className="text-xs text-muted-foreground">Use na bio ou comentário assim: :{emojiCode || 'codigo'}:</p>
-            </Card>
+            </div>
 
             <div className="space-y-2">
               {emojis.map((emoji) => (
@@ -1229,7 +1229,7 @@ export default function Admin() {
                 Criar selo
               </Button>
               <p className="text-xs text-muted-foreground">Os selos só aparecem quando você presenteia um usuário.</p>
-            </Card>
+            </div>
 
             <div className="space-y-2">
               {adminBadges.map((badge) => (
@@ -1247,7 +1247,7 @@ export default function Admin() {
                     try { await grantBadge({ user_id: target.user_id, badge_id: badge.id }); } catch {}
                   }}><Send className="w-4 h-4" /></Button>
                   <Button size="sm" variant="destructive" onClick={() => deleteBadge(badge.id)}><Trash2 className="w-4 h-4" /></Button>
-                </Card>
+                </div>
               ))}
               {adminBadges.length === 0 && <p className="text-center py-8 text-muted-foreground">Nenhum selo criado</p>}
             </div>
@@ -1281,7 +1281,7 @@ export default function Admin() {
                 }}>Enviar decoração</Button>
               </div>
               <p className="text-xs text-muted-foreground border-t border-border/50 pt-3">PNG transparente recomendado. Todos os usuários poderão escolher.</p>
-            </Card>
+            </div>
 
             <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4">
               <div className="flex items-center justify-between mb-4">
@@ -1310,7 +1310,7 @@ export default function Admin() {
                   ))}
                 </div>
               )}
-            </Card>
+            </div>
           </div>
         )}
 
@@ -1338,7 +1338,7 @@ export default function Admin() {
                   }}
                 >Abrir teclado</Button>
               </div>
-            </Card>
+            </div>
 
             <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-3 space-y-2">
               <div className="flex items-center justify-between"><h3 className="text-[12px] font-medium text-white/85">Saldos atuais</h3><span className="text-[10px] text-muted-foreground">{users?.length || 0} contas</span></div>
@@ -1354,7 +1354,7 @@ export default function Admin() {
                   </button>
                 ))}
               </div>
-            </Card>
+            </div>
 
             <NumericKeypad
               open={keypadOpen}
