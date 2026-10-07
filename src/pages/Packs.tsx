@@ -151,19 +151,6 @@ const Packs = () => {
                   </div>
                 </div>
               )}
-              {searchedMCs.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">MCs</p>
-                  <div className="space-y-1">
-                    {searchedMCs.map(mc => (
-                      <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl hover:bg-muted px-3 py-2">
-                        {mc.image_url ? <img src={mc.image_url} alt="" className="w-20 h-20 min-w-20 min-h-20 rounded-full object-cover" /> : <span className="w-20 h-20 min-w-20 min-h-20 rounded-full bg-muted flex items-center justify-center"><Mic className="size-6" /></span>}
-                        <span className="font-semibold text-sm">{mc.artist_name}</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
               {searchedPacks.length > 0 ? (
                 <div>
                   <p className="text-xs uppercase tracking-wider text-muted-foreground px-2 mb-2 font-bold">Packs & Projects</p>
@@ -175,9 +162,23 @@ const Packs = () => {
                     ))}
                   </div>
                 </div>
-              ) : query.length > 0 && searchedProfiles.length === 0 && searchedMCs.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">No results found.</p>
               ) : null}
+              {searchedMCs.length > 0 && (
+                <div className="mt-3 pt-2 border-t border-white/[0.05]">
+                  <p className="text-[9px] uppercase tracking-wider text-muted-foreground px-2 mb-1.5 font-bold">MCs</p>
+                  <div className="flex flex-wrap gap-1">
+                    {searchedMCs.slice(0, 6).map(mc => (
+                      <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 rounded-lg px-2 py-1 hover:bg-white/[0.04] transition-colors">
+                        {mc.image_url ? <img src={mc.image_url} alt="" className="w-5 h-5 rounded-full object-cover" /> : <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center"><Mic className="w-2.5 h-2.5" /></span>}
+                        <span className="text-[10px] font-medium text-muted-foreground">{mc.artist_name}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {searchedPacks.length === 0 && searchedProfiles.length === 0 && searchedMCs.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">No results found.</p>
+              )}
             </div>
           )}
         </div>
@@ -222,6 +223,23 @@ const Packs = () => {
               className="w-full h-[50px] bg-[#111111] border border-white/[0.05] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#8A8A8A] focus:outline-none focus:border-white/[0.10] focus:ring-1 focus:ring-white/[0.08] transition-all"
               placeholder={animatedPlaceholder}
             />
+            {popupOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 z-[80] rounded-2xl border border-white/[0.06] bg-[#111111]/98 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.35)] p-3 max-h-80 overflow-y-auto">
+                {searchedPacks.length > 0 && (
+                  <div className="space-y-2">
+                    {searchedPacks.slice(0, 5).map(pack => <div key={pack.id} className="transform scale-95 origin-left"><PackCardV2 pack={pack} /></div>)}
+                  </div>
+                )}
+                {searchedMCs.length > 0 && (
+                  <div className="mt-3 pt-2 border-t border-white/[0.05]">
+                    <p className="text-[9px] uppercase tracking-wider text-muted-foreground px-2 mb-1.5 font-bold">MCs</p>
+                    <div className="flex flex-wrap gap-1">
+                      {searchedMCs.slice(0, 6).map(mc => <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 rounded-lg px-2 py-1 hover:bg-white/[0.04]"><img src={mc.image_url || ''} alt="" className="w-5 h-5 rounded-full object-cover" /><span className="text-[10px] font-medium text-muted-foreground">{mc.artist_name}</span></a>)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -272,19 +290,6 @@ const Packs = () => {
             <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
               Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
             </h2>
-            {searchedMCs.length > 0 && (
-              <div className="mb-7">
-                <p className="text-xs uppercase text-muted-foreground font-bold mb-3">MCs</p>
-                <div className="space-y-2">
-                  {searchedMCs.map(mc => (
-                    <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl bg-card border border-border p-3">
-                      {mc.image_url ? <img src={mc.image_url} alt="" className="w-32 h-32 min-w-32 min-h-32 rounded-full object-cover" /> : <span className="w-32 h-32 min-w-32 min-h-32 rounded-full bg-muted flex items-center justify-center"><Mic className="size-10" /></span>}
-                      <span className="font-display font-bold">{mc.artist_name}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
             {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
               <p className="text-center py-16 text-muted-foreground">No packs found.</p>
             ) : (
