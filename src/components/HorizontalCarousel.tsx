@@ -20,9 +20,12 @@ export function HorizontalCarousel({ title, children, showArrows = true, centere
   };
 
   return (
-    <section className="mb-11 relative group bg-transparent border-0 shadow-none">
-      <div className="relative flex items-end justify-between mb-3 px-1 bg-transparent">
-        <h2 className="text-[17px] md:text-[18px] font-semibold tracking-[-0.02em] text-foreground"> {title}</h2>
+    <section className="mb-9 relative group bg-transparent border-0 shadow-none">
+      <div className="relative flex items-center justify-between mb-2.5 px-1 bg-transparent">
+        <div className="flex items-center gap-2.5">
+          <h2 className="text-[15px] md:text-[16px] font-medium tracking-[-0.015em] text-foreground/90 leading-none">{title}</h2>
+          <span className="w-7 h-px bg-foreground/25" />
+        </div>
         {showArrows && (
           <div className="hidden md:flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button onClick={() => scroll('left')} className="p-1.5 rounded-lg border border-white/[0.07] bg-white/[0.025] text-foreground/60 hover:text-foreground hover:bg-white/[0.05] transition" aria-label="Rolar para a esquerda">
@@ -36,7 +39,7 @@ export function HorizontalCarousel({ title, children, showArrows = true, centere
       </div>
       <div
         ref={scrollRef}
-        className={`flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-2.5 px-1 snap-x snap-mandatory scroll-smooth bg-transparent select-none touch-pan-x ${centered ? "justify-center" : ""}`}
+        className={`flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-2 px-1 snap-x snap-mandatory scroll-smooth bg-transparent select-none touch-pan-x ${centered ? "justify-center" : ""}`}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitUserSelect: 'none' }}
       >
         {children}
