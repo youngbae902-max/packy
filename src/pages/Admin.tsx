@@ -727,15 +727,15 @@ export default function Admin() {
         {(mainTab === 'packs' || mainTab === 'projetos' || mainTab === 'acapellas') && (
           <div className="space-y-4">
             {mainTab === 'packs' && (
-              <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+              <div className="flex gap-1 rounded-xl bg-[#141414] border border-white/[0.06] p-1 overflow-x-auto scrollbar-hide">
                 {(['geral', 'pagos'] as PackSection[]).map((section) => (
                   <button
                     key={section}
                     onClick={() => setPackSection(section)}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
+                    className={`flex items-center justify-center px-3.5 h-9 rounded-xl text-[12px] font-medium whitespace-nowrap transition-colors ${
                       packSection === section
-                        ? 'bg-foreground text-background border-foreground'
-                        : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground'
+                        ? 'bg-white text-black'
+                        : 'bg-transparent text-white/45 hover:text-white hover:bg-white/[0.04]'
                     }`}
                   >
                     {section === 'geral' ? 'Geral' : 'Pagos'}
@@ -805,15 +805,15 @@ export default function Admin() {
               </Card>
             )}
 
-            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex gap-1 rounded-xl bg-[#141414] border border-white/[0.06] p-1 overflow-x-auto scrollbar-hide">
               {subTabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setSubTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
+                  className={`flex items-center justify-center gap-1.5 px-3.5 h-9 rounded-xl text-[12px] font-medium whitespace-nowrap transition-colors ${
                     subTab === tab.id
-                      ? 'bg-foreground text-background border-foreground'
-                      : 'bg-[hsl(0,0%,4%)] text-muted-foreground border-border/40 hover:text-foreground'
+                      ? 'bg-white text-black'
+                      : 'bg-transparent text-white/45 hover:text-white hover:bg-white/[0.04]'
                   }`}
                 >
                   <tab.icon className="w-3 h-3" />{tab.label}
@@ -826,17 +826,17 @@ export default function Admin() {
         {/* Pending packs ready to send home */}
         {mainTab === 'pendentes' && (
           <div className="space-y-4">
-            <Card className="p-4 bg-[hsl(0,0%,4%)] border-border/40">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <h3 className="font-bold text-foreground">Packs pendentes</h3>
-                  <p className="text-xs text-muted-foreground">Links salvos aqui só aparecem na home quando forem enviados.</p>
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <h3 className="text-[13px] font-medium text-white/90">Packs pendentes</h3>
+                  <p className="text-[11px] leading-4 text-white/35 mt-1">Links salvos aqui só aparecem na Home quando forem enviados.</p>
                 </div>
-                <Button size="sm" onClick={() => handleSendPendingToHome()} disabled={pendingHomePacks.length === 0}>
-                  <Send className="w-4 h-4 mr-1" />Enviar todos
-                </Button>
+                <button type="button" onClick={() => handleSendPendingToHome()} disabled={pendingHomePacks.length === 0} className="shrink-0 h-9 px-3.5 rounded-xl bg-white text-black text-[11px] font-medium disabled:opacity-30 transition-opacity">
+                  Enviar todos
+                </button>
               </div>
-            </Card>
+            </div>
 
             <Button variant="outline" onClick={() => setShowBulkPackInput(!showBulkPackInput)} className="w-full">
               <LinkIcon className="w-4 h-4 mr-2" />Adicionar links em massa
@@ -891,7 +891,7 @@ export default function Admin() {
         {mainTab === 'usuarios' && (
           <div className="space-y-3">
             {users.map((u) => (
-              <div key={u.id} className="pack-card flex items-center gap-3">
+              <div key={u.id} className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-[#141414] px-3 py-3">
                 <img src={u.avatar_url || '/placeholder.svg'} alt="" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -905,13 +905,9 @@ export default function Admin() {
                     {u.has_spotify_badge && <Badge className="text-[10px] px-1.5 py-0 bg-success/15 text-success border-0">Spotify</Badge>}
                   </div>
                 </div>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => setEditingUser(u)}
-                >
+                <button type="button" onClick={() => setEditingUser(u)} className="h-9 w-9 shrink-0 rounded-xl border border-white/[0.07] bg-white/[0.025] text-white/55 hover:text-white hover:bg-white/[0.05] transition-colors">
                   <Edit className="w-4 h-4" />
-                </Button>
+                </button>
               </div>
             ))}
           </div>
@@ -968,9 +964,9 @@ export default function Admin() {
         {/* Albums Tab with Approval */}
         {mainTab === 'albuns' && (
           <div className="space-y-4">
-            <Button onClick={() => setShowAlbumModal(true)} className="admin-add-button w-auto">
-              <Plus className="w-4 h-4 mr-2" />Novo Álbum
-            </Button>
+            <button type="button" onClick={() => setShowAlbumModal(true)} className="h-10 px-3.5 rounded-xl border border-white/[0.07] bg-white text-black text-[12px] font-medium inline-flex items-center gap-2 hover:bg-white/90 transition-colors">
+              <Plus className="w-4 h-4" />Novo álbum
+            </button>
 
             {/* Album Sub Tabs */}
             <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
@@ -1437,8 +1433,8 @@ export default function Admin() {
             <Input
               value={packSearch}
               onChange={(e) => setPackSearch(e.target.value)}
-              placeholder="Buscar por nome, ID, criador ou categoria…"
-              className="bg-card border-border/60"
+              placeholder="Buscar packs..."
+              className="h-11 rounded-xl bg-[#141414] border border-white/[0.06] px-4 text-[12px] placeholder:text-white/25 focus-visible:ring-1 focus-visible:ring-white/10"
             />
             {filtered.map((pack) => (
               <div key={pack.id} className="pack-card flex gap-3">
