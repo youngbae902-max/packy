@@ -11,6 +11,7 @@ import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { avatarShapeClasses } from '@/lib/avatarShape';
 import { Badge } from '@/components/ui/badge';
 import { FavoritesSection } from '@/components/FavoritesSection';
+import Conta from '@/pages/Conta';
 
 export default function PublicProfile() {
   const { userId } = useParams();
@@ -71,6 +72,11 @@ export default function PublicProfile() {
     { url: profile?.soundcloud_url, Icon: SoundCloudIcon, color: 'text-orange-500', label: 'SoundCloud' },
     { url: profile?.youtube_url, Icon: Youtube, color: 'text-red-500', label: 'YouTube' },
   ].filter(link => link.url);
+
+  // The owner's profile uses the same view before and after opening settings.
+  if (isSelf) {
+    return <Conta />;
+  }
 
   if (isLoading) {
     return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">Carregando perfil...</div>;
