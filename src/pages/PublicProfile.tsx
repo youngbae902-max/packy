@@ -10,6 +10,7 @@ import { EmojiText } from '@/components/EmojiText';
 import { useUserAdminBadges } from '@/hooks/useAdminBadges';
 import { avatarShapeClasses } from '@/lib/avatarShape';
 import { Badge } from '@/components/ui/badge';
+import { FavoritesSection } from '@/components/FavoritesSection';
 
 export default function PublicProfile() {
   const { userId } = useParams();
@@ -239,6 +240,8 @@ export default function PublicProfile() {
           <div><p className="text-xl font-black text-foreground">{followersCount}</p><p className="text-xs text-muted-foreground">Seguidores</p></div>
           <div><p className="text-xl font-black text-foreground">{followingCount}</p><p className="text-xs text-muted-foreground">Seguindo</p></div>
         </div>
+
+        {isSelf && <FavoritesSection />}
 
         {albums.length > 0 && (
           <section className="mb-8">
