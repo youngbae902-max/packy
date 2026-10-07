@@ -393,7 +393,7 @@ const Conta = () => {
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-[17px] font-bold tracking-tight">
+              <h1 className="text-[17px] font-medium tracking-tight">
                 {settingsSub === 'tema' ? 'Trocar Tema'
                   : settingsSub === 'personalizacao' ? 'Personalização'
                   : settingsSub === 'cores' ? 'Cores dos Selos'
@@ -447,7 +447,7 @@ const Conta = () => {
             {!settingsSub && (
               <>
                 {/* Small profile card */}
-                <div className="rounded-[17px] border border-white/[0.065] bg-white/[0.018] p-3 flex items-center gap-3 mb-7">
+                <div className="rounded-[14px] border border-white/[0.055] bg-[#141414] p-3 flex items-center gap-3 mb-5">
                   <button
                     onClick={() => settingsFileInputRef.current?.click()}
                     className={`w-11 h-11 bg-secondary overflow-hidden flex-shrink-0 border border-border/40 ${avatarShapeClasses(avatarShape)}`}
@@ -467,7 +467,7 @@ const Conta = () => {
                 </div>
 
                 <SettingsGroup>
-                  <Link to="/carteira" className="w-full flex items-center gap-3 px-4 py-3.5 bg-card hover:bg-secondary/60 transition-colors">
+                  <Link to="/carteira" className="w-full flex items-center gap-3 px-3.5 py-3 bg-transparent hover:bg-white/[0.035] transition-colors">
                     <Wallet className="w-[18px] h-[18px] text-foreground/70" />
                     <span className="flex-1 text-[15px] font-medium tracking-tight">Carteira</span>
                     <span className="text-[13px] font-bold tabular-nums text-foreground/80">R$ {Number((profile as any)?.wallet_balance || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -509,8 +509,7 @@ const Conta = () => {
                 <SettingsRow icon={ImageIcon} label="Formato da Foto" onClick={() => setSettingsSub('formato-foto')} />
                 <SettingsRow icon={Smile} label="Indicador Online" onClick={() => setSettingsSub('indicador-online')} />
                 <SettingsRow icon={EyeOff} label="Mostrar Favoritos" value={showFavoritesSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showFavoritesSection; setShowFavoritesSection(next); await updateProfile({ show_favorites_section: next }); }} />
-                <SettingsRow icon={EyeOff} label="Mostrar Republicados" value={showRepostsSection ? 'Visível' : 'Oculto'} onClick={async () => { const next = !showRepostsSection; setShowRepostsSection(next); await updateProfile({ show_reposts_section: next }); }} />
-              </div>
+                              </div>
             )}
 
             {/* Theme subscreen */}
