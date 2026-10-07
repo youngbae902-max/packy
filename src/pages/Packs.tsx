@@ -23,7 +23,7 @@ import { useReleasesSection } from '@/hooks/useReleasesSection';
 
 
 const Packs = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
@@ -189,6 +189,7 @@ const Packs = () => {
               <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-green-500 rounded-full" />
             )}
           </Link>
+        </div>
         </div>
       </header>
 
