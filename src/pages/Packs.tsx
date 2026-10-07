@@ -290,15 +290,29 @@ const Packs = () => {
             <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
               Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
             </h2>
-            {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
-              <p className="text-center py-16 text-muted-foreground">No packs found.</p>
-            ) : (
+            {searchedPacks.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-3">
                 {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
               </div>
             )}
+            {searchedMCs.length > 0 && (
+              <div className="mt-7 border-t border-white/[0.05] pt-3">
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-1.5 px-1 font-bold">MCs</p>
+                <div className="flex flex-wrap gap-1">
+                  {searchedMCs.slice(0, 6).map(mc => (
+                    <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 hover:bg-white/[0.04] transition-colors">
+                      {mc.image_url ? <img src={mc.image_url} alt="" className="w-5 h-5 rounded-full object-cover" /> : <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center"><Mic className="w-2.5 h-2.5" /></span>}
+                      <span className="text-[10px] font-medium text-muted-foreground">{mc.artist_name}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+            {searchedPacks.length === 0 && searchedMCs.length === 0 && (
+              <p className="text-center py-16 text-muted-foreground">No results found.</p>
+            )}
           </div>
-        ) : activeTab === 'pagos' ? (
+       ) : activeTab === 'pagos' ? (
           <div>
             <div className="mb-5 px-1">
               <p className="text-xs font-semibold text-muted-foreground mb-1">Paid</p>
