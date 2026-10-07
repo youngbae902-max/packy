@@ -22,21 +22,21 @@ const Albums = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <div className="max-w-lg mx-auto px-4 pt-6">
-        <header className="flex items-center justify-between py-4">
+      <div className="max-w-lg mx-auto px-4 pt-4">
+        <header className="flex items-center justify-between py-2 mb-3">
           <Link to="/" className="p-2 -ml-2 rounded-full hover:bg-foreground/5">
             <ChevronLeft className="w-5 h-5" />
           </Link>
           <div className="text-center">
-            <h1 className="text-2xl font-black uppercase tracking-tight flex items-center justify-center gap-2">
+            <h1 className="text-[17px] font-medium tracking-tight flex items-center justify-center gap-2">
               <Disc className="w-6 h-6" /> Álbuns
             </h1>
-            <p className="text-xs text-muted-foreground mt-1">Coleções especiais</p>
+            <p className="text-[11px] text-muted-foreground/50 mt-0.5">Coleções especiais</p>
           </div>
           {isAdmin ? (
-            <Button size="sm" onClick={() => setShowAddModal(true)} className="gap-1">
-              <Plus className="w-4 h-4" /> Novo
-            </Button>
+            <button type="button" onClick={() => setShowAddModal(true)} className="h-9 px-3 rounded-xl border border-white/[0.07] bg-white text-black text-[11px] font-medium inline-flex items-center gap-1.5">
+              <Plus className="w-3.5 h-3.5" /> Novo álbum
+            </button>
           ) : (
             <div className="w-10" />
           )}
@@ -57,7 +57,7 @@ const Albums = () => {
                 <button
                   key={album.id}
                   onClick={() => setSelectedAlbum(album.id)}
-                  className="group flex flex-col text-left rounded-2xl bg-[hsl(0,0%,4%)] border border-border overflow-hidden hover:border-foreground/30 transition-colors"
+                  className="group flex flex-col text-left rounded-2xl bg-[#141414] border border-white/[0.06] overflow-hidden hover:border-foreground/30 transition-colors"
                 >
                   <div className="relative aspect-square w-full bg-[hsl(0,0%,2%)] overflow-hidden">
                     {album.cover_url ? (
@@ -75,8 +75,8 @@ const Albums = () => {
                       {linksCount} {linksCount === 1 ? 'link' : 'links'}
                     </span>
                   </div>
-                  <div className="p-3">
-                    <h3 className="font-bold text-sm truncate text-foreground">{album.title}</h3>
+                  <div className="p-3.5">
+                    <h3 className="text-[13px] font-medium truncate text-foreground">{album.title}</h3>
                     {album.style && (
                       <p className="text-xs text-muted-foreground truncate mt-0.5">{album.style}</p>
                     )}
