@@ -1184,13 +1184,16 @@ export default function Admin() {
         )}
 
         {mainTab === 'emojis' && (
-          <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><SmilePlus className="w-4 h-4" /> Novo emoji</h3>
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-white/[0.06] flex items-center justify-center"><SmilePlus className="w-4 h-4 text-white/70" /></div>
+                <div><h3 className="text-[13px] font-medium text-white/90">Novo emoji</h3><p className="text-[11px] text-white/35">Adicione um emoji personalizado.</p></div>
+              </div>
               <Input value={emojiName} onChange={(e) => setEmojiName(e.target.value)} placeholder="Nome do emoji" />
               <Input value={emojiCode} onChange={(e) => setEmojiCode(e.target.value.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase())} placeholder="codigo sem dois pontos" />
               <Input type="file" accept="image/*" onChange={(e) => setEmojiFile(e.target.files?.[0] || null)} />
-              <Button className="w-full" disabled={!emojiName.trim() || !emojiCode.trim() || !emojiFile || isSavingEmoji} onClick={async () => { if (!emojiFile) return; await saveEmoji({ name: emojiName, shortcode: emojiCode, file: emojiFile }); setEmojiName(''); setEmojiCode(''); setEmojiFile(null); }}>
+              <Button className="w-full h-9 rounded-xl text-[11px] font-medium" disabled={!emojiName.trim() || !emojiCode.trim() || !emojiFile || isSavingEmoji} onClick={async () => { if (!emojiFile) return; await saveEmoji({ name: emojiName, shortcode: emojiCode, file: emojiFile }); setEmojiName(''); setEmojiCode(''); setEmojiFile(null); }}>
                 Enviar emoji
               </Button>
               <p className="text-xs text-muted-foreground">Use na bio ou comentário assim: :{emojiCode || 'codigo'}:</p>
@@ -1198,7 +1201,7 @@ export default function Admin() {
 
             <div className="space-y-2">
               {emojis.map((emoji) => (
-                <div key={emoji.id} className="pack-card flex items-center gap-3">
+                <div key={emoji.id} className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-[#141414] px-3 py-3">
                   <img src={emoji.image_url} alt={emoji.name} className="w-10 h-10 object-contain rounded-lg bg-secondary" />
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm truncate">{emoji.name}</p>
@@ -1214,12 +1217,15 @@ export default function Admin() {
 
         {mainTab === 'selos' && (
           <div className="space-y-4">
-            <Card className="p-4 rounded-3xl border-border/50 bg-card space-y-3">
-              <h3 className="font-bold flex items-center gap-2"><BadgeCheck className="w-4 h-4" /> Novo selo</h3>
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-white/[0.06] flex items-center justify-center"><BadgeCheck className="w-4 h-4 text-white/70" /></div>
+                <div><h3 className="text-[13px] font-medium text-white/90">Novo selo</h3><p className="text-[11px] text-white/35">Crie e distribua selos aos usuários.</p></div>
+              </div>
               <Input value={badgeName} onChange={(e) => setBadgeName(e.target.value)} placeholder="Nome do selo" />
               <Input value={badgeDesc} onChange={(e) => setBadgeDesc(e.target.value)} placeholder="Descrição (opcional)" />
               <Input type="file" accept="image/*" onChange={(e) => setBadgeFile(e.target.files?.[0] || null)} />
-              <Button className="w-full" disabled={!badgeName.trim() || !badgeFile || isCreatingBadge} onClick={async () => { if (!badgeFile) return; await createBadge({ name: badgeName, description: badgeDesc, file: badgeFile }); setBadgeName(''); setBadgeDesc(''); setBadgeFile(null); }}>
+              <Button className="w-full h-9 rounded-xl text-[11px] font-medium" disabled={!badgeName.trim() || !badgeFile || isCreatingBadge} onClick={async () => { if (!badgeFile) return; await createBadge({ name: badgeName, description: badgeDesc, file: badgeFile }); setBadgeName(''); setBadgeDesc(''); setBadgeFile(null); }}>
                 Criar selo
               </Button>
               <p className="text-xs text-muted-foreground">Os selos só aparecem quando você presenteia um usuário.</p>
@@ -1227,7 +1233,7 @@ export default function Admin() {
 
             <div className="space-y-2">
               {adminBadges.map((badge) => (
-                <Card key={badge.id} className="p-3 rounded-2xl border-border/50 bg-card flex items-center gap-3">
+                <div key={badge.id} className="p-3 rounded-2xl border border-white/[0.06] bg-[#141414] flex items-center gap-3">
                   <img src={badge.image_url} alt={badge.name} className="w-10 h-10 object-contain rounded-lg bg-secondary" />
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm truncate">{badge.name}</p>
@@ -1249,8 +1255,8 @@ export default function Admin() {
         )}
 
         {mainTab === 'decoracoes' && (
-          <div className="admin-wallet space-y-3">
-            <Card className="p-4 rounded-3xl border-white/[0.06] bg-[#151515] space-y-3">
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4 space-y-3">
               <div>
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
@@ -1265,7 +1271,7 @@ export default function Admin() {
               <div className="space-y-3">
                 <Input value={decoName} onChange={(e) => setDecoName(e.target.value)} placeholder="Nome da decoração" />
                 <Input type="file" accept="image/png,image/webp" onChange={(e) => setDecoFile(e.target.files?.[0] || null)} />
-                <Button className="w-full" disabled={!decoName.trim() || !decoFile} onClick={async () => {
+                <Button className="w-full h-9 rounded-xl text-[11px] font-medium" disabled={!decoName.trim() || !decoFile} onClick={async () => {
                   if (!decoFile) return;
                   try {
                     await createDecoration({ file: decoFile, name: decoName });
@@ -1277,7 +1283,7 @@ export default function Admin() {
               <p className="text-xs text-muted-foreground border-t border-border/50 pt-3">PNG transparente recomendado. Todos os usuários poderão escolher.</p>
             </Card>
 
-            <Card className="p-5 rounded-3xl border-border/50 bg-card">
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="font-bold">Biblioteca</h3>
@@ -1310,9 +1316,9 @@ export default function Admin() {
 
         {mainTab === 'carteira' && (
           <div className="space-y-4">
-            <Card className="p-5 rounded-3xl border-border/50 bg-card space-y-4">
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4 space-y-4">
               <div>
-                <h3 className="font-bold flex items-center gap-2 text-base"><Wallet className="w-4 h-4" /> Ajustar saldo</h3>
+                <h3 className="text-[13px] font-medium flex items-center gap-2 text-white/90"><Wallet className="w-4 h-4" /> Ajustar saldo</h3>
                 <p className="text-xs text-muted-foreground mt-1">Selecione um usuário e abra o teclado.</p>
               </div>
               <div className="flex gap-2">
@@ -1320,7 +1326,7 @@ export default function Admin() {
                   value={walletUsername}
                   onChange={(e) => setWalletUsername(e.target.value.replace(/^@/, ''))}
                   placeholder="@username"
-                  className="rounded-2xl"
+                  className="rounded-xl"
                 />
                 <Button
                   className="rounded-2xl px-5"
@@ -1334,8 +1340,8 @@ export default function Admin() {
               </div>
             </Card>
 
-            <Card className="p-3 rounded-3xl border-white/[0.06] bg-[#151515] space-y-2">
-              <div className="flex items-center justify-between"><h3 className="font-bold text-sm">Saldos atuais</h3><span className="text-[10px] text-muted-foreground">{users?.length || 0} contas</span></div>
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-3 space-y-2">
+              <div className="flex items-center justify-between"><h3 className="text-[12px] font-medium text-white/85">Saldos atuais</h3><span className="text-[10px] text-muted-foreground">{users?.length || 0} contas</span></div>
               <div className="max-h-96 overflow-y-auto space-y-1">
                 {users?.slice().sort((a: any, b: any) => Number(b.wallet_balance || 0) - Number(a.wallet_balance || 0)).map((u: any) => (
                   <button
