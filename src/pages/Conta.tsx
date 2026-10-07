@@ -384,7 +384,7 @@ const Conta = () => {
         <div className="fixed inset-0 z-40 bg-background overflow-y-auto pb-24">
           <div className="max-w-lg mx-auto px-4 py-6">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-7 px-0.5">
               <button
                 onClick={() => { if (settingsSub) setSettingsSub(null); else setSearchParams({}); }}
                 className="w-11 h-11 flex items-center justify-center"
@@ -446,7 +446,7 @@ const Conta = () => {
             {!settingsSub && (
               <>
                 {/* Small profile card */}
-                <div className="rounded-2xl border border-border/40 bg-card p-3 flex items-center gap-3 mb-6">
+                <div className="rounded-[17px] border border-white/[0.065] bg-white/[0.018] p-3 flex items-center gap-3 mb-7">
                   <button
                     onClick={() => settingsFileInputRef.current?.click()}
                     className={`w-11 h-11 bg-secondary overflow-hidden flex-shrink-0 border border-border/40 ${avatarShapeClasses(avatarShape)}`}
