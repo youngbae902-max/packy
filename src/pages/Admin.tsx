@@ -412,16 +412,16 @@ export default function Admin() {
                       <button
                         key={tab.id}
                         onClick={() => { setMainTab(tab.id); setSubTab('pending'); }}
-                        className={`group flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all ${
+                        className={`group flex items-center gap-2 px-3 h-9 rounded-xl text-left transition-all ${
                           mainTab === tab.id
-                            ? 'bg-foreground text-background'
-                            : 'text-muted-foreground hover:bg-[#181818] hover:text-foreground'
+                            ? 'bg-white text-black'
+                            : 'text-muted-foreground hover:bg-white/[0.04] hover:text-foreground'
                         }`}
                       >
                         <tab.icon className={`w-4 h-4 flex-shrink-0 ${
                           mainTab === tab.id ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'
                         }`} />
-                        <span className="text-xs font-medium truncate">{tab.label}</span>
+                        <span className="text-[11px] font-medium truncate">{tab.label}</span>
                       </button>
                     ))}
                   </div>
