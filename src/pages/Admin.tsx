@@ -639,9 +639,12 @@ export default function Admin() {
 
         {/* Gift All Tab */}
         {mainTab === 'giftall' && (
-          <div className="space-y-6">
-            <Card className="p-4">
-              <h3 className="font-bold mb-4 flex items-center gap-2">
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-white/[0.06] flex items-center justify-center"><LinkIcon className="w-4 h-4 text-white/70" /></div>
+                <div><h3 className="text-[13px] font-medium text-white/90">Enviar para todos</h3><p className="text-[11px] text-white/35">Envie um pack externo para todos os usuários.</p></div>
+              </div>
                 <LinkIcon className="w-4 h-4" />
                 Enviar Link Externo para Todos
               </h3>
@@ -678,19 +681,23 @@ export default function Admin() {
                     placeholder="Uma mensagem especial..."
                   />
                 </div>
-                <Button onClick={handleSendExternalGiftToAll} className="w-full">
+                <Button onClick={handleSendExternalGiftToAll} className="w-full h-9 rounded-xl text-[11px] font-medium">
                   <Send className="w-4 h-4 mr-2" />
                   Enviar para Todos
                 </Button>
               </div>
-            </Card>
-
+            </div>
           </div>
         )}
 
         {/* Categories Tab */}
         {mainTab === 'categorias' && (
-          <div className="text-muted-foreground text-sm">Categorias em breve.</div>
+          <div className="rounded-2xl border border-white/[0.06] bg-[#141414] p-4">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-white/[0.06] flex items-center justify-center"><LayoutGrid className="w-4 h-4 text-white/70" /></div>
+              <div><h3 className="text-[13px] font-medium text-white/90">Categorias</h3><p className="text-[11px] text-white/35">Gerenciamento de categorias em breve.</p></div>
+            </div>
+          </div>
         )}
 
         {/* Bulk Covers Dialog */}
