@@ -261,7 +261,7 @@ const Packs = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab as 'inicio' | 'geral' | 'pagos')}
-                  className={`relative px-1 pb-3 text-[12px] font-medium whitespace-nowrap transition-colors ${
+                  className={`relative px-1 pb-3 text-[12px] font-display font-medium whitespace-nowrap transition-colors ${
                     activeTab === tab ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
