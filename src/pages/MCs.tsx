@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Search, LayoutGrid, List, Music } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { BottomNav } from '@/components/BottomNav';
@@ -10,6 +10,10 @@ const MCs = () => {
   const { acapellas, isLoading } = useAcapellas();
   const [searchTerm, setSearchTerm] = useState('');
   const [layout, setLayout] = useState<LayoutMode>('grid');
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, []);
 
   const filtered = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -32,7 +36,7 @@ const MCs = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <div className="mx-auto max-w-2xl px-6 pt-6">
+      <div className="mx-auto max-w-2xl px-4 pt-4 sm:px-6 sm:pt-6">
         <div className="mb-2 flex items-center gap-2">
           <div className="relative min-w-0 flex-1">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/50" />
