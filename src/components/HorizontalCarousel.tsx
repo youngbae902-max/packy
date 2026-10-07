@@ -39,7 +39,7 @@ export function HorizontalCarousel({ title, children, showArrows = true, centere
       </div>
       <div
         ref={scrollRef}
-        className={`flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-2 px-1 snap-x snap-mandatory scroll-smooth bg-transparent select-none touch-pan-x ${centered ? "justify-center" : ""}`}
+        className={`flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide py-2 px-1 snap-x snap-mandatory scroll-smooth bg-transparent select-none touch-auto ${centered ? "justify-center" : ""}`}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitUserSelect: 'none' }}
       >
         {children}
