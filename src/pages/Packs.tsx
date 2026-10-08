@@ -277,165 +277,29 @@ const Packs = () => {
 
         {query.length === 0 && activeTab === 'inicio' && <div className="mb-9 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
 
-        {/* Banners / Eventos */}
-        {activeTab === 'inicio' && activeEvents.length > 0 && (
-          <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {activeEvents.map(event => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        )}
-
-        {/* Main Feed Content */}
+        {/* Estrutura da Home: somente organização, mantendo a identidade visual do PACKY */}
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 py-16">{Array.from({ length: 10 }).map((_, i) => <div key={i} className="aspect-[0.9] rounded-2xl bg-white/[0.04] animate-pulse" />)}</div>
         ) : query.length > 0 ? (
           <div>
-            <h2 className="text-lg md:text-2xl font-display font-normal mb-4 px-1">
-              Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
-            </h2>
-            {searchedPacks.length > 0 && !isMCSearch && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-3">
-                {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
-              </div>
-            )}
-            {searchedMCs.length > 0 && (
-              <div className="mt-7 border-t border-white/[0.05] pt-3">
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-1.5 px-1 font-bold">MCs</p>
-                <div className="flex flex-wrap gap-1">
-                  {searchedMCs.slice(0, 6).map(mc => (
-                    <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 hover:bg-white/[0.04] transition-colors">
-                      {mc.image_url ? <img src={mc.image_url} alt="" className="w-5 h-5 rounded-full object-cover" /> : <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center"><Mic className="w-2.5 h-2.5" /></span>}
-                      <span className="text-[10px] font-medium text-muted-foreground">{mc.artist_name}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-            {searchedPacks.length === 0 && searchedMCs.length === 0 && (
-              <p className="text-center py-16 text-muted-foreground">No results found.</p>
-            )}
+            <h2 className="text-lg md:text-2xl font-display font-normal mb-4 px-1">Results for "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span></h2>
+            {searchedPacks.length > 0 && !isMCSearch && <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-3">{searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>}
+            {searchedMCs.length > 0 && <div className="mt-7 border-t border-white/[0.05] pt-3"><p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-1.5 px-1 font-bold">MCs</p><div className="flex flex-wrap gap-1">{searchedMCs.slice(0, 6).map(mc => <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 hover:bg-white/[0.04] transition-colors">{mc.image_url ? <img src={mc.image_url} alt="" className="w-5 h-5 rounded-full object-cover" /> : <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center"><Mic className="w-2.5 h-2.5" /></span>}<span className="text-[10px] font-medium text-muted-foreground">{mc.artist_name}</span></a>)}</div></div>}
+            {searchedPacks.length === 0 && searchedMCs.length === 0 && <p className="text-center py-16 text-muted-foreground">No results found.</p>}
           </div>
-       ) : activeTab === 'pagos' ? (
-          <div>
-            <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Paid</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight">Paid Packs</h2>
-              <p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} packs available</p>
-            </div>
-            {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">No paid packs available yet.</p> : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePremiumBadge />)}
-              </div>
-            )}
-          </div>
+        ) : activeTab === 'pagos' ? (
+          <div><div className="mb-5 px-1"><p className="text-xs font-semibold text-muted-foreground mb-1">Paid</p><h2 className="text-xl md:text-2xl font-normal tracking-tight">Paid Packs</h2><p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} packs available</p></div>{premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">No paid packs available yet.</p> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePremiumBadge />)}</div>}</div>
         ) : activeTab === 'geral' ? (
-          <div>
-            <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Library</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>All Packs</h2>
-              <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs available</p>
-            </div>
-            {allPacks.length === 0 ? (
-              <p className="text-center py-16 text-muted-foreground">No packs available yet.</p>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
-              </div>
-            )}
-          </div>
+          <div><div className="mb-5 px-1"><p className="text-xs font-semibold text-muted-foreground mb-1">Library</p><h2 className="text-xl md:text-2xl font-normal tracking-tight">All Packs</h2><p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs available</p></div>{allPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">No packs available yet.</p> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>}</div>
         ) : (
           <div className="space-y-10 md:space-y-12">
-            
-            {releases.visible && releasePacks.length > 0 && (
-              <HorizontalCarousel
-                title={releases.title}
-              >
-                {releasePacks.map(pack => (
-                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                    <PackCardV2 pack={pack} />
-                  </div>
-                ))}
-              </HorizontalCarousel>
-            )}
-
-
-
-            {/* Seções personalizadas da Home (admin) */}
-            {customSections
-              .filter(({ section }) => !['efeitos', 'lançamentos', 'presets essenciais'].includes(section.title.trim().toLocaleLowerCase('pt-BR')))
-              .map(({ section, packs }) => (
-              packs.length > 0 && (
-                <div key={section.id} className="bg-[#111111] border-0 rounded-none">
-                  <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
-                    {packs.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                </div>
-              )
-            ))}
-
-            {hasCategories ? (
-              categories
-                .filter(category => !['efeitos', 'lançamentos', 'presets essenciais'].includes(category.name.trim().toLocaleLowerCase('pt-BR')))
-                .map(category => (
-                  <div key={category.id} className="pt-1">
-                    <HorizontalCarousel title={category.name}>
-                      {premiumPacks.slice(0, 8).map(pack => (
-                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                          <PackCardV2 pack={pack} />
-                        </div>
-                      ))}
-                    </HorizontalCarousel>
-                  </div>
-                ))
-            ) : (
-              <>
-                {premiumPacks.length > 0 && (
-                  <HorizontalCarousel title="Paid & Exclusive">
-                    {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                )}
-
-                {projectPacks.length > 0 && (
-                  <HorizontalCarousel title="Projects & FLPs">
-                    {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                )}
-              </>
-            )}
-
-            {acapellas.length > 0 && (
-              <div className="flex justify-center">
-                <div className="w-full max-w-3xl">
-                  <HorizontalCarousel title="Acapellas" centered>
-                {acapellas.slice(0, 8).map(acapella => (
-                  <div key={acapella.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                    <AudioPlayer
-                      artistName={acapella.artist_name}
-                      imageUrl={acapella.image_url}
-                      audioUrl={acapella.audio_url}
-                      downloadUrl={acapella.download_url}
-                      duration={acapella.duration_seconds ?? undefined}
-                      onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }}
-                    />
-                  </div>
-                ))}
-                  </HorizontalCarousel>
-                </div>
-              </div>
-            )}
+            <section><div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Em destaque</h2><p className="text-sm text-muted-foreground mt-1">O que está acontecendo na PACKY agora.</p></div><div className="overflow-hidden rounded-[18px] bg-transparent"><HomeBannerCarousel /></div></section>
+            {releasePacks.length > 0 && <section><HorizontalCarousel title={releases.title || 'Lançamentos'}>{releasePacks.map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>}
+            {allPacks.length > 0 && <section><div className="mb-4 px-1 flex items-end justify-between"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Recentes na PACKY</h2><p className="text-sm text-muted-foreground mt-1">Packs para continuar descobrindo.</p></div><ArrowRight className="w-4 h-4 text-muted-foreground" /></div><div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-3">{allPacks.slice(0, 6).map(pack => <div key={pack.id} className="aspect-square overflow-hidden rounded-xl"><img src={pack.cover_url} alt={pack.title} className="h-full w-full object-cover" /></div>)}</div></section>}
+            {premiumPacks.length > 0 && <section><div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Em alta</h2><p className="text-sm text-muted-foreground mt-1">Packs que merecem entrar no seu projeto.</p></div><div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">{premiumPacks.slice(0, 4).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div></section>}
+            {projectPacks.length > 0 && <section><HorizontalCarousel title="Projetos e FLPs">{projectPacks.map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>}
+            {hasCategories ? categories.filter(category => !['efeitos', 'lançamentos', 'presets essenciais'].includes(category.name.trim().toLocaleLowerCase('pt-BR'))).map(category => <section key={category.id}><HorizontalCarousel title={category.name}>{premiumPacks.slice(0, 8).map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>) : <>{customSections.filter(({ section }) => !['efeitos', 'lançamentos', 'presets essenciais'].includes(section.title.trim().toLocaleLowerCase('pt-BR'))).map(({ section, packs }) => packs.length > 0 && <section key={section.id}><HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>{packs.map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>)}</>}
+            {acapellas.length > 0 && <section><HorizontalCarousel title="MCs">{acapellas.slice(0, 8).map(acapella => <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start"><AudioPlayer artistName={acapella.artist_name} imageUrl={acapella.image_url} audioUrl={acapella.audio_url} downloadUrl={acapella.download_url} duration={acapella.duration_seconds ?? undefined} onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }} /></div>)}</HorizontalCarousel></section>}
           </div>
         )}
 
