@@ -254,16 +254,7 @@ const Packs = () => {
 
         {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
 
-        {/* Banners / Eventos */}
-        {activeTab === 'inicio' && activeEvents.length > 0 && (
-          <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {activeEvents.map(event => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        )}
-
-        {/* Main Feed Content */}
+        {/* Estrutura da Home: somente organização, mantendo a identidade visual do PACKY */}
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 py-16">{Array.from({ length: 10 }).map((_, i) => <div key={i} className="aspect-[0.9] rounded-2xl bg-white/[0.04] animate-pulse" />)}</div>
         ) : q.length > 0 ? (
@@ -321,92 +312,127 @@ const Packs = () => {
             )}
           </div>
         ) : (
-          <div className="space-y-7 md:space-y-9">
-            
-            {releases.visible && releasePacks.length > 0 && (
-              <HorizontalCarousel
-                title={releases.title}
-              >
-                {releasePacks.map(pack => (
-                  <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                    <PackCardV2 pack={pack} />
-                  </div>
-                ))}
-              </HorizontalCarousel>
-            )}
+          <div className="space-y-9 md:space-y-12">
+            {/* 1. Hero / campanha */}
+            <section>
+              <div className="mb-4 px-1">
+                <h2 className="text-lg md:text-xl font-semibold tracking-tight">Em destaque</h2>
+                <p className="text-sm text-muted-foreground mt-1">O que está acontecendo na PACKY agora.</p>
+              </div>
+              <div className="overflow-hidden rounded-[18px] bg-transparent">
+                <HomeBannerCarousel />
+              </div>
+            </section>
 
-
-
-            {/* Seções personalizadas da Home (admin) */}
-            {customSections
-              .filter(({ section }) => !['efeitos', 'lançamentos', 'presets essenciais'].includes(section.title.trim().toLocaleLowerCase('pt-BR')))
-              .map(({ section, packs }) => (
-              packs.length > 0 && (
-                <div key={section.id} className="bg-[#111111] border-0 rounded-none">
-                  <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
-                    {packs.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                </div>
-              )
-            ))}
-
-            {hasCategories ? (
-              categories
-                .filter(category => !['efeitos', 'lançamentos', 'presets essenciais'].includes(category.name.trim().toLocaleLowerCase('pt-BR')))
-                .map(category => (
-                <HorizontalCarousel key={category.id} title={category.name}>
-                  {premiumPacks.slice(0, 8).map(pack => (
+            {/* 2. Faixa horizontal de destaques */}
+            {releasePacks.length > 0 && (
+              <section>
+                <HorizontalCarousel title={releases.title || 'Lançamentos'}>
+                  {releasePacks.map(pack => (
                     <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
                       <PackCardV2 pack={pack} />
                     </div>
                   ))}
                 </HorizontalCarousel>
-              ))
+              </section>
+            )}
+
+            {/* 3. Bloco de recentes / histórico */}
+            {allPacks.length > 0 && (
+              <section>
+                <div className="mb-4 px-1 flex items-end justify-between">
+                  <div>
+                    <h2 className="text-lg md:text-xl font-semibold tracking-tight">Recentes na PACKY</h2>
+                    <p className="text-sm text-muted-foreground mt-1">Packs para continuar descobrindo.</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-3">
+                  {allPacks.slice(0, 6).map(pack => (
+                    <div key={pack.id} className="aspect-square overflow-hidden rounded-xl">
+                      <img src={pack.cover_url} alt={pack.title} className="h-full w-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 4. Tendências / packs em evidência */}
+            {premiumPacks.length > 0 && (
+              <section>
+                <div className="mb-4 px-1">
+                  <h2 className="text-lg md:text-xl font-semibold tracking-tight">Em alta</h2>
+                  <p className="text-sm text-muted-foreground mt-1">Packs que merecem entrar no seu projeto.</p>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+                  {premiumPacks.slice(0, 4).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
+                </div>
+              </section>
+            )}
+
+            {/* 5. Outra coleção em destaque */}
+            {projectPacks.length > 0 && (
+              <section>
+                <HorizontalCarousel title="Projetos e FLPs">
+                  {projectPacks.map(pack => (
+                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                      <PackCardV2 pack={pack} />
+                    </div>
+                  ))}
+                </HorizontalCarousel>
+              </section>
+            )}
+
+            {/* 6. Categorias / catálogo contínuo */}
+            {hasCategories ? (
+              categories
+                .filter(category => !['efeitos', 'lançamentos', 'presets essenciais'].includes(category.name.trim().toLocaleLowerCase('pt-BR')))
+                .map(category => (
+                  <section key={category.id}>
+                    <HorizontalCarousel title={category.name}>
+                      {premiumPacks.slice(0, 8).map(pack => (
+                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                          <PackCardV2 pack={pack} />
+                        </div>
+                      ))}
+                    </HorizontalCarousel>
+                  </section>
+                ))
             ) : (
-              /* Fallback sections if no categories are setup yet */
               <>
-                {premiumPacks.length > 0 && (
-                  <HorizontalCarousel title="Premium & Exclusivos">
-                    {premiumPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                )}
-
-                {projectPacks.length > 0 && (
-                  <HorizontalCarousel title="Projetos e FLPs">
-                    {projectPacks.map(pack => (
-                      <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                        <PackCardV2 pack={pack} />
-                      </div>
-                    ))}
-                  </HorizontalCarousel>
-                )}
-
+                {customSections
+                  .filter(({ section }) => !['efeitos', 'lançamentos', 'presets essenciais'].includes(section.title.trim().toLocaleLowerCase('pt-BR')))
+                  .map(({ section, packs }) => packs.length > 0 && (
+                    <section key={section.id}>
+                      <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
+                        {packs.map(pack => (
+                          <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
+                            <PackCardV2 pack={pack} />
+                          </div>
+                        ))}
+                      </HorizontalCarousel>
+                    </section>
+                  ))}
               </>
             )}
 
             {acapellas.length > 0 && (
-              <HorizontalCarousel title="Acapellas">
-                {acapellas.slice(0, 8).map(acapella => (
-                  <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
-                    <AudioPlayer
-                      artistName={acapella.artist_name}
-                      imageUrl={acapella.image_url}
-                      audioUrl={acapella.audio_url}
-                      downloadUrl={acapella.download_url}
-                      duration={acapella.duration_seconds ?? undefined}
-                      onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }}
-                    />
-                  </div>
-                ))}
-              </HorizontalCarousel>
+              <section>
+                <HorizontalCarousel title="MCs">
+                  {acapellas.slice(0, 8).map(acapella => (
+                    <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
+                      <AudioPlayer
+                        artistName={acapella.artist_name}
+                        imageUrl={acapella.image_url}
+                        audioUrl={acapella.audio_url}
+                        downloadUrl={acapella.download_url}
+                        duration={acapella.duration_seconds ?? undefined}
+                        onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }}
+                      />
+                    </div>
+                  ))}
+                </HorizontalCarousel>
+              </section>
             )}
           </div>
         )}
