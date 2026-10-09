@@ -126,10 +126,10 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
       <button
         type="button"
         onClick={() => setShowDetails(true)}
-        className="pack-card-v2 group relative text-left w-full min-w-0 rounded-[18px] overflow-hidden bg-[#111111] border border-white/[0.045] hover:border-white/[0.10] hover:bg-[#151515] transition-all duration-200 p-1.5 flex flex-col"
+        className="pack-card-v2 group relative text-left w-full min-w-0 min-h-[220px] rounded-[24px] overflow-hidden bg-[#111111] border border-white/[0.07] hover:border-white/[0.14] transition-colors duration-200 p-2.5 flex flex-col"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}
       >
-        <div className="relative w-full aspect-square rounded-[14px] overflow-hidden bg-[#181818]">
+        <div className="relative w-full aspect-square rounded-[18px] overflow-hidden bg-[#181818]">
           {pack.cover_url ? (
             <img src={pack.cover_url} alt={pack.title} className="w-full h-full object-cover transition-transform duration-500 " />
           ) : (
@@ -147,16 +147,16 @@ export function PackCardV2({ pack, showAdminBadge = false, hidePremiumBadge = fa
           
         </div>
 
-        <div className="px-1.5 pt-2.5 pb-1">
-          <h3 className="text-[13px] leading-[1.15] font-semibold text-foreground line-clamp-2 tracking-[-0.015em]">
+        <div className="px-1.5 pt-3 pb-2 flex-1">
+          <h3 className="text-[14px] leading-[1.2] font-semibold text-foreground line-clamp-2 tracking-[-0.015em]">
             {pack.title}
           </h3>
           <div className="flex items-center justify-between gap-2 mt-2">
-            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-foreground/40 truncate">
-              {categoryLabel === 'DRUMKIT' ? <span className="opacity-0">DRUMKIT</span> : categoryLabel}
+            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-foreground/55 truncate">
+              {categoryLabel}
             </span>
             {isFree ? (
-              <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-green-500 bg-green-500 shrink-0 opacity-0" aria-label="Grátis" />
+              <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-green-500 bg-green-500 shrink-0" aria-label="Grátis" />
             ) : (
               <span className="w-5 h-2.5 rounded-[3px] border-[3px] border-yellow-400 bg-yellow-400 shrink-0" aria-label="Premium" />
             )}
