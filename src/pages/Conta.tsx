@@ -484,13 +484,15 @@ const Conta = () => {
                   <SettingsRow icon={Award} label="Meus Selos" onClick={() => setSettingsSub('selos')} />
                 </SettingsGroup>
 
-                <SettingsGroup>
-                  <Link to="/admin" className="w-full flex items-center gap-3 px-4 py-3.5 bg-white text-black hover:bg-gray-100 transition-colors rounded-xl">
-                    <Shield className="w-[18px] h-[18px] text-black" />
-                    <span className="flex-1 text-[15px] font-medium tracking-tight">Painel ADM</span>
-                    <ChevronRight className="w-4 h-4 text-gray-500" />
-                  </Link>
-                </SettingsGroup>
+                {isAdmin && (
+                  <SettingsGroup>
+                    <Link to="/admin" className="w-full flex items-center gap-3 px-4 py-3.5 bg-card hover:bg-secondary/60 transition-colors">
+                      <Shield className="w-[18px] h-[18px] text-foreground/70" />
+                      <span className="flex-1 text-[15px] font-medium tracking-tight">Painel de Administração</span>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground/70" />
+                    </Link>
+                  </SettingsGroup>
+                )}
 
                 <SettingsGroup>
                   <SettingsRow icon={MoreHorizontal} label="Mais opções" onClick={() => setSettingsSub('mais')} />
