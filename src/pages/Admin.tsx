@@ -1,7 +1,7 @@
 import { ChevronLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid, ChevronRight, ChevronDown, Image as ImageIcon, Smartphone } from 'lucide-react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { NumericKeypad } from '@/components/NumericKeypad';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabasePacks, Pack } from '@/hooks/useSupabasePacks';
@@ -144,7 +144,7 @@ export default function Admin() {
   const [insightMode, setInsightMode] = useState<'conteudo' | 'engajamento' | 'comunidade'>('conteudo');
 
   if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Carregando...</div></div>;
-  if (!isAdmin) return <Navigate to="/conta" replace />;
+
 
   const trashPacks = rejectedPacks;
   const trashAcapellas = rejectedAcapellas;
