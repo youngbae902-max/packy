@@ -645,9 +645,6 @@ export default function Admin() {
                 <div className="h-8 w-8 rounded-lg bg-white/[0.06] flex items-center justify-center"><LinkIcon className="w-4 h-4 text-white/70" /></div>
                 <div><h3 className="text-[13px] font-medium text-white/90">Enviar para todos</h3><p className="text-[11px] text-white/35">Envie um pack externo para todos os usuários.</p></div>
               </div>
-                <LinkIcon className="w-4 h-4" />
-                Enviar Link Externo para Todos
-              </h3>
               <div className="space-y-3">
                 <div>
                   <Label>Nome do Pack</Label>
