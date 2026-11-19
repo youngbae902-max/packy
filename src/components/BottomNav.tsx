@@ -1,20 +1,15 @@
-import { Compass, User, Disc, Mic } from 'lucide-react';
+import { Store, Folder, Heart, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import { useCustomPages } from '@/hooks/useCustomPages';
 
 const navItems = [
-  { icon: Compass, label: 'Explorar', to: '/' },
-  { icon: Mic, label: 'MCs', to: '/mcs' },
+  { icon: Store, label: 'Loja', to: '/' },
+  { icon: Folder, label: 'Projetos', to: '/projetos' },
+  { icon: Heart, label: 'Favoritos', to: '/desejos' },
   { icon: User, label: 'Perfil', to: '/conta' },
 ];
 
 export function BottomNav() {
-  const { pages } = useCustomPages();
-  const dynamicItems = pages
-    .filter((page) => page.is_active && page.placement === 'bottom')
-    .slice(0, 2)
-    .map((page) => ({ icon: Disc, label: page.title, to: `/pagina/${page.slug}` }));
-  const items = [navItems[0], navItems[1], ...dynamicItems.slice(0, 1), navItems[2]];
+  const items = [navItems[0], navItems[1], navItems[2], navItems[3]];
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-[#111111] backdrop-blur-sm border-t border-[#1E1E1E] z-30 md:hidden">
       <div className="max-w-lg mx-auto flex justify-around items-center py-2 px-2">

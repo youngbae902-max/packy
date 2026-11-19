@@ -231,9 +231,9 @@ const Packs = () => {
           <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
             <div className="flex items-center justify-center gap-7 md:gap-9">
               {[
-                ['inicio', 'Início'],
-                ['geral', 'Packs em geral'],
-                ['pagos', 'Packs pagos'],
+                ['inicio', 'Loja'],
+                ['geral', 'Todos os packs'],
+                ['pagos', 'Premium'],
               ].map(([tab, label]) => (
                 <button
                   key={tab}
@@ -252,188 +252,39 @@ const Packs = () => {
           </nav>
         )}
 
-        {q.length === 0 && activeTab === 'inicio' && <div className="mb-7 rounded-[18px] overflow-hidden bg-card shadow-[0_12px_40px_rgba(0,0,0,0.12)]"><HomeBannerCarousel /></div>}
-
-        {/* Estrutura da Home: somente organização, mantendo a identidade visual do PACKY */}
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 py-16">{Array.from({ length: 10 }).map((_, i) => <div key={i} className="aspect-[0.9] rounded-2xl bg-white/[0.04] animate-pulse" />)}</div>
         ) : q.length > 0 ? (
           <div>
-            <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">
-              Resultados para "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span>
-            </h2>
-            {searchedMCs.length > 0 && (
-              <div className="mb-7">
-                <p className="text-xs uppercase text-muted-foreground font-bold mb-3">MCs</p>
-                <div className="space-y-2">
-                  {searchedMCs.map(mc => (
-                    <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl bg-card border border-border p-3">
-                      {mc.image_url ? <img src={mc.image_url} alt="" className="w-32 h-32 min-w-32 min-h-32 rounded-full object-cover" /> : <span className="w-32 h-32 min-w-32 min-h-32 rounded-full bg-muted flex items-center justify-center"><Mic className="size-10" /></span>}
-                      <span className="font-display font-bold">{mc.artist_name}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-            {searchedPacks.length === 0 && searchedMCs.length === 0 ? (
-              <p className="text-center py-16 text-muted-foreground">Nenhum pack encontrado.</p>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
-              </div>
-            )}
+            <h2 className="text-lg md:text-2xl font-display font-bold mb-4 px-1">Resultados para "{searchQuery}" <span className="text-muted-foreground font-bold">({searchedPacks.length})</span></h2>
+            {searchedMCs.length > 0 && <div className="mb-7"><p className="text-xs uppercase text-muted-foreground font-bold mb-3">Acapellas</p><div className="space-y-2">{searchedMCs.map(mc => <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl bg-card border border-border p-3">{mc.image_url ? <img src={mc.image_url} alt="" className="w-16 h-16 rounded-full object-cover" /> : <span className="w-16 h-16 rounded-full bg-muted flex items-center justify-center"><Mic className="size-6" /></span>}<span className="font-display font-bold">{mc.artist_name}</span></a>)}</div></div>}
+            {searchedPacks.length === 0 && searchedMCs.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum produto encontrado.</p> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>}
           </div>
         ) : activeTab === 'pagos' ? (
-          <div>
-            <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Premium</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight">Packs pagos</h2>
-              <p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} packs disponíveis</p>
-            </div>
-            {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum pack pago disponível ainda.</p> : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePremiumBadge />)}
-              </div>
-            )}
-          </div>
+          <section>
+            <div className="mb-5 px-1"><p className="text-xs font-semibold text-muted-foreground mb-1">Seleção premium</p><h2 className="text-xl md:text-2xl font-normal tracking-tight">Packs premium</h2><p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} produtos disponíveis</p></div>
+            {premiumPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum pack premium disponível ainda.</p> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{premiumPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} hidePremiumBadge />)}</div>}
+          </section>
         ) : activeTab === 'geral' ? (
-          <div>
-            <div className="mb-5 px-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Biblioteca</p>
-              <h2 className="text-xl md:text-2xl font-normal tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>Todos os Packs</h2>
-              <p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p>
-            </div>
-            {allPacks.length === 0 ? (
-              <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
-              </div>
-            )}
-          </div>
+          <section>
+            <div className="mb-5 px-1"><p className="text-xs font-semibold text-muted-foreground mb-1">Catálogo completo</p><h2 className="text-xl md:text-2xl font-normal tracking-tight">Todos os packs</h2><p className="text-sm text-muted-foreground mt-1">{allPacks.length} produtos disponíveis</p></div>
+            {allPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum pack disponível ainda.</p> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{allPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>}
+          </section>
         ) : (
           <div className="space-y-9 md:space-y-12">
-            {/* 1. Hero / campanha */}
-            <section>
-              <div className="mb-4 px-1">
-                <h2 className="text-lg md:text-xl font-semibold tracking-tight">Em destaque</h2>
-                <p className="text-sm text-muted-foreground mt-1">O que está acontecendo na PACKY agora.</p>
-              </div>
-              <div className="overflow-hidden rounded-[18px] bg-transparent">
-                <HomeBannerCarousel />
-              </div>
-            </section>
+            <section><div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Em destaque</h2><p className="text-sm text-muted-foreground mt-1">Seleções e novidades do marketplace.</p></div><div className="overflow-hidden rounded-[18px] bg-transparent"><HomeBannerCarousel /></div></section>
 
-            {/* 2. Faixa horizontal de destaques */}
-            {releasePacks.length > 0 && (
-              <section>
-                <HorizontalCarousel title={releases.title || 'Lançamentos'}>
-                  {releasePacks.map(pack => (
-                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                      <PackCardV2 pack={pack} />
-                    </div>
-                  ))}
-                </HorizontalCarousel>
-              </section>
-            )}
+            {releasePacks.length > 0 && <section><div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">{releases.title || 'Destaques da loja'}</h2><p className="text-sm text-muted-foreground mt-1">Packs selecionados para seus próximos projetos.</p></div><div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{releasePacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div></section>}
 
-            {/* 3. Bloco de recentes / histórico */}
-            {allPacks.length > 0 && (
-              <section>
-                <div className="mb-4 px-1 flex items-end justify-between">
-                  <div>
-                    <h2 className="text-lg md:text-xl font-semibold tracking-tight">Recentes na PACKY</h2>
-                    <p className="text-sm text-muted-foreground mt-1">Packs para continuar descobrindo.</p>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-3">
-                  {allPacks.slice(0, 6).map(pack => (
-                    <div key={pack.id} className="aspect-square overflow-hidden rounded-xl">
-                      <img src={pack.cover_url} alt={pack.title} className="h-full w-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            {premiumPacks.length > 0 && <section><div className="mb-4 px-1 flex items-end justify-between"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Packs premium</h2><p className="text-sm text-muted-foreground mt-1">Conteúdos exclusivos da comunidade.</p></div><button onClick={() => setActiveTab('pagos')} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Ver todos</button></div><div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">{premiumPacks.slice(0, 4).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div></section>}
 
-            {/* 4. Tendências / packs em evidência */}
-            {premiumPacks.length > 0 && (
-              <section>
-                <div className="mb-4 px-1">
-                  <h2 className="text-lg md:text-xl font-semibold tracking-tight">Em alta</h2>
-                  <p className="text-sm text-muted-foreground mt-1">Packs que merecem entrar no seu projeto.</p>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
-                  {premiumPacks.slice(0, 4).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}
-                </div>
-              </section>
-            )}
+            {projectPacks.length > 0 && <section><HorizontalCarousel title="Projetos e FLPs">{projectPacks.map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>}
 
-            {/* 5. Outra coleção em destaque */}
-            {projectPacks.length > 0 && (
-              <section>
-                <HorizontalCarousel title="Projetos e FLPs">
-                  {projectPacks.map(pack => (
-                    <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                      <PackCardV2 pack={pack} />
-                    </div>
-                  ))}
-                </HorizontalCarousel>
-              </section>
-            )}
+            {customSections.filter(({ packs: sectionPacks }) => sectionPacks.length > 0).map(({ section, packs: sectionPacks }) => <section key={section.id}><HorizontalCarousel title={section.title === 'Acapellas' ? 'Acapellas' : section.title}>{sectionPacks.map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>)}
 
-            {/* 6. Categorias / catálogo contínuo */}
-            {hasCategories ? (
-              categories
-                .filter(category => !['efeitos', 'lançamentos', 'presets essenciais'].includes(category.name.trim().toLocaleLowerCase('pt-BR')))
-                .map(category => (
-                  <section key={category.id}>
-                    <HorizontalCarousel title={category.name}>
-                      {premiumPacks.slice(0, 8).map(pack => (
-                        <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                          <PackCardV2 pack={pack} />
-                        </div>
-                      ))}
-                    </HorizontalCarousel>
-                  </section>
-                ))
-            ) : (
-              <>
-                {customSections
-                  .filter(({ section }) => !['efeitos', 'lançamentos', 'presets essenciais'].includes(section.title.trim().toLocaleLowerCase('pt-BR')))
-                  .map(({ section, packs }) => packs.length > 0 && (
-                    <section key={section.id}>
-                      <HorizontalCarousel title={section.title === 'Acapellas' ? 'MCs' : section.title}>
-                        {packs.map(pack => (
-                          <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start">
-                            <PackCardV2 pack={pack} />
-                          </div>
-                        ))}
-                      </HorizontalCarousel>
-                    </section>
-                  ))}
-              </>
-            )}
+            {acapellas.length > 0 && <section><HorizontalCarousel title="Acapellas">{acapellas.slice(0, 8).map(acapella => <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start"><AudioPlayer artistName={acapella.artist_name} imageUrl={acapella.image_url} audioUrl={acapella.audio_url} downloadUrl={acapella.download_url} duration={acapella.duration_seconds ?? undefined} onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }} /></div>)}</HorizontalCarousel></section>}
 
-            {acapellas.length > 0 && (
-              <section>
-                <HorizontalCarousel title="MCs">
-                  {acapellas.slice(0, 8).map(acapella => (
-                    <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start">
-                      <AudioPlayer
-                        artistName={acapella.artist_name}
-                        imageUrl={acapella.image_url}
-                        audioUrl={acapella.audio_url}
-                        downloadUrl={acapella.download_url}
-                        duration={acapella.duration_seconds ?? undefined}
-                        onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }}
-                      />
-                    </div>
-                  ))}
-                </HorizontalCarousel>
-              </section>
-            )}
+            {allPacks.length > 0 && <section><div className="mb-4 px-1 flex items-end justify-between"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Explorar catálogo</h2><p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p></div><button onClick={() => setActiveTab('geral')} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Ver todos</button></div><div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{allPacks.slice(0, 10).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div></section>}
           </div>
         )}
 
