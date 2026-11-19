@@ -291,3 +291,25 @@
 }
 .account-page h2.text-3xl { font-size: 30px !important; }
 .account-page .flex.gap-3 > a { width: 42px !important; height: 42px !important; }
+
+
+/* ADM — página em tela cheia, sem cartão central flutuante */
+.admin-scope {
+  display: block;
+  width: 100% !important;
+  min-height: 100vh;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #0b0b0c !important;
+}
+.admin-scope > .max-w-2xl,
+.admin-scope > .w-full {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box;
+}
+@media (max-width: 767px) {
+  .admin-scope { padding-bottom: 88px !important; }
+}
