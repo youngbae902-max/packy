@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, Globe, Mail, Star, Monitor, Compass, FileArchive, Mic, Smartphone } from 'lucide-react';
+import { X, Globe, Mail, Star, Monitor, Store, FileArchive, Mic, Smartphone } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -16,16 +16,17 @@ export function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const [showSignOutConfirm, setShowSignOutConfirm] = React.useState(false);
 
   const baseItems = [
-    { to: '/', icon: Compass, label: 'Explorar' },
-    { to: '/mcs', icon: Mic, label: 'Acapella' },
+    { to: '/', icon: Store, label: 'Marketplace' },
+    { to: '/projetos', icon: FileArchive, label: 'Projetos' },
+    { to: '/mcs', icon: Mic, label: 'Acapellas' },
     { to: '/sites', icon: Globe, label: 'Sites' },
-    { to: '/inbox', icon: Mail, label: 'Caixa de entrada' },
-    { to: '/desejos', icon: Star, label: 'Lista de desejos' },
+    { to: '/desejos', icon: Star, label: 'Favoritos' },
+    { to: '/inbox', icon: Mail, label: 'Mensagens' },
     { to: '/aplicativos', icon: Smartphone, label: 'Aplicativos' },
   ];
 
   const items = user
-    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Projetos' }]
+    ? [...baseItems, { to: '/up', icon: FileArchive, label: 'Meus arquivos' }]
     : baseItems;
 
   if (!isOpen) return null;
