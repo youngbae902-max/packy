@@ -1,13 +1,8 @@
-import { Compass, User, Disc, Home, Inbox, List, Folder, Mic, Crown, Search, Settings } from 'lucide-react';
+import { User, Disc, Store, Inbox, Folder, Mic, Heart } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppLogo } from '@/hooks/useAppLogo';
-
-const mainNavItems = [
-  { icon: Home, label: 'Início', to: '/' },
-  { icon: Search, label: 'Buscar', to: '/explore' }, // Just an example if there was an explore page
-];
 
 export function Sidebar() {
   const { pages } = useCustomPages();
@@ -40,13 +35,13 @@ export function Sidebar() {
               }`
             }
           >
-            <Home className="w-5 h-5" />
-            Início
+            <Store className="w-5 h-5" />
+            Marketplace
           </NavLink>
         </div>
 
         <div className="space-y-1">
-          <p className="px-3 text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Descobrir</p>
+          <p className="px-3 text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Categorias</p>
           <NavLink
             to="/projetos"
             className={({ isActive }) =>
@@ -67,8 +62,14 @@ export function Sidebar() {
             }
           >
             <Mic className="w-5 h-5" />
-            MCs
+            Acapellas
           </NavLink>
+        </div>
+
+        <div className="space-y-1">
+          <p className="px-3 text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Sua área</p>
+          <NavLink to="/desejos" className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-xl transition-colors ${isActive ? 'bg-foreground/10 text-foreground font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}><Heart className="w-5 h-5" /> Favoritos</NavLink>
+          <NavLink to="/inbox" className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-xl transition-colors ${isActive ? 'bg-foreground/10 text-foreground font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}><Inbox className="w-5 h-5" /> Mensagens</NavLink>
         </div>
 
         {dynamicItems.length > 0 && (
