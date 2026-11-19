@@ -1,3 +1,4 @@
+import { oauthReturnPath } from '@/lib/oauth-return-path';
 import { lovable } from '@/integrations/lovable/index';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -10,9 +11,12 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialMode?: 'login' | 'signup';
+  returnTo?: string;
 }
 
-export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose, initialMode = 'login', returnTo }: AuthModalProps) {
+  const safeReturn = returnTo ? oauthReturnPath(returnTo) : null;
+  const redirectUrl = safeReturn ? new URL(safeReturn, window.location.origin).href : window.location.origin;
   const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -64,7 +68,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
       }
 
       if (mode === 'signup') {
-        const { error } = await signUp(loginEmail, password);
+        const { error } = await signUp(loginEmail, password, redirectUrl);
         if (error) {
           toast.error(error.message);
         } else {
@@ -160,7 +164,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
           <button type="button" onClick={async () => {
             try {
               const result = await lovable.auth.signInWithOAuth('google', {
-                redirect_uri: window.location.origin,
+                redirect_uri: redirectUrl,
               });
               if (result.error) toast.error('Erro ao entrar com Google');
             } catch {
