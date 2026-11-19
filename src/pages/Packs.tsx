@@ -28,6 +28,7 @@ const Packs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'inicio' | 'geral' | 'pagos'>('inicio');
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [selectedAcapella, setSelectedAcapella] = useState<typeof acapellas[number] | null>(null);
   const [pollChoice, setPollChoice] = useState('');
   const [pollText, setPollText] = useState('');
@@ -95,6 +96,16 @@ const Packs = () => {
       return true;
     });
   }, [approvedPacks, premiumPacks, projectPacks]);
+
+  const categoryFilters = useMemo(() => {
+    const labels: Record<string, string> = { samples: 'Samples', drumkit: 'Drumkits', loops: 'Loops', presets: 'Presets', project: 'Projetos', other: 'Outros' };
+    return [...new Set(allPacks.map(pack => pack.pack_type).filter(Boolean))]
+      .map(type => ({ value: type, label: labels[type] || type }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
+  }, [allPacks]);
+
+  const categoryPacks = useMemo(() => allPacks.filter(pack => pack.pack_type === categoryFilter), [allPacks, categoryFilter]);
+  const latestPacks = useMemo(() => [...allPacks].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()), [allPacks]);
 
   // Use categories from DB if available, otherwise fallback to standard sections
   const hasCategories = categories && categories.length > 0;
@@ -226,30 +237,37 @@ const Packs = () => {
       </div>
 
       <div className="packs-page relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
-
         {q.length === 0 && (
-          <nav className="mb-9 flex w-full min-w-0 items-center justify-center overflow-hidden" aria-label="Navegação de packs">
-            <div className="flex items-center justify-center gap-7 md:gap-9">
+          <>
+            <nav className="mb-5 flex items-center gap-6 overflow-x-auto border-b border-border/40 pb-3" aria-label="Navegação principal">
               {[
-                ['inicio', 'Loja'],
+                ['inicio', 'Início'],
                 ['geral', 'Todos os packs'],
                 ['pagos', 'Premium'],
               ].map(([tab, label]) => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab as 'inicio' | 'geral' | 'pagos')}
-                  className={`relative px-1 pb-3 text-[12px] font-medium whitespace-nowrap transition-colors ${
-                    activeTab === tab ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                  onClick={() => { setActiveTab(tab as 'inicio' | 'geral' | 'pagos'); setCategoryFilter(null); }}
+                  className={`relative shrink-0 pb-1 text-sm font-medium whitespace-nowrap transition-colors ${
+                    activeTab === tab && !categoryFilter ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   {label}
-                  {activeTab === tab && (
-                    <span className="absolute -bottom-px left-0 right-0 h-[2px] rounded-full bg-foreground" />
-                  )}
+                  {activeTab === tab && !categoryFilter && <span className="absolute -bottom-[13px] left-0 right-0 h-[2px] rounded-full bg-foreground" />}
                 </button>
               ))}
-            </div>
-          </nav>
+            </nav>
+            {activeTab === 'inicio' && (
+              <div className="mb-7 flex items-center gap-2 overflow-x-auto pb-1" aria-label="Categorias">
+                <button onClick={() => setCategoryFilter(null)} className={`shrink-0 rounded-full border px-4 py-2 text-xs font-medium transition-colors ${!categoryFilter ? 'border-foreground/30 bg-foreground text-background' : 'border-border/60 text-muted-foreground hover:text-foreground'}`}>Todas</button>
+                {categoryFilters.map(category => (
+                  <button key={category.value} onClick={() => { setCategoryFilter(category.value); setActiveTab('inicio'); }} className={`shrink-0 rounded-full border px-4 py-2 text-xs font-medium transition-colors ${categoryFilter === category.value ? 'border-foreground/30 bg-foreground text-background' : 'border-border/60 text-muted-foreground hover:text-foreground'}`}>
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         {isLoading ? (
@@ -260,6 +278,11 @@ const Packs = () => {
             {searchedMCs.length > 0 && <div className="mb-7"><p className="text-xs uppercase text-muted-foreground font-bold mb-3">Acapellas</p><div className="space-y-2">{searchedMCs.map(mc => <a key={mc.id} href={mc.download_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl bg-card border border-border p-3">{mc.image_url ? <img src={mc.image_url} alt="" className="w-16 h-16 rounded-full object-cover" /> : <span className="w-16 h-16 rounded-full bg-muted flex items-center justify-center"><Mic className="size-6" /></span>}<span className="font-display font-bold">{mc.artist_name}</span></a>)}</div></div>}
             {searchedPacks.length === 0 && searchedMCs.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum produto encontrado.</p> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{searchedPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>}
           </div>
+        ) : categoryFilter && activeTab === 'inicio' ? (
+          <section>
+            <div className="mb-5 px-1"><p className="text-xs font-semibold text-muted-foreground mb-1">Categoria</p><h2 className="text-xl md:text-2xl font-normal tracking-tight">{categoryFilters.find(category => category.value === categoryFilter)?.label || categoryFilter}</h2><p className="text-sm text-muted-foreground mt-1">{categoryPacks.length} produtos disponíveis</p></div>
+            {categoryPacks.length === 0 ? <p className="text-center py-16 text-muted-foreground">Nenhum pack nesta categoria.</p> : <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{categoryPacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>}
+          </section>
         ) : activeTab === 'pagos' ? (
           <section>
             <div className="mb-5 px-1"><p className="text-xs font-semibold text-muted-foreground mb-1">Seleção premium</p><h2 className="text-xl md:text-2xl font-normal tracking-tight">Packs premium</h2><p className="text-sm text-muted-foreground mt-1">{premiumPacks.length} produtos disponíveis</p></div>
@@ -272,22 +295,59 @@ const Packs = () => {
           </section>
         ) : (
           <div className="space-y-9 md:space-y-12">
-            <section><div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Em destaque</h2><p className="text-sm text-muted-foreground mt-1">Seleções e novidades do marketplace.</p></div><div className="overflow-hidden rounded-[18px] bg-transparent"><HomeBannerCarousel /></div></section>
+            <section>
+              <div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Em destaque</h2><p className="text-sm text-muted-foreground mt-1">Seleções e novidades do marketplace.</p></div>
+              <div className="overflow-hidden rounded-[18px] bg-transparent"><HomeBannerCarousel /></div>
+            </section>
 
-            {releasePacks.length > 0 && <section><div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">{releases.title || 'Destaques da loja'}</h2><p className="text-sm text-muted-foreground mt-1">Packs selecionados para seus próximos projetos.</p></div><div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{releasePacks.map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div></section>}
+            {categoryFilters.length > 0 && (
+              <section>
+                <div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Explore por categoria</h2></div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                  {categoryFilters.map(category => (
+                    <button key={category.value} onClick={() => setCategoryFilter(category.value)} className="flex min-h-16 items-center justify-between rounded-2xl border border-border/50 bg-card/50 px-4 py-3 text-left text-sm font-medium text-foreground/85 transition hover:bg-card">
+                      <span>{category.label}</span><span className="text-xs text-muted-foreground">{allPacks.filter(pack => pack.pack_type === category.value).length}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
 
-            {premiumPacks.length > 0 && <section><div className="mb-4 px-1 flex items-end justify-between"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Packs premium</h2><p className="text-sm text-muted-foreground mt-1">Conteúdos exclusivos da comunidade.</p></div><button onClick={() => setActiveTab('pagos')} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Ver todos</button></div><div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">{premiumPacks.slice(0, 4).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div></section>}
+            {releasePacks.length > 0 && (
+              <section>
+                <div className="mb-4 px-1 flex items-end justify-between gap-3"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">{releases.title || 'Destaques da loja'}</h2><p className="text-sm text-muted-foreground mt-1">Packs selecionados para seus próximos projetos.</p></div><button onClick={() => setActiveTab('geral')} className="shrink-0 text-xs text-muted-foreground hover:text-foreground transition-colors">Ver tudo</button></div>
+                <HorizontalCarousel title="">{releasePacks.map(pack => <div key={pack.id} className="min-w-[160px] max-w-[160px] md:min-w-[210px] md:max-w-[210px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel>
+              </section>
+            )}
 
-            {projectPacks.length > 0 && <section><HorizontalCarousel title="Projetos e FLPs">{projectPacks.map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>}
+            {premiumPacks.length > 0 && (
+              <section>
+                <div className="mb-4 px-1 flex items-end justify-between gap-3"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Packs premium</h2><p className="text-sm text-muted-foreground mt-1">Conteúdos exclusivos da comunidade.</p></div><button onClick={() => setActiveTab('pagos')} className="shrink-0 text-xs text-muted-foreground hover:text-foreground transition-colors">Ver tudo</button></div>
+                <HorizontalCarousel title="">{premiumPacks.slice(0, 10).map(pack => <div key={pack.id} className="min-w-[160px] max-w-[160px] md:min-w-[210px] md:max-w-[210px] shrink-0 snap-start"><PackCardV2 pack={pack} hidePremiumBadge /></div>)}</HorizontalCarousel>
+              </section>
+            )}
 
-            {customSections.filter(({ packs: sectionPacks }) => sectionPacks.length > 0).map(({ section, packs: sectionPacks }) => <section key={section.id}><HorizontalCarousel title={section.title === 'Acapellas' ? 'Acapellas' : section.title}>{sectionPacks.map(pack => <div key={pack.id} className="min-w-[180px] max-w-[180px] md:min-w-[240px] md:max-w-[240px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>)}
+            {projectPacks.length > 0 && <section><HorizontalCarousel title="Projetos e FLPs">{projectPacks.map(pack => <div key={pack.id} className="min-w-[160px] max-w-[160px] md:min-w-[210px] md:max-w-[210px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>}
+
+            {customSections.filter(({ packs: sectionPacks }) => sectionPacks.length > 0).map(({ section, packs: sectionPacks }) => <section key={section.id}><HorizontalCarousel title={section.title === 'Acapellas' ? 'Acapellas' : section.title}>{sectionPacks.map(pack => <div key={pack.id} className="min-w-[160px] max-w-[160px] md:min-w-[210px] md:max-w-[210px] shrink-0 snap-start"><PackCardV2 pack={pack} /></div>)}</HorizontalCarousel></section>)}
 
             {acapellas.length > 0 && <section><HorizontalCarousel title="Acapellas">{acapellas.slice(0, 8).map(acapella => <div key={acapella.id} className="min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] shrink-0 snap-start"><AudioPlayer artistName={acapella.artist_name} imageUrl={acapella.image_url} audioUrl={acapella.audio_url} downloadUrl={acapella.download_url} duration={acapella.duration_seconds ?? undefined} onSelect={() => { setSelectedAcapella(acapella); setPollChoice(''); setPollText(''); }} /></div>)}</HorizontalCarousel></section>}
 
-            {allPacks.length > 0 && <section><div className="mb-4 px-1 flex items-end justify-between"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Explorar catálogo</h2><p className="text-sm text-muted-foreground mt-1">{allPacks.length} packs disponíveis</p></div><button onClick={() => setActiveTab('geral')} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Ver todos</button></div><div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{allPacks.slice(0, 10).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div></section>}
+            {latestPacks.length > 0 && (
+              <section>
+                <div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Novidades</h2><p className="text-sm text-muted-foreground mt-1">Os produtos mais recentes da comunidade.</p></div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{latestPacks.slice(0, 10).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>
+              </section>
+            )}
+
+            {allPacks.length > 0 && (
+              <section>
+                <div className="mb-4 px-1 flex items-end justify-between gap-3"><div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Explorar catálogo</h2><p className="text-sm text-muted-foreground mt-1">{allPacks.length} produtos disponíveis</p></div><button onClick={() => setActiveTab('geral')} className="shrink-0 text-xs text-muted-foreground hover:text-foreground transition-colors">Ver tudo</button></div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">{allPacks.slice(0, 10).map(pack => <PackCardV2 key={pack.id} pack={pack} />)}</div>
+              </section>
+            )}
           </div>
         )}
-
       </div>
 
 
