@@ -203,37 +203,51 @@ const Packs = () => {
         </div>
       </header>
 
-      {/* Mobile Header */}
-      <div className="md:hidden max-w-lg mx-auto px-4 pt-6">
+      {/* Mobile Header - marketplace layout */}
+      <div className="md:hidden w-full px-4 pt-4">
         <header className="flex items-center justify-between py-2">
-          <button
-            onClick={() => setShowMenu(true)}
-            className="p-2 -ml-2 rounded-full text-foreground hover:bg-foreground/10 transition-colors"
-          >
-            <Menu className="w-[18px] h-[18px]" />
-          </button>
-          <div className="relative z-10 pointer-events-none">
-            {logoUrl ? <img src={logoUrl} alt="Logo" className="w-9 h-9 rounded-xl object-cover border border-border/40" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
+          <div className="flex items-center gap-3">
+            {logoUrl ? <img src={logoUrl} alt="Logo" className="w-10 h-10 rounded-xl object-cover" /> : <h1 className="text-2xl font-black tracking-tighter">PACKY</h1>}
           </div>
-          <Link to="/inbox" className="relative p-2 -mr-2">
-            <Inbox className="w-[18px] h-[18px]" />
-            {hasUnread && <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />}
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/inbox" className="relative p-2" aria-label="Caixa de entrada">
+              <Inbox className="w-6 h-6" />
+              {hasUnread && <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full" />}
+            </Link>
+            <Link to="/conta" className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border/50 bg-secondary" aria-label="Meu perfil">
+              <Menu className="h-5 w-5" />
+            </Link>
+          </div>
         </header>
 
-        {/* Mobile Search */}
-        <div className="flex items-center gap-2 mt-7 mb-7 relative" ref={mobilePopupRef}>
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#9E9E9E]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full h-[50px] bg-[#111111] border border-white/[0.05] rounded-2xl pl-12 pr-10 text-[14px] text-[#F5F5F5] placeholder:text-[#8A8A8A] focus:outline-none focus:border-white/[0.10] focus:ring-1 focus:ring-white/[0.08] transition-all"
-              placeholder={animatedPlaceholder}
-            />
-          </div>
+        <div className="relative mt-4 mb-4" ref={mobilePopupRef}>
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full h-[54px] bg-secondary/70 border border-border/40 rounded-2xl pl-12 pr-10 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-border transition-all"
+            placeholder={animatedPlaceholder}
+          />
         </div>
+
+        {q.length === 0 && (
+          <nav className="flex items-center gap-7 overflow-x-auto whitespace-nowrap border-b border-border/50 -mx-4 px-4" aria-label="Categorias">
+            {[
+              { label: 'Para você', value: null },
+              ...categoryFilters.map(category => ({ label: category.label, value: category.value })),
+              { label: 'Premium', value: 'premium' },
+            ].map((item, index) => (
+              <button key={item.label} onClick={() => {
+                if (item.value === 'premium') { setActiveTab('pagos'); setCategoryFilter(null); }
+                else { setActiveTab('inicio'); setCategoryFilter(item.value); }
+              }} className={`relative shrink-0 py-4 text-sm font-semibold transition-colors ${(index === 0 && !categoryFilter && activeTab === 'inicio') || categoryFilter === item.value && item.value !== null || (item.value === 'premium' && activeTab === 'pagos') ? 'text-foreground' : 'text-muted-foreground'}`}>
+                {item.label}
+                {((index === 0 && !categoryFilter && activeTab === 'inicio') || categoryFilter === item.value && item.value !== null || (item.value === 'premium' && activeTab === 'pagos')) && <span className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-foreground" />}
+              </button>
+            ))}
+          </nav>
+        )}
       </div>
 
       <div className="packs-page relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8 pt-4 md:pt-8">
@@ -295,10 +309,22 @@ const Packs = () => {
           </section>
         ) : (
           <div className="space-y-9 md:space-y-12">
-            <section>
+            <section className="pt-5">
               <div className="mb-4 px-1"><h2 className="text-lg md:text-xl font-semibold tracking-tight">Em destaque</h2><p className="text-sm text-muted-foreground mt-1">Seleções e novidades do marketplace.</p></div>
               <div className="overflow-hidden rounded-[18px] bg-transparent"><HomeBannerCarousel /></div>
             </section>
+
+            {latestPacks.length > 0 && (
+              <section>
+                <div className="mb-4 flex items-center justify-between gap-3 px-1">
+                  <div><h2 className="text-lg md:text-xl font-semibold tracking-tight">Vale a pena conferir</h2><p className="mt-1 text-sm text-muted-foreground">Produtos que podem chamar sua atenção</p></div>
+                  <button onClick={() => setActiveTab('geral')} className="shrink-0 text-xs text-muted-foreground">Ver todos</button>
+                </div>
+                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-5 gap-2 md:gap-3">
+                  {latestPacks.slice(0, 10).map(pack => <PackCardV2 key={pack.id} pack={pack} imageOnly />)}
+                </div>
+              </section>
+            )}
 
             {categoryFilters.length > 0 && (
               <section>
