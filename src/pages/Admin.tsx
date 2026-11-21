@@ -1,5 +1,4 @@
 import { ChevronLeft } from 'lucide-react';
-import Cropper from 'react-easy-crop';
 import { useEffect, useState } from 'react';
 import { Clock, CheckCircle, XCircle, Music, Package, Folder, Pin, Trash2, Edit, Check, X, Users, Gift, Disc, Send, Megaphone, Crown, Plus, ExternalLink, RotateCcw, Mic, BarChart3, Link as LinkIcon, Camera, Edit2, FileText, SmilePlus, BadgeCheck, Sparkles, Wallet, LayoutGrid, ChevronRight, ChevronDown, Image as ImageIcon, Smartphone } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
@@ -744,12 +743,24 @@ export default function Admin() {
                 ))}
               </div>
             )}
-            <div className="admin-pack-actions grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-              <Button variant="outline" className="admin-add-button w-full min-w-0 justify-center" onClick={() => { if (mainTab === 'acapellas') setShowAcapellaModal(true); else setShowPackModal(true); }}>
-                <Plus className="w-4 h-4 mr-2 shrink-0" /><span className="truncate">Adicionar {mainTab === 'acapellas' ? 'Acapella' : 'Pack'}</span>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                className="admin-add-button flex-1"
+                onClick={() => {
+                  if (mainTab === 'acapellas') setShowAcapellaModal(true);
+                  else setShowPackModal(true);
+                }}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Adicionar {mainTab === 'acapellas' ? 'Acapella' : 'Pack'}
               </Button>
-              <Button variant="outline" className="admin-bulk-button shrink-0" onClick={() => mainTab === 'acapellas' ? setShowBulkAcapellaInput(!showBulkAcapellaInput) : setShowBulkPackInput(!showBulkPackInput)}>
-                <LinkIcon className="w-4 h-4 mr-2" />Em Massa
+              <Button 
+                variant="outline"
+                onClick={() => mainTab === 'acapellas' ? setShowBulkAcapellaInput(!showBulkAcapellaInput) : setShowBulkPackInput(!showBulkPackInput)}
+              >
+                <LinkIcon className="w-4 h-4 mr-2" />
+                Em Massa
               </Button>
             </div>
 
@@ -1413,14 +1424,14 @@ export default function Admin() {
           const q = packSearch.trim().toLowerCase();
           const packItems = mainTab === 'packs'
             ? getPacksContent().filter((p) => packSection === 'pagos' ? p.is_premium : !p.is_premium)
-            : getPacksContent();
+            : packItems;
           const filtered = q
             ? packItems.filter((p) =>
                 [p.id, p.title, p.author_name, p.pack_type]
                   .filter(Boolean)
                   .some((v) => String(v).toLowerCase().includes(q))
               )
-            : packItems;
+            : getPacksContent();
           return (
           <div className="space-y-3 mt-4">
             <Input
@@ -1692,35 +1703,23 @@ function AdminPackForm({
   const [price, setPrice] = useState('');
   const [requiresShortener, setRequiresShortener] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [cropImage, setCropImage] = useState<string | null>(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-  const [isCropping, setIsCropping] = useState(false);
-  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
 
-  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setCropImage(URL.createObjectURL(file));
-    setCrop({ x: 0, y: 0 }); setZoom(1); setCroppedAreaPixels(null);
-    setIsCropping(true); e.target.value = '';
-  };
-
-  const handleCropAndUpload = async () => {
-    if (!cropImage || !croppedAreaPixels) return;
-    setIsUploadingCover(true);
-    try {
-      const blob = await createCroppedImage(cropImage, croppedAreaPixels);
-      const fileName = `admin/${Date.now()}-cover.jpg`;
-      const { error } = await supabase.storage.from('covers').upload(fileName, blob, { contentType: 'image/jpeg' });
-      if (error) throw error;
-      const { data } = supabase.storage.from('covers').getPublicUrl(fileName);
-      setCoverUrl(data.publicUrl); setIsCropping(false);
-      URL.revokeObjectURL(cropImage); setCropImage(null);
-      toast.success('Capa ajustada e enviada!');
-    } catch { toast.error('Erro ao cortar ou enviar a capa'); }
-    finally { setIsUploadingCover(false); }
+    setCoverFile(file);
+    
+    // Upload to storage
+    const fileName = `admin/${Date.now()}-${file.name}`;
+    const { error } = await supabase.storage.from('covers').upload(fileName, file);
+    if (error) {
+      toast.error('Erro ao fazer upload da capa');
+      return;
+    }
+    const { data } = supabase.storage.from('covers').getPublicUrl(fileName);
+    setCoverUrl(data.publicUrl);
+    toast.success('Capa enviada!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -1750,9 +1749,7 @@ function AdminPackForm({
   };
 
   return (
-    <>
-    <form onSubmit={handleSubmit} className="admin-pack-form space-y-4">
-      <div key={packType} className="admin-pack-fields-transition space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Label>Título *</Label>
         <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Nome do pack" />
@@ -1770,7 +1767,6 @@ function AdminPackForm({
             <SelectItem value="drumkit">Drumkit</SelectItem>
             <SelectItem value="loops">Loops</SelectItem>
             <SelectItem value="presets">Presets</SelectItem>
-            <SelectItem value="midi">MIDI</SelectItem>
             <SelectItem value="project">Projeto</SelectItem>
             <SelectItem value="other">Outro</SelectItem>
           </SelectContent>
@@ -1780,7 +1776,7 @@ function AdminPackForm({
         <Label>Capa</Label>
         <Input type="file" accept="image/*" onChange={handleCoverUpload} />
         {coverUrl && (
-          <div className="mt-3 flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-2.5"><img src={coverUrl} alt="Prévia da capa" className="h-20 w-20 rounded-lg object-cover" /><div><p className="text-xs font-semibold">Capa pronta</p><p className="mt-1 text-[11px] text-muted-foreground">Imagem cortada e enquadrada.</p></div></div>
+          <img src={coverUrl} alt="Preview" className="mt-2 w-24 h-24 rounded-lg object-cover" />
         )}
       </div>
       <div>
@@ -1797,7 +1793,6 @@ function AdminPackForm({
           <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="19.90" />
         </div>
       )}
-      </div>
       <div className="flex gap-2 pt-2">
         <Button type="submit" disabled={isSubmitting} className="flex-1">
           {isSubmitting ? 'Adicionando...' : 'Adicionar'}
@@ -1807,33 +1802,5 @@ function AdminPackForm({
         </Button>
       </div>
     </form>
-    <Dialog open={isCropping} onOpenChange={(open) => {
-      setIsCropping(open);
-      if (!open && cropImage) { URL.revokeObjectURL(cropImage); setCropImage(null); }
-    }}>
-      <DialogContent className="admin-crop-dialog w-[calc(100%-1.25rem)] max-w-lg">
-        <DialogHeader><DialogTitle>Ajustar capa</DialogTitle><DialogDescription>Arraste a imagem e ajuste o zoom antes de salvar.</DialogDescription></DialogHeader>
-        {cropImage && <div className="space-y-4">
-          <div className="admin-crop-area"><Cropper image={cropImage} crop={crop} zoom={zoom} aspect={1} onCropChange={setCrop} onZoomChange={setZoom} onCropComplete={(_, pixels) => setCroppedAreaPixels(pixels)} showGrid={false} /></div>
-          <div className="space-y-2"><div className="flex items-center justify-between text-xs text-muted-foreground"><span>Zoom</span><span>{zoom.toFixed(1)}x</span></div>
-            <input aria-label="Zoom da capa" type="range" min={1} max={3} step={0.05} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="admin-crop-zoom w-full" /></div>
-          <div className="flex gap-2">
-            <Button type="button" variant="outline" className="flex-1" onClick={() => { setIsCropping(false); URL.revokeObjectURL(cropImage); setCropImage(null); }}>Cancelar</Button>
-            <Button type="button" className="flex-1" disabled={isUploadingCover || !croppedAreaPixels} onClick={handleCropAndUpload}>{isUploadingCover ? 'Enviando...' : 'Usar esta capa'}</Button>
-          </div>
-        </div>}
-      </DialogContent>
-    </Dialog>
-    </>
   );
-}
-
-async function createCroppedImage(imageSrc: string, pixelCrop: { x: number; y: number; width: number; height: number }): Promise<Blob> {
-  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const element = new Image(); element.onload = () => resolve(element); element.onerror = reject; element.src = imageSrc;
-  });
-  const canvas = document.createElement('canvas'); canvas.width = Math.round(pixelCrop.width); canvas.height = Math.round(pixelCrop.height);
-  const context = canvas.getContext('2d'); if (!context) throw new Error('Canvas indisponível');
-  context.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, canvas.width, canvas.height);
-  return await new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Falha ao gerar imagem')), 'image/jpeg', 0.92));
 }
