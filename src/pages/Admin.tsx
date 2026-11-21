@@ -1413,7 +1413,7 @@ export default function Admin() {
           const q = packSearch.trim().toLowerCase();
           const packItems = mainTab === 'packs'
             ? getPacksContent().filter((p) => packSection === 'pagos' ? p.is_premium : !p.is_premium)
-            : packItems;
+            : getPacksContent();
           const filtered = q
             ? packItems.filter((p) =>
                 [p.id, p.title, p.author_name, p.pack_type]
@@ -1799,7 +1799,7 @@ function AdminPackForm({
       )}
       </div>
       <div className="flex gap-2 pt-2">
-        <Button type="submit"> disabled={isSubmitting} className="flex-1">
+        <Button type="submit" disabled={isSubmitting} className="flex-1">
           {isSubmitting ? 'Adicionando...' : 'Adicionar'}
         </Button>
         <Button type="button" variant="outline" onClick={onClose}>
