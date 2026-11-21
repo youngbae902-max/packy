@@ -98,7 +98,7 @@ const Packs = () => {
   }, [approvedPacks, premiumPacks, projectPacks]);
 
   const categoryFilters = useMemo(() => {
-    const labels: Record<string, string> = { samples: 'Samples', drumkit: 'Drumkits', loops: 'Loops', presets: 'Presets', midi: 'MIDI', project: 'Projetos', other: 'Outros' };
+    const labels: Record<string, string> = { samples: 'Samples', drumkit: 'Drumkits', loops: 'Loops', presets: 'Presets', project: 'Projetos', other: 'Outros' };
     return [...new Set(allPacks.map(pack => pack.pack_type).filter(Boolean))]
       .map(type => ({ value: type, label: labels[type] || type }))
       .sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
